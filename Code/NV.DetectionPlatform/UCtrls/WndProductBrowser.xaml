@@ -1,0 +1,181 @@
+﻿<Window x:Class="NV.DetectionPlatform.UCtrls.WndProductBrowser"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NV.DRF.Controls;assembly=NV.DRF.Controls"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             mc:Ignorable="d" Title="{DynamicResource Tip_ProductHistory}" WindowStartupLocation="CenterScreen"
+             d:DesignHeight="900" d:DesignWidth="1200" FontSize="16" Style="{DynamicResource WindowStyle}">
+    <Window.InputBindings>
+        <KeyBinding Key="Enter" Command="{Binding CmdQuery}"/>
+    </Window.InputBindings>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding CmdLoaded}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Unloaded">
+            <i:InvokeCommandAction Command="{Binding CmdUnLoaded}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Window.Resources>
+
+    </Window.Resources>
+    <Border BorderBrush="{DynamicResource EditWindowBG}" BorderThickness="1">
+        <Grid Background="{DynamicResource LightGrayBG}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="200" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="615*" />
+                <RowDefinition Height="42*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Column="1" Margin="0,0,5,0" Name="gridQuery">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Content="{DynamicResource Top_ProductName}" Margin="0" Name="label1" VerticalAlignment="Center" Grid.Row="0"/>
+                <TextBox Grid.Row="1" Margin="4,2" Name="txtHisPID" VerticalAlignment="Center" VerticalContentAlignment="Center" Text="{Binding Condition.Name,UpdateSourceTrigger=PropertyChanged}"/>
+                <Label Content="{DynamicResource Top_ProductType2}" Grid.Row="2" Margin="0" Name="label2" VerticalAlignment="Center" />
+                <TextBox Grid.Row="3" Margin="4,2" Name="txtHisPatName" VerticalAlignment="Center" VerticalContentAlignment="Center" Text="{Binding Condition.Type,UpdateSourceTrigger=PropertyChanged}" />
+                <Label Content="{DynamicResource Top_ProductKeyword2}" Grid.Row="4" Margin="0" Name="label3" VerticalAlignment="Center" />
+                <TextBox Grid.Row="5" Margin="4,2" Name="txtHisAcceNo" VerticalAlignment="Center" VerticalContentAlignment="Center" Text="{Binding Condition.Keywords,UpdateSourceTrigger=PropertyChanged}" />
+                <Label Content="{DynamicResource Search_Inspectiondate}" Grid.Row="6" Margin="0" Name="label4" VerticalAlignment="Center" />
+
+                <Grid Grid.Row="9" Margin="4,0,4,0" Name="grid2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button  Content="{DynamicResource Search_Today}" Margin="0,2" Name="btnTodayHistData" Command="{Binding CmdDateQuery}" CommandParameter="today"  Style="{DynamicResource LeftGrayButtonStyle}"/>
+                    <Button  Content="{DynamicResource Search_ThisWeek}" Margin="0,2" Name="btnLast3DaysHistData" Grid.Column="1" Command="{Binding CmdDateQuery}" CommandParameter="week" Style="{DynamicResource MidGrayButtonStyle}"/>
+                    <Button  Content="{DynamicResource Search_ThisMonth}" Margin="0,2" Name="btnAllHistData" Grid.Column="2" Command="{Binding CmdDateQuery}" CommandParameter="month" Style="{DynamicResource RightGrayButtonStyle}"/>
+                </Grid>
+
+                <Border  Name="border1" Grid.Row="7" BorderBrush="Transparent" BorderThickness="2">
+                    <DatePicker   Margin="1,0,1,0" Name="dtpFromHistData" VerticalAlignment="Center" Focusable="False" SelectedDate="{Binding Condition.DateFrom,UpdateSourceTrigger=PropertyChanged}"/>
+                </Border>
+                <Border Name="border2" Grid.Row="8" BorderBrush="Transparent" BorderThickness="2">
+                    <DatePicker Margin="1,0,1,0" Name="dtpToHistData" VerticalAlignment="Center"  Focusable="False" SelectedDate="{Binding Condition.DateTo,UpdateSourceTrigger=PropertyChanged}"/>
+                </Border>
+                <Button Style="{DynamicResource GrayButtonStyle}"  Grid.Row="11" Margin="4,0" Name="btnQueryHistData" Command="{Binding CmdQuery}" VerticalAlignment="Stretch">
+                    <Path Margin="5,4" Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Data="M709.57156 709.512a415.636 415.636 0 1 1 0-587.727 415.563 415.563 0 0 1 0 587.727zM170.77356 170.714a346.376 346.376 0 1 0 490.016 0 346.449 346.449 0 0 0-489.724 0.292z m636.801 538.798l195.934 195.933a69.334 69.334 0 0 1-98.003 98.004L709.57056 807.515a69.407 69.407 0 0 1 98.296-98.003z"/>
+                </Button>
+                <Grid Grid.Row="13">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button ToolTip="修改 edit" Margin="3,1" Grid.Column="0" x:Name="btnEdit" Command="{Binding CmdEdit}" Style="{DynamicResource GrayButtonStyle}">
+                        <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="5,2" Data="M879.656 855.88H137.288c-11.048 0-20 8.952-20 20s8.952 20 20 20h742.368c11.048 0 20-8.952 20-20s-8.952-20-20-20zM166.592 798.16c1.832 0 3.68-0.248 5.496-0.768L295.16 762.24a19.951 19.951 0 0 0 8.648-5.096l386.816-386.808c7.816-7.808 7.816-20.472 0-28.28-7.816-7.816-20.472-7.816-28.28 0L327.76 676.624l-64.976-64.984c-2.304-2.304-5.048-3.84-7.952-4.792l327.352-327.352c7.816-7.808 7.816-20.472 0-28.28-7.816-7.816-20.472-7.816-28.28 0L170.032 635.088a19.926 19.926 0 0 0-5.672 11.44l-17.584 128.928a20.022 20.022 0 0 0 6.72 17.824 20.018 20.018 0 0 0 13.096 4.88zM203.08 658.6l26.632-26.624c0.944 2.896 2.488 5.64 4.784 7.944l64.984 64.992-20.288 20.288-88.64 25.312L203.08 658.6zM700.792 329.376a19.92 19.92 0 0 0 13.56 5.312c5.384 0 10.752-2.16 14.696-6.424l70.584-76.368c3.6-3.896 5.504-9.064 5.296-14.36s-2.512-10.304-6.416-13.904l-96.952-89.568c-8.112-7.496-20.776-6.992-28.256 1.12l-70.56 76.368c-7.504 8.112-7 20.768 1.12 28.264l96.928 89.56z m-11.68-152.36l67.568 62.416-43.44 46.992L645.696 224l43.416-46.984z"/>
+                    </Button>
+                    <Button ToolTip="删除 delete" Margin="3,1" Grid.Column="1" x:Name="btnDeleteStudy" Command="{Binding CmdDel}" Style="{DynamicResource GrayButtonStyle}">
+                        <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="5,2">
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <PathGeometry Figures="M713.4 776.3c-11.2 0-20.2-9.4-20.2-21V357.1c0-11.5 9-20.9 20.2-20.9 11.1 0 20.2 9.4 20.2 20.9v398.2c0 11.6-9.1 21-20.2 21m-202.6 0c-11.1 0-20.2-9.4-20.2-21V357.1c0-11.5 9.1-20.9 20.2-20.9 11.2 0 20.2 9.4 20.2 20.9v398.2c0 11.6-9.1 21-20.2 21m-202.6 0c-11.2 0-20.2-9.4-20.2-21V357.1c0-11.5 9-20.9 20.2-20.9s20.2 9.4 20.2 20.9v398.2c0 11.6-9 21-20.2 21M645.9 42.6c12.8 0 27.1 17.2 27.1 41.9v62.8H348.6V84.6c0-24.7 14.3-41.9 27.1-41.9h270.2m0-41.9H375.7c-37.3 0-67.5 37.5-67.5 83.9v104.8h405.2V84.7c0-46.4-30.3-83.9-67.5-83.9"/>
+                                    <PathGeometry Figures="M982.1 189.4H39.4c-11.1 0-20.2-9.4-20.2-20.9 0-11.5 9.1-20.9 20.2-20.9h942.7c11.2 0 20.2 9.4 20.2 20.9 0.1 11.5-9 20.9-20.2 20.9"/>
+                                    <PathGeometry Figures="M826.4 1013.7H195.1c-54.6 0-99.2-51-99.2-113.6V159.5h40.5v740.7c0 39.5 26.3 71.6 58.6 71.6h631.3c32.4 0 58.7-32.1 58.7-71.6V159.5h40.5v740.7c0.1 62.6-44.4 113.5-99.1 113.5"/>
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+
+                    </Button>
+                    <Button ToolTip="打开所在目录 open Imagefolder" Margin="3,1" Grid.Column="2" Command="{Binding CmdExport}" Style="{DynamicResource GrayButtonStyle}">
+                        <Path Margin="5,2" Stretch="Uniform" Fill="{DynamicResource BtnForeground}" Data="M62.137491 81.92C28.446605 81.92 0.697491 109.669114 0.697491 143.36L0.697491 225.28 0.697491 819.2 0.697491 899.2A1.0001 1.0001 0 0 0 1.977491 913.28C7.749463 941.161615 32.657965 962.56 62.137491 962.56L860.857491 962.56C891.433128 962.56 916.529525 939.489198 921.017491 910.08 921.213956 908.792648 921.543623 907.551089 921.657491 906.24A1.0001 1.0001 0 0 0 921.657491 904.96L922.297491 901.76C922.299826 901.541294 922.297491 901.339218 922.297491 901.12L1024.057491 352 1024.697491 350.08 1024.697491 348.16C1024.697491 314.46911 996.948382 286.72 963.257491 286.72L963.257491 225.28C963.257491 191.589114 935.508382 163.84 901.817491 163.84L369.977491 163.84C370.043376 163.929418 369.78072 163.84 369.337491 163.84 368.678199 163.38297 366.830678 161.828846 363.577491 158.08 358.572548 152.312545 352.73198 142.744396 346.297491 132.48 339.863003 122.215604 333.039477 111.383536 324.537491 101.76 316.035506 92.136464 304.185573 81.92 287.417491 81.92L62.137491 81.92zM62.137491 122.88 287.417491 122.88C286.173331 122.88 288.749511 122.903552 293.817491 128.64 298.885411 134.376464 304.69358 144.024396 311.097491 154.24 317.501403 164.455604 324.53317 175.367455 332.857491 184.96 341.181813 194.552545 352.521916 204.8 369.337491 204.8L901.817491 204.8C913.346441 204.8 922.297491 213.75105 922.297491 225.28L922.297491 286.72 164.537491 286.72C132.291924 286.72 106.617784 312.600781 104.377491 344.32L103.737491 344.32 103.097491 348.16 41.657491 679.68 41.657491 225.28 41.657491 143.36C41.657491 131.831046 50.608538 122.88 62.137491 122.88zM164.537491 327.68 938.937491 327.68 947.257491 327.68 963.257491 327.68C974.786441 327.68 983.737491 336.63105 983.737491 348.16L883.257491 891.52 882.617491 892.8A1.0001 1.0001 0 0 0 881.977491 895.36 1.0001 1.0001 0 0 0 881.337491 897.92 1.0001 1.0001 0 0 0 881.337491 899.2 1.0001 1.0001 0 0 0 881.337491 899.84 1.0001 1.0001 0 0 0 880.697491 903.04C880.63898 903.671276 880.809333 904.348631 880.697491 904.96A1.0001 1.0001 0 0 0 880.697491 907.52C878.121681 915.866255 870.187278 921.6 860.857491 921.6L62.137491 921.6C50.608538 921.6 41.657491 912.64895 41.657491 901.12L143.417491 352 144.057491 350.08 144.057491 348.16C144.057491 336.63105 153.008538 327.68 164.537491 327.68z"/>
+                    </Button>
+                </Grid>
+                <Button Style="{DynamicResource GrayButtonStyle}" ToolTip="复查" Grid.Row="15" Margin="4,0" Command="{Binding CmdExam}" VerticalAlignment="Stretch">
+                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="5,4">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M79.936 960l-79.936-72.768 412.033-375.232-412.032-375.168 79.936-72.832 492.032 448-492.032 448z"/>
+                                <PathGeometry Figures="M864.257 512l-412.224-375.168 79.936-72.832 492.032 448-492.032 448-79.936-72.768 412.223-375.232z"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                </Button>
+                <StackPanel Orientation="Horizontal" Grid.Row="15" FlowDirection="RightToLeft" Visibility="Collapsed">
+                    <Button Content="回放" Margin="8,4" Grid.Column="3" Name="btnOpen" Command="{Binding CmdReview}" Width="80" VerticalAlignment="Stretch"/>
+                    <Button Content="检验" Margin="8,4" Grid.Column="2" Name="btnReExam" Command="{Binding CmdExam}" Width="80" VerticalAlignment="Stretch" />
+                </StackPanel>
+            </Grid>
+            <Grid Grid.RowSpan="2" Margin="0,0,0,10">
+                <DataGrid AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Extended" Name="dgHistData" RowHeight="40" SelectedItem="{Binding CurrentProduct,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding TestRecords}" Margin="5,2,10,2">
+                    <DataGrid.Resources>
+                        <Style x:Key="bottomText" TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="FontFamily" Value="微软雅黑"/>
+                            <Setter Property="ToolTip" Value="{Binding Text,RelativeSource={RelativeSource Self}}"/>
+                        </Style>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="LightGray"/>
+                    </DataGrid.Resources>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="PreviewMouseDoubleClick">
+                            <i:InvokeCommandAction Command="{Binding CmdFastExam}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+
+                    <DataGrid.RowDetailsTemplate>
+                        <DataTemplate>
+                            <ListBox MinHeight="150" HorizontalAlignment="Left" Grid.Row="1" Width="{Binding ActualWidth,RelativeSource={RelativeSource AncestorType=DataGrid}}" Margin="2" Name="_lstSeries" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Disabled"  ItemsSource="{Binding DataContext.PlatformModels,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDoubleClick">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.CmdDoubleClickSeries,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" IsItemsHost="True"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="5">
+                                            <TextBlock Panel.ZIndex="100" Grid.Row="0" FontSize="13"  HorizontalAlignment="Stretch" TextAlignment="Left" VerticalAlignment="Top" Foreground="{DynamicResource BtnForeground}">
+                                            <Run Text="{Binding DateTime}"/>
+                                            <Run Text="&#13;"/>
+                                            <Run Text="{Binding DcmFiles.Count,Mode=OneWay}"/>
+                                            <Run Text="张"/>
+                                            </TextBlock>
+                                            <local:BxImage  Stretch="Fill" Width="120" Height="120" Margin="5" Source="{Binding Thumbnail}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                        </DataTemplate>
+                    </DataGrid.RowDetailsTemplate>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="{DynamicResource Search_RegistrationDate}"  Binding="{Binding StartTime,StringFormat='yyyy-MM-dd'}" IsReadOnly="True" ElementStyle="{StaticResource bottomText}">
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="{DynamicResource Top_ProductName2}" Binding="{Binding ProductName}" ElementStyle="{StaticResource bottomText}"/>
+                        <DataGridTextColumn Header="{DynamicResource Top_ProductType}" Binding="{Binding ProductTypeID}" ElementStyle="{StaticResource bottomText}"/>
+                        <DataGridTextColumn Header="{DynamicResource Top_ProductSpecification}" Binding="{Binding ProductSpecification}" ElementStyle="{StaticResource bottomText}"/>
+                        <DataGridTextColumn Header="{DynamicResource Search_LastOperationDate}" Binding="{Binding EndTime}" ElementStyle="{StaticResource bottomText}"/>
+                        <DataGridTextColumn Header="{DynamicResource Search_ImageFolder}" Binding="{Binding ImageFolder}" ElementStyle="{StaticResource bottomText}"/>
+                        <DataGridTextColumn Header="{DynamicResource Top_ProductKeyword}" Binding="{Binding ProductKeywords}" ElementStyle="{StaticResource bottomText}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<ImageParam xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <EntityKey>
+    <EntitySetName>ImageParam</EntitySetName>
+    <EntityContainerName>Entities</EntityContainerName>
+    <EntityKeyValues>
+      <EntityKeyMember>
+        <Key>GUID</Key>
+        <Value xsi:type="xsd:string">69eb1caa-2d74-4234-89a5-bf56dd1f7ce5</Value>
+      </EntityKeyMember>
+    </EntityKeyValues>
+  </EntityKey>
+  <GUID>69eb1caa-2d74-4234-89a5-bf56dd1f7ce5</GUID>
+  <Name>示例1</Name>
+  <WindowWidth>65534</WindowWidth>
+  <WindowLevel>33879</WindowLevel>
+  <Gamma xsi:nil="true" />
+  <SharpLevel xsi:nil="true" />
+  <ReduceNoiseLevel xsi:nil="true" />
+  <FalseColor xsi:nil="true" />
+  <EqualHist xsi:nil="true" />
+  <ProductType>电池</ProductType>
+</ImageParam>

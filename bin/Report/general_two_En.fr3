@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TfrxReport Name="" DataSet="FrmReport.frxDataSet" DataSetName="frxDataSet" DotMatrixReport="false" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="2047" PreviewOptions.Zoom="1" PrintOptions.Printer="Ô¤Éè" ReportOptions.CreateDate="39695.6949464699" ReportOptions.Description.Text="" ReportOptions.LastChange="40235.5745126157" ScriptLanguage="PascalScript" ScriptText.Text="begin&#13;&#10;&#13;&#10;end." PropData="044C65667403300103546F7003380108446174617365747301010C3800000020446174615365743D2246726D5265706F72742E667278446174615365742220446174615365744E616D653D2266727844617461536574220000095661726961626C65730100055374796C650100">
+  <TfrxReportPage Name="Page1" PaperWidth="210" PaperHeight="297" PaperSize="9" LeftMargin="10" RightMargin="10" TopMargin="10" BottomMargin="10" ColumnWidth="0" ColumnPositions.Text="" HGuides.Text="" VGuides.Text="">
+    <TfrxMemoView Name="Memo3" Left="0" Top="94.48825" Width="75.5906" Height="18.89765" Memo.Text="PatientID:"/>
+    <TfrxMemoView Name="Memo5" Left="355.27582" Top="94.48825" Width="83.14966" Height="18.89765" Memo.Text="Acce No.:"/>
+    <TfrxLineView Name="Line1" Left="0" Top="117.16543" Width="718.11023622" Height="0" Frame.ShadowWidth="9" Frame.Typ="4"/>
+    <TfrxMemoView Name="Memo7" Left="0" Top="124.72449" Width="75.5906" Height="18.89765" Memo.Text="Name:"/>
+    <TfrxMemoView Name="Memo9" Left="355.27582" Top="128.50402" Width="68.03154" Height="18.89765" Memo.Text="Sex:"/>
+    <TfrxMemoView Name="Memo11" Left="351.49629" Top="154.96073" Width="71.81107" Height="18.89765" Memo.Text="Age:"/>
+    <TfrxMemoView Name="Memo13" Left="0" Top="154.96073" Width="75.5906" Height="18.89765" Memo.Text="Department:"/>
+    <TfrxLineView Name="Line2" Left="0" Top="210.87415" Width="718.11023622" Height="0" Frame.ShadowWidth="9" Frame.Typ="4"/>
+    <TfrxMemoView Name="Memo19" Left="0" Top="183.41744" Width="75.5906" Height="18.89765" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="0" Memo.Text="BodyPart:" ParentFont="false"/>
+    <TfrxMemoView Name="Memo21" Left="0" Top="226.7718" Width="90.70872" Height="18.89765" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="1" Memo.Text="CheckView:" ParentFont="false"/>
+    <TfrxMemoView Name="Memo23" Left="0" Top="468.66172" Width="102.04731" Height="18.89765" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="1" Memo.Text="CheckResult:" ParentFont="false"/>
+    <TfrxMemoView Name="Memo25" Left="238.11039" Top="1024.25263" Width="86.92919" Height="18.89765" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="1" Memo.Text="ReportDoc:" ParentFont="false"/>
+    <TfrxMemoView Name="Memo27" Left="453.5436" Top="1024.25263" Width="83.14966" Height="18.89765" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="1" Memo.Text="CheckDoc:" ParentFont="false"/>
+    <TfrxLineView Name="Line3" Left="0" Top="1012.91404" Width="725.66929622" Height="0" Frame.ShadowWidth="9" Frame.Typ="4"/>
+    <TfrxPictureView Name="image1" Left="0" Top="600.94527" Width="359.05535" Height="404.40971"/>
+    <TfrxMemoView Name="Memo4" Left="83.14966" Top="94.48825" Width="249.44898" Height="18.89765" DataField="PatientID" DataSet="FrmReport.frxDataSet" DataSetName="frxDataSet" Memo.Text="[frxDataSet.&#34;PatientID&#34;]"/>
+    <TfrxMemoView Name="Memo6" Left="442.20501" Top="94.48825" Width="275.90569" Height="18.89765" DataField="AccessionNumber" DataSet="FrmReport.frxDataSet" DataSetName="frxDataSet" Memo.Text="[frxDataSet.&#34;AccessionNumber&#34;]"/>
+    <TfrxMemoView Name="Memo8" Left="83.14966" Top="124.72449" Width="253.22851" Height="18.89765" DataField="PatientName" DataSet="FrmReport.frxDataSet" DataSetName="frxDataSet" Memo.Text="[frxDataSet.&#34;PatientName&#34;]"/>
+    <TfrxMemoView Name="Memo10" Left="445.98454" Top="128.50402" Width="94.48825" Height="18.89765" DataField="PatientSex" DataSet="FrmReport.frxDataSet" DataSetName="frxDataSet" Memo.Text="[frxDataSet.&#34;PatientSex&#34;]"/>
+    <TfrxMemoView Name="Memo12" Left="445.98454" Top="154.96073" Width="94.48825" Height="18.89765" DataField="PatientAge" DataSet="FrmReport.frxDataSet" DataSetName="frxDataSet" Memo.Text="[frxDataSet.&#34;PatientAge&#34;]"/>
+    <TfrxMemoView Name="Memo14" Left="83.14966" Top="154.96073" Width="253.22851" Height="18.89765" DataField="Department" DataSet="FrmReport.frxDataSet" DataSetName="frxDataSet" Memo.Text="[frxDataSet.&#34;Department&#34;]"/>
+    <TfrxMemoView Name="Memo17" Left="83.14966" Top="185.19697" Width="634.96104" Height="18.89765" DataField="BodyPart" DataSet="FrmReport.frxDataSet" DataSetName="frxDataSet" Memo.Text="[frxDataSet.&#34;BodyPart&#34;]"/>
+    <TfrxMemoView Name="Memo18" Left="0" Top="257.00804" Width="718.1107" Height="204.09462" DataField="CheckView" DataSet="FrmReport.frxDataSet" DataSetName="frxDataSet" Memo.Text="[frxDataSet.&#34;CheckView&#34;]"/>
+    <TfrxMemoView Name="Memo20" Left="0" Top="491.3389" Width="718.1107" Height="102.04731" DataField="CheckResult" DataSet="FrmReport.frxDataSet" DataSetName="frxDataSet" Memo.Text="[frxDataSet.&#34;CheckResult&#34;]"/>
+    <TfrxMemoView Name="Memo26" Left="93.48825" Top="1024.25263" Width="132.28355" Height="18.89765" DataField="ReportDate" DataSet="FrmReport.frxDataSet" DataSetName="frxDataSet" Memo.Text="[frxDataSet.&#34;ReportDate&#34;]"/>
+    <TfrxMemoView Name="Memo2" Align="baWidth" Left="0" Top="41.57483" Width="718.1107" Height="30.23624" Font.Charset="1" Font.Color="0" Font.Height="-21" Font.Name="Arial" Font.Style="1" HAlign="haCenter" Memo.Text="DR Check Report" ParentFont="false"/>
+    <TfrxMemoView Name="Memo28" Left="0" Top="1024.25263" Width="86.92919" Height="18.89765" Memo.Text="ReportDate:"/>
+    <TfrxPictureView Name="Picture1" Left="366.61441" Top="600.94527" Width="355.27582" Height="404.40971"/>
+    <TfrxMemoView Name="Memo1" Align="baWidth" Left="0" Top="0" Width="718.1107" Height="37.7953" DataField="HospitalName" DataSet="FrmReport.frxDataSet" DataSetName="frxDataSet" Font.Charset="1" Font.Color="0" Font.Height="-32" Font.Name="Arial" Font.Style="1" HAlign="haCenter" Memo.Text="[frxDataSet.&#34;HospitalName&#34;]" ParentFont="false" VAlign="vaCenter"/>
+  </TfrxReportPage>
+</TfrxReport>

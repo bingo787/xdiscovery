@@ -1,0 +1,491 @@
+﻿<Window x:Class="NV.DetectionPlatform.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:NV.DetectionPlatform.UCtrls"
+        xmlns:ctrls="clr-namespace:NV.DRF.Controls;assembly=NV.DRF.Controls"
+        Title="睿奥高清晰X光检测系统" Tag="工业无损检测软件" FontSize="15" ShowInTaskbar="True" Height="1080" Icon="NVCT.ico" Width="1500" WindowStyle="None" Style="{DynamicResource WindowStyle}" AllowsTransparency="False">
+    <Window.Resources>
+        <RoutedUICommand x:Key="CMDStartAcq" />
+        <RoutedUICommand x:Key="CMDAutoWL" />
+    </Window.Resources>
+    
+    <Window.CommandBindings>
+        <CommandBinding Command="{StaticResource CMDStartAcq}" Executed="ProductExamStart_Click"/>
+        <CommandBinding Command="{StaticResource CMDAutoWL}" Executed="_hVView_AutoWLEvent"/>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Gesture="Ctrl+Enter" Command="{StaticResource CMDStartAcq}"/>
+        <KeyBinding Gesture="Ctrl+A" Command="{StaticResource CMDAutoWL}"/>
+    </Window.InputBindings>
+    <Grid Background="{DynamicResource LightGrayBG}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <ctrls:PopubEx x:Name="pRegister" IsOpen="{Binding IsChecked,ElementName=btnRegister,Mode=TwoWay}" StaysOpen="False" AllowsTransparency="True" PopupAnimation="None" Placement="Right" PlacementTarget="{Binding ElementName=btnRegister}">
+            <Border x:Name="bdrRegister" BorderBrush="Gray" Margin="1" Background="{DynamicResource LightGrayBG}">
+            </Border>
+        </ctrls:PopubEx>
+        
+        <Border Grid.Row="0" BorderThickness="0,0,0,0" BorderBrush="#FF606060">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" Color="Gray"/>
+            </Border.Effect>
+            <!--菜单-->
+            <Grid>
+                <Menu x:Name="menuBar" Background="Transparent" Foreground="#FFF1F1F1" Margin="10,0,0,2" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                    <Menu.Resources>
+                        <Style TargetType="MenuItem">
+                            <Setter Property="FontSize" Value="15"/>
+                            <Setter Property="Margin" Value="0,0,10,0"/>
+                        </Style>
+                    </Menu.Resources>
+                    <MenuItem Header="{DynamicResource Menu_File}">
+                        <MenuItem Header="{DynamicResource Menu_File_Open}" Click="OpenFile" >
+                        </MenuItem>
+                        <MenuItem Header="{DynamicResource Menu_File_Close}" Click="CloseFile"/>
+                        <MenuItem Header="{DynamicResource Menu_File_Save}" Click="SaveFile"/>
+                        <MenuItem Header="{DynamicResource Menu_File_SaveAs}" Click="SaveAs"/>
+                    </MenuItem>
+                    <MenuItem Header="{DynamicResource Menu_Setting}">
+                        <MenuItem Header="{DynamicResource Menu_Setting_Detector}" >
+                            <MenuItem Header="{DynamicResource Menu_Setting_Detector_cfg}" Tag="DetectorSetting"  Click="SettingClick"/>
+                            <MenuItem Header="{DynamicResource Menu_Setting_Detector_Correction}">
+                                <MenuItem Header="{DynamicResource Menu_Setting_Detector_Correction_Offset}" Tag="DetectorOffsetCorrection"  Click="SettingClick"/>
+                                <MenuItem Header="{DynamicResource Menu_Setting_Detector_Correction_Gain}" Tag="DetectorGainCorrection" Click="SettingClick"/>
+                                <MenuItem Header="{DynamicResource Menu_Setting_Detector_Correction_Defect}" Tag="DetectorDefectCorrection" Click="SettingClick"/>
+                            </MenuItem>
+                            <MenuItem Header="{DynamicResource Menu_Setting_Detector_Reconnection}" Click="SettingClick" Tag="DetectorReConnect"/>
+
+                        </MenuItem>
+                        <MenuItem Header="{DynamicResource Menu_Setting_HV}">
+                            <MenuItem Header="{DynamicResource Menu_Setting_HV_Port}" Tag="PortSetting" Click="SettingClick" />
+                            <MenuItem Header="{DynamicResource Menu_Setting_HV_PreHeat}" Tag="PreheatSetting" Click="SettingClick" />
+                            <MenuItem Header="{DynamicResource Menu_Setting_HV_Reconnection}" Tag="PortReOpen" Click="SettingClick" />
+                            <MenuItem Header="{DynamicResource Menu_Setting_HV_Security}" Tag="SafetySetting" Click="SettingClick"/>
+                        </MenuItem>
+                        <MenuItem IsCheckable="False" Header="{DynamicResource Menu_Setting_General}" Tag="GeneralSetting"  Click="SettingClick"/>
+                        <MenuItem Header="{DynamicResource Menu_Setting_Label}" Tag="FilmSetting" Click="SettingClick"/>
+                    </MenuItem>
+                    <!--<MenuItem Header="实验(H)">
+                        <MenuItem Header="静态多能采集合成" ToolTip="只能在静态单张图像模式下使用" Click="Help" Tag="MultiEnergyAvgGrab"/>
+                    </MenuItem>-->
+                    <MenuItem Header="{DynamicResource Menu_Help}">
+                        <MenuItem Header="{DynamicResource Menu_Help_RepairReport}" Click="Help" Tag="ReportUpdate"/>
+                    </MenuItem>
+                    <MenuItem Header="{DynamicResource Menu_Language}">
+                        <MenuItem Header="{DynamicResource Menu_Language_zhCN}" Click="LanguageSetting" Tag="CN"/>
+                        <MenuItem Header="{DynamicResource Menu_Language_enUS}" Click="LanguageSetting" Tag="US"/>
+                    </MenuItem>
+                </Menu>
+
+                <Viewbox HorizontalAlignment="Center" Stretch="Uniform" x:Name="vbProductInfo">
+                    <TextBlock HorizontalAlignment="Center">
+                        <Label Content="{DynamicResource Top_Solution}" FontSize="17"/>
+                        <Label x:Name="lblExamType" Content="--" FontSize="17"/>
+                        <Label x:Name="lblKV" Content="0kV" FontSize="17"/>
+                        <Label x:Name="lblUA" Content="0uA" FontSize="17"/>
+                        <Label x:Name="lblTime" Content="0s" FontSize="17"/>
+                        <Label x:Name="lblFps" Content="0Fps" FontSize="17"/>
+                        <Label Content="∥"/>
+                <Label HorizontalAlignment="Center" FontSize="17" Content="{DynamicResource Top_ProductName}" Foreground="LightGray" />
+                <TextBox IsReadOnly="True" FontSize="17" Background="Transparent" BorderThickness="0,0,0,1" Text="--" Foreground="{DynamicResource BtnForeground}" x:Name="txtProductName"/>
+                    <Label HorizontalAlignment="Center" FontSize="17" Content="{DynamicResource Top_ProductType}" Foreground="LightGray" />
+                <TextBox IsReadOnly="True" FontSize="17" Background="Transparent" BorderThickness="0,0,0,1" Text="--" Foreground="{DynamicResource BtnForeground}" x:Name="txtProductType"/>
+                    <Label HorizontalAlignment="Center" FontSize="17" Content="{DynamicResource Top_ProductSpecification}" Foreground="LightGray" />
+                <TextBox IsReadOnly="True" FontSize="17" Background="Transparent" BorderThickness="0,0,0,1" Text="--" Foreground="{DynamicResource BtnForeground}" x:Name="txtProductSpe"/>
+                    <!--<Label HorizontalAlignment="Center" FontSize="17" Content="  关键词:" Foreground="LightGray" Visibility="Collapsed"/>
+                <TextBox IsReadOnly="True" FontSize="17" Background="Transparent" BorderThickness="0,0,0,1" Text="" Foreground="{DynamicResource BtnForeground}" x:Name="txtProductKeywords" Visibility="Collapsed"/>-->
+                    </TextBlock>
+                </Viewbox>
+
+            </Grid>
+        </Border>
+
+
+        <!--主界面-->
+        <Grid Grid.Row="1" Margin="10,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="*" x:Name="cloImageView"/>
+                <ColumnDefinition Width="240"/>
+            </Grid.ColumnDefinitions>
+
+            <GridSplitter Grid.Column="0" Width="2" Background="#FF686868" IsEnabled="False">
+                <GridSplitter.Effect>
+                    <DropShadowEffect ShadowDepth="1" Color="Gray"/>
+                </GridSplitter.Effect>
+            </GridSplitter>
+            <!--模块菜单-->
+            <StackPanel Orientation="Vertical" Grid.Column="0">
+                <StackPanel.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource GrayButtonStyle}">
+                        <Setter Property="Margin" Value="2"/>
+                        <Setter Property="Width" Value="50"/>
+                        <Setter Property="Height" Value="50"/>
+                    </Style>
+                    <Style TargetType="RadioButton" BasedOn="{StaticResource ImageRadioButtonStyle}">
+                        <Setter Property="Margin" Value="2"/>
+                        <Setter Property="Width" Value="50"/>
+                        <Setter Property="Height" Value="50"/>
+                    </Style>
+                    <Style TargetType="ToggleButton" BasedOn="{StaticResource GrayToggleButtonStyle}">
+                        <Setter Property="Margin" Value="2"/>
+                        <Setter Property="Width" Value="50"/>
+                        <Setter Property="Height" Value="50"/>
+                    </Style>
+                    <Style TargetType="Path">
+                        <Setter Property="Margin" Value="5"/>
+                        <Setter Property="Fill" Value="{DynamicResource BtnForeground}"/>
+                        <Setter Property="Stretch" Value="Uniform"/>
+                    </Style>
+                </StackPanel.Resources>
+                <Label Content="{DynamicResource Main_ProductRegistration}" FontSize="21"/>
+                <GridSplitter HorizontalAlignment="Left" Height="3" Width="120" Background="#FF686868" IsEnabled="False" Margin="0,0,0,4"/>
+                <WrapPanel Orientation="Horizontal" Margin="0">
+                    <ToggleButton x:Name="btnRegister" ToolTip="{DynamicResource Tip_ProductRegistration}">
+                        <Path Data="M787.43719 954.992323 168.220283 954.992323c-56.898895 0-103.201453-43.002396-103.201453-95.847975L65.018829 220.207307c0-52.841485 42.827411-87.296205 99.723236-87.296205l498.629481 0c19.022239 0 20.862143 5.771447 20.862143 23.396873 0 17.641799-1.839905 23.580045-20.862143 23.580045L164.742065 179.88802c-18.952654 0-49.862641 29.371958-49.862641 46.971801l0 634.18276c0 17.637706 30.909987 46.975894 49.862641 46.975894l623.288642 0c18.98233 0 49.862641-29.339212 49.862641-46.975894L837.893348 367.792621c0-17.637706-0.675382-51.746548 18.34174-51.746548 19.027355 0 31.520901 10.616802 31.520901 28.260647l0 516.734838C887.757013 913.88816 844.330968 954.992323 787.43719 954.992323L787.43719 954.992323 787.43719 954.992323zM585.328076 443.835528c-8.80862 0-17.6111-3.131317-24.317848-9.360182-13.455453-12.495592-13.455453-32.68133 0-45.169759L902.882502 71.816652c13.450337-12.497639 35.195593-12.497639 48.640814 0 13.453407 12.488429 13.453407 32.677237 0 45.165666L609.654111 434.475346C602.945315 440.732863 594.136695 443.835528 585.328076 443.835528L585.328076 443.835528 585.328076 443.835528zM438.988126 438.259532 239.536538 438.259532c-18.990516 0-36.918841-8.727779-36.918841-26.372647 0-17.630542 17.928325-20.608364 36.918841-20.608364l199.451588 0c18.9854 0 38.84061 2.977821 38.84061 20.608364C477.82362 429.531753 457.978642 438.259532 438.988126 438.259532L438.988126 438.259532 438.988126 438.259532zM638.439714 626.157993 239.536538 626.157993c-18.990516 0-36.918841-4.913916-36.918841-22.584368 0-17.672498 17.928325-24.390503 36.918841-24.390503l398.903176 0c19.022239 0 45.793976 6.718005 45.793976 24.390503C684.23369 621.244077 657.461953 626.157993 638.439714 626.157993L638.439714 626.157993 638.439714 626.157993zM638.439714 626.157993"/>
+                    </ToggleButton>
+                    <Button Click="ProductBrower_Click" ToolTip="{DynamicResource Tip_ProductHistory}">
+                        <Path>
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <PathGeometry Figures="M197.632 949.76c-58.88 0-67.072-13.312-67.072-66.56l-2.048-752.64c0-51.712 7.168-66.56 67.072-66.56h634.368c50.688 0 66.56 23.04 66.56 66.56v385.024c0 26.624-39.936 26.624-39.936 0v-388.096c0-13.824-9.728-24.064-25.088-24.064H194.56c-13.824 0-24.576 10.24-24.576 24.064v757.76c0 13.824 9.216 24.064 24.576 24.064h325.632c28.672 0 31.232 39.936 0 39.936l-322.56 0.512z"/>
+                                    <PathGeometry Figures="M602.112 479.744c-238.592-1.536-238.592 354.304-2.048 354.304 237.568 0 234.496-352.768 2.048-354.304z m-2.048 315.392c-188.416 2.56-183.808-279.04 0-279.04 185.344 0 186.368 276.48 0 279.04z"/>
+                                    <PathGeometry Figures="M788.992 881.664l-80.384-81.92c-11.776-11.776-10.752-28.672-2.048-36.864 8.192-8.192 25.088-9.728 36.864 2.048l82.432 82.432c13.824 13.824 13.824 29.696 4.608 39.424-10.752 10.752-27.136 9.216-41.472-5.12zM730.112 256.512h-459.264c-15.36 0-25.6-7.68-25.6-23.552 0-16.384 14.336-20.992 25.6-20.992h464.896c12.8 0 23.04 10.24 22.528 23.04 0 16.896-11.264 21.504-28.16 21.504z m-248.832 155.136h-206.336c-17.92 0-29.696-8.704-29.696-22.016s11.776-22.016 29.696-22.016h206.336c17.92 0 29.696 8.704 29.696 22.016 0 13.312-12.288 22.016-29.696 22.016z m-146.432 155.136h-59.904c-17.92 0-29.696-8.704-29.696-22.016s11.776-22.016 29.696-22.016h59.904c17.92 0 29.696 8.704 29.696 22.016s-11.776 22.016-29.696 22.016z"/>
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                    </Button>
+                </WrapPanel>
+
+                <Label Content="{DynamicResource Main_ProductInspection}" FontSize="21"/>
+                <GridSplitter HorizontalAlignment="Left" Height="3" Width="120" Background="#FF686868" IsEnabled="False" Margin="0,0,0,4"/>
+
+                <WrapPanel Orientation="Horizontal">
+                    <Button ToolTip="{DynamicResource Tip_ResetHVError}" Click="PortCMD" Tag="ResetHV">
+                        <Path Data="M849.311744 134.41536 227.216384 512l622.941184 377.583616-0.8448-755.161088M849.311744 80.308224c9.194496-0.04608 18.25792 2.285568 26.2912 6.764544 17.18784 9.551872 27.836416 27.677696 27.823104 47.34976l0.845824 755.161088c0.013312 19.658752-10.648576 37.784576-27.824128 47.34976-8.032256 4.478976-17.094656 6.816768-26.2912 6.764544-10.092544 0-19.975168-2.80064-28.563456-8.112128L198.672384 558.002176c-25.40544-15.748096-33.23392-49.106944-17.491968-74.50624 4.406272-7.107584 10.390528-13.092864 17.491968-17.491968l622.076928-377.583616c8.573952-5.311488 18.468864-8.12544 28.563456-8.118272l0 0L849.312768 80.308224zM146.778112 79.085568c-14.942208 0-27.057152 12.114944-27.057152 27.057152l0 811.713536c0 14.942208 12.114944 27.057152 27.057152 27.057152 14.942208 0 27.057152-12.114944 27.057152-27.057152l0-811.713536C173.835264 91.200512 161.72032 79.085568 146.778112 79.085568z">
+                            <Path.LayoutTransform>
+                                <RotateTransform Angle="-90"/>
+                            </Path.LayoutTransform>
+                        </Path>
+                    </Button>
+                    <Button ToolTip="{DynamicResource Tip_Preheat}" Click="PortCMD" Tag="Preheat" MouseRightButtonUp="PreheatSetting">
+                        <Path Data="M791.773216 1024l-22.521994-97.595308s219.214076-55.053763 217.71261-182.177908a279.773216 279.773216 0 0 0-85.583578-200.195503 363.855327 363.855327 0 0 1-106.604105-262.756599c0-205.70088 200.195503-273.767351 302.795699-281.274682l7.006842 100.097752L1101.075269 50.048876l3.503421 50.048876c-8.508309 0-209.204301 18.017595-210.205278 181.677419a265.759531 265.759531 0 0 0 83.081133 200.195503 374.86608 374.86608 0 0 1 109.10655 264.258065c2.502444 204.699902-282.776149 275.268817-294.787879 277.771261zM406.897361 1024l-22.521994-97.595308s219.214076-55.053763 217.71261-182.177908a279.773216 279.773216 0 0 0-85.583578-200.195503 363.354839 363.354839 0 0 1-106.604106-262.756599c0-205.70088 200.195503-273.767351 302.795699-281.274682l7.006843 100.097752-3.503422-50.048876 3.503422 50.048876c-8.508309 0-209.204301 18.017595-209.70479 181.677419a265.759531 265.759531 0 0 0 83.081134 200.195503A374.86608 374.86608 0 0 1 700.684262 743.726295c4.00391 207.202346-281.274682 277.771261-293.786901 280.273705zM22.521994 1024L0 926.905181s219.214076-55.053763 217.71261-182.177908a279.773216 279.773216 0 0 0-85.583578-200.195504A363.855327 363.855327 0 0 1 25.524927 281.274682C26.025415 75.573803 223.718475 7.507331 328.320626 0l7.006842 100.097752-3.503421-50.048876 3.503421 50.048876c-8.508309 0-209.204301 18.017595-210.205278 181.677419a265.759531 265.759531 0 0 0 83.081134 200.195503 374.86608 374.86608 0 0 1 109.106549 264.258065C320.312805 950.928641 34.533724 1021.497556 22.521994 1024z"/>
+                    </Button>
+                    <RadioButton ToolTip="{DynamicResource Tip_Spot}" Click="ProductExam_Click" Tag="单片" x:Name="btnSpot" IsChecked="True" MouseRightButtonDown="ExamSetting">
+                        <Path Data="M876 262H747.21L680 151H344l-67.19 111H148c-28 0-84 27.78-84 82.46v445.28c0 46 42 83.3 78.17 83.3h735.58C914.5 873 960 834 960 790.59V345.37c0-27.78-28-83.33-84-83.33z m28 528.55c0 11-17.91 26.29-26.25 26.91H142.33c-6.49-0.51-22.33-13-22.33-27.75V344.49c0-17.6 23.82-26.47 28-26.91h160.51l16.32-27 50.87-84.08h274.44l50 84.12 15.39 27H876c19.74 0 27.73 25.58 28 27.78v445.19zM512 345.37c-108.25 0-196 87-196 194.4s87.75 194.41 196 194.41 196-87 196-194.41-87.75-194.4-196-194.4z m0 333.27c-77.19 0-140-62.29-140-138.87s62.81-138.85 140-138.85 140 62.29 140 138.85-62.81 138.86-140 138.86z"/>
+                    </RadioButton>
+                    <RadioButton ToolTip="{DynamicResource Tip_Expose}" Click="ProductExam_Click" Tag="动态"  MouseRightButtonDown="ExamSetting" x:Name="btnExpose">
+                        <Path Stretch="Uniform" Data="M960 192h-28.384c-16.8 0-32.928 6.624-44.928 18.432L800 295.936V256c0-53.024-43.008-96-96-96H96c-52.928 0-96 43.04-96 96v512c0 52.992 42.976 96 96 96h608c52.992 0 96-43.008 96-96v-39.072l86.688 85.504c12 11.808 28.128 18.432 44.928 18.432H960c35.328 0 64-28.64 64-64V256c0-35.36-28.672-64-64-64zM96 800c-17.664 0-32-14.368-32-32V256c0-17.696 14.304-32 32-32h608c17.632 0 32 14.336 32 32v512c0 17.632-14.368 32-32 32H96z m864-31.136h-32l-128-128V640l-32-32V416l160-160h32v512.864z"/>
+                    </RadioButton>
+                    <Button ToolTip="{DynamicResource Tip_StartACQ}" Click="ProductExamStart_Click" Tag="RAD" IsEnabled="False" x:Name="StartGrab">
+                        <Path>
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <PathGeometry Figures="M513.758508 1023.997013a511.973761 511.973761 0 1 1 360.514857-150.17897A508.560603 508.560603 0 0 1 513.758508 1023.997013z m0-961.230736A449.256976 449.256976 0 1 0 963.015484 512.023252 450.110265 450.110265 0 0 0 513.758508 62.339632z"/>
+                                    <PathGeometry Figures="M704.468734 512.023252L381.49862 269.26236v485.521784L704.468734 512.023252z"/>
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                    </Button>
+                    <Button ToolTip="{DynamicResource Tip_StopACQ}" Click="ProductExamStop_Click" Tag="RAD" IsEnabled="{Binding IsChecked,ElementName=btnExpose}">
+                        <Path StrokeThickness="0.5" Stroke="{DynamicResource BtnForeground}">
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <PathGeometry Figures="M512 42.666667C252.8 42.666667 42.666667 252.8 42.666667 512s210.133333 469.333333 469.333333 469.333333 469.333333-210.133333 469.333333-469.333333S771.2 42.666667 512 42.666667zM512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512 85.333333 276.352 276.352 85.333333 512 85.333333c235.648 0 426.666667 191.018667 426.666667 426.666667C938.666667 747.648 747.648 938.666667 512 938.666667z"/>
+                                    <PathGeometry Figures="M341.333333 341.333333l341.333333 0 0 341.333333-341.333333 0 0-341.333333Z"/>
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                    </Button>
+                    <Button ToolTip="{DynamicResource Tip_MultiEnergyImage}" Click="ProductExamMultiEnergy_Click" Tag="MultiEnergy" x:Name="btnMultiEnergy" IsEnabled="{Binding IsChecked,ElementName=btnSpot}">
+                        <Path Stroke="{DynamicResource BtnForeground}" StrokeThickness="0" Margin="6">
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <PathGeometry Figures="M921.6 887.466667V273.066667c0-10.24-6.826667-17.066667-17.066667-17.066667h-34.133333c-10.24 0-17.066667 6.826667-17.066667 17.066667v512c0 27.306667-23.893333 51.2-51.2 51.2h-580.266666c-10.24 0-17.066667 6.826667-17.066667 17.066666v34.133334c0 10.24 6.826667 17.066667 17.066667 17.066666h682.666666c10.24 0 17.066667-6.826667 17.066667-17.066666z"/>
+                                    <PathGeometry Figures="M819.2 785.066667V170.666667c0-10.24-6.826667-17.066667-17.066667-17.066667h-34.133333c-10.24 0-17.066667 6.826667-17.066667 17.066667v512c0 27.306667-23.893333 51.2-51.2 51.2h-580.266666c-10.24 0-17.066667 6.826667-17.066667 17.066666v34.133334c0 10.24 6.826667 17.066667 17.066667 17.066666h682.666666c10.24 0 17.066667-6.826667 17.066667-17.066666z"/>
+                                    <PathGeometry Figures="M696.32 699.733333c13.653333 0 20.48-6.826667 20.48-17.066666V34.133333c0-10.24-6.826667-17.066667-17.066667-17.066666H17.066667C6.826667 17.066667 0 23.893333 0 34.133333v648.533334c0 3.413333 0 6.826667 3.413333 6.826666 0 3.413333 3.413333 3.413333 3.413334 3.413334h3.413333c3.413333 0 3.413333 3.413333 6.826667 3.413333 0 3.413333 679.253333 3.413333 679.253333 3.413333z m-13.653333-648.533333v556.373333l-170.666667-409.6c-3.413333-6.826667-6.826667-10.24-13.653333-10.24s-13.653333 3.413333-17.066667 10.24l-143.36 256-102.4-88.746666c-3.413333-3.413333-10.24-3.413333-13.653333-3.413334-3.413333 0-10.24 3.413333-10.24 6.826667L34.133333 624.64V51.2h648.533334z"/>
+                                    <PathGeometry Figures="M221.866667 204.8m-85.333334 0a85.333333 85.333333 0 1 0 170.666667 0 85.333333 85.333333 0 1 0-170.666667 0Z"/>
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                    </Button>
+
+                    <ToggleButton ToolTip="{DynamicResource Tip_RecordButton}" Click="ProductExamRing_Click" Tag="Ring" x:Name="btnIsStored" IsEnabled="{Binding IsChecked,ElementName=btnExpose}" IsChecked="False">
+                        <Path Stroke="{DynamicResource BtnForeground}" StrokeThickness="0" Margin="6">
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <PathGeometry Figures="M511.963581 383.972918c64.158228 0 116.355148-52.196919 116.355148-116.355147s-52.196919-116.355148-116.355148-116.355148-116.355148 52.196919-116.355148 116.355148 52.196919 116.355148 116.355148 116.355147z m5.817757-174.532721c35.290516 0 63.995331 28.704815 63.995332 63.995331S553.071855 337.430859 517.781338 337.430859a64.065144 64.065144 0 0 1-63.995331-63.995331c0-35.290516 28.704815-63.995331 63.995331-63.995331zM628.318729 756.309391c0-64.158228-52.196919-116.355148-116.355148-116.355148s-116.355148 52.196919-116.355148 116.355148 52.196919 116.355148 116.355148 116.355148 116.355148-52.196919 116.355148-116.355148z m-174.532722 5.817757c0-35.290516 28.704815-63.995331 63.995331-63.995331s63.995331 28.704815 63.995332 63.995331c0 35.278881-28.704815 63.995331-63.995332 63.995332a64.065144 64.065144 0 0 1-63.995331-63.995332zM756.309391 628.318729c64.158228 0 116.355148-52.196919 116.355148-116.355148s-52.196919-116.355148-116.355148-116.355148-116.355148 52.196919-116.355148 116.355148 52.196919 116.355148 116.355148 116.355148z m-5.817757-174.532722c35.290516 0 63.995331 28.704815 63.995331 63.995331S785.78215 581.776669 750.491634 581.776669a64.065144 64.065144 0 0 1-63.995332-63.995331c0-35.290516 28.704815-63.995331 63.995332-63.995331zM267.617771 395.608433c-64.158228 0-116.355148 52.196919-116.355148 116.355148 0 64.146593 52.196919 116.355148 116.355148 116.355148s116.355148-52.208555 116.355147-116.355148c0-64.158228-52.196919-116.355148-116.355147-116.355148z m5.817757 186.168236a64.065144 64.065144 0 0 1-63.995331-63.995331c0-35.290516 28.704815-63.995331 63.995331-63.995331 35.278881 0 63.995331 28.704815 63.995331 63.995331S308.714409 581.776669 273.435528 581.776669z m713.047616 386.624885h-242.367772a510.403491 510.403491 0 0 0 129.852345-94.422202 510.14751 510.14751 0 0 0 109.722904-162.722674A508.751248 508.751248 0 0 0 1023.926231 511.963581a508.786154 508.786154 0 0 0-40.247246-199.293097 510.194052 510.194052 0 0 0-109.699633-162.722674A510.170781 510.170781 0 0 0 711.256678 40.259812 508.727977 508.727977 0 0 0 511.963581 0.000931a508.727977 508.727977 0 0 0-199.281462 40.247245 510.240594 510.240594 0 0 0-162.734309 109.699634A510.240594 510.240594 0 0 0 40.259812 312.670484 508.704706 508.704706 0 0 0 0.000931 511.963581c0 69.114958 13.532104 136.158794 40.247246 199.293097a510.194052 510.194052 0 0 0 109.699633 162.722674 510.182416 510.182416 0 0 0 162.734309 109.699633 508.739612 508.739612 0 0 0 207.158705 40.189068c0.593411 0.034907 1.198458 0.058178 1.815141 0.058178h464.827179a27.750703 27.750703 0 1 0 0-55.524677z m-795.403789-135.553747A452.40045 452.40045 0 0 1 58.178505 511.963581a452.319001 452.319001 0 0 1 132.912485-320.872591A452.307366 452.307366 0 0 1 335.336467 93.829722 450.829655 450.829655 0 0 1 511.963581 58.178505c61.272621 0 120.695195 11.98458 176.627114 35.651217a452.307366 452.307366 0 0 1 144.245477 97.261268A452.342272 452.342272 0 0 1 965.748657 511.963581c0 61.272621-11.98458 120.695195-35.651217 176.627114a452.307366 452.307366 0 0 1-97.261268 144.245477A452.435356 452.435356 0 0 1 511.963581 965.748657a452.342272 452.342272 0 0 1-320.872591-132.912485z"/>
+                                    <!--<PathGeometry Figures="M686.016 912l-576 0c-44.096 0-80-35.904-80-80L30.016 478.016c0-44.096 35.904-80 80-80l576 0c44.096 0 80 35.904 80 80L766.016 832C766.016 876.096 730.112 912 686.016 912zM110.016 430.016c-26.496 0-48 21.504-48 48L62.016 832c0 26.432 21.504 48 48 48l576 0c26.432 0 48-21.568 48-48L734.016 478.016c0-26.496-21.568-48-48-48L110.016 430.016z"/>
+                                    <PathGeometry Figures="M224 362.368c-78.848 0-142.976-64.128-142.976-142.976S145.216 76.416 224 76.416c78.848 0 143.04 64.128 143.04 142.976S302.848 362.368 224 362.368zM224 108.416c-29.632 0-57.536 11.52-78.464 32.512C124.608 161.856 113.088 189.76 113.088 219.392c0 61.248 49.792 110.976 110.976 110.976s110.976-49.792 110.976-110.976C334.976 158.208 285.248 108.416 224 108.416z"/>
+                                    <PathGeometry Figures="M571.904 362.368c-78.848 0-142.976-64.128-142.976-142.976s64.128-142.976 142.912-142.976c78.848 0 143.04 64.128 143.04 142.976S650.752 362.368 571.904 362.368zM571.904 108.416c-29.632 0-57.472 11.52-78.464 32.512S460.928 189.76 460.928 219.392c0 61.248 49.792 110.976 110.976 110.976s110.976-49.792 110.976-110.976C682.88 158.208 633.088 108.416 571.904 108.416z"/>
+                                    <PathGeometry Figures="M996.032 846.016c-2.944 0-5.888-0.832-8.448-2.432l-164.032-102.016c-4.672-2.88-7.552-8.064-7.552-13.568L816 555.776c0-5.504 2.88-10.688 7.552-13.568l164.032-102.08c4.864-3.008 11.2-3.2 16.192-0.384 5.12 2.816 8.256 8.192 8.256 14.016l0 376.256c0 5.824-3.136 11.2-8.256 14.016C1001.344 845.312 998.656 846.016 996.032 846.016zM848 719.104l132.032 82.048L980.032 482.56 848 564.608 848 719.104z"/>-->
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                    </ToggleButton>
+                </WrapPanel>
+                <WrapPanel Orientation="Horizontal" >
+                    <Label Content="{DynamicResource Main_ProductExport}" FontSize="21"/>
+                    <GridSplitter HorizontalAlignment="Left" Height="3" Width="120" Background="#FF686868" Margin="0,0,0,4"  IsEnabled="False"/>
+
+                    <Button ToolTip="{DynamicResource Tip_Bitmap}" Click="Excute" Tag="SaveImage" MouseRightButtonDown="SaveScreen">
+                        <Path>
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <PathGeometry Figures="M32 880h960a32 32 0 0 0 32-32V176a32 32 0 0 0-32-32H32a32 32 0 0 0-32 32v672a32 32 0 0 0 32 32z m32-64v-49.84l318.944-289.952 170.432 170.416A31.968 31.968 0 0 0 601.6 643.2l75.008-100.016L960 798.256V816H64z m896-608v504.16L693.408 472.224a31.968 31.968 0 0 0-47.008 4.576l-73.856 98.48-165.92-165.904a31.968 31.968 0 0 0-44.144-1.04L64 679.664V208h896z"/>
+                                    <PathGeometry Figures="M816 464c61.76 0 112-50.256 112-112s-50.24-112-112-112-112 50.256-112 112 50.24 112 112 112z m0-160c26.464 0 48 21.536 48 48s-21.536 48-48 48-48-21.536-48-48 21.536-48 48-48z"/>
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                    </Button>
+                    <Button ToolTip="{DynamicResource Tip_ExportAVI}" Click="Excute" Tag="SaveAVI" x:Name="wplReport" IsEnabled="False">
+                        <Path Stroke="{DynamicResource BtnForeground}" StrokeThickness="0.75" Margin="7.5">
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <PathGeometry Figures="M909.1 64.3H112.9c-27.3 0-49.5 22.2-49.5 49.5V910c0 27.3 22.2 49.5 49.5 49.5h796.3c27.3 0 49.5-22.2 49.5-49.5V113.8c-0.1-27.3-22.3-49.5-49.6-49.5zM193.2 926.5h-80.3c-9.1 0-16.5-7.4-16.5-16.5V800.3h96.8v126.2z m0-159.2H96.4V618.8h96.8v148.5z m0-181.5H96.4V437.3h96.8v148.5z m0-181.5H96.4V255.8h96.8v148.5z m0-181.5H96.4v-109c0-9.1 7.4-16.5 16.5-16.5h80.3v125.5z m605 703.7h-572V97.3h572v829.2zM925.6 910c0 9.1-7.4 16.5-16.5 16.5h-77.9V801.3h94.4V910z m0-141.7h-94.4V619.8h94.4v148.5z m0-181.5h-94.4V438.3h94.4v148.5z m0-181.5h-94.4V256.8h94.4v148.5z m0-181.5h-94.4V97.3h77.9c9.1 0 16.5 7.4 16.5 16.5v110z"/>
+                                    <PathGeometry Figures="M393.7 689c2.6 1.5 5.4 2.2 8.3 2.2s5.7-0.7 8.3-2.2l282.1-162.9c5.1-2.9 8.3-8.4 8.3-14.3s-3.1-11.3-8.3-14.3L410.2 334.6c-5.1-2.9-11.4-2.9-16.5 0s-8.3 8.4-8.3 14.3v325.8c0.1 5.9 3.2 11.3 8.3 14.3z m24.8-311.5l232.6 134.3-232.6 134.3V377.5z"/>
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                    </Button>
+                    <Button ToolTip="{DynamicResource Tip_Print}" Click="Excute" Tag="Print">
+                        <Path Stroke="{DynamicResource BtnForeground}" StrokeThickness="0">
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <PathGeometry Figures="M704 426.666667h128a21.333333 21.333333 0 1 1 0 42.666666h-128a21.333333 21.333333 0 1 1 0-42.666666z"/>
+                                    <PathGeometry Figures="M913.066667 725.333333H853.333333v128a85.333333 85.333333 0 0 1-85.333333 85.333334H256a85.333333 85.333333 0 0 1-85.333333-85.333334v-128H110.933333A68.266667 68.266667 0 0 1 42.666667 657.066667V366.933333A110.933333 110.933333 0 0 1 153.6 256H170.666667V170.666667a85.333333 85.333333 0 0 1 85.333333-85.333334h512a85.333333 85.333333 0 0 1 85.333333 85.333334v85.333333h17.066667A110.933333 110.933333 0 0 1 981.333333 366.933333v290.133334a68.266667 68.266667 0 0 1-68.266666 68.266666zM213.333333 853.333333a42.666667 42.666667 0 0 0 42.666667 42.666667h512a42.666667 42.666667 0 0 0 42.666667-42.666667v-238.933333a17.066667 17.066667 0 0 0-17.066667-17.066667H230.4a17.066667 17.066667 0 0 0-17.066667 17.066667zM810.666667 170.666667a42.666667 42.666667 0 0 0-42.666667-42.666667H256a42.666667 42.666667 0 0 0-42.666667 42.666667v85.333333h597.333334z m128 196.266666A68.266667 68.266667 0 0 0 870.4 298.666667H153.6A68.266667 68.266667 0 0 0 85.333333 366.933333v290.133334a25.6 25.6 0 0 0 25.6 25.6H170.666667v-85.333334a42.666667 42.666667 0 0 1 42.666666-42.666666h597.333334a42.666667 42.666667 0 0 1 42.666666 42.666666v85.333334h59.733334a25.6 25.6 0 0 0 25.6-25.6z"/>
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                    </Button>
+
+                    <Button ToolTip="{DynamicResource Tip_Report}" Click="Excute" Tag="Report" IsEnabled="{Binding IsEnabled,ElementName=wplReport}">
+                        <Path>
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <PathGeometry Figures="M271.058824 301.176471h481.882352v60.235294H271.058824zM271.058824 481.882353h481.882352v60.235294H271.058824zM271.058824 662.588235h481.882352v60.235294H271.058824z"/>
+                                    <PathGeometry Figures="M777.637647 0H210.823529a120.470588 120.470588 0 0 0-120.470588 120.470588v783.058824a120.470588 120.470588 0 0 0 120.470588 120.470588h602.352942a120.470588 120.470588 0 0 0 120.470588-120.470588V156.009412zM752.941176 60.235294l120.470589 120.470588h-120.470589zM150.588235 903.529412V120.470588a60.235294 60.235294 0 0 1 60.235294-60.235294h481.882353v180.705882h180.705883v662.588236a60.235294 60.235294 0 0 1-60.235294 60.235294H210.823529a60.235294 60.235294 0 0 1-60.235294-60.235294z"/>
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+
+                    </Button>
+
+                    <Button ToolTip="{DynamicResource Tip_OpenWorkDirectory}" Click="Excute" Tag="OpenFolder"  IsEnabled="{Binding IsEnabled,ElementName=wplReport}">
+                        <Path Stroke="{DynamicResource BtnForeground}" Margin="5.3" StrokeThickness="1" Data="M981.162667 366.933333H921.6v-106.973866a46.677333 46.677333 0 0 0-46.626133-46.626134H452.522667l-85.333334-119.466666H46.626133A46.6944 46.6944 0 0 0 0 140.4928v745.591467h0.1024c-0.085333 9.608533 2.901333 19.012267 8.9088 26.88A43.451733 43.451733 0 0 0 43.776 930.133333h763.886933c19.729067 0 37.102933-13.294933 41.813334-30.941866L1024 420.676267v-3.0208c0-29.3888-18.0224-50.722133-42.837333-50.722134zM34.133333 140.4928c0-6.894933 5.614933-12.4928 12.4928-12.4928h302.984534l85.333333 119.466667h440.0128c6.894933 0 12.4928 5.597867 12.4928 12.4928V366.933333H217.275733c-2.4576 0-4.898133 0.2048-7.2704 0.6144-16.605867 2.781867-30.4128 14.8992-34.525866 30.3104L34.133333 783.342933V140.4928z m782.830934 748.3904a9.659733 9.659733 0 0 1-9.301334 7.1168H43.776a9.4208 9.4208 0 0 1-7.645867-3.7888c-1.0752-1.399467-2.730667-4.369067-2.0992-6.9632l173.9264-477.064533a9.659733 9.659733 0 0 1 9.301334-7.1168H981.162667c6.485333 0 8.1408 9.3184 8.567466 13.9776L816.964267 888.8832z"/>
+                    </Button>
+                    <Button ToolTip="{DynamicResource Tip_SaveCurrentData}" Click="Excute" Tag="SaveADCM">
+                        <Path Stroke="{DynamicResource BtnForeground}" StrokeThickness="0.75" Margin="7">
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <PathGeometry Figures="M899.44 1023.444H124.56c-61.422 0-111.214-49.792-111.214-111.214V111.77C13.346 50.348 63.138 0.556 124.559 0.556h774.882c61.421 0 111.213 49.792 111.213 111.214v800.46c0 61.422-49.792 111.214-111.213 111.214zM787.394 60.61H237.997v350.602h549.396V60.61z m164.874 41.706c0-23.034-18.672-41.706-41.705-41.706h-84.8V450.971h-38.37v-1.39H237.998v1.39H199.63V60.611h-85.913c-23.033 0-41.705 18.672-41.705 41.706v819.366c0 23.034 18.672 41.706 41.705 41.706h796.846c23.033 0 41.705-18.672 41.705-41.706V102.317z m-312.788 59.22h37.534v-0.277h38.369v197.96H601.11V161.26h38.369v0.278z m0 159.314h37.534V199.907H639.48V320.85z"/>
+                                    <PathGeometry Figures=""/>
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                    </Button>
+
+                </WrapPanel>
+                <WrapPanel Orientation="Horizontal">
+                    <Label Content="{DynamicResource Main_ProductView}" FontSize="21"/>
+                    <GridSplitter HorizontalAlignment="Left" Height="3" Width="120" Background="#FF686868" IsEnabled="False" Margin="0,0,0,4"/>
+                    <RadioButton Tag="0" GroupName="PrintLayout" Checked="btnPrintLayout_Checked" IsChecked="True">
+                            <Image Source="pack://application:,,,/NV.DRF.Controls;Component/themes/images/print/V-LayoutTemplate-01.png"/>
+                    </RadioButton>
+                    <RadioButton Tag="1" GroupName="PrintLayout"  Checked="btnPrintLayout_Checked">
+                        <Image Source="pack://application:,,,/NV.DRF.Controls;Component/themes/images/print/V-LayoutTemplate-02.png"/>
+                    </RadioButton>
+                    <RadioButton Tag="2" GroupName="PrintLayout" Checked="btnPrintLayout_Checked">
+                        <Image Source="pack://application:,,,/NV.DRF.Controls;Component/themes/images/print/V-LayoutTemplate-03.png"/>
+                    </RadioButton>
+                    <RadioButton Tag="3" GroupName="PrintLayout"  Checked="btnPrintLayout_Checked">
+                        <Image Source="pack://application:,,,/NV.DRF.Controls;Component/themes/images/print/V-LayoutTemplate-04.png"/>
+                    </RadioButton>
+                    <RadioButton Tag="4" GroupName="PrintLayout"  Checked="btnPrintLayout_Checked">
+                        <Image Source="pack://application:,,,/NV.DRF.Controls;Component/themes/images/print/V-LayoutTemplate-05.png"/>
+                    </RadioButton>
+
+
+                    <CheckBox x:Name="chkMore" Grid.Row="1" Margin="2" Grid.Column="3" Style="{DynamicResource CheckBoxStyle}" Width="50" ToolTip="More">
+                        <Path Stretch="Uniform" Fill="{DynamicResource BtnForeground}" Margin="10,0">
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <PathGeometry Figures="M948.600241 313.87257 539.099706 762.638387c-7.809873 7.844665-18.195408 11.197016-28.435633 10.68127-10.239202 0.515746-20.62576-2.836605-28.435633-10.68127L72.727906 313.87257c-14.659885-14.732539-14.659885-38.600133 0-53.332672 14.6957-14.733563 38.452777-14.733563 53.148477 0L510.664074 682.234149l384.78769-421.693228c14.6957-14.733563 38.451754-14.733563 53.148477 0C963.260126 275.273461 963.260126 299.140031 948.600241 313.87257z"/>
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                    </CheckBox>
+                    <Popup x:Name="popMore"  Height="auto" StaysOpen="False" IsOpen="{Binding IsChecked,Mode=TwoWay,ElementName=chkMore}" PlacementTarget="{Binding ElementName=chkMore}" Placement="Bottom" AllowsTransparency="True" PopupAnimation="Slide" HorizontalOffset="0" >
+                        <Border BorderThickness="2" BorderBrush="Gray" CornerRadius="1" Margin="0" Background="{DynamicResource MenuBG}">
+                            <UniformGrid Width="auto" Height="auto" Rows="4" Columns="2">
+                                <RadioButton Tag="5" GroupName="PrintLayout"  Checked="btnPrintLayout_Checked">
+                                        <Image Source="pack://application:,,,/NV.DRF.Controls;Component/themes/images/print/V-LayoutTemplate-06.png"/>
+                                </RadioButton>
+                                <RadioButton Tag="6" GroupName="PrintLayout"  Checked="btnPrintLayout_Checked">
+                                    <Image Source="pack://application:,,,/NV.DRF.Controls;Component/themes/images/print/V-LayoutTemplate-07.png"/>
+                                </RadioButton>
+                                <RadioButton Tag="7" GroupName="PrintLayout"  Checked="btnPrintLayout_Checked">
+                                    <Image Source="pack://application:,,,/NV.DRF.Controls;Component/themes/images/print/V-LayoutTemplate-08.png"/>
+                                </RadioButton>
+                                <RadioButton Tag="8" GroupName="PrintLayout"  Checked="btnPrintLayout_Checked">
+                                    <Image Source="pack://application:,,,/NV.DRF.Controls;Component/themes/images/print/V-LayoutTemplate-10.png"/>
+                                </RadioButton>
+                                <RadioButton Tag="9"  GroupName="PrintLayout"  Checked="btnPrintLayout_Checked">
+                                    <Image Source="pack://application:,,,/NV.DRF.Controls;Component/themes/images/print/V-LayoutTemplate-11.png"/>
+                                </RadioButton>
+                                <RadioButton Tag="10"  GroupName="PrintLayout"  Checked="btnPrintLayout_Checked">
+                                    <Image Source="pack://application:,,,/NV.DRF.Controls;Component/themes/images/print/V-LayoutTemplate-14.png"/>
+                                </RadioButton>
+                                <RadioButton Tag="11"  GroupName="PrintLayout" Checked="btnPrintLayout_Checked">
+                                    <Image Source="pack://application:,,,/NV.DRF.Controls;Component/themes/images/print/V-LayoutTemplate-15.png"/>
+                                </RadioButton>
+                                <RadioButton Tag="12"  GroupName="PrintLayout"  Checked="btnPrintLayout_Checked">
+                                    <Image Source="pack://application:,,,/NV.DRF.Controls;Component/themes/images/print/V-LayoutTemplate-09.png"/>
+                                </RadioButton>
+                            </UniformGrid>
+                        </Border>
+                    </Popup>
+                </WrapPanel>
+            </StackPanel>
+
+            <!--内容区域-->
+            <Frame x:Name="MainView" Grid.Column="1" Grid.ColumnSpan="2" Margin="5" NavigationUIVisibility="Hidden">
+            </Frame>
+
+        </Grid>
+
+        <Border x:Name="bdStatus" Grid.Row="2" BorderThickness="0,2,0,1" BorderBrush="#FF606060">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" Color="Gray"/>
+            </Border.Effect>
+            
+            <StackPanel Orientation="Horizontal" Width="auto" HorizontalAlignment="Center">
+                <Label x:Name="lblVersion" Content="Ver1.0" Margin="10,0"/>
+
+                <Button>
+                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="1" Data="M660.910035 444.92915H362.967714a80.236339 80.236339 0 0 1-81.296892-78.956361V208.060068A80.236339 80.236339 0 0 1 362.967714 129.103707h297.942321a80.199768 80.199768 0 0 1 81.260321 78.956361v157.912721a80.199768 80.199768 0 0 1-81.260321 78.956361z m-297.942321-263.309772a26.733256 26.733256 0 0 0-27.098964 26.330977v157.912722a26.733256 26.733256 0 0 0 27.098964 26.330977h297.942321a26.769827 26.769827 0 0 0 27.098964-26.330977V207.950355a26.769827 26.769827 0 0 0-27.098964-26.330977H362.967714zM796.331713 0.008777H227.509465A80.199768 80.199768 0 0 0 146.285714 78.965138v866.069724A80.236339 80.236339 0 0 0 227.509465 1023.991223h568.822248A80.199768 80.199768 0 0 0 877.701747 945.034862V78.965138A80.199768 80.199768 0 0 0 796.331713 0.008777zM335.86875 971.365839v-52.661954a26.696685 26.696685 0 0 1 27.098964-26.294406h297.942321a26.733256 26.733256 0 0 1 27.098964 26.294406v52.661954H335.86875z m487.561928-26.330977a26.733256 26.733256 0 0 1-27.098965 26.330977h-54.161357v-52.661954a80.199768 80.199768 0 0 0-81.260321-78.956361H362.967714a80.236339 80.236339 0 0 0-81.296892 78.956361v52.661954H227.509465a26.769827 26.769827 0 0 1-27.098964-26.330977V78.965138a26.769827 26.769827 0 0 1 27.098964-26.330977h568.822248a26.733256 26.733256 0 0 1 27.098965 26.330977v866.069724z"/>
+                </Button>
+                <Label Content="{DynamicResource Bottom_HV}"/>
+
+                <Button ToolTip="{DynamicResource Tip_Connectionstate}">
+                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="3">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M302.4 690.7904l411.904-411.9808c13.3632-13.3632 40.1152-13.3632 53.504 0 13.3888 13.3888 13.3888 40.192 0 53.5552L355.9808 744.448c-13.3632 13.3888-36.7872 13.3888-53.5808 0-13.3632-16.7424-13.3632-40.1664 0-53.6576z"/>
+                                <PathGeometry Figures="M473.2032 777.9072l-130.5856 133.9648c-56.9344 57.0112-167.424 73.728-227.712 13.3888l-20.0704-20.0704c-56.9344-56.8832-40.192-167.424 16.7168-224.4352l130.56-133.9904c46.9248-46.848 127.2576-60.2368 184.192-33.4592l46.8992-43.6224c-77.0048-50.0736-177.4848-40.1664-244.4544 23.552l-170.7776 170.7776c-77.0048 77.0816-77.0048 201.0112 0 274.6368l26.8288 26.88c73.6512 73.6256 197.5296 73.6256 274.5344 0l167.424-170.88c60.288-60.2368 73.6768-147.3792 40.2176-217.6512l-46.8992 46.848c13.3888 53.5552-3.328 113.92-46.8736 154.0608zM597.0816 242.0224l130.5856-130.6368c60.3392-56.8832 170.7264-73.728 227.712-16.7424l20.0704 20.096c56.8832 60.2112 43.4944 170.752-16.7168 227.7888l-130.5856 130.6112c-46.9504 46.848-123.904 60.2368-184.2432 33.4848l-43.4688 46.848c73.728 50.304 177.408 40.2688 241.0752-26.7776l170.752-167.424c77.056-77.1072 77.056-201.0368 0-274.7648l-23.424-26.7776c-76.9536-76.9792-200.832-76.9792-274.56 0L543.552 228.608c-60.3136 56.8832-70.3488 147.3536-40.2432 217.7536l46.9504-46.976c-13.3888-53.6576 6.6816-117.248 46.8224-157.3888z"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                </Button>
+                <Label x:Name="lblHVConn" Content="--" Margin="0,0" FontWeight="Normal"/>
+
+                <Button>
+                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="1">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M722.1248 309.8624l-174.4896 474.9312h-68.1984l-172.032-474.9312h68.1984l129.024 371.712c4.3008 12.288 6.7584 26.4192 9.8304 43.008h1.2288c1.2288-14.1312 5.5296-27.648 11.0592-43.008l129.6384-371.712h65.7408z"/>
+                                <PathGeometry Figures="M515.6864 58.5728c-254.3616 0-460.8 206.4384-460.8 460.8s206.4384 460.8 460.8 460.8 460.8-206.4384 460.8-460.8-206.4384-460.8-460.8-460.8z m0 866.9184c-223.6416 0-404.8896-181.248-404.8896-404.8896S292.0448 115.712 515.6864 115.712 920.576 296.96 920.576 520.6016 739.328 925.4912 515.6864 925.4912z"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                </Button>
+                <Label x:Name="lblHV_KV" Content="0" Margin="0,0"/>
+                <Label  Content="/" Margin="0,0"/>
+                <Label x:Name="lblHV_SettingKV" Content="0" Margin="0,0"/>
+                <Button>
+                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="1">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M512 102.370529c-209.646787 0-380.226814 170.580027-380.226814 380.226814 0 209.646787 170.579003 380.225791 380.226814 380.225791 209.645764 0 380.225791-170.579003 380.225791-380.225791C892.225791 272.950556 721.645764 102.370529 512 102.370529zM512 822.561152c-187.467649 0-339.963809-152.498206-339.963809-339.963809 0-187.467649 152.49616-339.963809 339.963809-339.963809 187.466626 0 339.963809 152.497183 339.963809 339.963809C851.963809 670.062945 699.466626 822.561152 512 822.561152z"/>
+                                <PathGeometry Figures="M594.297354 539.02654 429.967682 539.02654l-38.331004 104.008842-50.664913 0 150.656255-390.308427 42.887786 0 148.244322 390.308427-50.664913 0L594.297354 539.02654zM444.713524 499.079736l135.105071 0-67.016323-184.969759L444.713524 499.079736z"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                </Button>
+                <Label x:Name="lblHV_Cur" Content="0" Margin="0,0"/>
+                <Label  Content="/" Margin="0,0"/>
+                <Label x:Name="lblHV_SettingCur" Content="0" Margin="0,0"/>
+                <Button IsHitTestVisible="False">
+                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="1">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M572.8 922.24H430.08c-69.12 0-126.08-56.32-126.08-126.08v-21.12c0-17.92-8.32-35.2-23.04-48C200.32 657.28 156.8 556.8 161.28 449.92c7.04-174.08 149.12-319.36 323.2-330.24 96.64-6.4 188.8 26.88 259.2 92.8 69.76 65.28 109.44 157.44 109.44 252.8 0 106.88-48 206.08-131.84 272-14.08 10.88-22.4 28.8-22.4 47.36v11.52c-0.64 69.12-56.96 126.08-126.08 126.08zM506.88 182.4c-6.4 0-12.16 0-18.56 0.64C346.88 192 231.04 310.4 225.28 452.48c-3.84 87.04 32 168.96 97.92 225.92 28.8 24.96 45.44 60.16 45.44 96.64v21.12c0 33.92 27.52 62.08 62.08 62.08h142.72c33.92 0 62.08-27.52 62.08-62.08v-11.52c0-38.4 17.28-74.24 46.72-97.92 68.48-53.76 107.52-135.04 107.52-221.44 0-78.72-31.36-151.68-88.96-206.08-53.76-49.92-121.6-76.8-193.92-76.8z"/>
+                                <PathGeometry Figures="M618.24 532.48c-36.48 0-54.4-28.8-64.64-46.08-2.56-4.48-7.04-11.52-9.6-14.72-2.56 3.2-7.04 10.24-9.6 14.72-10.24 17.28-28.16 46.08-64.64 46.08-36.48 0-54.4-28.8-64.64-46.08-2.56-4.48-7.04-11.52-9.6-14.72-2.56 3.2-7.04 10.24-9.6 14.72-10.24 17.28-28.16 46.08-64.64 46.08-17.92 0-32-14.08-32-32 0-17.28 14.08-31.36 31.36-32 2.56-2.56 7.68-10.24 10.88-15.36 10.24-17.28 28.16-46.08 64.64-46.08s54.4 28.8 64.64 46.08c2.56 4.48 7.04 11.52 9.6 14.72 2.56-3.2 7.04-10.24 9.6-14.72 10.24-17.28 28.16-46.08 64.64-46.08 36.48 0 54.4 28.8 64.64 46.08 2.56 4.48 7.04 11.52 9.6 14.72 2.56-3.2 7.04-10.24 9.6-14.72 10.24-17.28 28.16-46.08 64.64-46.08 17.92 0 32 14.08 32 32 0 17.28-14.08 31.36-31.36 32-2.56 2.56-7.68 10.24-10.88 15.36-10.24 17.28-27.52 46.08-64.64 46.08z"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                </Button>
+                <Label x:Name="lblHV_Fila" Content="0"/>
+                <Button >
+                    <Path Fill="{Binding Foreground,ElementName=lblHV_XRayState}" Stretch="Uniform" Margin="1" Data="M561.294 430.076l74.326-128.734c73.876 42.742 123.58 122.624 123.58 214.114h-148.56c0-36.438-19.876-68.302-49.346-85.38z m-98.59 170.768l-74.324 128.732c36.366 21.042 78.588 33.082 123.622 33.082s87.256-12.042 123.622-33.082l-74.326-128.736c-29.85 17.304-67.458 18.046-98.594 0.004z m0.002-170.768l-74.326-128.732c-73.876 42.742-123.58 122.624-123.58 214.114h148.558c0-36.44 19.878-68.304 49.348-85.382zM512 572.1c31.28 0 56.64-25.362 56.64-56.642 0-31.28-25.362-56.636-56.64-56.636s-56.642 25.356-56.642 56.636S480.72 572.1 512 572.1zM924 512c0 227.542-184.458 412-412 412S100 739.542 100 512 284.458 100 512 100s412 184.458 412 412z m-80 0c0-183.51-148.516-332-332-332-183.51 0-332 148.518-332 332 0 183.51 148.516 332 332 332 183.51 0 332-148.518 332-332z"/>
+                </Button>
+                <Label x:Name="lblHV_XRayState" Content="--" />
+                <Button>
+                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="1">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M661.504 656.794V118.426C661.504 53.094 594.432 0 512 0c-82.432 0-149.504 53.094-149.504 118.426v538.368C295.629 694.938 256 755.558 256 821.248 256 933.018 370.893 1024 512 1024s256-90.982 256-202.752c0-65.69-39.526-126.31-106.496-164.454zM512 979.456c-110.182 0-199.782-70.963-199.782-158.208 0-54.58 34.918-104.55 93.44-133.837l13.107-6.553V118.426c0-40.756 41.83-73.933 93.235-73.933 51.456 0 93.338 33.177 93.338 73.933v562.432l13.056 6.553c58.47 29.287 93.388 79.36 93.388 133.786 0 87.296-89.6 158.259-199.782 158.259z"/>
+                                <PathGeometry Figures="M541.133 764.416V307.2h-58.215v457.216c-42.29 9.83-73.318 40.243-73.318 76.646 0 44.493 45.824 80.538 102.4 80.538 56.627 0 102.4-36.045 102.4-80.486 0-36.352-30.976-66.765-73.267-76.75z"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                </Button>
+                <Label x:Name="lblHV_Temperature" Content="--"/>
+                <Button ToolTip="Error">
+                    <Path Fill="{Binding Foreground,ElementName=lblHV_Error}" Stretch="Uniform" Margin="1">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M575.986694 832.039919C575.986694 867.356032 547.316113 896.026613 512 896.026613 476.683887 896.026613 448.013306 867.356032 448.013306 832.039919 448.013306 796.723806 476.683887 768.048156 512 768.048156 547.316113 768.048156 575.986694 796.64777 575.986694 832.039919ZM512 255.997465C476.683887 255.997465 448.013306 284.668046 448.013306 319.984159L448.013306 639.998733C448.013306 675.314846 476.683887 703.990496 512 703.990496 547.316113 703.990496 575.986694 675.314846 575.986694 639.998733L575.986694 319.984159C575.986694 284.668046 547.316113 255.997465 512 255.997465ZM1023.979724 896.026613C1023.979724 966.729805 966.709529 1024.005069 896.006336 1024.005069L127.993664 1024.005069C57.290471 1024.005069 0.020276 966.658839 0.020276 896.026613 0.020276 874.868373 5.216059 854.931776 14.39105 837.311737L14.320083 837.24077 398.250384 69.304133 398.392317 69.304133C419.626593 28.133261 462.455047 0.040552 512 0.040552 561.544953 0.040552 604.373407 28.209297 625.67865 69.3751L1008.311272 834.711311C1018.348003 852.838256 1023.979724 873.783595 1023.979724 896.026613ZM959.99303 896.026613C959.99303 885.123073 957.392604 874.868373 952.191753 865.404445L951.613881 864.319667 951.112044 863.239958 568.621355 98.405584C557.499847 77.171308 535.834701 64.027246 512 64.027246 488.023365 64.027246 466.282184 77.318311 455.160675 98.765487L452.12938 104.544211 92.175714 824.527578 92.677551 825.034483 71.154339 866.778159C66.389426 875.948082 64.00697 885.842879 64.00697 896.097579 64.00697 931.413692 92.748517 960.089342 127.993664 960.089342L896.006336 960.089342C931.322449 960.013306 959.99303 931.342726 959.99303 896.026613Z"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                </Button>
+                <Label x:Name="lblHV_Error" Content="--"/>
+
+                <Label Content="          "/>
+                <Button Tag="DetectorSetting"  Click="SettingClick">
+                    <Path Fill="{Binding Foreground,ElementName=lblWorkState}" Stretch="Uniform" Margin="1" Data="M1002.688 793.28c-2.816 0-4.672 1.984-7.104 2.944l0-2.944-21.056 0c4.16-9.28 6.784-19.392 6.784-30.208L981.312 226.752c0-40.64-32.768-73.536-73.216-73.536L115.904 153.216c-40.448 0-73.216 32.96-73.216 73.536l0 536.256c0 10.816 2.624 20.928 6.784 30.208L28.416 793.216l0 2.944c-2.432-0.96-4.288-2.944-7.104-2.944C9.536 793.28 0 802.816 0 814.592c0 11.84 9.536 21.312 21.312 21.312 2.752 0 4.672-1.984 7.104-2.944l0 2.944 84.032 0c1.216 0.064 2.176 0.704 3.392 0.704l792.256 0c1.216 0 2.176-0.64 3.392-0.704l84.032 0 0-2.944c2.432 0.96 4.288 2.944 7.104 2.944 11.776 0 21.312-9.472 21.312-21.312C1024 802.816 1014.464 793.28 1002.688 793.28zM939.136 763.072c0 15.552-11.712 28.032-26.688 30.208L312.64 793.28c11.712 0 21.12-9.472 21.12-21.248 0-11.712-9.408-21.184-21.12-21.184L141.312 750.848c-11.648 0-21.12 9.472-21.12 21.184 0 11.776 9.408 21.248 21.12 21.248L111.552 793.28c-14.976-2.176-26.688-14.656-26.688-30.208L84.864 226.752c0-17.216 13.824-31.104 30.976-31.104l792.256 0c17.152 0 30.976 13.888 30.976 31.104L939.072 763.072zM410.048 405.504 407.872 411.584C406.208 416.064 408.256 421.12 412.416 422.848 413.376 423.296 414.4 423.488 415.36 423.488c3.2 0 6.272-2.112 7.552-5.568l2.176-6.08c1.6-4.48-0.448-9.536-4.608-11.264C416.32 398.784 411.648 401.024 410.048 405.504zM400 433.408 362.88 553.792C361.28 558.272 363.328 563.328 367.488 565.12c0.96 0.384 1.92 0.576 2.88 0.576 3.264 0 6.272-2.112 7.552-5.568l37.12-120.32c1.6-4.48-0.448-9.536-4.608-11.264C406.272 426.688 401.6 428.992 400 433.408zM388.288 339.904C384.128 338.112 379.456 340.352 377.856 344.832L330.176 494.592c-1.6 4.48 0.448 9.536 4.608 11.264C335.744 506.24 336.768 506.432 337.728 506.432c3.2 0 6.272-2.112 7.552-5.504l47.616-149.696C394.496 346.688 392.448 341.632 388.288 339.904zM319.424 524.416 314.496 538.112c-1.6 4.48 0.448 9.536 4.608 11.264 0.96 0.384 1.92 0.576 2.88 0.576 3.264 0 6.272-2.112 7.552-5.568l4.928-13.632c1.6-4.48-0.448-9.536-4.544-11.328S321.024 520 319.424 524.416z"/>
+                </Button>
+                <Label Content="{DynamicResource Bottom_Detector}"/>
+                <Button ToolTip="{DynamicResource Tip_Connectionstate}" Click="SettingClick" Tag="DetectorReConnect">
+                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="3">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M302.4 690.7904l411.904-411.9808c13.3632-13.3632 40.1152-13.3632 53.504 0 13.3888 13.3888 13.3888 40.192 0 53.5552L355.9808 744.448c-13.3632 13.3888-36.7872 13.3888-53.5808 0-13.3632-16.7424-13.3632-40.1664 0-53.6576z"/>
+                                <PathGeometry Figures="M473.2032 777.9072l-130.5856 133.9648c-56.9344 57.0112-167.424 73.728-227.712 13.3888l-20.0704-20.0704c-56.9344-56.8832-40.192-167.424 16.7168-224.4352l130.56-133.9904c46.9248-46.848 127.2576-60.2368 184.192-33.4592l46.8992-43.6224c-77.0048-50.0736-177.4848-40.1664-244.4544 23.552l-170.7776 170.7776c-77.0048 77.0816-77.0048 201.0112 0 274.6368l26.8288 26.88c73.6512 73.6256 197.5296 73.6256 274.5344 0l167.424-170.88c60.288-60.2368 73.6768-147.3792 40.2176-217.6512l-46.8992 46.848c13.3888 53.5552-3.328 113.92-46.8736 154.0608zM597.0816 242.0224l130.5856-130.6368c60.3392-56.8832 170.7264-73.728 227.712-16.7424l20.0704 20.096c56.8832 60.2112 43.4944 170.752-16.7168 227.7888l-130.5856 130.6112c-46.9504 46.848-123.904 60.2368-184.2432 33.4848l-43.4688 46.848c73.728 50.304 177.408 40.2688 241.0752-26.7776l170.752-167.424c77.056-77.1072 77.056-201.0368 0-274.7648l-23.424-26.7776c-76.9536-76.9792-200.832-76.9792-274.56 0L543.552 228.608c-60.3136 56.8832-70.3488 147.3536-40.2432 217.7536l46.9504-46.976c-13.3888-53.6576 6.6816-117.248 46.8224-157.3888z"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                </Button>
+                <Label x:Name="lblDetector" Content="--" Margin="0,0"/>
+                <Button >
+                    <Path Fill="{Binding Foreground,ElementName=lblWorkState}" Stretch="Uniform" Margin="1">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M686.016 912l-576 0c-44.096 0-80-35.904-80-80L30.016 478.016c0-44.096 35.904-80 80-80l576 0c44.096 0 80 35.904 80 80L766.016 832C766.016 876.096 730.112 912 686.016 912zM110.016 430.016c-26.496 0-48 21.504-48 48L62.016 832c0 26.432 21.504 48 48 48l576 0c26.432 0 48-21.568 48-48L734.016 478.016c0-26.496-21.568-48-48-48L110.016 430.016z"/>
+                                <PathGeometry Figures="M224 362.368c-78.848 0-142.976-64.128-142.976-142.976S145.216 76.416 224 76.416c78.848 0 143.04 64.128 143.04 142.976S302.848 362.368 224 362.368zM224 108.416c-29.632 0-57.536 11.52-78.464 32.512C124.608 161.856 113.088 189.76 113.088 219.392c0 61.248 49.792 110.976 110.976 110.976s110.976-49.792 110.976-110.976C334.976 158.208 285.248 108.416 224 108.416z"/>
+                                <PathGeometry Figures="M571.904 362.368c-78.848 0-142.976-64.128-142.976-142.976s64.128-142.976 142.912-142.976c78.848 0 143.04 64.128 143.04 142.976S650.752 362.368 571.904 362.368zM571.904 108.416c-29.632 0-57.472 11.52-78.464 32.512S460.928 189.76 460.928 219.392c0 61.248 49.792 110.976 110.976 110.976s110.976-49.792 110.976-110.976C682.88 158.208 633.088 108.416 571.904 108.416z"/>
+                                <PathGeometry Figures="M996.032 846.016c-2.944 0-5.888-0.832-8.448-2.432l-164.032-102.016c-4.672-2.88-7.552-8.064-7.552-13.568L816 555.776c0-5.504 2.88-10.688 7.552-13.568l164.032-102.08c4.864-3.008 11.2-3.2 16.192-0.384 5.12 2.816 8.256 8.192 8.256 14.016l0 376.256c0 5.824-3.136 11.2-8.256 14.016C1001.344 845.312 998.656 846.016 996.032 846.016zM848 719.104l132.032 82.048L980.032 482.56 848 564.608 848 719.104z"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                </Button>
+                <Label x:Name="lblWorkState" Content="--" FontSize="13"/>
+                <Button>
+                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="1">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M661.504 656.794V118.426C661.504 53.094 594.432 0 512 0c-82.432 0-149.504 53.094-149.504 118.426v538.368C295.629 694.938 256 755.558 256 821.248 256 933.018 370.893 1024 512 1024s256-90.982 256-202.752c0-65.69-39.526-126.31-106.496-164.454zM512 979.456c-110.182 0-199.782-70.963-199.782-158.208 0-54.58 34.918-104.55 93.44-133.837l13.107-6.553V118.426c0-40.756 41.83-73.933 93.235-73.933 51.456 0 93.338 33.177 93.338 73.933v562.432l13.056 6.553c58.47 29.287 93.388 79.36 93.388 133.786 0 87.296-89.6 158.259-199.782 158.259z"/>
+                                <PathGeometry Figures="M541.133 764.416V307.2h-58.215v457.216c-42.29 9.83-73.318 40.243-73.318 76.646 0 44.493 45.824 80.538 102.4 80.538 56.627 0 102.4-36.045 102.4-80.486 0-36.352-30.976-66.765-73.267-76.75z"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                </Button>
+                <Label x:Name="lblDetector_Temperature" Content="--"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

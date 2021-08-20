@@ -1,0 +1,8 @@
+CREATE TABLE [AOIParam] (
+	[GUID] nvarchar(254) NOT NULL, 
+	[UpperlimitofBubble] int, 
+	[LowerlimitofBubble] int, 
+	[PercentofBubblePass] int, 
+	[Name] nvarchar(254)
+)
+GO

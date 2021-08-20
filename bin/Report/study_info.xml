@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Document>
+  <Images>
+    <Image>
+      <Thumbnail>C:\CTImages\6bfa17c6-dbb1-471f-9d3e-35f0bb44c968\2019-07-29_16∶40∶56\000.png</Thumbnail>
+      <FileName>C:\CTImages\6bfa17c6-dbb1-471f-9d3e-35f0bb44c968\2019-07-29_16∶40∶56\000.dcm</FileName>
+      <Crop>
+        <Left>0</Left>
+        <Top>0</Top>
+        <Right>1280</Right>
+        <Bottom>1280</Bottom>
+      </Crop>
+    </Image>
+  </Images>
+  <SaveFileName />
+  <SavePath>G:\个人勿删\个人项目\工业探测软件\2.广东睿奥\NVXRayPlatform\bin\Report\</SavePath>
+</Document>

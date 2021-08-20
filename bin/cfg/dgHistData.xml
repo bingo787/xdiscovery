@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<ArrayOfDataGridColumnInfo xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <DataGridColumnInfo>
+    <Width>176</Width>
+    <Visible>true</Visible>
+  </DataGridColumnInfo>
+  <DataGridColumnInfo>
+    <Width>85</Width>
+    <Visible>true</Visible>
+  </DataGridColumnInfo>
+  <DataGridColumnInfo>
+    <Width>126</Width>
+    <Visible>true</Visible>
+  </DataGridColumnInfo>
+  <DataGridColumnInfo>
+    <Width>64</Width>
+    <Visible>true</Visible>
+  </DataGridColumnInfo>
+  <DataGridColumnInfo>
+    <Width>174</Width>
+    <Visible>true</Visible>
+  </DataGridColumnInfo>
+  <DataGridColumnInfo>
+    <Width>475</Width>
+    <Visible>true</Visible>
+  </DataGridColumnInfo>
+  <DataGridColumnInfo>
+    <Width>155</Width>
+    <Visible>true</Visible>
+  </DataGridColumnInfo>
+</ArrayOfDataGridColumnInfo>

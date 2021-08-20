@@ -1,0 +1,72 @@
+﻿<Window x:Class="NV.DetectionPlatform.UCtrls.WndGeneralSetting"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="常规设置" Height="250" Width="600" Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen">
+    <Grid Background="{DynamicResource LightGrayBG}">
+        <TabControl  Margin="10" Background="{DynamicResource LightGrayBG}">
+            <TabItem Header="一般设置">
+                <Grid x:Name="ugd" Margin="5">
+                    <Grid.Resources>
+                        <Style TargetType="ComboBox" BasedOn="{StaticResource ComboBoxStyle}">
+                            <Setter Property="MinHeight" Value="30"/>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="114"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="图像存储目录:" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtImageFolder" Text="" Grid.Row="0" Grid.Column="1"/>
+
+                    <Button Grid.Column="2" Width="30" Content="..." Margin="2,0" IsEnabled="True" Click="btnSelectDirClick" Height="30"/>
+                    <Button x:Name="btnClose" Grid.Column="3" Width="70" Content="应用" IsEnabled="True" Tag="Folder" Click="btnClose_Click" Height="30"/>
+
+                    <TextBlock Text="伪彩Lut文件:" Grid.Column="0" Grid.Row="1" VerticalAlignment="Center"/>
+                    <TextBox x:Name="txtLutFile" Text="" Grid.Row="1" Grid.Column="1"/>
+
+                    <Button Grid.Column="2" Width="30" Content="..." Grid.Row="1" Margin="2,0" Tag="Lut" IsEnabled="True" Click="btnSelectFileClick" Height="30"/>
+                    <Button Grid.Column="3" Width="70" Content="应用" Grid.Row="1" IsEnabled="True" Click="btnLut_Click" Height="30"/>
+
+                    <GroupBox Grid.Row="2" Grid.ColumnSpan="4" Header="提示:" FontSize="13" Margin="10,15,10,5">
+                        <TextBlock Text="       为了方便您对伪彩功能的使用，我们在程序安装目录下Luts文件夹中附带了数种经典伪彩配置表文件。" Grid.Row="2" TextWrapping="Wrap" HorizontalAlignment="Stretch" Grid.ColumnSpan="4" FontSize="13"/>
+                    </GroupBox>
+                    
+                </Grid>
+            </TabItem>
+            <TabItem Header="公司信息">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="114"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="公司名称:" TextAlignment="Center"/>
+                    <TextBlock Text="公司部门:" TextAlignment="Center" Grid.Row="1"/>
+                    <TextBlock Text="公司地址:" TextAlignment="Center" Grid.Row="2"/>
+                    <TextBlock Text="高压型号:" TextAlignment="Center" Grid.Row="3"/>
+
+                    <TextBox x:Name="txtCompany" Grid.Column="1" Margin="1"/>
+                    <TextBox x:Name="txtDepartment" Grid.Column="1" Grid.Row="1" Margin="1"/>
+                    <TextBox x:Name="txtAddress" Grid.Column="1" Grid.Row="2" Margin="1"/>
+                    <TextBox x:Name="txtHVName" Grid.Column="1" Grid.Row="3" Margin="1"/>
+                    
+                    <Button Content="保存" Click="SaveCompanyInfo" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="100" Margin="2"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

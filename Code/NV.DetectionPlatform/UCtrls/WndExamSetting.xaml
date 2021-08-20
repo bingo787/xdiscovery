@@ -1,0 +1,191 @@
+﻿<Window x:Class="NV.DetectionPlatform.UCtrls.WndExamSetting"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:NV.DRF.Controls;assembly=NV.DRF.Controls"
+        Title="{DynamicResource AcqSolution}" Height="320" Width="650" Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen" Topmost="True">
+    <Window.Resources>
+        <Style x:Key="WindowStyle" TargetType="{x:Type Window}">
+            <Setter Property="ShowInTaskbar" Value="False"/>
+            <Setter Property="Foreground" Value="{DynamicResource WindowForeground}"/>
+            <Setter Property="Background" Value="{DynamicResource EditWindowBG}"/>
+            <Setter Property="WindowStyle" Value="None"/>
+            <Setter Property="FontSize" Value="17"/>
+            <Setter Property="ResizeMode" Value="NoResize"/>
+            <Setter Property="AllowsTransparency" Value="False"/>
+            <Setter Property="Icon" Value="/NVCT.ico"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Window}">
+                        <Border CornerRadius="0,0,5,5" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                            <AdornerDecorator>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Image Width="auto" Height="25" HorizontalAlignment="Left" Margin="5" VerticalAlignment="Center" Stretch="Uniform" Source="{TemplateBinding Icon}"/>
+                                    <Label Margin="30,0,0,0" HorizontalAlignment="Stretch" Content="{TemplateBinding Title}" FontSize="{TemplateBinding FontSize}" Background="{DynamicResource EditWindowBG}" Grid.Row="0" Foreground="{TemplateBinding Foreground}" local:WindowStyleHelper.CanDragMove="True"/>
+                                    <Label Margin="0,-10,5,0" Background="Transparent" Content="×" MouseLeftButtonUp="Label_MouseLeftButtonUp" FontSize="25" Grid.Row="0" HorizontalAlignment="Right" Width="auto" VerticalAlignment="Top"  Panel.ZIndex="1000">
+                                        <Label.Style>
+                                            <Style TargetType="Label">
+                                                <Setter Property="Foreground" Value="{DynamicResource WindowForeground}"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Foreground" Value="Red"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Label.Style>
+                                    </Label>
+                                    <ContentPresenter Grid.Row="1" VerticalAlignment="Stretch" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}"/>
+                                </Grid>
+                            </AdornerDecorator>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid Background="{DynamicResource LightGrayBG}">
+        <GroupBox Header="{DynamicResource AcqSolution}" Grid.Row="1" Grid.Column="0" BorderBrush="DimGray" Margin="5" BorderThickness="1">
+            <Grid TextBlock.FontSize="14">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+
+                <ListBox x:Name="lstParams" ItemsSource="{Binding ExamParams,UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding CurrentParam}" Grid.Row="1" DisplayMemberPath="Name" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{DynamicResource MessageWindowBG}" Margin="5,2">
+
+                </ListBox>
+                <StackPanel  Orientation="Horizontal">
+                    <Label Content="{DynamicResource Name}" FontSize="14"/>
+                    <TextBox x:Name="txtName" Width="100" FontSize="14" Text="{Binding SelectedItem.Name,ElementName=lstParams,Mode=OneWay}"/>
+                    <Button Content="+" Width="24" VerticalAlignment="Stretch" Margin="2" Click="Add"/>
+                    <Button Content="-" Width="24" VerticalAlignment="Stretch" Margin="2" Click="Del"/>
+                </StackPanel>
+
+                <Grid Grid.Column="1" Grid.RowSpan="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="{DynamicResource AcqSolution_Voltage}" HorizontalAlignment="Center"/>
+                    <Label Content="{DynamicResource AcqSolution_Current}" Grid.Row="2" HorizontalAlignment="Center"/>
+                    <Label Content="{DynamicResource SpotTime}" Grid.Row="4" HorizontalAlignment="Center"/>
+                    <Label Content="{DynamicResource ExposeFPS}" Grid.Row="6" HorizontalAlignment="Center"/>
+                    <Label Content="kV"  Grid.Column="2" HorizontalAlignment="Center"/>
+                    <Label Content="uA" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"/>
+                    <Label Content="S" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center"/>
+
+                    <TextBox Grid.Column="1" x:Name="txtkv" Text="{Binding DataContext.CurrentParam.KV}"/>
+                    <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtua" Text="{Binding DataContext.CurrentParam.UA}"/>
+                    <TextBox Grid.Column="1" Grid.Row="4" x:Name="txtTime" Text="{Binding DataContext.CurrentParam.Time}"/>
+
+                    <Slider Grid.ColumnSpan="3" Grid.Row="1" x:Name="sldrkv" Minimum="0" Value="{Binding DataContext.CurrentParam.KV}" TickFrequency="0.1" Maximum="160"/>
+                    <Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrua" Minimum="0" Value="{Binding DataContext.CurrentParam.UA}" Maximum="1250"/>
+                    <Slider Grid.ColumnSpan="3" Grid.Row="5" x:Name="sldrtime" Minimum="0" Value="{Binding DataContext.CurrentParam.Time}" TickFrequency="0.1"/>
+
+                    <ComboBox x:Name="cboFps" Grid.Row="6" Grid.Column="1" Text="{Binding SelectedItem.Fps,ElementName=lstParams,Mode=OneWay}" SelectedIndex="0">
+                        <ComboBoxItem Content="1" Tag="1000"/>
+                        <ComboBoxItem Content="2" Tag="1000"/>
+                        <ComboBoxItem Content="4" Tag="1000"/>
+                        <ComboBoxItem Content="8" Tag="1000"/>
+                        <ComboBoxItem Content="16" Tag="1000"/>
+                        <ComboBoxItem Content="20" Tag="1000"/>
+                        <ComboBoxItem Content="30" Tag="1000"/>
+                    </ComboBox>
+                    
+                    <Grid Grid.Row="7" Grid.ColumnSpan="3" Margin="5,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Content="{DynamicResource BubbleSave}" VerticalAlignment="Stretch" Margin="3" Click="Save"/>
+                        <Button Content="{DynamicResource Btn_Apply}" Grid.Column="1" VerticalAlignment="Stretch" Margin="3" Click="Select"/>
+                        
+                    </Grid>
+                </Grid>
+
+                <Grid Grid.Column="2" Margin="10,0,5,0" Grid.RowSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="15" Grid.Column="1">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M722.1248 309.8624l-174.4896 474.9312h-68.1984l-172.032-474.9312h68.1984l129.024 371.712c4.3008 12.288 6.7584 26.4192 9.8304 43.008h1.2288c1.2288-14.1312 5.5296-27.648 11.0592-43.008l129.6384-371.712h65.7408z"/>
+                                <PathGeometry Figures="M515.6864 58.5728c-254.3616 0-460.8 206.4384-460.8 460.8s206.4384 460.8 460.8 460.8 460.8-206.4384 460.8-460.8-206.4384-460.8-460.8-460.8z m0 866.9184c-223.6416 0-404.8896-181.248-404.8896-404.8896S292.0448 115.712 515.6864 115.712 920.576 296.96 920.576 520.6016 739.328 925.4912 515.6864 925.4912z"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="15" Grid.Row="1" Grid.Column="1">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M512 102.370529c-209.646787 0-380.226814 170.580027-380.226814 380.226814 0 209.646787 170.579003 380.225791 380.226814 380.225791 209.645764 0 380.225791-170.579003 380.225791-380.225791C892.225791 272.950556 721.645764 102.370529 512 102.370529zM512 822.561152c-187.467649 0-339.963809-152.498206-339.963809-339.963809 0-187.467649 152.49616-339.963809 339.963809-339.963809 187.466626 0 339.963809 152.497183 339.963809 339.963809C851.963809 670.062945 699.466626 822.561152 512 822.561152z"/>
+                                <PathGeometry Figures="M594.297354 539.02654 429.967682 539.02654l-38.331004 104.008842-50.664913 0 150.656255-390.308427 42.887786 0 148.244322 390.308427-50.664913 0L594.297354 539.02654zM444.713524 499.079736l135.105071 0-67.016323-184.969759L444.713524 499.079736z"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="15" Grid.Row="2" Grid.Column="1">
+                        <Path.Data>
+                            <GeometryGroup>
+                                <PathGeometry Figures="M572.8 922.24H430.08c-69.12 0-126.08-56.32-126.08-126.08v-21.12c0-17.92-8.32-35.2-23.04-48C200.32 657.28 156.8 556.8 161.28 449.92c7.04-174.08 149.12-319.36 323.2-330.24 96.64-6.4 188.8 26.88 259.2 92.8 69.76 65.28 109.44 157.44 109.44 252.8 0 106.88-48 206.08-131.84 272-14.08 10.88-22.4 28.8-22.4 47.36v11.52c-0.64 69.12-56.96 126.08-126.08 126.08zM506.88 182.4c-6.4 0-12.16 0-18.56 0.64C346.88 192 231.04 310.4 225.28 452.48c-3.84 87.04 32 168.96 97.92 225.92 28.8 24.96 45.44 60.16 45.44 96.64v21.12c0 33.92 27.52 62.08 62.08 62.08h142.72c33.92 0 62.08-27.52 62.08-62.08v-11.52c0-38.4 17.28-74.24 46.72-97.92 68.48-53.76 107.52-135.04 107.52-221.44 0-78.72-31.36-151.68-88.96-206.08-53.76-49.92-121.6-76.8-193.92-76.8z"/>
+                                <PathGeometry Figures="M618.24 532.48c-36.48 0-54.4-28.8-64.64-46.08-2.56-4.48-7.04-11.52-9.6-14.72-2.56 3.2-7.04 10.24-9.6 14.72-10.24 17.28-28.16 46.08-64.64 46.08-36.48 0-54.4-28.8-64.64-46.08-2.56-4.48-7.04-11.52-9.6-14.72-2.56 3.2-7.04 10.24-9.6 14.72-10.24 17.28-28.16 46.08-64.64 46.08-17.92 0-32-14.08-32-32 0-17.28 14.08-31.36 31.36-32 2.56-2.56 7.68-10.24 10.88-15.36 10.24-17.28 28.16-46.08 64.64-46.08s54.4 28.8 64.64 46.08c2.56 4.48 7.04 11.52 9.6 14.72 2.56-3.2 7.04-10.24 9.6-14.72 10.24-17.28 28.16-46.08 64.64-46.08 36.48 0 54.4 28.8 64.64 46.08 2.56 4.48 7.04 11.52 9.6 14.72 2.56-3.2 7.04-10.24 9.6-14.72 10.24-17.28 28.16-46.08 64.64-46.08 17.92 0 32 14.08 32 32 0 17.28-14.08 31.36-31.36 32-2.56 2.56-7.68 10.24-10.88 15.36-10.24 17.28-27.52 46.08-64.64 46.08z"/>
+                            </GeometryGroup>
+                        </Path.Data>
+                    </Path>
+                    <TextBlock Text="kV" Grid.Column="3" VerticalAlignment="Center"/>
+                    <TextBlock Text="uA" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center"/>
+                    <TextBlock Text="mA" Grid.Row="2" Grid.Column="3" VerticalAlignment="Center"/>
+
+                    <TextBlock Text="0000" Grid.Column="2" FontSize="30" x:Name="tbKV" VerticalAlignment="Center" x:FieldModifier="public"></TextBlock>
+                    <TextBlock Text="0000" Grid.Row="1" Grid.Column="2" FontSize="30" x:Name="tbUA" VerticalAlignment="Center" x:FieldModifier="public"/>
+                    <TextBlock Text="0000" Grid.Row="2" Grid.Column="2" FontSize="30" x:Name="tbFila" VerticalAlignment="Center" x:FieldModifier="public"/>
+                    
+                    <Button Content=">" Grid.Column="0" Grid.Row="0" Width="20" Height="40" Click="SetKV"/>
+                    <Button Content=">" Grid.Column="0" Grid.Row="1" Width="20" Height="40" Click="SetUA"/>
+
+                    <UniformGrid Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="3" Grid.RowSpan="2" Columns="2" Rows="2">
+                        <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+                            <TextBlock Text="" Foreground="Red" FontSize="20" x:Name="tbError" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                        </ScrollViewer>
+                        <Button Content="自动窗位" Visibility="Hidden" VerticalAlignment="Stretch" Margin="3" Click="AutoWL" Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="2" IsCancel="True"/>
+                        <Button Content="{DynamicResource BubbleClose}" VerticalAlignment="Stretch" Margin="3" Click="Button_Click" Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="2" IsCancel="True"/>
+                        <Button Content="{DynamicResource StartAcq}" VerticalAlignment="Stretch" Margin="3" Click="StartAcq_Click" Grid.Column="2" Grid.Row="4" Grid.ColumnSpan="2" IsDefault="True"/>
+                    </UniformGrid>
+                </Grid>
+
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>

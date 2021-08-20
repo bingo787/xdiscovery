@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<HVGeneratorParam xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <自动预热>false</自动预热>
+  <预热电压>80</预热电压>
+  <预热电流>400</预热电流>
+  <预热时间_x0028_分钟_x0029_>10</预热时间_x0028_分钟_x0029_>
+  <电压上限>165</电压上限>
+  <电流上限>1450</电流上限>
+  <功率上限>210</功率上限>
+  <厂商验证码></厂商验证码>
+  <额外随启动软件 />
+</HVGeneratorParam>

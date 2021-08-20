@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<ImageOverlay xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <FontName>微软雅黑</FontName>
+  <FontSize>20</FontSize>
+  <Resolution>300 DPI</Resolution>
+  <TopLeft>
+    <Overlay>
+      <Type>DYNAMIC</Type>
+      <Description>产品名称</Description>
+      <DisplayFormat>名称:%s</DisplayFormat>
+      <TagGroup>0x0010</TagGroup>
+      <TagElement>0x0010</TagElement>
+    </Overlay>
+    <Overlay>
+      <Type>DYNAMIC</Type>
+      <Description>产品类型</Description>
+      <DisplayFormat>类型:%s</DisplayFormat>
+      <TagGroup>0x0010</TagGroup>
+      <TagElement>0x0040</TagElement>
+    </Overlay>
+    <Overlay>
+      <Type>DYNAMIC</Type>
+      <Description>产品规格</Description>
+      <DisplayFormat>规格:%s</DisplayFormat>
+      <TagGroup>0x0010</TagGroup>
+      <TagElement>0x1010</TagElement>
+    </Overlay>
+  </TopLeft>
+  <TopRight />
+  <BottomLeft>
+    <Overlay>
+      <Type>DYNAMIC</Type>
+      <Description>拍摄日期</Description>
+      <DisplayFormat>%s</DisplayFormat>
+      <TagGroup>0x0008</TagGroup>
+      <TagElement>0x0021</TagElement>
+    </Overlay>
+    <Overlay>
+      <Type>DYNAMIC</Type>
+      <Description>拍摄时间</Description>
+      <DisplayFormat>%s</DisplayFormat>
+      <TagGroup>0x0008</TagGroup>
+      <TagElement>0x0031</TagElement>
+    </Overlay>
+    <Overlay>
+      <Type>DYNAMIC</Type>
+      <Description>电压kV</Description>
+      <DisplayFormat>%skV</DisplayFormat>
+      <TagGroup>0x0018</TagGroup>
+      <TagElement>0x0060</TagElement>
+    </Overlay>
+    <Overlay>
+      <Type>DYNAMIC</Type>
+      <Description>电流uA</Description>
+      <DisplayFormat>%suA</DisplayFormat>
+      <TagGroup>0x0018</TagGroup>
+      <TagElement>0x1151</TagElement>
+    </Overlay>
+  </BottomLeft>
+  <BottomRight />
+</ImageOverlay>
