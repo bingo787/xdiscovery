@@ -101,7 +101,8 @@ namespace Detector
             IsMultiFramesOverlayByAvg = true;
             MultiFramesOverlayNumber = 2;
 
-            unsafe {
+            unsafe
+            {
                 //add by zhao 
                 HBICallbackHandle = new USER_CALLBACK_HANDLE_ENVENT(RecieveImageAndEvent);
             }
@@ -261,7 +262,7 @@ namespace Detector
                 //if (NVDentalSDK.NV_MonitorConnbreak(ConnBreakCallBack) != NV_StatusCodes.NV_SC_SUCCESS)
                 //    res += ("ConnBreak failed");
 
-                
+
                 LastHBIReturnValue = HBSDK.HBI_GetImageProperty(hb_fpd_handle, out iMAGE_PROPERTY);
 
                 if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
@@ -318,17 +319,18 @@ namespace Detector
             }
         }
 
-        private unsafe int RecieveImageAndEvent(Byte cmd, void* buff, int len, int nID){
+        private unsafe int RecieveImageAndEvent(Byte cmd, void* buff, int len, int nID)
+        {
 
             switch ((CALLBACK_EVENT_COMM_TYPE)cmd)
             {
                 case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_NET_ERR_MSG:
                     {
-                       
+
                         if (len <= 0 && len >= -7)
                         {
                             if (len == 0)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG, Err: 网络未连接！",true);
+                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG, Err: 网络未连接！", true);
                             else if (len == -1)
                                 ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,Err:参数异常!", true);
                             else if (len == -2)
@@ -373,20 +375,27 @@ namespace Detector
                 case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_SINGLE_IMAGE:
                 case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_MULTIPLE_IMAGE:
                     {
-                        ushort[] buffer = new ushort[_imageWidth * _imageHeight];
+                        NV_ImageInfo _ImageInfo;
+                        _ImageInfo.iImageSize = 10;
+                        _ImageInfo.iSizeX = _imageWidth;
+                        _ImageInfo.iSizeY = _imageHeight;
 
-                        for (int i = 0; i < _imageWidth * _imageHeight; i++)
-                        {
-                           // buffer[i] = buff[i];
-                        }
+                        _ImageInfo.iPixelType = 0;			///< 像素格式
+                        _ImageInfo.iSizeX = _imageWidth;             ///< 图像宽
+                        _ImageInfo.iSizeY = _imageHeight;             ///< 图像高
+                        _ImageInfo.iImageSize = 0;         ///< 图像所占的字节数
 
-                        PlayBuffer.Enqueue(buffer);
-                        if (IsStored)
-                        {
-                            ImageBuffer.Add(buffer);
-                        }
+                        _ImageInfo.pImageBuffer = null;		///< 图像数据指针
+                        _ImageInfo.iTimeStamp = 0;			///< 时间戳
+                        _ImageInfo.iMissingPackets = 0;    ///< 丢失的包数量
+                        _ImageInfo.iAnnouncedBuffers = 0;  ///< 声明缓存区大小[暂为0]
+                        _ImageInfo.iQueuedBuffers = 0;     ///< 队列缓存区大小[暂为0]
+                        _ImageInfo.iOffsetX = 0;           ///< x方向偏移量[暂未设置]
+                        _ImageInfo.iOffsetY = 0;           ///< y方向偏移量[暂未设置]
+                        _ImageInfo.iAwaitDelivery = 0;     ///< 等待传送的帧数[暂为0]
+                        _ImageInfo.iBlockId = 0;          ///< GVSP协议的block-id
+                        ShowImageCallBack(0, _ImageInfo);
 
-                        count++;
                         break;
                     }
                 case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_THREAD_EVENT:
@@ -412,7 +421,7 @@ namespace Detector
                         ShowMessage("TYPE_FPD_STATUS, command= " + cmd.ToString());
                         if (len == 5)
                         {
-                            ShowMessage("Stop Acquisition",true);
+                            ShowMessage("Stop Acquisition", true);
                             //if(INSTANCE->acq_mode.aqc_mode == DYNAMIC_DEFECT_ACQ_MODE)
                             //	INSTANCE->
                         }
@@ -428,7 +437,7 @@ namespace Detector
                     }
                 default:
                     {
-                        ShowMessage("ECALLBACK_TYPE_INVALID, command " + cmd.ToString(),true);
+                        ShowMessage("ECALLBACK_TYPE_INVALID, command " + cmd.ToString(), true);
                         break;
                     }
             }
