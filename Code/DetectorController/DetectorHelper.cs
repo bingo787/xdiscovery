@@ -17,13 +17,9 @@ namespace Detector
     {
 
         // add by zhao
-        public UIntPtr hb_fpd_handle { get; set; }
+        public UIntPtr _HBI_Handle { get; set; }
         public int LastHBIReturnValue { get; set; }
 
-
-        public IMAGE_PROPERTY iMAGE_PROPERTY;
-
-        // add by zhao end
 
         /// <summary>
         /// 是否存储图像
@@ -151,10 +147,11 @@ namespace Detector
             count = 0;
 
 
-            NVDentalSDK.NV_SetMaxFrames(MaxFrames);
+            FPD_AQC_MODE fPD_AQC_MODE_nframecount = MaxFrames;
+            LastHBIReturnValue =  HBSDK.HBI_SingleAcquisition(_HBI_Handle, fPD_AQC_MODE_nframecount);
+            // HBSDK.HBI_LiveAcquisition(_HBI_Handle,fPD_AQC_MODE_nframecount);
 
-            //  HBSDK.HBI_LiveAcquisition(hb_fpd_handle, fpq_aec_mode);
-            if (NVDentalSDK.NV_StartAcq(AcqMaxFrameEvent) != (int)NV_StatusCodes.NV_SC_SUCCESS)
+            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
             {
                 ShowMessage("StartAcq Failed——" + GetLastError(), true);
                 return false;
@@ -173,7 +170,7 @@ namespace Detector
         {
 
 
-            LastHBIReturnValue = HBSDK.HBI_StopAcquisition(hb_fpd_handle);
+            LastHBIReturnValue = HBSDK.HBI_StopAcquisition(_HBI_Handle);
             if ((HBIRETCODE)LastHBIReturnValue != HBIRETCODE.HBI_SUCCSS)
             {
                 ShowMessage("StopAcq Failed——" + GetLastError(), true);
@@ -236,18 +233,18 @@ namespace Detector
 
             // 首先销毁之前的句柄
             //NVDentalSDK.NV_CloseDet();
-            HBSDK.HBI_Destroy(hb_fpd_handle);
+            HBSDK.HBI_Destroy(_HBI_Handle);
 
             // 然后再注册回调函数
 
-            LastHBIReturnValue = HBSDK.HBI_RegEventCallBackFun(hb_fpd_handle, HBICallbackHandle);
+            LastHBIReturnValue = HBSDK.HBI_RegEventCallBackFun(_HBI_Handle, HBICallbackHandle);
             if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
                 res += ("HBI_RegEventCallBackFun Failed");
             else
                 ShowMessage("HBI_RegEventCallBackFun success.");
 
 
-            LastHBIReturnValue = HBSDK.HBI_ConnectDetector(hb_fpd_handle, "192.168.3.1", 100, "192.168.3.1", 100, 30);
+            LastHBIReturnValue = HBSDK.HBI_ConnectDetector(_HBI_Handle, "192.168.3.1", 100, "192.168.3.1", 100, 30);
             if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
             {
                 res += "探测器连接失败。" + GetLastError();
@@ -263,7 +260,8 @@ namespace Detector
                 //    res += ("ConnBreak failed");
 
 
-                LastHBIReturnValue = HBSDK.HBI_GetImageProperty(hb_fpd_handle, out iMAGE_PROPERTY);
+                IMAGE_PROPERTY iMAGE_PROPERTY;
+                LastHBIReturnValue = HBSDK.HBI_GetImageProperty(_HBI_Handle, out iMAGE_PROPERTY);
 
                 if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
                 {
@@ -271,12 +269,15 @@ namespace Detector
                 }
                 else
                 {
+                    _detectorHeight = 3072;
+                    _detectorWidth = 3072;
+
                     _imageWidth = (int)iMAGE_PROPERTY.nwidth;
                     _imageHeight = (int)iMAGE_PROPERTY.nheight;
                     _bits = (int)iMAGE_PROPERTY.ndatabit;
 
                     Byte binning;
-                    HBSDK.HBI_GetBinning(hb_fpd_handle, out binning);
+                    HBSDK.HBI_GetBinning(_HBI_Handle, out binning);
 
                     res += binning.ToString();
                     //if (binning == 2)
@@ -562,49 +563,57 @@ namespace Detector
         /// </summary>
         /// <param name="nullable1"></param>
         /// <param name="nullable2"></param>
-        public static string SetAcqPara(int? exp, string g, string binning = "1X1")
+        public string SetAcqPara(int? exp, string g, string binning = "1X1")
         {
             string res = string.Empty;
             int expTime = 168;
-            NV_Gain gain = NV_Gain.NV_GAIN_07;
-            NV_BinningMode bin = binning == "2X2" ? NV_BinningMode.NV_BINNING_2X2 : NV_BinningMode.NV_BINNING_1X1;
-            if (NVDentalSDK.NV_SetBinningMode(bin) != NV_StatusCodes.NV_SC_SUCCESS)
+          //  NV_Gain gain = NV_Gain.NV_GAIN_07;
+            //NV_BinningMode bin = binning == "2X2" ? NV_BinningMode.NV_BINNING_2X2 : NV_BinningMode.NV_BINNING_1X1;
+
+            byte bin = 1;
+            if (binning == "1X1")
             {
-                StringBuilder buffer = new StringBuilder(1024);
-                NVDentalSDK.NV_LastErrorMsg(buffer, 1024);
-                res += ("Set BinningMode Failed:" + buffer.ToString() + "\n");
+                bin = 1;
+            } else if (binning == "2X2") {
+                bin = 2;
+            } else if (binning == "4X4") {
+                bin = 4;
             }
 
-            if (NVDentalSDK.NV_SetExpTime((int)exp) != NV_StatusCodes.NV_SC_SUCCESS)
+            LastHBIReturnValue = HBSDK.HBI_SetBinning(_HBI_Handle,bin);
+
+            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
             {
-                res += ("Set Exptime Failed\n");
+                res += ("Set BinningMode Failed:" + GetLastError() + "\n");
             }
+
+            //if (NVDentalSDK.NV_SetExpTime((int)exp) != NV_StatusCodes.NV_SC_SUCCESS)
+            //{
+            //    res += ("Set Exptime Failed\n");
+            //}
+
+            int gain = 6;
             switch (g)
             {
-                case "0.1pF":
-                    gain = NV_Gain.NV_GAIN_01;
-                    break;
-                case "0.4pF":
-                    gain = NV_Gain.NV_GAIN_04;
-                    break;
-                case "0.7pF":
-                    gain = NV_Gain.NV_GAIN_07;
-                    break;
-                case "1.0pF":
-                    gain = NV_Gain.NV_GAIN_10;
-                    break;
-                default:
-                    break;
+                case "0.6pC": gain = 1; break;
+                case "1.2pC" : gain = 2; break;
+                case "2.4pC" : gain = 3; break;
+                case "3.6pC" : gain = 4; break;
+                case "4.8pC" : gain = 5; break;
+                case "7.2pC" : gain = 6; break; //默认7.2pC
+                case "9.6pC": gain = 7; break;
+                default: break;
+
             }
-            if (NVDentalSDK.NV_SetGain(gain) != NV_StatusCodes.NV_SC_SUCCESS)
+            if (HBSDK.HBI_SetGainMode(_HBI_Handle,gain) != (int)HBIRETCODE.HBI_SUCCSS)
             {
                 res += ("Set Gain Failed\n");
             }
-            int x, y, w, h;
-            NVDentalSDK.NV_GetImageRange(out x, out y, out w, out h);
+            int x, y, w = 0, h = 0;
+            //NVDentalSDK.NV_GetImageRange(out x, out y, out w, out h);
 
-            NVDentalSDK.NV_GetGain(out gain);
-            NVDentalSDK.NV_GetExpTime(out expTime);
+            //NVDentalSDK.NV_GetGain(out gain);
+            //NVDentalSDK.NV_GetExpTime(out expTime);
             res += ("exp:" + expTime + "," + g + "," + binning + "," + w + "x" + h);
             return res;
         }
@@ -638,8 +647,20 @@ namespace Detector
         public void StartOffset()
         {
             count = 0;
-            NVDentalSDK.NV_ResetCorrection();
-            NV_StatusCodes result = NVDentalSDK.NV_RunOffsetCalThread(FinishedOffsetEvent);
+
+            IMAGE_CORRECT_ENABLE iMAGE_CORRECT_ENABLE = false;
+         
+            LastHBIReturnValue = HBSDK.HBI_UpdateCorrectEnable(_HBI_Handle, ref iMAGE_CORRECT_ENABLE);
+            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS) {
+                ShowMessage(GetLastError(),false);
+                FinishedOffsetEvent(false);
+            }
+            else
+            {
+                FinishedOffsetEvent(true);
+            }
+           // NVDentalSDK.NV_ResetCorrection();
+          //  NV_StatusCodes result = NVDentalSDK.NV_RunOffsetCalThread(FinishedOffsetEvent);
         }
         /// <summary>
         /// 校正完毕，设置校正模式软件模式
@@ -659,8 +680,20 @@ namespace Detector
         public void StartAutoDetect()
         {
             count = 0;
-            NVDentalSDK.NV_ResetCorrection();
-            NV_StatusCodes result = NVDentalSDK.NV_RunAutoDefectCalThread(FinishedDetectEvent);
+
+            CALIBRATE_INPUT_PARAM cALIBRATE_INPUT_PARAM = 1;
+            LastHBIReturnValue =  HBSDK.HBI_InitDefectMode(_HBI_Handle,cALIBRATE_INPUT_PARAM);
+
+            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
+            {
+                FinishedDetectEvent(false);
+            }
+            else {
+                FinishedDetectEvent(true);
+            }
+
+           // NVDentalSDK.NV_ResetCorrection();
+          //  NV_StatusCodes result = NVDentalSDK.NV_RunAutoDefectCalThread(FinishedDetectEvent);
         }
         /// <summary>
         /// detect校正返回
@@ -680,8 +713,21 @@ namespace Detector
         /// <param name="e"></param>
         public void StartGain()
         {
-            NVDentalSDK.NV_ResetCorrection();
-            NVDentalSDK.NV_RunGainCalThread(FinishedGainEvent, OpenXRayEvent, CloseXRayEvent);
+
+            CALIBRATE_INPUT_PARAM cALIBRATE_INPUT_PARAM = 1;
+            LastHBIReturnValue = HBSDK.HBI_InitGainMode(_HBI_Handle, cALIBRATE_INPUT_PARAM);
+
+            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
+            {
+                FinishedDetectEvent(false);
+            }
+            else
+            {
+                FinishedDetectEvent(true);
+            }
+
+            //NVDentalSDK.NV_ResetCorrection();
+            //NVDentalSDK.NV_RunGainCalThread(FinishedGainEvent, OpenXRayEvent, CloseXRayEvent);
         }
         /// <summary>
         /// 关闭X光回调
@@ -693,7 +739,7 @@ namespace Detector
             {
                 if (CMessageBox.Show("请关闭 X光后，点击确定", "提示", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
                 {
-                    NVDentalSDK.NV_CancelGainCal();
+                 //   NVDentalSDK.NV_CancelGainCal();
                 }
             }));
         }
@@ -749,9 +795,9 @@ namespace Detector
         public List<ushort[]> GetSourceImage(int count = 10)
         {
             //取消所有校正
-            NVDentalSDK.NV_SetDefectCal(NV_CorrType.NV_CORR_NO);
-            NVDentalSDK.NV_SetGainCal(NV_CorrType.NV_CORR_NO);
-            NVDentalSDK.NV_SetOffsetCal(NV_CorrType.NV_CORR_NO);
+         //   NVDentalSDK.NV_SetDefectCal(NV_CorrType.NV_CORR_NO);
+         //   NVDentalSDK.NV_SetGainCal(NV_CorrType.NV_CORR_NO);
+         //   NVDentalSDK.NV_SetOffsetCal(NV_CorrType.NV_CORR_NO);
 
             return GetImage(count);
         }

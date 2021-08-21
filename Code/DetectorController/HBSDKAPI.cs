@@ -178,24 +178,28 @@ namespace Detector
     };
 
     // Notice:fpd software calibrate enable info.
-    public class IMAGE_CORRECT_ENABLE
+    public struct IMAGE_CORRECT_ENABLE
     {
+        public static implicit operator IMAGE_CORRECT_ENABLE(bool b)
+        {
+
+            return new IMAGE_CORRECT_ENABLE()
+            {
+                bFeedbackCfg = false,
+                ucOffsetCorrection = 0,
+                ucGainCorrection = 0,
+                ucDefectCorrection = 0,
+                ucDummyCorrection = 0
+            };
+        }
 
         public bool bFeedbackCfg;                  //true-ECALLBACK_TYPE_ROM_UPLOAD Event,false-ECALLBACK_TYPE_SET_CFG_OK Event
         public byte ucOffsetCorrection;   //00-"Do nothing";01-"prepare Offset Correction";  02-"post Offset Correction";
         public byte ucGainCorrection;     //00-"Do nothing";01-"Software Gain Correction";   02-"Hardware Gain Correction"
         public byte ucDefectCorrection;   //00-"Do nothing";01-"Software Defect Correction"; 02-"Software Defect Correction"
         public byte ucDummyCorrection;    //00-"Do nothing";01-"Software Dummy Correction";  02-"Software Dummy Correction"
-
-        public IMAGE_CORRECT_ENABLE()
-        {
-            this.bFeedbackCfg = false;
-            this.ucOffsetCorrection = 0;
-            this.ucGainCorrection = 0;
-            this.ucDefectCorrection = 0;
-            this.ucDummyCorrection = 0;
-        }
     };
+
 
     // Notice: acq mode:static and dynamic
     public enum IMAGE_ACQ_MODE
@@ -282,19 +286,24 @@ namespace Detector
     };
 
     // Notice:fpd aqc mode
-    public class FPD_AQC_MODE
+    public struct FPD_AQC_MODE
     {
-        public FPD_AQC_MODE()
+
+
+        public static implicit operator FPD_AQC_MODE(int frame)
         {
-            aqc_mode = IMAGE_ACQ_MODE.DYNAMIC_ACQ_DEFAULT_MODE;
-            ngroupno = 0;
-            nframesum = 0;
-            ndiscard = 0;
-            nframeid = 0;
-            nLiveMode = LIVE_MODE.ACQ_IMAGE;//add by lss
-            isOverLap = false;//add by lss 2020/8/12
-            nGrayBit = GRAY_MODE.GRAY_16;//add by lss 2020/8/12
-            bSimpleGT = false;//简单快速做模板
+            return new FPD_AQC_MODE()
+            {
+                aqc_mode = IMAGE_ACQ_MODE.DYNAMIC_ACQ_DEFAULT_MODE,
+                ngroupno = 0,
+                nframesum = frame,
+                ndiscard = 0,
+                nframeid = 0,
+                nLiveMode = LIVE_MODE.ACQ_IMAGE,//add by lss
+                isOverLap = false,//add by lss 2020/8/12
+                nGrayBit = GRAY_MODE.GRAY_16,//add by lss 2020/8/12
+                bSimpleGT = false//简单快速做模板
+            };
         }
         public IMAGE_ACQ_MODE aqc_mode;
         public int ngroupno;
@@ -442,19 +451,22 @@ namespace Detector
     };
 
     // Notice:generate calibrate template input param
-    public class CALIBRATE_INPUT_PARAM
+    public struct CALIBRATE_INPUT_PARAM
     {
-        public CALIBRATE_INPUT_PARAM()
+        public static implicit operator CALIBRATE_INPUT_PARAM(int b)
         {
-            image_w = 0;
-            image_h = 0;
-            binning = 1;
-            roi_x = 0;
-            roi_y = 0;
-            roi_w = 0;
-            roi_h = 0;
-            group_sum = 0;
-            per_group_num = 0;
+            return new CALIBRATE_INPUT_PARAM
+            {
+                image_w = 0,
+                image_h = 0,
+                binning = b,
+                roi_x = 0,
+                roi_y = 0,
+                roi_w = 0,
+                roi_h = 0,
+                group_sum = 0,
+                per_group_num = 0
+            };
         }
         public int image_w;       // image width
         public int image_h;       // image height
@@ -465,8 +477,8 @@ namespace Detector
         public int roi_h;         // ROI height
         public int group_sum;     // group sum
         public int per_group_num; // num per group
-    }
-    ;
+    };
+    
 
 
     // System Manufacture Information：100
