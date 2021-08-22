@@ -345,8 +345,21 @@ namespace Detector
         /// <returns></returns>
         private unsafe int RecieveImageAndEvent(Byte cmd, void* buff, int len, int nID)
         {
+            CALLBACK_EVENT_COMM_TYPE command = (CALLBACK_EVENT_COMM_TYPE)cmd;
 
-            switch ((CALLBACK_EVENT_COMM_TYPE)cmd)
+            if ((command == CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_SINGLE_IMAGE) || (command == CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_MULTIPLE_IMAGE) ||
+                (command == CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_ROM_UPLOAD) || (command == CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_RAM_UPLOAD))
+            {
+                if (buff == null || len == 0)
+                {
+                    ShowMessage("注册回调函数参数异常!");
+                    return 0;
+                }
+            }
+
+
+
+            switch (command)
             {
                 case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_NET_ERR_MSG:
                     {
@@ -407,16 +420,14 @@ namespace Detector
                 case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_MULTIPLE_IMAGE:
                     {
                         NV_ImageInfo _ImageInfo;
-                        _ImageInfo.iImageSize = 10;
-                        _ImageInfo.iSizeX = _imageWidth;
-                        _ImageInfo.iSizeY = _imageHeight;
 
-                        _ImageInfo.iPixelType = 0;			///< 像素格式
+                        //todo: ZQB 像素格式这里需要确认下是怎么搞？
+                        _ImageInfo.iPixelType = 4;			///< 像素格式
                         _ImageInfo.iSizeX = _imageWidth;             ///< 图像宽
                         _ImageInfo.iSizeY = _imageHeight;             ///< 图像高
-                        _ImageInfo.iImageSize = 0;         ///< 图像所占的字节数
+                        _ImageInfo.iImageSize = len * sizeof(ushort);         ///< 图像所占的字节数
 
-                        _ImageInfo.pImageBuffer = null;		///< 图像数据指针
+                        _ImageInfo.pImageBuffer = (ushort*)buff;		///< 图像数据指针
                         _ImageInfo.iTimeStamp = 0;			///< 时间戳
                         _ImageInfo.iMissingPackets = _MissedPacketNum;    ///< 丢失的包数量
                         _ImageInfo.iAnnouncedBuffers = 0;  ///< 声明缓存区大小[暂为0]
