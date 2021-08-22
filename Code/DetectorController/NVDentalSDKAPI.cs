@@ -76,6 +76,17 @@ namespace Detector
        public int KernelVersion;		///< 探测器的系统内核版本
        public int HardwareVersion;	///< 探测器的处理板版本
     }
+
+    /// @brief 图像像素格式(位数)
+    public enum NV_PixelFormat
+    {
+        NV_PF_Mono16 = 0x01100007,  ///< 16位图像数据(默认值)
+        NV_PF_Mono14 = 0x01100025,  ///< 14位图像数据
+        NV_PF_Mono12 = 0x01100005,  ///< 12位图像数据
+        NV_PF_Mono8 = 0x01080001    ///< 8位图像数据
+    }
+
+
     public unsafe struct NV_ImageInfo
     {
         public Int32 iPixelType;			///< 像素格式

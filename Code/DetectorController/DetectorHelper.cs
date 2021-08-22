@@ -420,15 +420,15 @@ namespace Detector
                 case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_MULTIPLE_IMAGE:
                     {
                         NV_ImageInfo _ImageInfo;
-
+                        
                         //todo: ZQB 像素格式这里需要确认下是怎么搞？
-                        _ImageInfo.iPixelType = 4;			///< 像素格式
+                        _ImageInfo.iPixelType = (Int32)NV_PixelFormat.NV_PF_Mono16;	///< 像素格式
                         _ImageInfo.iSizeX = _imageWidth;             ///< 图像宽
                         _ImageInfo.iSizeY = _imageHeight;             ///< 图像高
                         _ImageInfo.iImageSize = len * sizeof(ushort);         ///< 图像所占的字节数
 
                         _ImageInfo.pImageBuffer = (ushort*)buff;		///< 图像数据指针
-                        _ImageInfo.iTimeStamp = 0;			///< 时间戳
+                        _ImageInfo.iTimeStamp = System.DateTime.Now.Second;			///< 时间戳
                         _ImageInfo.iMissingPackets = _MissedPacketNum;    ///< 丢失的包数量
                         _ImageInfo.iAnnouncedBuffers = 0;  ///< 声明缓存区大小[暂为0]
                         _ImageInfo.iQueuedBuffers = 0;     ///< 队列缓存区大小[暂为0]
