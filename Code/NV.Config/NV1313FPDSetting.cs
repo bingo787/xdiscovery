@@ -45,7 +45,7 @@ namespace NV.Config
     {
         HB_SORTWARE_TRIGGER =1 ,
         HB_HIGH_VOLTAGE_TRIGGER = 3,
-        HB_FREE_AED_TRIGGER = 4,
+        HB_FREE_AED_TRIGGER =4,
     }
 
 
@@ -206,6 +206,7 @@ namespace NV.Config
             }
         }
 
+        //============================================================
         private int _expTime = 168;
         /// <summary>
         /// 积分时间
@@ -222,6 +223,44 @@ namespace NV.Config
                 Set(() => ExpTime, ref _expTime, value);
             }
         }
+
+        //=========================================================
+        private string _remoteIp= "192.168.3.204:8989";
+        /// <summary>
+        /// 平板IP地址
+        /// </summary>
+        [XmlElement(ElementName = "平板地址")]
+        public string RemoteIp
+        {
+            get
+            {
+                return _remoteIp;
+            }
+            set
+            {
+                Set(() => RemoteIp, ref _remoteIp, value);
+            }
+        }
+        //==============================================
+        //=========================================================
+        private string _localIp = "192.168.3.104:8989";
+        /// <summary>
+        /// 平板IP地址
+        /// </summary>
+        [XmlElement(ElementName = "本机地址")]
+        public string LocalIp
+        {
+            get
+            {
+                return _localIp;
+            }
+            set
+            {
+                Set(() => LocalIp, ref _localIp, value);
+            }
+        }
+        //==============================================
+
         private int _delay = 1000;
         /// <summary>
         /// 延迟采集时间

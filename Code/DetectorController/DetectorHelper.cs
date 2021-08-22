@@ -22,6 +22,9 @@ namespace Detector
 
         public FPD_AQC_MODE global_aqc_mode;
 
+        public string LocalIpPort;
+        public string RemoteIpPort;
+
         /// <summary>
         /// 是否丢包
         /// </summary>
@@ -244,8 +247,9 @@ namespace Detector
             //NVDentalSDK.NV_CloseDet();
             HBSDK.HBI_Destroy(_HBI_Handle);
 
-            // 然后再注册回调函数
+            _HBI_Handle =  HBSDK.HBI_Init();
 
+            // 然后再注册回调函数
             LastHBIReturnValue = HBSDK.HBI_RegEventCallBackFun(_HBI_Handle, HBIEventCallback);
 
             unsafe {
@@ -257,11 +261,23 @@ namespace Detector
             else
                 ShowMessage("HBI_RegEventCallBackFun success.");
 
+            string[] local_ip_port = LocalIpPort.Split(':');
+            string local_ip = local_ip_port.ElementAt(0);
+            Int16 local_port = Convert.ToInt16(local_ip_port.ElementAt(1));
 
-            LastHBIReturnValue = HBSDK.HBI_ConnectDetector(_HBI_Handle, "192.168.3.1", 100, "192.168.3.1", 100, 30);
+            string[] remote_ip_port = RemoteIpPort.Split(':');
+            string remote_ip = remote_ip_port.ElementAt(0);
+            Int16 remote_port = Convert.ToInt16(remote_ip_port.ElementAt(1));
+
+            LastHBIReturnValue = HBSDK.HBI_ConnectDetector(_HBI_Handle, 
+                local_ip,(ushort)local_port,
+                 remote_ip, (ushort)remote_port, 
+                 30);
             if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
             {
-                res += "探测器连接失败。" + GetLastError();
+                res += "探测器连接失败。" + GetLastError() + "\n" +
+                    local_ip.ToString() +":" + local_port.ToString() + " <--->" + 
+                    remote_ip.ToString() + ":" + remote_port.ToString();
                 return false;
             }
             else

@@ -1,7 +1,7 @@
 ﻿<Window x:Class="NV.DetectionPlatform.UCtrls.WndDetectorSetting"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="{DynamicResource Menu_Setting_Detector}" Height="430" Width="450" Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen">
+        Title="{DynamicResource Menu_Setting_Detector}" Height="530" Width="450" Style="{DynamicResource WindowStyle}" WindowStartupLocation="CenterScreen">
     <Window.Resources>
     </Window.Resources>
     <Grid Background="{DynamicResource LightGrayBG}">
@@ -26,6 +26,10 @@
                 <CheckBox Width="25" Height="25" HorizontalAlignment="Left" Margin="2,0,0,0" IsChecked="{Binding IsMultiFramesOverlayByAvg,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
                 <TextBlock Text="静态叠加帧数:"/>
                 <TextBox Text="{Binding MultiFramesOverlayNumber,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->
+                <TextBlock Text="本机地址(ip:port):"/>
+                <TextBox Text="{Binding LocalIp,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="平板地址(ip:port):"/>
+                <TextBox Text="{Binding RemoteIp,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Text="延时采集Delay(ms):"/>
                 <TextBox Text="{Binding Delay,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Text="增益Gain:" />
@@ -36,8 +40,8 @@
                 <TextBox Text="{Binding MaxFrames,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->
                 <TextBlock Text="Binning:"/>
                 <ComboBox ItemsSource="{Binding BinningModes}" SelectedValue="{Binding BinningMode}"/>
-                <TextBlock Text="Shutter:"/>
-                <ComboBox SelectedValue="{Binding ShutterMode}" ItemsSource="{Binding ShutterModes}"/>
+                <!--<TextBlock Text="Shutter:"/>
+                <ComboBox SelectedValue="{Binding ShutterMode}" ItemsSource="{Binding ShutterModes}"/>-->
                 <TextBlock Text="Acquisition:"/>
                 <ComboBox x:Name="cboParities" ItemsSource="{Binding AcquisitionModes}" SelectedValue="{Binding AcquisitionMode}">
                 </ComboBox>
@@ -48,7 +52,7 @@
                 <TextBlock Text="{DynamicResource DefectCorType}"/>
                 <ComboBox x:Name="cboSstopBites" ItemsSource="{Binding CorrectionModes}" SelectedValue="{Binding DefectCorMode}"/>
                 <Button x:Name="btnClose" Content="应用" IsEnabled="True" Click="btnClose_Click" Height="30" Visibility="Hidden"/>
-                <Button  Content="{DynamicResource Btn_Apply}" IsEnabled="True" Click="btnClose_Click" Height="30" IsDefault="True"/>
+                <Button  Content="{DynamicResource Btn_Apply}" IsEnabled="True" Click="btnClose_Click" Height="30" IsDefault="True" Margin="0,0,0,1"/>
             </UniformGrid>
         </GroupBox>
     </Grid>
