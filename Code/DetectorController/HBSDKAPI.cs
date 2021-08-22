@@ -1178,7 +1178,7 @@ namespace Detector
         * 备    注:
         *********************************************************/
         [DllImport("HBI_FPD_E.dll", CharSet = CharSet.Auto)]
-        public static extern int HBI_UpdateCorrectEnable(UIntPtr handle, ref IMAGE_CORRECT_ENABLE pCorrect);
+        public static extern int HBI_UpdateCorrectEnable(UIntPtr handle,  IMAGE_CORRECT_ENABLE pCorrect);
 
         /*********************************************************
         * 编    号: No022
@@ -1238,6 +1238,7 @@ namespace Detector
                     [7]-9.6pC
         * 备    注:
         *********************************************************/
+        [DllImport("HBI_FPD_E.dll", CharSet = CharSet.Auto)]
         public static extern int HBI_GetGainMode(UIntPtr handle);
 
         /*********************************************************
@@ -1431,7 +1432,7 @@ namespace Detector
         * 备    注:
         *********************************************************/
         [DllImport("HBI_FPD_E.dll", CharSet = CharSet.Auto)]
-        public static extern int HBI_RegProgressCallBack(UIntPtr handle, USER_CALLBACK_HANDLE_PROCESS handleStatusfun, UIntPtr _Object);
+        public static unsafe extern int HBI_RegProgressCallBack(UIntPtr handle, USER_CALLBACK_HANDLE_PROCESS handleStatusfun, void* _Object);
 
         /*********************************************************
         * 编    号: No037
@@ -1494,6 +1495,7 @@ namespace Detector
             非0 - 失败
         * 备    注:
         *********************************************************/
+        [DllImport("HBI_FPD_E.dll", CharSet = CharSet.Auto)]
         public static extern int HBI_GenerateOffsetTemp(UIntPtr handle, int raw_num);
 
         /*********************************************************

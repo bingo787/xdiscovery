@@ -20,10 +20,16 @@ namespace Detector
         public UIntPtr _HBI_Handle { get; set; }
         public int LastHBIReturnValue { get; set; }
 
+        public FPD_AQC_MODE global_aqc_mode;
+
+        /// <summary>
+        /// 是否丢包
+        /// </summary>
+        public Int32 _MissedPacketNum;
 
         /// <summary>
         /// 是否存储图像
-        /// </summary>
+        /// </summary>`
         public bool IsStored { get; set; }
         /// <summary>
         /// 是否多帧叠加
@@ -100,7 +106,8 @@ namespace Detector
             unsafe
             {
                 //add by zhao 
-                HBICallbackHandle = new USER_CALLBACK_HANDLE_ENVENT(RecieveImageAndEvent);
+                HBIEventCallback = new USER_CALLBACK_HANDLE_ENVENT(RecieveImageAndEvent);
+                HBIProcessCallback = new USER_CALLBACK_HANDLE_PROCESS(HandleProcessCallback);
             }
 
         }
@@ -148,6 +155,7 @@ namespace Detector
 
 
             FPD_AQC_MODE fPD_AQC_MODE_nframecount = MaxFrames;
+
             LastHBIReturnValue =  HBSDK.HBI_SingleAcquisition(_HBI_Handle, fPD_AQC_MODE_nframecount);
             // HBSDK.HBI_LiveAcquisition(_HBI_Handle,fPD_AQC_MODE_nframecount);
 
@@ -221,7 +229,8 @@ namespace Detector
         public event ExcutedCallbackHandler AcqMaxFramesEvent;
         public int MaxFrames = 0;
 
-        public static USER_CALLBACK_HANDLE_ENVENT HBICallbackHandle;
+        public static USER_CALLBACK_HANDLE_ENVENT HBIEventCallback;
+        public static USER_CALLBACK_HANDLE_PROCESS HBIProcessCallback;
 
 
         /// <summary>
@@ -237,7 +246,12 @@ namespace Detector
 
             // 然后再注册回调函数
 
-            LastHBIReturnValue = HBSDK.HBI_RegEventCallBackFun(_HBI_Handle, HBICallbackHandle);
+            LastHBIReturnValue = HBSDK.HBI_RegEventCallBackFun(_HBI_Handle, HBIEventCallback);
+
+            unsafe {
+                LastHBIReturnValue = HBSDK.HBI_RegProgressCallBack(_HBI_Handle, HBIProcessCallback, null);
+            }
+ 
             if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
                 res += ("HBI_RegEventCallBackFun Failed");
             else
@@ -320,6 +334,15 @@ namespace Detector
             }
         }
 
+
+        /// <summary>
+        /// HBI 的事件回调函数，这个接口内部有众多事件需要判断
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <param name="buff"></param>
+        /// <param name="len"></param>
+        /// <param name="nID"></param>
+        /// <returns></returns>
         private unsafe int RecieveImageAndEvent(Byte cmd, void* buff, int len, int nID)
         {
 
@@ -388,7 +411,7 @@ namespace Detector
 
                         _ImageInfo.pImageBuffer = null;		///< 图像数据指针
                         _ImageInfo.iTimeStamp = 0;			///< 时间戳
-                        _ImageInfo.iMissingPackets = 0;    ///< 丢失的包数量
+                        _ImageInfo.iMissingPackets = _MissedPacketNum;    ///< 丢失的包数量
                         _ImageInfo.iAnnouncedBuffers = 0;  ///< 声明缓存区大小[暂为0]
                         _ImageInfo.iQueuedBuffers = 0;     ///< 队列缓存区大小[暂为0]
                         _ImageInfo.iOffsetX = 0;           ///< x方向偏移量[暂未设置]
@@ -423,8 +446,13 @@ namespace Detector
                         if (len == 5)
                         {
                             ShowMessage("Stop Acquisition", true);
-                            //if(INSTANCE->acq_mode.aqc_mode == DYNAMIC_DEFECT_ACQ_MODE)
-                            //	INSTANCE->
+
+                            // 完成OFFSET校正
+                            if (global_aqc_mode.nLiveMode == LIVE_MODE.ACQ_OFFSET_T)//Only Template
+                                {
+                                    FinishedOffsetEvent(true);
+                                }
+
                         }
                         break;
                     }
@@ -436,12 +464,30 @@ namespace Detector
                     {
                         break;
                     }
+                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_PACKET_MISS:
+                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_PACKET_MISS_MSG:
+                    {
+                        ShowMessage("Packet miss  " + len.ToString());
+                        _MissedPacketNum = len;
+                        break;
+                    }
                 default:
                     {
                         ShowMessage("ECALLBACK_TYPE_INVALID, command " + cmd.ToString(), true);
                         break;
                     }
             }
+            return 0;
+        }
+        /// <summary>
+        /// HBI 的处理回调函数
+        /// </summary>
+        /// <param name="cmd"></param>
+        /// <param name="retcode"></param>
+        /// <param name="buff"></param>
+        /// <returns></returns>
+        private unsafe int HandleProcessCallback(Byte cmd, int retcode, ushort* buff) {
+            Log(cmd.ToString() + " " + retcode.ToString() );
             return 0;
         }
 
@@ -471,6 +517,11 @@ namespace Detector
             }
 
             count++;
+
+            // 达到最大帧数量的时候，通知。
+            if (count == MaxFrames) {
+                AcqMaxFrameEvent();
+            }
         }
         /// <summary>
         /// 多帧叠加
@@ -648,17 +699,18 @@ namespace Detector
         {
             count = 0;
 
-            IMAGE_CORRECT_ENABLE iMAGE_CORRECT_ENABLE = false;
-         
-            LastHBIReturnValue = HBSDK.HBI_UpdateCorrectEnable(_HBI_Handle, ref iMAGE_CORRECT_ENABLE);
+           
+            global_aqc_mode.bSimpleGT = true;
+            global_aqc_mode.nLiveMode = LIVE_MODE.ACQ_OFFSET_T;
+            
+
+            LastHBIReturnValue = HBSDK.HBI_LiveAcquisition(_HBI_Handle, global_aqc_mode);
+
             if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS) {
                 ShowMessage(GetLastError(),false);
-                FinishedOffsetEvent(false);
+                return;
             }
-            else
-            {
-                FinishedOffsetEvent(true);
-            }
+
            // NVDentalSDK.NV_ResetCorrection();
           //  NV_StatusCodes result = NVDentalSDK.NV_RunOffsetCalThread(FinishedOffsetEvent);
         }
@@ -714,17 +766,20 @@ namespace Detector
         public void StartGain()
         {
 
+            // 1. 注册回调函数
+
+            // 2. 设置触发模式为 Firmware PreOffset
+            IMAGE_CORRECT_ENABLE iMAGE_CORRECT_ENABLE = false;
+            iMAGE_CORRECT_ENABLE.bFeedbackCfg = false;
+            iMAGE_CORRECT_ENABLE.ucOffsetCorrection = 3;
+
+            LastHBIReturnValue = HBSDK.HBI_UpdateCorrectEnable(_HBI_Handle,  iMAGE_CORRECT_ENABLE);
+
+            // 3.初始化 GAIN 校正模型
             CALIBRATE_INPUT_PARAM cALIBRATE_INPUT_PARAM = 1;
             LastHBIReturnValue = HBSDK.HBI_InitGainMode(_HBI_Handle, cALIBRATE_INPUT_PARAM);
 
-            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
-            {
-                FinishedDetectEvent(false);
-            }
-            else
-            {
-                FinishedDetectEvent(true);
-            }
+
 
             //NVDentalSDK.NV_ResetCorrection();
             //NVDentalSDK.NV_RunGainCalThread(FinishedGainEvent, OpenXRayEvent, CloseXRayEvent);
@@ -954,6 +1009,7 @@ namespace Detector
 
         public bool NV_SetGain(NV_Gain nV_Gain)
         {
+           // HBSDK.HBI_SetGainMode(_HBI_Handle,);
             return NVDentalSDK.NV_SetGain(nV_Gain) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
