@@ -156,7 +156,7 @@ namespace Detector
 
             FPD_AQC_MODE fPD_AQC_MODE_nframecount = MaxFrames;
 
-            LastHBIReturnValue =  HBSDK.HBI_SingleAcquisition(_HBI_Handle, fPD_AQC_MODE_nframecount);
+            LastHBIReturnValue = HBSDK.HBI_SingleAcquisition(_HBI_Handle, fPD_AQC_MODE_nframecount);
             // HBSDK.HBI_LiveAcquisition(_HBI_Handle,fPD_AQC_MODE_nframecount);
 
             if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
@@ -251,7 +251,7 @@ namespace Detector
             unsafe {
                 LastHBIReturnValue = HBSDK.HBI_RegProgressCallBack(_HBI_Handle, HBIProcessCallback, null);
             }
- 
+
             if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
                 res += ("HBI_RegEventCallBackFun Failed");
             else
@@ -353,6 +353,11 @@ namespace Detector
 
                         if (len <= 0 && len >= -7)
                         {
+
+                            // 连接断开了
+
+                            ConnBreakCallBack();
+
                             if (len == 0)
                                 ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG, Err: 网络未连接！", true);
                             else if (len == -1)
@@ -369,6 +374,8 @@ namespace Detector
                                 ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,network card unusual!", true);
                             else if (len == -7)
                                 ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,network card ok!", true);
+
+
                         }
                         else if (len == 1)
                             ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,开始监听!");
@@ -418,6 +425,7 @@ namespace Detector
                         _ImageInfo.iOffsetY = 0;           ///< y方向偏移量[暂未设置]
                         _ImageInfo.iAwaitDelivery = 0;     ///< 等待传送的帧数[暂为0]
                         _ImageInfo.iBlockId = 0;          ///< GVSP协议的block-id
+
                         ShowImageCallBack(0, _ImageInfo);
 
                         break;
@@ -449,9 +457,9 @@ namespace Detector
 
                             // 完成OFFSET校正
                             if (global_aqc_mode.nLiveMode == LIVE_MODE.ACQ_OFFSET_T)//Only Template
-                                {
-                                    FinishedOffsetEvent(true);
-                                }
+                            {
+                                FinishedOffsetEvent(true);
+                            }
 
                         }
                         break;
@@ -487,7 +495,7 @@ namespace Detector
         /// <param name="buff"></param>
         /// <returns></returns>
         private unsafe int HandleProcessCallback(Byte cmd, int retcode, ushort* buff) {
-            Log(cmd.ToString() + " " + retcode.ToString() );
+            Log(cmd.ToString() + " " + retcode.ToString());
             return 0;
         }
 
@@ -574,7 +582,6 @@ namespace Detector
         }
 
 
-
         /// <summary>
         /// 采集到最大帧
         /// </summary>
@@ -618,7 +625,7 @@ namespace Detector
         {
             string res = string.Empty;
             int expTime = 168;
-          //  NV_Gain gain = NV_Gain.NV_GAIN_07;
+            //  NV_Gain gain = NV_Gain.NV_GAIN_07;
             //NV_BinningMode bin = binning == "2X2" ? NV_BinningMode.NV_BINNING_2X2 : NV_BinningMode.NV_BINNING_1X1;
 
             byte bin = 1;
@@ -631,7 +638,7 @@ namespace Detector
                 bin = 4;
             }
 
-            LastHBIReturnValue = HBSDK.HBI_SetBinning(_HBI_Handle,bin);
+            LastHBIReturnValue = HBSDK.HBI_SetBinning(_HBI_Handle, bin);
 
             if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
             {
@@ -647,16 +654,16 @@ namespace Detector
             switch (g)
             {
                 case "0.6pC": gain = 1; break;
-                case "1.2pC" : gain = 2; break;
-                case "2.4pC" : gain = 3; break;
-                case "3.6pC" : gain = 4; break;
-                case "4.8pC" : gain = 5; break;
-                case "7.2pC" : gain = 6; break; //默认7.2pC
+                case "1.2pC": gain = 2; break;
+                case "2.4pC": gain = 3; break;
+                case "3.6pC": gain = 4; break;
+                case "4.8pC": gain = 5; break;
+                case "7.2pC": gain = 6; break; //默认7.2pC
                 case "9.6pC": gain = 7; break;
                 default: break;
 
             }
-            if (HBSDK.HBI_SetGainMode(_HBI_Handle,gain) != (int)HBIRETCODE.HBI_SUCCSS)
+            if (HBSDK.HBI_SetGainMode(_HBI_Handle, gain) != (int)HBIRETCODE.HBI_SUCCSS)
             {
                 res += ("Set Gain Failed\n");
             }
@@ -699,20 +706,20 @@ namespace Detector
         {
             count = 0;
 
-           
+
             global_aqc_mode.bSimpleGT = true;
             global_aqc_mode.nLiveMode = LIVE_MODE.ACQ_OFFSET_T;
-            
+
 
             LastHBIReturnValue = HBSDK.HBI_LiveAcquisition(_HBI_Handle, global_aqc_mode);
 
             if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS) {
-                ShowMessage(GetLastError(),false);
+                ShowMessage(GetLastError(), false);
                 return;
             }
 
-           // NVDentalSDK.NV_ResetCorrection();
-          //  NV_StatusCodes result = NVDentalSDK.NV_RunOffsetCalThread(FinishedOffsetEvent);
+            // NVDentalSDK.NV_ResetCorrection();
+            //  NV_StatusCodes result = NVDentalSDK.NV_RunOffsetCalThread(FinishedOffsetEvent);
         }
         /// <summary>
         /// 校正完毕，设置校正模式软件模式
@@ -734,7 +741,7 @@ namespace Detector
             count = 0;
 
             CALIBRATE_INPUT_PARAM cALIBRATE_INPUT_PARAM = 1;
-            LastHBIReturnValue =  HBSDK.HBI_InitDefectMode(_HBI_Handle,cALIBRATE_INPUT_PARAM);
+            LastHBIReturnValue = HBSDK.HBI_InitDefectMode(_HBI_Handle, cALIBRATE_INPUT_PARAM);
 
             if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
             {
@@ -744,8 +751,8 @@ namespace Detector
                 FinishedDetectEvent(true);
             }
 
-           // NVDentalSDK.NV_ResetCorrection();
-          //  NV_StatusCodes result = NVDentalSDK.NV_RunAutoDefectCalThread(FinishedDetectEvent);
+            // NVDentalSDK.NV_ResetCorrection();
+            //  NV_StatusCodes result = NVDentalSDK.NV_RunAutoDefectCalThread(FinishedDetectEvent);
         }
         /// <summary>
         /// detect校正返回
@@ -773,7 +780,7 @@ namespace Detector
             iMAGE_CORRECT_ENABLE.bFeedbackCfg = false;
             iMAGE_CORRECT_ENABLE.ucOffsetCorrection = 3;
 
-            LastHBIReturnValue = HBSDK.HBI_UpdateCorrectEnable(_HBI_Handle,  iMAGE_CORRECT_ENABLE);
+            LastHBIReturnValue = HBSDK.HBI_UpdateCorrectEnable(_HBI_Handle, iMAGE_CORRECT_ENABLE);
 
             // 3.初始化 GAIN 校正模型
             CALIBRATE_INPUT_PARAM cALIBRATE_INPUT_PARAM = 1;
@@ -794,7 +801,7 @@ namespace Detector
             {
                 if (CMessageBox.Show("请关闭 X光后，点击确定", "提示", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
                 {
-                 //   NVDentalSDK.NV_CancelGainCal();
+                    //   NVDentalSDK.NV_CancelGainCal();
                 }
             }));
         }
@@ -850,9 +857,9 @@ namespace Detector
         public List<ushort[]> GetSourceImage(int count = 10)
         {
             //取消所有校正
-         //   NVDentalSDK.NV_SetDefectCal(NV_CorrType.NV_CORR_NO);
-         //   NVDentalSDK.NV_SetGainCal(NV_CorrType.NV_CORR_NO);
-         //   NVDentalSDK.NV_SetOffsetCal(NV_CorrType.NV_CORR_NO);
+            //   NVDentalSDK.NV_SetDefectCal(NV_CorrType.NV_CORR_NO);
+            //   NVDentalSDK.NV_SetGainCal(NV_CorrType.NV_CORR_NO);
+            //   NVDentalSDK.NV_SetOffsetCal(NV_CorrType.NV_CORR_NO);
 
             return GetImage(count);
         }
@@ -1009,18 +1016,57 @@ namespace Detector
 
         public bool NV_SetGain(NV_Gain nV_Gain)
         {
-           // HBSDK.HBI_SetGainMode(_HBI_Handle,);
+            // HBSDK.HBI_SetGainMode(_HBI_Handle,);
             return NVDentalSDK.NV_SetGain(nV_Gain) == NV_StatusCodes.NV_SC_SUCCESS;
         }
+        public bool HB_SetGain(int mode) {
 
-        public bool NV_SetExpTime(int p)
+            int ret = HBSDK.HBI_SetGainMode(_HBI_Handle, mode);
+            return ret == (int)HBIRETCODE.HBI_SUCCSS;
+        }
+
+        public bool HB_SetExpTime(int p)
         {
-            return NVDentalSDK.NV_SetExpTime(p) == NV_StatusCodes.NV_SC_SUCCESS;
+            int ret = HBSDK.HBI_SetSinglePrepareTime(_HBI_Handle, p);
+            return ret == (int)HBIRETCODE.HBI_SUCCSS;
+            // return NVDentalSDK.NV_SetExpTime(p) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
         public bool NV_SetMaxFrames(int p)
         {
             return NVDentalSDK.NV_SetMaxFrames(p) == NV_StatusCodes.NV_SC_SUCCESS;
+        }
+
+        public bool HB_SetBinningMode(byte mode) {
+
+            int ret = HBSDK.HBI_SetBinning(_HBI_Handle, mode);
+
+            switch (mode) {
+                case 1: {
+
+                        break;
+                    }
+                case 2:
+                    {
+                        _imageWidth = _detectorWidth / 2;
+                        _imageHeight = _detectorHeight / 2;
+                        break;
+                    }
+                case 4:
+                    {
+                        _imageWidth = _detectorWidth / 4;
+                        _imageHeight = _detectorHeight / 4;
+                        break;
+                    }
+                default:
+                    {
+                        ShowMessage("Unsupport bining mode");
+                        break;
+                    }
+
+            }
+
+            return ret == (int)HBIRETCODE.HBI_SUCCSS;
         }
 
         public bool NV_SetBinningMode(NV_BinningMode nV_BinningMode)
@@ -1050,6 +1096,11 @@ namespace Detector
             return NVDentalSDK.NV_SetOffsetCal(nV_CorrType) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
+        public bool HB_SetAcquisitionMode(int t) {
+
+            int ret = HBSDK.HBI_UpdateTriggerMode(_HBI_Handle,t);
+            return ret == (int)HBIRETCODE.HBI_SUCCSS;    
+        }
 
         public bool NV_SetAcquisitionMode(NV_AcquisitionMode nV_AcquisitionMode)
         {

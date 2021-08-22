@@ -40,6 +40,15 @@ namespace NV.Config
         NV_LOW_LEVEL_TRIGGER,		///< 高电平触发模式
         NV_HIGH_LEVEL_TRIGGER		///< 低电平触发模式
     }
+
+    public enum HB_TriggerMode
+    {
+        HB_SORTWARE_TRIGGER =1 ,
+        HB_HIGH_VOLTAGE_TRIGGER = 3,
+        HB_FREE_AED_TRIGGER = 4,
+    }
+
+
     public enum NV_ShutterMode
     {
         NV_GLOBAL_SHUTTER,			///< 全局快门(默认值)
@@ -50,6 +59,14 @@ namespace NV.Config
         NV_BINNING_1X1 = 0,				///< 1x1binning(默认值)
         NV_BINNING_2X2 = 1,				///< 2x2binning
     }
+
+    public enum HB_BinningMode
+    {
+        HB_BINNING_1X1 = 1,				///< 1x1binning(默认值)
+        HB_BINNING_2X2 = 2,             ///< 2x2binning
+        HB_BINNING_4X4 = 4,				///< 2x2binning
+    }
+
     public enum NV_Gain
     {
         NV_GAIN_01,					///< Sensor的增益档位：0.1PF
@@ -57,6 +74,18 @@ namespace NV.Config
         NV_GAIN_07,					///< Sensor的增益档位：0.7PF(默认值)
         NV_GAIN_10					///< Sensor的增益档位：1.0PF
     }
+
+    public enum HB_Gain {
+        HB_GAIN_06 = 1,       // [1]-0.6pC
+        HB_GAIN_12,         // [2]-1.2pC
+        HB_GAIN_24,         // [3]-2.4pC
+        HB_GAIN_36,         // [4]-3.6pC
+        HB_GAIN_48,         // [5]-4.8pC
+        HB_GAIN_72,         // [6]-7.2pC, 默认7.2pC
+        HB_GAIN_96,         // [7]-9.6pC
+
+    }
+
     public enum NV_CorrType
     {
         NV_CORR_NO,				///< 不应用校正使能
@@ -134,12 +163,12 @@ namespace NV.Config
             }
         }
 
-        private NV_Gain _gain = NV_Gain.NV_GAIN_07;
+        private HB_Gain _gain = HB_Gain.HB_GAIN_72;
         /// <summary>
         /// 增益档
         /// </summary>
         [XmlElement(ElementName = "增益档")]
-        public NV_Gain Gain
+        public HB_Gain Gain
         {
             get
             {
@@ -151,18 +180,21 @@ namespace NV.Config
             }
         }
 
-        private ObservableCollection<NV_Gain> _gains = new ObservableCollection<NV_Gain>()
+        private ObservableCollection<HB_Gain> _gains = new ObservableCollection<HB_Gain>()
         {
-            NV_Gain.NV_GAIN_01,
-            NV_Gain.NV_GAIN_04,
-            NV_Gain.NV_GAIN_07,
-            NV_Gain.NV_GAIN_10,
+            HB_Gain.HB_GAIN_06,       // [1]-0.6pC
+            HB_Gain.HB_GAIN_12,         // [2]-1.2pC
+            HB_Gain.HB_GAIN_24,         // [3]-2.4pC
+            HB_Gain.HB_GAIN_36,         // [4]-3.6pC
+            HB_Gain.HB_GAIN_48,         // [5]-4.8pC
+            HB_Gain.HB_GAIN_72,         // [6]-7.2pC, 默认7.2pC
+            HB_Gain.HB_GAIN_96        // [7]-9.6pC
         };
         /// <summary>
         /// 增益档列表
         /// </summary>
         [XmlIgnoreAttribute]
-        public ObservableCollection<NV_Gain> Gains
+        public ObservableCollection<HB_Gain> Gains
         {
             get
             {
@@ -272,12 +304,12 @@ namespace NV.Config
             }
         }
 
-        private NV_BinningMode _binningMode = NV_BinningMode.NV_BINNING_1X1;
+        private HB_BinningMode _binningMode = HB_BinningMode.HB_BINNING_1X1;
         /// <summary>
         /// binning模式
         /// </summary>
         [XmlElement(ElementName = "binning模式")]
-        public NV_BinningMode BinningMode
+        public HB_BinningMode BinningMode
         {
             get
             {
@@ -288,16 +320,17 @@ namespace NV.Config
                 Set(() => BinningMode, ref _binningMode, value);
             }
         }
-        private ObservableCollection<NV_BinningMode> _binningModes = new ObservableCollection<NV_BinningMode>()
+        private ObservableCollection<HB_BinningMode> _binningModes = new ObservableCollection<HB_BinningMode>()
         {
-            NV_BinningMode.NV_BINNING_1X1,
-            NV_BinningMode.NV_BINNING_2X2,
+            HB_BinningMode.HB_BINNING_1X1,
+            HB_BinningMode.HB_BINNING_2X2,
+            HB_BinningMode.HB_BINNING_4X4,
         };
         /// <summary>
         /// Binning列表
         /// </summary>
         [XmlIgnoreAttribute]
-        public ObservableCollection<NV_BinningMode> BinningModes
+        public ObservableCollection<HB_BinningMode> BinningModes
         {
             get
             {
@@ -346,12 +379,12 @@ namespace NV.Config
             }
         }
 
-        private NV_AcquisitionMode _acquisitionMode = NV_AcquisitionMode.NV_CONTINUE;
+        private HB_TriggerMode _acquisitionMode = HB_TriggerMode.HB_SORTWARE_TRIGGER;
         /// <summary>
         /// 触发模式
         /// </summary>
         [XmlElement(ElementName = "触发模式")]
-        public NV_AcquisitionMode AcquisitionMode
+        public HB_TriggerMode AcquisitionMode
         {
             get
             {
@@ -363,19 +396,17 @@ namespace NV.Config
             }
         }
 
-        private ObservableCollection<NV_AcquisitionMode> _acquisitionModes = new ObservableCollection<NV_AcquisitionMode>()
+        private ObservableCollection<HB_TriggerMode> _acquisitionModes = new ObservableCollection<HB_TriggerMode>()
         {
-            NV_AcquisitionMode.NV_CONTINUE,
-            NV_AcquisitionMode.NV_FALLING_EDGE_TRIGGER,
-            NV_AcquisitionMode.NV_HIGH_LEVEL_TRIGGER,
-            NV_AcquisitionMode.NV_LOW_LEVEL_TRIGGER,
-            NV_AcquisitionMode.NV_RISING_EDGE_TRIGGER,
+            HB_TriggerMode.HB_SORTWARE_TRIGGER,
+            HB_TriggerMode.HB_HIGH_VOLTAGE_TRIGGER,
+            HB_TriggerMode.HB_FREE_AED_TRIGGER,
         };
         /// <summary>
         /// 触发模式列表
         /// </summary>
         [XmlIgnoreAttribute]
-        public ObservableCollection<NV_AcquisitionMode> AcquisitionModes
+        public ObservableCollection<HB_TriggerMode> AcquisitionModes
         {
             get
             {
