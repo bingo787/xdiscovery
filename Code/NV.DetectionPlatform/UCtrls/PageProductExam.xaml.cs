@@ -118,15 +118,10 @@ namespace NV.DetectionPlatform.UCtrls
         /// </summary>
         public void InitilizeDetector()
         {
-            var Data = NV.Config.NV1313FPDSetting.Instance;
-            _detector.RemoteIpPort = Data.RemoteIp;
-            _detector.LocalIpPort = Data.LocalIp;
-
             string res;
             if (_detector.InitDetector(out res))
             {
-
-
+                var Data = NV.Config.NV1313FPDSetting.Instance;
                 _detector.IsMultiFramesOverlay = Data.IsMultiFramesOverlay;
                 _detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
                 _detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;

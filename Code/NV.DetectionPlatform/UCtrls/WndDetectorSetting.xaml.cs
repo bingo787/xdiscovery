@@ -41,11 +41,6 @@ namespace NV.DetectionPlatform.UCtrls
         {
             Data.Save();
             var detector = Detector.DetectorController.Instance;
-
-
-            detector.RemoteIpPort = Data.RemoteIp;
-            detector.LocalIpPort = Data.LocalIp;
-
             detector.IsMultiFramesOverlay = Data.IsMultiFramesOverlay;
             detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
             detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
