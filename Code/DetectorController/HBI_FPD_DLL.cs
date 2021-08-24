@@ -57,12 +57,12 @@ namespace Detector
                 case HBIRETCODE.HBI_REGISTER_CALLBACK_FAILED: return "failed to register callback function";
                 case HBIRETCODE.HBI_SEND_MESSAGE_FAILD: return "send message failed";
                 case HBIRETCODE.HBI_ERR_WORKMODE: return "switch work mode failed";
-                //case HBIRETCODE.HBI_FAILED: return "operation failed";
-                //case HBIRETCODE.HBI_FILE_NOT_EXISTS: return "file does not exist";
-                //case HBIRETCODE.HBI_COMM_TYPE_ERR: return "communication is not exist";
-                //case HBIRETCODE.HBI_TYPE_IS_NOT_EXISTS: return "this type is not exists";
-                //case HBIRETCODE.HBI_SAVE_FILE_FAILED: return "save file failed";
-                //case HBIRETCODE.HBI_INIT_PARAM_FAILED: return "Init dll param failed";
+                case HBIRETCODE.HBI_FAILED: return "operation failed";
+                case HBIRETCODE.HBI_FILE_NOT_EXISTS: return "file does not exist";
+                case HBIRETCODE.HBI_COMM_TYPE_ERR: return "communication is not exist";
+                case HBIRETCODE.HBI_TYPE_IS_NOT_EXISTS: return "this type is not exists";
+                case HBIRETCODE.HBI_SAVE_FILE_FAILED: return "save file failed";
+                case HBIRETCODE.HBI_INIT_PARAM_FAILED: return "Init dll param failed";
                 case HBIRETCODE.HBI_END: return "Exit monitoring";
                 default:
                     return "Unknown error";
@@ -725,7 +725,15 @@ namespace Detector
 	    HBI_REGISTER_CALLBACK_FAILED     = 8019,
 	    HBI_SEND_MESSAGE_FAILD           = 8020,
 	    HBI_ERR_WORKMODE                 = 8021,
-	    HBI_END
+        HBI_FAILED = 8022,
+        HBI_FILE_NOT_EXISTS = 8023,
+        HBI_COMM_TYPE_ERR = 8024,
+        HBI_TYPE_IS_NOT_EXISTS = 8025,
+        HBI_SAVE_FILE_FAILED = 8026,
+        HBI_INIT_PARAM_FAILED = 8027,
+        HBI_TIMEOUT = 8028,
+        HBI_SYSTEM_EXCEPTION = 8028, //System exception
+        HBI_END
     };
 
     public enum eCallbackTemplateStatus

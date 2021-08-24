@@ -427,6 +427,7 @@ namespace Detector
                 case eCallbackEventCommType.ECALLBACK_TYPE_SINGLE_IMAGE:
                 case eCallbackEventCommType.ECALLBACK_TYPE_MULTIPLE_IMAGE:
                     {
+                        ShowMessage("ECALLBACK_TYPE_SINGLE_IMAGE or ECALLBACK_TYPE_MULTIPLE_IMAGE");
                         NV_ImageInfo _ImageInfo;
                         
                         //todo: ZQB 像素格式这里需要确认下是怎么搞？
