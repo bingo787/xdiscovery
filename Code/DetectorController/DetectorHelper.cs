@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -649,7 +650,27 @@ namespace Detector
 
         private void Log(string p)
         {
-            Console.WriteLine(p);
+            string path = @"E:\temp";
+            
+            try
+            {
+                //如果日志目录不存在,则创建该目录
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                string logFileName = path + "\\调试日志_" + DateTime.Now.ToString("yyyy_MM_dd_HH") + ".log";
+                StringBuilder logContents = new StringBuilder();
+                logContents.AppendLine(p);
+                //当天的日志文件不存在则新建，否则追加内容
+                StreamWriter sw = new StreamWriter(logFileName, true, System.Text.Encoding.Unicode);
+                sw.Write(DateTime.Now.ToString("yyyy-MM-dd hh:mm:sss") + " " + logContents.ToString());
+                sw.Flush();
+                sw.Close();
+            }
+            catch (Exception)
+            {
+            }
         }
         /// <summary>
         /// 设置探测器采集时间、增益
