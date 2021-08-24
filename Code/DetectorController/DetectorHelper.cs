@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -257,9 +258,7 @@ namespace Detector
         {
             res = string.Empty;
 
-            // 首先销毁之前的句柄
-            //NVDentalSDK.NV_CloseDet();
-            HBI_FPD_DLL.HBI_Destroy(HBI_FPD_DLL._handel);
+            HBI_FPD_DLL._handel = HBI_FPD_DLL.HBI_Init();
 
             // 然后再注册回调函数
 
@@ -269,8 +268,8 @@ namespace Detector
             else
                 ShowMessage("HBI_RegEventCallBackFun success.");
 
-
-            ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, "192.168.3.1", 100, "192.168.3.1", 100, 30);
+           
+            ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, "192.168.10.40", 0x8081, "192.168.10.20", 0x8080, 30);
             if (ret != (int)HBIRETCODE.HBI_SUCCSS)
             {
                 res += "探测器连接失败。" + GetLastError(ret);
@@ -1328,6 +1327,20 @@ namespace Detector
             return NVDentalSDK.NV_SaveParamFile() == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
+
+        public string GetLocalIp()
+        {
+            ///获取本地的IP地址
+            string AddressIP = string.Empty;
+            foreach (IPAddress _IPAddress in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
+            {
+                if (_IPAddress.AddressFamily.ToString() == "InterNetwork")
+                {
+                    AddressIP = _IPAddress.ToString();
+                }
+            }
+            return AddressIP;
+        }
 
     }
 }
