@@ -80,10 +80,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DetectorHelper.cs" />
-    <Compile Include="HBSDKAPI.cs" />
+    <Compile Include="HBI_FPD_DLL.cs" />
     <Compile Include="NVDentalSDKAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TemplateTool.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

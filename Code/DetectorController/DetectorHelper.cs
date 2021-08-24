@@ -10,17 +10,25 @@ using NV.DRF.Core.Common;
 
 namespace Detector
 {
+
     /// <summary>
     /// 探测器操作辅助类
     /// </summary>
     public class DetectorController
     {
 
-        // add by zhao
-        public UIntPtr _HBI_Handle { get; set; }
-        public int LastHBIReturnValue { get; set; }
-
-        public FPD_AQC_MODE global_aqc_mode;
+        public bool bGainAcqFinished = false;   // 采集gain亮场图像结束标识
+        public bool bDefectAcqFinished = false; // 采集defect亮场图像结束标识
+        public bool bOffsetTemplateOk = false; // 生成offset模板成功标识
+        public bool bGainsetTemplateOk = false; // 生成gain模板成功标识
+        public bool bDefectTemplateOk = false; // 生成defect模板成功标识
+        public bool bDownloadTemplateOk = false; // 下载模板成功标识
+        EnumGENERATE_TEMPLATE_TYPE enumTemplateType = EnumGENERATE_TEMPLATE_TYPE.OFFSET_TEMPLATE;
+        emTFILE_MODE m_emfiletype;
+        RegCfgInfo m_pLastRegCfg; //记录固件所有配置数据  1024字节的结构体
+        IMAGE_CORRECT_ENABLE m_pCorrect = new IMAGE_CORRECT_ENABLE();
+        //    DOWNLOAD_FILE m_pdownloadmode = new DOWNLOAD_FILE();
+        FPD_AQC_MODE m_stMode = new FPD_AQC_MODE();
 
         /// <summary>
         /// 是否丢包
@@ -120,12 +128,12 @@ namespace Detector
         /// 获取上次出错信息
         /// </summary>
         /// <returns></returns>
-        public string GetLastError()
+        public string GetLastError(int ret)
         {
             //  StringBuilder _error = new StringBuilder(1024);
             //   NVDentalSDK.NV_LastErrorMsg(_error, 1024);
             //  return _error.ToString();
-            return HBSDK.GetErrorMsgByCode(LastHBIReturnValue);
+            return HBI_FPD_DLL.GetErrorMsgByCode(ret);
         }
 
         public bool GetTemperature(out float temperatrue1, out float temperature2)
@@ -153,15 +161,24 @@ namespace Detector
             _multiFramesOverlayBuffer.Clear();
             count = 0;
 
+            FPD_AQC_MODE stMode = new FPD_AQC_MODE();
+            
+            stMode.aqc_mode = EnumIMAGE_ACQ_MODE.STATIC_ACQ_DEFAULT_MODE;
+            stMode.nLiveMode = 2;
+            stMode.ndiscard = 0;
+            stMode.nframeid = 0;
+            stMode.nframesum = MaxFrames;
+            stMode.ngroupno = 0;
+            stMode.bSimpleGT = false;
+            stMode.isOverLap = false;
+            stMode.nGrayBit = emGRAY_MODE.GRAY_16;
+            m_stMode = stMode;
+            int ret = HBI_FPD_DLL.HBI_SingleAcquisition(HBI_FPD_DLL._handel, stMode);
+            // HBI_FPD_DLL.HBI_LiveAcquisition(HBI_FPD_DLL._handel,fPD_AQC_MODE_nframecount);
 
-            FPD_AQC_MODE fPD_AQC_MODE_nframecount = MaxFrames;
-
-            LastHBIReturnValue = HBSDK.HBI_SingleAcquisition(_HBI_Handle, fPD_AQC_MODE_nframecount);
-            // HBSDK.HBI_LiveAcquisition(_HBI_Handle,fPD_AQC_MODE_nframecount);
-
-            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
+            if (ret != 0)
             {
-                ShowMessage("StartAcq Failed——" + GetLastError(), true);
+                ShowMessage("StartAcq Failed——" + GetLastError(ret), true);
                 return false;
             }
             else
@@ -178,10 +195,10 @@ namespace Detector
         {
 
 
-            LastHBIReturnValue = HBSDK.HBI_StopAcquisition(_HBI_Handle);
-            if ((HBIRETCODE)LastHBIReturnValue != HBIRETCODE.HBI_SUCCSS)
+            int ret = HBI_FPD_DLL.HBI_StopAcquisition(HBI_FPD_DLL._handel);
+            if (ret !=0)
             {
-                ShowMessage("StopAcq Failed——" + GetLastError(), true);
+                ShowMessage("StopAcq Failed——" + GetLastError(ret), true);
                 return false;
             }
 
@@ -242,26 +259,21 @@ namespace Detector
 
             // 首先销毁之前的句柄
             //NVDentalSDK.NV_CloseDet();
-            HBSDK.HBI_Destroy(_HBI_Handle);
+            HBI_FPD_DLL.HBI_Destroy(HBI_FPD_DLL._handel);
 
             // 然后再注册回调函数
 
-            LastHBIReturnValue = HBSDK.HBI_RegEventCallBackFun(_HBI_Handle, HBIEventCallback);
-
-            unsafe {
-                LastHBIReturnValue = HBSDK.HBI_RegProgressCallBack(_HBI_Handle, HBIProcessCallback, null);
-            }
-
-            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
+            int ret = HBI_FPD_DLL.HBI_RegEventCallBackFun(HBI_FPD_DLL._handel, HBIEventCallback);
+            if (ret != (int)HBIRETCODE.HBI_SUCCSS)
                 res += ("HBI_RegEventCallBackFun Failed");
             else
                 ShowMessage("HBI_RegEventCallBackFun success.");
 
 
-            LastHBIReturnValue = HBSDK.HBI_ConnectDetector(_HBI_Handle, "192.168.3.1", 100, "192.168.3.1", 100, 30);
-            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
+            ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, "192.168.3.1", 100, "192.168.3.1", 100, 30);
+            if (ret != (int)HBIRETCODE.HBI_SUCCSS)
             {
-                res += "探测器连接失败。" + GetLastError();
+                res += "探测器连接失败。" + GetLastError(ret);
                 return false;
             }
             else
@@ -274,10 +286,10 @@ namespace Detector
                 //    res += ("ConnBreak failed");
 
 
-                IMAGE_PROPERTY iMAGE_PROPERTY;
-                LastHBIReturnValue = HBSDK.HBI_GetImageProperty(_HBI_Handle, out iMAGE_PROPERTY);
+                IMAGE_PROPERTY img_pro = new IMAGE_PROPERTY();
+                ret = HBI_FPD_DLL.HBI_GetImageProperty(HBI_FPD_DLL._handel, ref img_pro);
 
-                if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
+                if (ret != (int)HBIRETCODE.HBI_SUCCSS)
                 {
                     res += ("HBI_GetImageProperty failed");
                 }
@@ -286,17 +298,13 @@ namespace Detector
                     _detectorHeight = 3072;
                     _detectorWidth = 3072;
 
-                    _imageWidth = (int)iMAGE_PROPERTY.nwidth;
-                    _imageHeight = (int)iMAGE_PROPERTY.nheight;
-                    _bits = (int)iMAGE_PROPERTY.ndatabit;
+                    _imageWidth = (int)img_pro.nwidth;
+                    _imageHeight = (int)img_pro.nheight;
+                    _bits = (int)img_pro.ndatabit;
 
-                    Byte binning;
-                    HBSDK.HBI_GetBinning(_HBI_Handle, out binning);
-
-                    res += binning.ToString();
                     //if (binning == 2)
                     //{
-                    //    HBSDK.HBI_SetImageCalibration
+                    //    HBI_FPD_DLL.HBI_SetImageCalibration
                     //    NVDentalSDK.NV_SetImageRange(0, 0, ImageWidth / 2, ImageHeight / 2);
                     //}
                     //else
@@ -343,12 +351,12 @@ namespace Detector
         /// <param name="len"></param>
         /// <param name="nID"></param>
         /// <returns></returns>
-        private unsafe int RecieveImageAndEvent(Byte cmd, void* buff, int len, int nID)
+        private int RecieveImageAndEvent(byte cmd, IntPtr buff, int len, int nID)
         {
-            CALLBACK_EVENT_COMM_TYPE command = (CALLBACK_EVENT_COMM_TYPE)cmd;
+            eCallbackEventCommType command = (eCallbackEventCommType)cmd;
 
-            if ((command == CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_SINGLE_IMAGE) || (command == CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_MULTIPLE_IMAGE) ||
-                (command == CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_ROM_UPLOAD) || (command == CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_RAM_UPLOAD))
+            if ((command == eCallbackEventCommType.ECALLBACK_TYPE_SINGLE_IMAGE) || (command == eCallbackEventCommType.ECALLBACK_TYPE_MULTIPLE_IMAGE) ||
+                (command == eCallbackEventCommType.ECALLBACK_TYPE_ROM_UPLOAD) || (command == eCallbackEventCommType.ECALLBACK_TYPE_RAM_UPLOAD))
             {
                 if (buff == null || len == 0)
                 {
@@ -361,7 +369,7 @@ namespace Detector
 
             switch (command)
             {
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_NET_ERR_MSG:
+                case eCallbackEventCommType.ECALLBACK_TYPE_NET_ERR_MSG:
                     {
 
                         if (len <= 0 && len >= -7)
@@ -403,7 +411,7 @@ namespace Detector
 
                         break;
                     }
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_ROM_UPLOAD:
+                case eCallbackEventCommType.ECALLBACK_TYPE_ROM_UPLOAD:
                     {
                         ShowMessage("ECALLBACK_TYPE_ROM_UPLOAD...");
                         //if (INSTANCE->m_pLastRegCfg != NULL)
@@ -416,8 +424,8 @@ namespace Detector
                         //}
                         break;
                     }
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_SINGLE_IMAGE:
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_MULTIPLE_IMAGE:
+                case eCallbackEventCommType.ECALLBACK_TYPE_SINGLE_IMAGE:
+                case eCallbackEventCommType.ECALLBACK_TYPE_MULTIPLE_IMAGE:
                     {
                         NV_ImageInfo _ImageInfo;
                         
@@ -427,7 +435,9 @@ namespace Detector
                         _ImageInfo.iSizeY = _imageHeight;             ///< 图像高
                         _ImageInfo.iImageSize = len * sizeof(ushort);         ///< 图像所占的字节数
 
-                        _ImageInfo.pImageBuffer = (ushort*)buff;		///< 图像数据指针
+                        unsafe {
+                            _ImageInfo.pImageBuffer = (ushort*)buff;
+                                }		///< 图像数据指针
                         _ImageInfo.iTimeStamp = System.DateTime.Now.Second;			///< 时间戳
                         _ImageInfo.iMissingPackets = _MissedPacketNum;    ///< 丢失的包数量
                         _ImageInfo.iAnnouncedBuffers = 0;  ///< 声明缓存区大小[暂为0]
@@ -441,7 +451,7 @@ namespace Detector
 
                         break;
                     }
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_THREAD_EVENT:
+                case eCallbackEventCommType.ECALLBACK_TYPE_THREAD_EVENT:
                     {
                         if (len == 112)// offset使能，校正反馈信息
                             ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},offset calibrate:success!");
@@ -459,32 +469,47 @@ namespace Detector
                             ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},other feedback message!");
                         break;
                     }
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_FPD_STATUS:
+                case eCallbackEventCommType.ECALLBACK_TYPE_FPD_STATUS:
                     {
                         ShowMessage("TYPE_FPD_STATUS, command= " + cmd.ToString());
                         if (len == 5)
                         {
                             ShowMessage("Stop Acquisition", true);
 
-                            // 完成OFFSET校正
-                            if (global_aqc_mode.nLiveMode == LIVE_MODE.ACQ_OFFSET_T)//Only Template
+                            if (m_stMode.aqc_mode == EnumIMAGE_ACQ_MODE.DYNAMIC_ACQ_DEFAULT_MODE && m_stMode.nLiveMode == 3)//Only Template
                             {
-                                FinishedOffsetEvent(true);
+                                bOffsetTemplateOk = true; // 表示生成offset模板成功
+                                Log(string.Format("\tECALLBACK_TYPE_FPD_STATUS,bOffsetTemplateOk is true!aqc_mode:{0}\n", (int)(m_stMode.aqc_mode)));
+                                FinishedOffsetEvent(true);    
+                            }
+                            //
+                            if (m_stMode.aqc_mode == EnumIMAGE_ACQ_MODE.DYNAMIC_ACQ_BRIGHT_MODE)
+                            {
+                                bGainAcqFinished = true;// 表示defect采图成功
+                                Log(string.Format("\tECALLBACK_TYPE_FPD_STATUS,bGainAcqFinished is true!aqc_mode:{0}\n", (int)(m_stMode.aqc_mode)));
+                                FinishedDetectEvent(true);
+                            }
+                            //
+                            if (m_stMode.aqc_mode == EnumIMAGE_ACQ_MODE.DYNAMIC_DEFECT_ACQ_MODE && m_stMode.bSimpleGT)
+                            {
+                                bDefectAcqFinished = true;// 表示defect采图成功
+                                Log(string.Format("\tECALLBACK_TYPE_FPD_STATUS,bDefectAcqFinished is true!aqc_mode:{0}\n", (int)(m_stMode.aqc_mode)));
+                                FinishedDetectEvent(false);
                             }
 
                         }
                         break;
                     }
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_GAIN_ERR_MSG:
+                case eCallbackEventCommType.ECALLBACK_TYPE_GAIN_ERR_MSG:
                     {
                         break;
                     }
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_DEFECT_ERR_MSG:
+                case eCallbackEventCommType.ECALLBACK_TYPE_DEFECT_ERR_MSG:
                     {
                         break;
                     }
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_PACKET_MISS:
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_PACKET_MISS_MSG:
+                case eCallbackEventCommType.ECALLBACK_TYPE_PACKET_MISS:
+                case eCallbackEventCommType.ECALLBACK_TYPE_PACKET_MISS_MSG:
                     {
                         ShowMessage("Packet miss  " + len.ToString());
                         _MissedPacketNum = len;
@@ -505,7 +530,7 @@ namespace Detector
         /// <param name="retcode"></param>
         /// <param name="buff"></param>
         /// <returns></returns>
-        private unsafe int HandleProcessCallback(Byte cmd, int retcode, ushort* buff) {
+        private unsafe int HandleProcessCallback(byte cmd, int retcode, IntPtr buff) {
             Log(cmd.ToString() + " " + retcode.ToString());
             return 0;
         }
@@ -649,11 +674,11 @@ namespace Detector
                 bin = 4;
             }
 
-            LastHBIReturnValue = HBSDK.HBI_SetBinning(_HBI_Handle, bin);
+            int ret = HBI_FPD_DLL.HBI_SetBinning(HBI_FPD_DLL._handel, bin);
 
-            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
+            if (ret != 0)
             {
-                res += ("Set BinningMode Failed:" + GetLastError() + "\n");
+                res += ("Set BinningMode Failed:" + GetLastError(ret) + "\n");
             }
 
             //if (NVDentalSDK.NV_SetExpTime((int)exp) != NV_StatusCodes.NV_SC_SUCCESS)
@@ -674,7 +699,7 @@ namespace Detector
                 default: break;
 
             }
-            if (HBSDK.HBI_SetGainMode(_HBI_Handle, gain) != (int)HBIRETCODE.HBI_SUCCSS)
+            if (HBI_FPD_DLL.HBI_SetGainMode(HBI_FPD_DLL._handel, gain) != (int)HBIRETCODE.HBI_SUCCSS)
             {
                 res += ("Set Gain Failed\n");
             }
@@ -717,20 +742,24 @@ namespace Detector
         {
             count = 0;
 
-
-            global_aqc_mode.bSimpleGT = true;
-            global_aqc_mode.nLiveMode = LIVE_MODE.ACQ_OFFSET_T;
-
-
-            LastHBIReturnValue = HBSDK.HBI_LiveAcquisition(_HBI_Handle, global_aqc_mode);
-
-            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS) {
-                ShowMessage(GetLastError(), false);
+            m_stMode.aqc_mode = EnumIMAGE_ACQ_MODE.DYNAMIC_DEFECT_ACQ_MODE;
+            m_stMode.bSimpleGT = true;
+            m_stMode.nLiveMode = 3;
+            bOffsetTemplateOk = false;
+            //
+            enumTemplateType = EnumGENERATE_TEMPLATE_TYPE.OFFSET_TEMPLATE;
+            int ret = HBI_FPD_DLL.HBI_GenerateTemplateEx(HBI_FPD_DLL._handel, enumTemplateType);
+            if (ret != 0)
+            {
+                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(),true);
                 return;
             }
+            else
+            {
+               
+                ShowMessage("Do pre-offset template success!",true);
+            }
 
-            // NVDentalSDK.NV_ResetCorrection();
-            //  NV_StatusCodes result = NVDentalSDK.NV_RunOffsetCalThread(FinishedOffsetEvent);
         }
         /// <summary>
         /// 校正完毕，设置校正模式软件模式
@@ -751,19 +780,144 @@ namespace Detector
         {
             count = 0;
 
-            CALIBRATE_INPUT_PARAM cALIBRATE_INPUT_PARAM = 1;
-            LastHBIReturnValue = HBSDK.HBI_InitDefectMode(_HBI_Handle, cALIBRATE_INPUT_PARAM);
-
-            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
+            m_stMode.aqc_mode = EnumIMAGE_ACQ_MODE.DYNAMIC_DEFECT_ACQ_MODE;
+            m_stMode.bSimpleGT = true;
+            m_stMode.nLiveMode = 2;
+            bDefectAcqFinished = false;
+            bDefectTemplateOk = false;
+            bDownloadTemplateOk = false;
+            // 第一步：第一组亮场(剂量要求：正常高压，毫安秒调节正常的 10%)-发送采集命令
+            enumTemplateType = EnumGENERATE_TEMPLATE_TYPE.DEFECT_TEMPLATE_GROUP1;
+            int ret = HBI_FPD_DLL.HBI_GenerateTemplateEx(HBI_FPD_DLL._handel, enumTemplateType);   //6
+            if (ret != 0)
             {
-                FinishedDetectEvent(false);
+                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(),true);
+                return;
+            }
+            else
+            {
+                ShowMessage("Do defect group1 success!",true);
+            }
+            // 第二步：第二组亮场(剂量要求：正常高压，毫安秒调节正常的 50%)-发送采集命令
+            enumTemplateType = EnumGENERATE_TEMPLATE_TYPE.DEFECT_TEMPLATE_GROUP2;
+            ret = HBI_FPD_DLL.HBI_GenerateTemplateEx(HBI_FPD_DLL._handel, enumTemplateType);   //6
+            if (ret != 0)
+            {
+                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(),true);
+                return;
+            }
+            else
+            {
+                ShowMessage("Do defect group2 success!",true);
+            }
+            // 第三步：第三组亮场(剂量要求：正常高压，毫安秒调节正常的 100%)-发送采集命令
+            enumTemplateType = EnumGENERATE_TEMPLATE_TYPE.DEFECT_TEMPLATE_GROUP3;
+            ret = HBI_FPD_DLL.HBI_GenerateTemplateEx(HBI_FPD_DLL._handel, enumTemplateType);   //6
+            if (ret != 0)
+            {
+                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(),true);
+                return;
+            }
+            else
+            {
+                ShowMessage("Do defect group2 success and Generate Template success!",true);
+            }
+            // 第四步：注册回调函数
+            ret = HBI_FPD_DLL.HBI_RegProgressCallBack(HBI_FPD_DLL._handel, DownloadCallBack, HBI_FPD_DLL._handel);
+            if (ret != 0)
+            {
+                ShowMessage("err:HBI_RegProgressCallBack failed,TimeOut!", true);
+                return;
             }
             else {
-                FinishedDetectEvent(true);
+                ShowMessage("HBI_RegProgressCallBack success!");
             }
-
-            // NVDentalSDK.NV_ResetCorrection();
-            //  NV_StatusCodes result = NVDentalSDK.NV_RunAutoDefectCalThread(FinishedDetectEvent);
+               
+            // 第五步：将defect模板下载到固件
+            m_emfiletype = emTFILE_MODE.DEFECT_T;
+            HBI_FPD_DLL.HBI_DownloadTemplateEx(HBI_FPD_DLL._handel, m_emfiletype);
+            if (ret != 0)
+            {
+                ShowMessage("HBI_DownloadTemplateEx:gain template failed!ret:[{0}]" + ret.ToString(),true);
+                return;
+            }
+            // 第六步：更新矫正使能
+            m_pCorrect.bFeedbackCfg = true;  // true  - ECALLBACK_TYPE_ROM_UPLOAD Event,false - ECALLBACK_TYPE_SET_CFG_OK Event
+            m_pCorrect.ucOffsetCorrection = (char)3;
+            m_pCorrect.ucGainCorrection = (char)2;
+            m_pCorrect.ucDefectCorrection = (char)2;
+            m_pCorrect.ucDummyCorrection = (char)0; // 暂时不支持
+            // 打印
+            Log("HBI_UpdateCorrectEnable\n");
+            Log(String.Format("\tm_pCorrect.ucOffsetCorrection={0}\n", (int)m_pCorrect.ucOffsetCorrection));
+            Log(String.Format("\tm_pCorrect.ucGainCorrection={0}\n", (int)m_pCorrect.ucGainCorrection));
+            Log(String.Format("\tm_pCorrect.ucDefectCorrection={0}\n", (int)m_pCorrect.ucDefectCorrection));
+            Log(String.Format("\tm_pCorrect.ucDummyCorrection={0}\n", (int)m_pCorrect.ucDummyCorrection));
+            ret = HBI_FPD_DLL.HBI_UpdateCorrectEnable(HBI_FPD_DLL._handel, ref m_pCorrect);
+            if (ret == 0)
+            {
+                Log("\tHBI_UpdateCorrectEnable success!\n");
+            }
+            else
+            {
+                Log("\tHBI_UpdateCorrectEnable failed!");
+                return;
+            }
+        }
+        // dwnload template callcallback function
+        private int DownloadCallBack(byte command, int code, IntPtr pContext)
+        {
+            switch (command)
+            {
+                case (byte)(eCallbackDownloadTemplateFileStatus.ECALLBACK_DTFile_STATUS_PROGRESS): // 进度 code：百分比（0~100）	 初始化进度条	
+                    if (code == 100)//最后一包发完成
+                    {
+                        bDownloadTemplateOk = true;
+                    }
+                    //
+                    if (m_emfiletype == emTFILE_MODE.GAIN_T)
+                    {
+                        Log(string.Format("gain:ECALLBACK_DTFile_STATUS_PROGRESS,recode={0}\n", code));
+                    }
+                    else if (m_emfiletype == emTFILE_MODE.DEFECT_T)
+                    {
+                        Log(string.Format("defect:ECALLBACK_DTFile_STATUS_PROGRESS,recode={0}\n", code));
+                    }
+                    else
+                    {
+                        Log(string.Format("err:ECALLBACK_DTFile_STATUS_PROGRESS,tf_mode is not exits,recode={0}\n", code));
+                    }
+                    break;
+                case (byte)(eCallbackDownloadTemplateFileStatus.ECALLBACK_DTFile_STATUS_RESULT):   // 结果
+                    Log(string.Format("DownloadCallBack,%{0}\n", code));
+                    //最后一包发完成
+                    if (code == 100)
+                    {
+                        bDownloadTemplateOk = true;
+                        //
+                        if (m_emfiletype == emTFILE_MODE.GAIN_T)
+                        {
+                            Log(string.Format("gain:ECALLBACK_DTFile_STATUS_RESULT,retcode:[{0}]\n", code));
+                        }
+                        else if (m_emfiletype == emTFILE_MODE.DEFECT_T)
+                        {
+                            Log(string.Format("defect:ECALLBACK_DTFile_STATUS_RESULT,retcode:[{0}]\n", code));
+                        }
+                        else
+                        {
+                            Log(string.Format("err:ECALLBACK_DTFile_STATUS_RESULT,tf_mode is not exits,retcode:[{0}]\n", code));
+                        }
+                    }
+                    else
+                    {
+                        Log(string.Format("ECALLBACK_DTFile_STATUS_RESULT,retcode:[{0}]\n", code));
+                    }
+                    break;
+                default: // unusual
+                    Log(string.Format("DownloadCallBack,retcode:[{0}]\n", code));
+                    break;
+            }
+            return 1;
         }
         /// <summary>
         /// detect校正返回
@@ -784,23 +938,64 @@ namespace Detector
         public void StartGain()
         {
 
-            // 1. 注册回调函数
-
-            // 2. 设置触发模式为 Firmware PreOffset
-            IMAGE_CORRECT_ENABLE iMAGE_CORRECT_ENABLE = false;
-            iMAGE_CORRECT_ENABLE.bFeedbackCfg = false;
-            iMAGE_CORRECT_ENABLE.ucOffsetCorrection = 3;
-
-            LastHBIReturnValue = HBSDK.HBI_UpdateCorrectEnable(_HBI_Handle, iMAGE_CORRECT_ENABLE);
-
-            // 3.初始化 GAIN 校正模型
-            CALIBRATE_INPUT_PARAM cALIBRATE_INPUT_PARAM = 1;
-            LastHBIReturnValue = HBSDK.HBI_InitGainMode(_HBI_Handle, cALIBRATE_INPUT_PARAM);
-
-
-
-            //NVDentalSDK.NV_ResetCorrection();
-            //NVDentalSDK.NV_RunGainCalThread(FinishedGainEvent, OpenXRayEvent, CloseXRayEvent);
+            m_stMode.aqc_mode = EnumIMAGE_ACQ_MODE.DYNAMIC_ACQ_BRIGHT_MODE;
+            m_stMode.bSimpleGT = true;
+            m_stMode.nLiveMode = 2;
+            bGainAcqFinished = false;
+            bGainsetTemplateOk = false;
+            bDownloadTemplateOk = false;
+            // 第一步：一组亮场(剂量要求：正常高压和电流)-发送采集命令
+            // 高压的剂量一般为正常采图的剂量即可，等高压到达稳定值后开始调用生成接口直到采图完成结束。
+            enumTemplateType = EnumGENERATE_TEMPLATE_TYPE.GAIN_TEMPLATE;
+            int ret = HBI_FPD_DLL.HBI_GenerateTemplateEx(HBI_FPD_DLL._handel, enumTemplateType);   //6
+            if (ret != 0)
+            {
+                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(),true);
+                return;
+            }
+            else
+            {
+                ShowMessage("Do gain template success!");
+            }
+            // 第二步：注册回调函数
+            ret = HBI_FPD_DLL.HBI_RegProgressCallBack(HBI_FPD_DLL._handel, DownloadCallBack, HBI_FPD_DLL._handel);
+            if (ret != 0)
+            {
+                ShowMessage("HBI_RegProgressCallBack failed!ret:[{0}]" + ret.ToString(),true);
+                return;
+            }
+            else
+                ShowMessage("HBI_RegProgressCallBack success!");
+            // 第三步：将gain模板下载到固件
+            m_emfiletype = emTFILE_MODE.GAIN_T;
+            HBI_FPD_DLL.HBI_DownloadTemplateEx(HBI_FPD_DLL._handel, m_emfiletype);
+            if (ret != 0)
+            {
+                ShowMessage("HBI_DownloadTemplateEx:gain template failed!ret:[{0}]" + ret.ToString());
+                return;
+            }
+            // 第四步：更新矫正使能
+            m_pCorrect.bFeedbackCfg = true;  // true  - ECALLBACK_TYPE_ROM_UPLOAD Event,false - ECALLBACK_TYPE_SET_CFG_OK Event
+            m_pCorrect.ucOffsetCorrection = (char)3;
+            m_pCorrect.ucGainCorrection = (char)2;
+            m_pCorrect.ucDefectCorrection = (char)0;
+            m_pCorrect.ucDummyCorrection = (char)0; // 暂时不支持
+            // 打印
+            ShowMessage("HBI_UpdateCorrectEnable\n");
+            ShowMessage(String.Format("\tm_pCorrect.ucOffsetCorrection={0}\n", (int)m_pCorrect.ucOffsetCorrection));
+            ShowMessage(String.Format("\tm_pCorrect.ucGainCorrection={0}\n", (int)m_pCorrect.ucGainCorrection));
+            ShowMessage(String.Format("\tm_pCorrect.ucDefectCorrection={0}\n", (int)m_pCorrect.ucDefectCorrection));
+            ShowMessage(String.Format("\tm_pCorrect.ucDummyCorrection={0}\n", (int)m_pCorrect.ucDummyCorrection));
+            ret = HBI_FPD_DLL.HBI_UpdateCorrectEnable(HBI_FPD_DLL._handel, ref m_pCorrect);
+            if (ret == 0)
+            {
+                ShowMessage("\tHBI_UpdateCorrectEnable success!\n");
+            }
+            else
+            {
+                ShowMessage("\tHBI_UpdateCorrectEnable failed!");
+                return;
+            }
         }
         /// <summary>
         /// 关闭X光回调
@@ -1027,19 +1222,19 @@ namespace Detector
 
         public bool NV_SetGain(NV_Gain nV_Gain)
         {
-            // HBSDK.HBI_SetGainMode(_HBI_Handle,);
+            // HBI_FPD_DLL.HBI_SetGainMode(HBI_FPD_DLL._handel,);
             return NVDentalSDK.NV_SetGain(nV_Gain) == NV_StatusCodes.NV_SC_SUCCESS;
         }
         public bool HB_SetGain(int mode) {
 
-            int ret = HBSDK.HBI_SetGainMode(_HBI_Handle, mode);
-            return ret == (int)HBIRETCODE.HBI_SUCCSS;
+            int ret = HBI_FPD_DLL.HBI_SetGainMode(HBI_FPD_DLL._handel, mode);
+            return ret==0;
         }
 
         public bool HB_SetExpTime(int p)
         {
-            int ret = HBSDK.HBI_SetSinglePrepareTime(_HBI_Handle, p);
-            return ret == (int)HBIRETCODE.HBI_SUCCSS;
+            int ret = HBI_FPD_DLL.HBI_SetSinglePrepareTime(HBI_FPD_DLL._handel, p);
+            return ret == 0;
             // return NVDentalSDK.NV_SetExpTime(p) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
@@ -1050,7 +1245,7 @@ namespace Detector
 
         public bool HB_SetBinningMode(byte mode) {
 
-            int ret = HBSDK.HBI_SetBinning(_HBI_Handle, mode);
+            int ret = HBI_FPD_DLL.HBI_SetBinning(HBI_FPD_DLL._handel, mode);
 
             switch (mode) {
                 case 1: {
@@ -1077,7 +1272,7 @@ namespace Detector
 
             }
 
-            return ret == (int)HBIRETCODE.HBI_SUCCSS;
+            return ret == 0;
         }
 
         public bool NV_SetBinningMode(NV_BinningMode nV_BinningMode)
@@ -1109,8 +1304,8 @@ namespace Detector
 
         public bool HB_SetAcquisitionMode(int t) {
 
-            int ret = HBSDK.HBI_UpdateTriggerMode(_HBI_Handle,t);
-            return ret == (int)HBIRETCODE.HBI_SUCCSS;    
+            int ret = HBI_FPD_DLL.HBI_UpdateTriggerMode(HBI_FPD_DLL._handel,t);
+            return ret == 0;    
         }
 
         public bool NV_SetAcquisitionMode(NV_AcquisitionMode nV_AcquisitionMode)
