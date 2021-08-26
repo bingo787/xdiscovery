@@ -125,22 +125,18 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.IsMultiFramesOverlay = Data.IsMultiFramesOverlay;
                 _detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
                 _detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
-                // _detector.NV_SetGain((NV_Gain)Data.Gain);
                 _detector.HB_SetGain((int)Data.Gain);
                 _detector.HB_SetExpTime(Data.ExpTime);
-                _detector.NV_SetMaxFrames(Data.MaxFrames);
-                //string autoOffset = Data.IsAutoPreOffset ? "1" : "0";
-                //NV.Infrastructure.UICommon.IniFile.WriteString("System", "AutoOffsetCalOnOpen", autoOffset, System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "nvDentalDet.ini"));
-                //_detector.NV_SetBinningMode((NV_BinningMode)Data.BinningMode);
+                _detector.HB_SetMaxFrames(Data.MaxFrames);
+                string autoOffset = Data.IsAutoPreOffset ? "1" : "0";
+                NV.Infrastructure.UICommon.IniFile.WriteString("System", "AutoOffsetCalOnOpen", autoOffset, System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "nvDentalDet.ini"));
                 _detector.HB_SetBinningMode((byte)Data.BinningMode);
-                _detector.NV_SetShutterMode((NV_ShutterMode)Data.ShutterMode);
-               // _detector.NV_SetAcquisitionMode((NV_AcquisitionMode)Data.AcquisitionMode);
                 _detector.HB_SetAcquisitionMode((int)Data.AcquisitionMode);
-                _detector.NV_SetOffsetCal((NV_CorrType)Data.OffsetCorMode);
-                _detector.NV_SetGainCal((NV_CorrType)Data.GainCorMode);
-                _detector.NV_SetDefectCal((NV_CorrType)Data.DefectCorMode);
+                _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
+                _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
+                _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
                 _detector.Delay = Data.Delay;
-                _detector.NV_SaveParamFile();
+               _detector.NV_SaveParamFile();
 
                 IsConnected = true;
             }
@@ -238,9 +234,9 @@ namespace NV.DetectionPlatform.UCtrls
 
             _curExpType = type;
             var Data = NV.Config.NV1313FPDSetting.Instance;
-            _detector.NV_SetOffsetCal((NV_CorrType)Data.OffsetCorMode);
-            _detector.NV_SetGainCal((NV_CorrType)Data.GainCorMode);
-            _detector.NV_SetDefectCal((NV_CorrType)Data.DefectCorMode);
+            _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
+            _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
+            _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
 
             DicomViewer.Current.ClearImage();
 

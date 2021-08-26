@@ -86,12 +86,22 @@ namespace NV.Config
 
     }
 
-    public enum NV_CorrType
+    public enum HB_OffsetCorrType
     {
-        NV_CORR_NO,				///< 不应用校正使能
-        NV_CORR_HARD,			///< 应用硬件校正使能
-        NV_CORR_SOFT			///< 应用软件校正使能
+        HB_CORR_NO = 0,				///< 不应用校正使能
+        HB_CORR_SOFT = 1,			///< 应用硬件校正使能
+        HB_CORR_HARD_POST = 2,			///< 应用软件校正使能
+        HB_CORR_HARD_PRE = 3
     }
+
+    public enum HB_CorrType {
+
+        HB_CORR_NO = 0,				///< 不应用校正使能
+        HB_CORR_SOFT =1,			///< 应用硬件校正使能
+        HB_CORR_HARD =2			///< 应用软件校正使能
+    }
+
+
     public struct NV_Version
     {
         public int FirmwareVersion;	///< 探测器的应用软件版本
@@ -418,17 +428,17 @@ namespace NV.Config
             }
         }
 
-        private ObservableCollection<NV_CorrType> _correctionModes = new ObservableCollection<NV_CorrType>()
+        private ObservableCollection<HB_CorrType> _correctionModes = new ObservableCollection<HB_CorrType>()
         {
-            NV_CorrType.NV_CORR_HARD,
-            NV_CorrType.NV_CORR_NO,
-            NV_CorrType.NV_CORR_SOFT
+            HB_CorrType.HB_CORR_HARD,
+            HB_CorrType.HB_CORR_NO,
+            HB_CorrType.HB_CORR_SOFT
         };
         /// <summary>
         /// 校正模式列表
         /// </summary>
         [XmlIgnoreAttribute]
-        public ObservableCollection<NV_CorrType> CorrectionModes
+        public ObservableCollection<HB_CorrType> CorrectionModes
         {
             get
             {
@@ -440,12 +450,39 @@ namespace NV.Config
             }
         }
 
-        private NV_CorrType _offsetCorMode = NV_CorrType.NV_CORR_SOFT;
+        //
+
+        private ObservableCollection<HB_OffsetCorrType> _offsetCorrectionModes = new ObservableCollection<HB_OffsetCorrType>()
+        {
+            HB_OffsetCorrType.HB_CORR_NO ,              
+            HB_OffsetCorrType.HB_CORR_SOFT ,        
+            HB_OffsetCorrType.HB_CORR_HARD_POST,       
+            HB_OffsetCorrType.HB_CORR_HARD_PRE
+        };
+        /// <summary>
+        /// Offset 校正模式列表
+        /// </summary>
+        [XmlIgnoreAttribute]
+        public ObservableCollection<HB_OffsetCorrType> OffsetCorrectionModes
+        {
+            get
+            {
+                return _offsetCorrectionModes;
+            }
+            set
+            {
+                _offsetCorrectionModes = value;
+            }
+        }
+
+        //
+
+        private HB_OffsetCorrType _offsetCorMode = HB_OffsetCorrType.HB_CORR_HARD_PRE;
         /// <summary>
         /// 本底校正模式
         /// </summary>
         [XmlElement(ElementName = "本底校正模式")]
-        public NV_CorrType OffsetCorMode
+        public HB_OffsetCorrType OffsetCorMode
         {
             get
             {
@@ -456,12 +493,12 @@ namespace NV.Config
                 Set(() => OffsetCorMode, ref _offsetCorMode, value);
             }
         }
-        private NV_CorrType _gainCorMode = NV_CorrType.NV_CORR_SOFT;
+        private HB_CorrType _gainCorMode = HB_CorrType.HB_CORR_SOFT;
         /// <summary>
         /// 增益校正模式
         /// </summary>
         [XmlElement(ElementName = "增益校正模式")]
-        public NV_CorrType GainCorMode
+        public HB_CorrType GainCorMode
         {
             get
             {
@@ -472,12 +509,12 @@ namespace NV.Config
                 Set(() => GainCorMode, ref _gainCorMode, value);
             }
         }
-        private NV_CorrType _defectCorMode = NV_CorrType.NV_CORR_SOFT;
+        private HB_CorrType _defectCorMode = HB_CorrType.HB_CORR_SOFT;
         /// <summary>
         /// 坏点校正模式
         /// </summary>
         [XmlElement(ElementName = "坏点校正模式")]
-        public NV_CorrType DefectCorMode
+        public HB_CorrType DefectCorMode
         {
             get
             {

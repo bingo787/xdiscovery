@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -31,6 +32,8 @@ namespace Detector
         IMAGE_CORRECT_ENABLE m_pCorrect = new IMAGE_CORRECT_ENABLE();
         //    DOWNLOAD_FILE m_pdownloadmode = new DOWNLOAD_FILE();
         FPD_AQC_MODE m_stMode = new FPD_AQC_MODE();
+
+        public string log_path = System.Environment.CurrentDirectory;
 
         /// <summary>
         /// 是否丢包
@@ -113,12 +116,10 @@ namespace Detector
             IsMultiFramesOverlayByAvg = true;
             MultiFramesOverlayNumber = 2;
 
-            unsafe
-            {
                 //add by zhao 
-                HBIEventCallback = new USER_CALLBACK_HANDLE_ENVENT(RecieveImageAndEvent);
-                HBIProcessCallback = new USER_CALLBACK_HANDLE_PROCESS(HandleProcessCallback);
-            }
+            HBIEventCallback = new USER_CALLBACK_HANDLE_ENVENT(RecieveImageAndEvent);
+            HBIProcessCallback = new USER_CALLBACK_HANDLE_PROCESS(HandleProcessCallback);
+
 
         }
 
@@ -162,7 +163,7 @@ namespace Detector
             _imageBuffer.Clear();
             _multiFramesOverlayBuffer.Clear();
             count = 0;
-
+          //  亦可不用切换到软触发模式下，发送连续采集1帧即可完成单帧采集
             FPD_AQC_MODE stMode = new FPD_AQC_MODE();
             
             stMode.aqc_mode = EnumIMAGE_ACQ_MODE.STATIC_ACQ_DEFAULT_MODE;
@@ -175,7 +176,9 @@ namespace Detector
             stMode.isOverLap = false;
             stMode.nGrayBit = emGRAY_MODE.GRAY_16;
             m_stMode = stMode;
-            int ret = HBI_FPD_DLL.HBI_SingleAcquisition(HBI_FPD_DLL._handel, stMode);
+
+            ShowMessage("MaxFrames "+ MaxFrames.ToString());
+            int ret = HBI_FPD_DLL.HBI_LiveAcquisition(HBI_FPD_DLL._handel, stMode);
             // HBI_FPD_DLL.HBI_LiveAcquisition(HBI_FPD_DLL._handel,fPD_AQC_MODE_nframecount);
 
             if (ret != 0)
@@ -259,19 +262,26 @@ namespace Detector
         {
             res = string.Empty;
 
+            // 因为要重新连接，所以需要先销毁
+            HBI_FPD_DLL.HBI_Destroy(HBI_FPD_DLL._handel);
             HBI_FPD_DLL._handel = HBI_FPD_DLL.HBI_Init();
 
             // 然后再注册回调函数
 
             int ret = HBI_FPD_DLL.HBI_RegEventCallBackFun(HBI_FPD_DLL._handel, HBIEventCallback);
-            if (ret != (int)HBIRETCODE.HBI_SUCCSS)
+            if (ret != 0)
                 res += ("HBI_RegEventCallBackFun Failed");
             else
                 ShowMessage("HBI_RegEventCallBackFun success.");
 
-           
-            ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, "192.168.10.40", 0x8081, "192.168.10.20", 0x8080, 30);
-            if (ret != (int)HBIRETCODE.HBI_SUCCSS)
+
+            string local_ip = "192.168.10.20";
+            string remote_ip = "192.168.10.40";
+            ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, remote_ip, 0x8081, local_ip, 0x8080);
+
+            ShowMessage("local ip: " + local_ip + " <---> " + remote_ip);
+
+            if (ret != 0)
             {
                 res += "探测器连接失败。" + GetLastError(ret);
                 return false;
@@ -365,6 +375,7 @@ namespace Detector
                 }
             }
 
+            ShowMessage("================== RecieveImageAndEvent cmd " + cmd.ToString());
 
 
             switch (command)
@@ -651,16 +662,15 @@ namespace Detector
 
         private void Log(string p)
         {
-            string path = @"E:\temp";
-            
+
             try
             {
                 //如果日志目录不存在,则创建该目录
-                if (!Directory.Exists(path))
+                if (!Directory.Exists(log_path))
                 {
-                    Directory.CreateDirectory(path);
+                    Directory.CreateDirectory(log_path);
                 }
-                string logFileName = path + "\\调试日志_" + DateTime.Now.ToString("yyyy_MM_dd_HH") + ".log";
+                string logFileName = log_path + "\\调试日志_" + DateTime.Now.ToString("yyyy_MM_dd_HH") + ".log";
                 StringBuilder logContents = new StringBuilder();
                 logContents.AppendLine(p);
                 //当天的日志文件不存在则新建，否则追加内容
@@ -1259,9 +1269,11 @@ namespace Detector
             // return NVDentalSDK.NV_SetExpTime(p) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
-        public bool NV_SetMaxFrames(int p)
+        public bool HB_SetMaxFrames(int p)
         {
-            return NVDentalSDK.NV_SetMaxFrames(p) == NV_StatusCodes.NV_SC_SUCCESS;
+            MaxFrames = p;
+            return true;
+            //   return NVDentalSDK.NV_SetMaxFrames(p) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
         public bool HB_SetBinningMode(byte mode) {
@@ -1318,51 +1330,52 @@ namespace Detector
             return NVDentalSDK.NV_SetShutterMode(nV_ShutterMode) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
-        public bool NV_SetOffsetCal(NV_CorrType nV_CorrType)
-        {
-            return NVDentalSDK.NV_SetOffsetCal(nV_CorrType) == NV_StatusCodes.NV_SC_SUCCESS;
-        }
+      
 
         public bool HB_SetAcquisitionMode(int t) {
 
-            int ret = HBI_FPD_DLL.HBI_UpdateTriggerMode(HBI_FPD_DLL._handel,t);
+
+            // 这里出发模式只能选择07
+            int ret = HBI_FPD_DLL.HBI_UpdateTriggerMode(HBI_FPD_DLL._handel,7);
             return ret == 0;    
         }
 
-        public bool NV_SetAcquisitionMode(NV_AcquisitionMode nV_AcquisitionMode)
+        //public bool NV_SetAcquisitionMode(NV_AcquisitionMode nV_AcquisitionMode)
+        //{
+        //    return NVDentalSDK.NV_SetAcquisitionMode(nV_AcquisitionMode) == NV_StatusCodes.NV_SC_SUCCESS;
+        //}
+
+        public bool NV_SetOffsetCal(HB_OffsetCorrType nV_CorrType)
         {
-            return NVDentalSDK.NV_SetAcquisitionMode(nV_AcquisitionMode) == NV_StatusCodes.NV_SC_SUCCESS;
+            m_pCorrect.ucOffsetCorrection = (char)nV_CorrType;
+            return true;
+           // return NVDentalSDK.NV_SetOffsetCal(nV_CorrType) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
-        public bool NV_SetGainCal(NV_CorrType nV_CorrType)
+        public bool NV_SetGainCal(HB_CorrType nV_CorrType)
         {
-            return NVDentalSDK.NV_SetGainCal(nV_CorrType) == NV_StatusCodes.NV_SC_SUCCESS;
+
+            m_pCorrect.ucGainCorrection = (char)nV_CorrType;
+            return true;
+           // return NVDentalSDK.NV_SetGainCal(nV_CorrType) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
-        public bool NV_SetDefectCal(NV_CorrType nV_CorrType)
+        public bool NV_SetDefectCal(HB_CorrType nV_CorrType)
         {
-            return NVDentalSDK.NV_SetDefectCal(nV_CorrType) == NV_StatusCodes.NV_SC_SUCCESS;
+            m_pCorrect.ucDefectCorrection = (char)nV_CorrType;
+            return true;
+            //return NVDentalSDK.NV_SetDefectCal(nV_CorrType) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
         public bool NV_SaveParamFile()
         {
-            return NVDentalSDK.NV_SaveParamFile() == NV_StatusCodes.NV_SC_SUCCESS;
+            return true;
+            //return NVDentalSDK.NV_SaveParamFile() == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
 
-        public string GetLocalIp()
-        {
-            ///获取本地的IP地址
-            string AddressIP = string.Empty;
-            foreach (IPAddress _IPAddress in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
-            {
-                if (_IPAddress.AddressFamily.ToString() == "InterNetwork")
-                {
-                    AddressIP = _IPAddress.ToString();
-                }
-            }
-            return AddressIP;
-        }
+
+
 
     }
 }

@@ -42,7 +42,7 @@
                 <ComboBox x:Name="cboParities" ItemsSource="{Binding AcquisitionModes}" SelectedValue="{Binding AcquisitionMode}">
                 </ComboBox>
                 <TextBlock Text="{DynamicResource OffsetCorType}"/>
-                <ComboBox ItemsSource="{Binding CorrectionModes}" SelectedValue="{Binding OffsetCorMode}"/>
+                <ComboBox ItemsSource="{Binding OffsetCorrectionModes}" SelectedValue="{Binding OffsetCorMode}"/>
                 <TextBlock Text="{DynamicResource GainCorType}"/>
                 <ComboBox x:Name="cboStopBites" ItemsSource="{Binding CorrectionModes}" SelectedValue="{Binding GainCorMode}"/>
                 <TextBlock Text="{DynamicResource DefectCorType}"/>

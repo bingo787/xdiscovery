@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using NV.DRF.Controls;
 using Detector;
+
 namespace NV.DetectionPlatform.UCtrls
 {
     /// <summary>
@@ -44,20 +45,17 @@ namespace NV.DetectionPlatform.UCtrls
             detector.IsMultiFramesOverlay = Data.IsMultiFramesOverlay;
             detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
             detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
-            //detector.NV_SetGain((NV_Gain)Data.Gain);
             detector.HB_SetGain((int)Data.Gain);
             detector.HB_SetExpTime(Data.ExpTime);
-            detector.NV_SetMaxFrames(Data.MaxFrames);
+            detector.HB_SetMaxFrames(Data.MaxFrames);
             string autoOffset = Data.IsAutoPreOffset ? "1" : "0";
             NV.Infrastructure.UICommon.IniFile.WriteString("System", "AutoOffsetCalOnOpen", autoOffset, System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "nvDentalDet.ini"));
-            // detector.NV_SetBinningMode((NV_BinningMode)Data.BinningMode);
             detector.HB_SetBinningMode((byte)Data.BinningMode);
             detector.NV_SetShutterMode((NV_ShutterMode)Data.ShutterMode);
-            //detector.NV_SetAcquisitionMode((NV_AcquisitionMode)Data.AcquisitionMode);
             detector.HB_SetAcquisitionMode((int)Data.AcquisitionMode);
-            detector.NV_SetOffsetCal((NV_CorrType)Data.OffsetCorMode);
-            detector.NV_SetGainCal((NV_CorrType)Data.GainCorMode);
-            detector.NV_SetDefectCal((NV_CorrType)Data.DefectCorMode);
+            detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
+            detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
+            detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
             detector.Delay = Data.Delay;
             detector.NV_SaveParamFile();
 
