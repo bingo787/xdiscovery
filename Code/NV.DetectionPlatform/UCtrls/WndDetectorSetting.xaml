@@ -30,14 +30,14 @@
                 <TextBox Text="{Binding Delay,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Text="增益Gain:" />
                 <ComboBox SelectedValue="{Binding Gain,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Gains,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Text="积分时间Exptime:"/>
-                <TextBox Text="{Binding ExpTime,UpdateSourceTrigger=PropertyChanged}" />
+                <!--<TextBlock Text="积分时间Exptime:"/>
+                <TextBox Text="{Binding ExpTime,UpdateSourceTrigger=PropertyChanged}" />-->
                 <!--<TextBlock Text="最大帧数:"/>
                 <TextBox Text="{Binding MaxFrames,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->
                 <TextBlock Text="Binning:"/>
                 <ComboBox ItemsSource="{Binding BinningModes}" SelectedValue="{Binding BinningMode}"/>
-                <TextBlock Text="Shutter:"/>
-                <ComboBox SelectedValue="{Binding ShutterMode}" ItemsSource="{Binding ShutterModes}"/>
+                <!--<TextBlock Text="Shutter:"/>
+                <ComboBox SelectedValue="{Binding ShutterMode}" ItemsSource="{Binding ShutterModes}"/>-->
                 <TextBlock Text="Acquisition:"/>
                 <ComboBox x:Name="cboParities" ItemsSource="{Binding AcquisitionModes}" SelectedValue="{Binding AcquisitionMode}">
                 </ComboBox>
