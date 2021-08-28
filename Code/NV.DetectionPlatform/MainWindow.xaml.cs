@@ -391,7 +391,7 @@ namespace NV.DetectionPlatform
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                _examView.StopAcq(null, null);
+               // _examView.StopAcq(null, null);
 
             }));
         }

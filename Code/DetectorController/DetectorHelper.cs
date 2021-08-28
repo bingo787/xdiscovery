@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -160,26 +161,23 @@ namespace Detector
         /// <param name="e"></param>
         public bool StartAcq()
         {
+            ShowMessage("DEBUG ");
             _imageBuffer.Clear();
             _multiFramesOverlayBuffer.Clear();
             count = 0;
-          //  亦可不用切换到软触发模式下，发送连续采集1帧即可完成单帧采集
+            //  亦可不用切换到软触发模式下，发送连续采集1帧即可完成单帧采集
             FPD_AQC_MODE stMode = new FPD_AQC_MODE();
-            
-            stMode.aqc_mode = EnumIMAGE_ACQ_MODE.STATIC_ACQ_DEFAULT_MODE;
-            stMode.nLiveMode = 2;
-            stMode.ndiscard = 0;
-            stMode.nframeid = 0;
-            stMode.nframesum = MaxFrames;
-            stMode.ngroupno = 0;
-            stMode.bSimpleGT = false;
-            stMode.isOverLap = false;
+            stMode.aqc_mode = EnumIMAGE_ACQ_MODE.DYNAMIC_ACQ_DEFAULT_MODE;
+            stMode.nLiveMode = 2;     // 1-固件做offset模板并上图；2-只上图；3-固件做只做offset模板。
+            stMode.ndiscard = 0;     // 这里默认位0，不抛弃前几帧图像
+            stMode.nframeid = 0;     // 这里默认位0
+            stMode.nframesum = 20;    // 0-表示一直采图，20表示采集20帧图结束。这里默认采集20帧
+            stMode.ngroupno = 0;     // 这里默认位0
+            stMode.bSimpleGT = false; // 表示不启用快速生成模板
+            stMode.isOverLap = false; // 不要做叠加
             stMode.nGrayBit = emGRAY_MODE.GRAY_16;
-            m_stMode = stMode;
-
-            ShowMessage("MaxFrames "+ MaxFrames.ToString());
             int ret = HBI_FPD_DLL.HBI_LiveAcquisition(HBI_FPD_DLL._handel, stMode);
-            // HBI_FPD_DLL.HBI_LiveAcquisition(HBI_FPD_DLL._handel,fPD_AQC_MODE_nframecount);
+
 
             if (ret != 0)
             {
@@ -198,7 +196,7 @@ namespace Detector
         /// <returns></returns>
         public bool StopAcq()
         {
-
+            ShowMessage("DEBUG ");
 
             int ret = HBI_FPD_DLL.HBI_StopAcquisition(HBI_FPD_DLL._handel);
             if (ret !=0)
@@ -324,12 +322,15 @@ namespace Detector
                 }
                 res += (string.Format("Size w:{0} h:{1} bits:{2}", ImageWidth, ImageHeight, Bits));
                 res += "探测器已连接。";
+
+                btnGetFirmwareCfg_Click();
             }
             return true;
         }
 
         private void ConnBreak()
         {
+            ShowMessage("DEBUG ");
             if (ConnBreakEvent != null)
             {
                 ConnBreakEvent();
@@ -486,7 +487,7 @@ namespace Detector
                         ShowMessage("TYPE_FPD_STATUS, command= " + cmd.ToString());
                         if (len == 5)
                         {
-                            ShowMessage("Stop Acquisition", true);
+                             ShowMessage("aqc mode" + m_stMode.aqc_mode.ToString() + " " + m_stMode.nLiveMode.ToString() + " " + m_stMode.bSimpleGT.ToString());
 
                             if (m_stMode.aqc_mode == EnumIMAGE_ACQ_MODE.DYNAMIC_ACQ_DEFAULT_MODE && m_stMode.nLiveMode == 3)//Only Template
                             {
@@ -554,6 +555,7 @@ namespace Detector
         /// <param name="image"></param>
         private unsafe void ReceiveImage(byte wnd, NV_ImageInfo image)
         {
+            ShowMessage("DEBUG ");
             if (image.iMissingPackets > 0)
             {
                 return;//跳过丢包图像 
@@ -585,6 +587,7 @@ namespace Detector
         /// <param name="buffer"></param>
         private void MultiFramesOverlay(ref ushort[] buffer)
         {
+            ShowMessage("DEBUG ");
             _multiFramesOverlayBuffer.Enqueue(buffer);
             //低于降噪帧数直接返回
             if (_multiFramesOverlayBuffer.Count < MultiFramesOverlayNumber)
@@ -635,6 +638,7 @@ namespace Detector
         /// </summary>
         private void AcqMaxFrame()
         {
+            ShowMessage("DEBUG ");
             if (AcqMaxFramesEvent != null)
             {
                 AcqMaxFramesEvent.Invoke();
@@ -647,7 +651,7 @@ namespace Detector
         /// </summary>
         /// <param name="p"></param>
         /// <param name="isShowMessageBox"></param>
-        private void ShowMessage(string p, bool isShowMessageBox = false)
+        public void ShowMessage(string p, bool isShowMessageBox = false)
         {
             Log(p);
 
@@ -663,6 +667,11 @@ namespace Detector
         private void Log(string p)
         {
 
+            System.Diagnostics.StackTrace st = new System.Diagnostics.StackTrace(1, true);
+            string file = st.GetFrame(1).GetFileName();
+            int line = st.GetFrame(1).GetFileLineNumber();
+            string method = st.GetFrame(1).GetMethod().ToString();
+
             try
             {
                 //如果日志目录不存在,则创建该目录
@@ -672,7 +681,7 @@ namespace Detector
                 }
                 string logFileName = log_path + "\\调试日志_" + DateTime.Now.ToString("yyyy_MM_dd_HH") + ".log";
                 StringBuilder logContents = new StringBuilder();
-                logContents.AppendLine(p);
+                logContents.AppendLine(p + " " + method + " " + file +":" + line.ToString());
                 //当天的日志文件不存在则新建，否则追加内容
                 StreamWriter sw = new StreamWriter(logFileName, true, System.Text.Encoding.Unicode);
                 sw.Write(DateTime.Now.ToString("yyyy-MM-dd hh:mm:sss") + " " + logContents.ToString());
@@ -1264,8 +1273,9 @@ namespace Detector
 
         public bool HB_SetExpTime(int p)
         {
-            int ret = HBI_FPD_DLL.HBI_SetSinglePrepareTime(HBI_FPD_DLL._handel, p);
-            return ret == 0;
+            return true;
+          //  int ret = HBI_FPD_DLL.HBI_SetSinglePrepareTime(HBI_FPD_DLL._handel, p);
+          //  return ret == 0;
             // return NVDentalSDK.NV_SetExpTime(p) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
@@ -1334,7 +1344,7 @@ namespace Detector
 
         public bool HB_SetAcquisitionMode(int t) {
 
-
+            ShowMessage("DEBUG  设置触发模式为 7");
             // 这里出发模式只能选择07
             int ret = HBI_FPD_DLL.HBI_UpdateTriggerMode(HBI_FPD_DLL._handel,7);
             return ret == 0;    
@@ -1373,6 +1383,63 @@ namespace Detector
             //return NVDentalSDK.NV_SaveParamFile() == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
+        // 固件最新参数数据
+        private void btnGetFirmwareCfg_Click()
+        {
+            //if (!m_bOpen)
+            //{
+            //    System.Windows.Forms.MessageBox.Show("warnning:disconnect!");
+            //    return;
+            //}
+            //
+            m_pLastRegCfg = new RegCfgInfo();//RegCfgInfo 1024
+            int _ret = Marshal.SizeOf(m_pLastRegCfg);
+            _ret = HBI_FPD_DLL.HBI_GetDevCfgInfo(HBI_FPD_DLL._handel, ref m_pLastRegCfg);       //获取固件参数，连接后即可获取参数
+            if (_ret != 0) { Log("Error,HBI_GetDevCfgInfo" + _ret.ToString()); return; }   // WriteLog("HBI_GetDevCfgInfo:\n", img_pro.nwidth, img_pro.nheight);
+
+            // 测试，置零，检查结果
+            ushort usValue = (ushort)(((m_pLastRegCfg.m_EtherInfo.m_sDestUDPPort & 0xff) << 8) | ((m_pLastRegCfg.m_EtherInfo.m_sDestUDPPort >> 8) & 0xff));// 高低位需要转换
+            Log(string.Format("\tSourceIP:{0}.{1}.{2}.{3}:{4}\n",
+               (int)(m_pLastRegCfg.m_EtherInfo.m_byDestIP[0]), (int)(m_pLastRegCfg.m_EtherInfo.m_byDestIP[1]),
+                (int)(m_pLastRegCfg.m_EtherInfo.m_byDestIP[2]), (int)(m_pLastRegCfg.m_EtherInfo.m_byDestIP[3]), (ushort)(usValue)));
+            usValue = (ushort)(((m_pLastRegCfg.m_EtherInfo.m_sSourceUDPPort & 0xff) << 8) | ((m_pLastRegCfg.m_EtherInfo.m_sSourceUDPPort >> 8) & 0xff));
+            Log(string.Format("\tDestIP:{0}.{1}.{2}.{3}:{4}\n", (int)(m_pLastRegCfg.m_EtherInfo.m_bySourceIP[0]), (int)(m_pLastRegCfg.m_EtherInfo.m_bySourceIP[1]),
+                (int)(m_pLastRegCfg.m_EtherInfo.m_bySourceIP[2]),
+                (int)(m_pLastRegCfg.m_EtherInfo.m_bySourceIP[3]), (ushort)(usValue)));
+
+            if (m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize >= 0x01 && m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize <= 0x08)
+            {
+                if (m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize == 0x01)
+                    Log(string.Format("\tPanelSize:0x{0:X000},fpd type:4343\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
+                else if (m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize == 0x02)
+                    Log(string.Format("\tPanelSize:0x{0:X000},fpd type:3543\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
+                else if (m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize == 0x03)
+                    Log(string.Format("\tPanelSize:0x{0:X000},fpd type:1613\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
+                else if (m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize == 0x04)
+                    Log(string.Format("\tPanelSize:0x{0:X000},fpd type:3030\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
+                else if (m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize == 0x05)
+                    Log(string.Format("\tPanelSize:0x{0:X000},fpd type:2530\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
+                else
+                    Log(string.Format("\tPanelSize:0x{0:X000},fpd type:3025\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
+            }
+            else
+            {
+                Log(string.Format("\tErr:fpd property:Do not know!fpd type:0x{0:X000}\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
+            }
+            Log(string.Format("\twidth={0},hight={1}\n", m_pLastRegCfg.m_SysBaseInfo.m_sImageWidth, m_pLastRegCfg.m_SysBaseInfo.m_sImageHeight));
+            Log("\tdatatype is unsigned char.\n");
+            Log("\tdatabit is 16bits.\n");
+            Log("\tdata is little endian.\n");
+
+           
+            // 图像分辨率
+            _imageWidth = m_pLastRegCfg.m_SysBaseInfo.m_sImageWidth;
+            _imageHeight = m_pLastRegCfg.m_SysBaseInfo.m_sImageHeight;
+            Log(string.Format("\tImage width={0},hight={1}\n", _imageWidth, _imageHeight));
+            // 连续采集时间间隔
+            UInt32 value = (UInt32)m_pLastRegCfg.m_SysCfgInfo.m_unSelfDumpingSpanTime;
+
+        }
 
 
 

@@ -156,6 +156,7 @@ namespace NV.DetectionPlatform.UCtrls
             int clear = 0;
             while (_running)
             {
+                
                 clear++;
                 if (_detector.PlayBuffer.Count > 0)
                 {
@@ -265,8 +266,10 @@ namespace NV.DetectionPlatform.UCtrls
             MainWindow.ControlSystem.XRayOn();
             IsAcqing = true;
 
+
             new Thread(new ThreadStart(delegate
             {
+                _detector.ShowMessage("DEBUG ");
                 Thread.Sleep(_detector.Delay);
                 if (_detector.StartAcq())
                 {
