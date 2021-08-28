@@ -56,6 +56,7 @@ namespace NV.DetectionPlatform.UCtrls
             detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
             detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
             detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
+            detector.HBUpdateCorrectEnable();
             detector.Delay = Data.Delay;
             detector.NV_SaveParamFile();
 

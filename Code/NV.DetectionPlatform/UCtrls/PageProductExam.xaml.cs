@@ -135,6 +135,7 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
                 _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
                 _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
+                _detector.HBUpdateCorrectEnable();
                 _detector.Delay = Data.Delay;
                _detector.NV_SaveParamFile();
 
@@ -156,16 +157,28 @@ namespace NV.DetectionPlatform.UCtrls
             int clear = 0;
             while (_running)
             {
-                
+
                 clear++;
+                
                 if (_detector.PlayBuffer.Count > 0)
                 {
                     ushort[] data = _detector.PlayBuffer.Dequeue();
+                    ushort W = (ushort)_detector.ImageWidth;
+                    ushort H = (ushort)_detector.ImageHeight;
+                    ushort Bits = (ushort)_detector.Bits;
+ 
+
                     _imageCount++;
                     this.Dispatcher.Invoke(new Action(() =>
                     {
-                        if (IsAcqing)
-                            ipUC.PutData((ushort)_detector.ImageWidth, (ushort)_detector.ImageHeight, (ushort)_detector.Bits, data, true);
+                       if (IsAcqing)
+                        {
+                               
+                            _detector.ShowMessage("acqing... and putdata to display "+ data.Length.ToString() + " " + H.ToString() + " " + W.ToString() + " " + Bits.ToString());
+                            ipUC.PutData(W,H ,Bits,data, true);
+
+                        }
+                            
                         if (_detector.PlayBuffer.Count > 90)
                         {
                             _detector.PlayBuffer.Dequeue();
@@ -238,6 +251,7 @@ namespace NV.DetectionPlatform.UCtrls
             _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
             _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
             _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
+            _detector.HBUpdateCorrectEnable();
 
             DicomViewer.Current.ClearImage();
 
@@ -260,7 +274,8 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.MaxFrames = 0;
                 _curExpTime = (int)(Global.CurrentParam.Time * 1000);
             }
-            _detector.HB_SetExpTime((int)(_curExpTime * 10 - DETECTOR_READTIME));
+            // _detector.HB_SetExpTime((int)(_curExpTime * 10 - DETECTOR_READTIME));
+            _detector.HB_SetExpTime((int)(_curExpTime));
             _imageCount = 0;
 
             MainWindow.ControlSystem.XRayOn();

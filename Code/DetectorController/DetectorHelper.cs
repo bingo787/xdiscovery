@@ -308,22 +308,36 @@ namespace Detector
 
                     _imageWidth = (int)img_pro.nwidth;
                     _imageHeight = (int)img_pro.nheight;
-                    _bits = (int)img_pro.ndatabit;
+                    if (img_pro.ndatabit == 0)
+                    {
+                        _bits = 16;
+                    }
+                    else if (img_pro.ndatabit == 1)
+                    {
+                        _bits = 14;
+                    }
+                    else if (img_pro.ndatabit == 2)
+                    {
+                        _bits = 12;
+                    }
+                    else if (img_pro.ndatabit == 3)
+                    {
+                        _bits = 8;
+                    }
+                    else {
+                        _bits = 16;
+                    }
+                  
 
-                    //if (binning == 2)
-                    //{
-                    //    HBI_FPD_DLL.HBI_SetImageCalibration
-                    //    NVDentalSDK.NV_SetImageRange(0, 0, ImageWidth / 2, ImageHeight / 2);
-                    //}
-                    //else
-                    //    NVDentalSDK.NV_SetImageRange(0, 0, ImageWidth, ImageHeight);
-                    //NVDentalSDK.NV_SaveParamFile();
-                    ////NVDentalSDK.NV_LoadParamFile();
+                    ShowMessage("W:"+_imageWidth.ToString() + " H:"+_imageHeight.ToString() +" B:"+ _bits.ToString());
+
+
                 }
                 res += (string.Format("Size w:{0} h:{1} bits:{2}", ImageWidth, ImageHeight, Bits));
                 res += "探测器已连接。";
 
                 btnGetFirmwareCfg_Click();
+                btnImageProperty_Click();
             }
             return true;
         }
@@ -440,19 +454,20 @@ namespace Detector
                 case eCallbackEventCommType.ECALLBACK_TYPE_MULTIPLE_IMAGE:
                     {
                         ShowMessage("ECALLBACK_TYPE_SINGLE_IMAGE or ECALLBACK_TYPE_MULTIPLE_IMAGE");
+                        ShowMessage("image size " + len.ToString() + " nID " + nID.ToString());
                         NV_ImageInfo _ImageInfo;
                         
                         //todo: ZQB 像素格式这里需要确认下是怎么搞？
                         _ImageInfo.iPixelType = (Int32)NV_PixelFormat.NV_PF_Mono16;	///< 像素格式
                         _ImageInfo.iSizeX = _imageWidth;             ///< 图像宽
                         _ImageInfo.iSizeY = _imageHeight;             ///< 图像高
-                        _ImageInfo.iImageSize = len * sizeof(ushort);         ///< 图像所占的字节数
+                        _ImageInfo.iImageSize = len ;         ///< 图像所占的字节数
 
                         unsafe {
                             _ImageInfo.pImageBuffer = (ushort*)buff;
                                 }		///< 图像数据指针
                         _ImageInfo.iTimeStamp = System.DateTime.Now.Second;			///< 时间戳
-                        _ImageInfo.iMissingPackets = _MissedPacketNum;    ///< 丢失的包数量
+                        _ImageInfo.iMissingPackets = 0; // _MissedPacketNum;    ///< 丢失的包数量
                         _ImageInfo.iAnnouncedBuffers = 0;  ///< 声明缓存区大小[暂为0]
                         _ImageInfo.iQueuedBuffers = 0;     ///< 队列缓存区大小[暂为0]
                         _ImageInfo.iOffsetX = 0;           ///< x方向偏移量[暂未设置]
@@ -561,11 +576,24 @@ namespace Detector
                 return;//跳过丢包图像 
             }
 
+            /* 探测器分辨率大小 */
+            int WIDTH = _imageWidth;
+            int HEIGHT = _imageHeight;
+            if ((image.pImageBuffer == null) || ((image.iImageSize/sizeof(ushort)) != (WIDTH * HEIGHT)))
+            {
+                ShowMessage("图像数据异常 ",true);
+                return ;
+            }
+
+
+            ShowMessage("DEBUG " + " iSizeX " + image.iSizeX.ToString() + " iSizeY" + image.iSizeY.ToString() );
             ushort[] buffer = new ushort[image.iSizeX * image.iSizeY];
 
             for (int i = 0; i < image.iSizeX * image.iSizeY; i++)
             {
+                
                 buffer[i] = image.pImageBuffer[i];
+              //  ShowMessage(buffer[i].ToString());
             }
 
             PlayBuffer.Enqueue(buffer);
@@ -1273,11 +1301,16 @@ namespace Detector
 
         public bool HB_SetExpTime(int p)
         {
+            ShowMessage("采集帧率(ms) " + p.ToString() );
+            int ret = HBI_FPD_DLL.HBI_SetAcqSpanTm(HBI_FPD_DLL._handel,p);
+
             return true;
           //  int ret = HBI_FPD_DLL.HBI_SetSinglePrepareTime(HBI_FPD_DLL._handel, p);
           //  return ret == 0;
             // return NVDentalSDK.NV_SetExpTime(p) == NV_StatusCodes.NV_SC_SUCCESS;
         }
+
+   
 
         public bool HB_SetMaxFrames(int p)
         {
@@ -1377,6 +1410,27 @@ namespace Detector
             //return NVDentalSDK.NV_SetDefectCal(nV_CorrType) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
+        public bool HBUpdateCorrectEnable() {
+
+            
+           // int ret = HBI_FPD_DLL.HBI_UpdateCorrectEnable(HBI_FPD_DLL._handel, ref m_pCorrect);
+            int ret = HBI_FPD_DLL.HBI_TriggerAndCorrectApplay(HBI_FPD_DLL._handel,7, ref m_pCorrect);
+            ShowMessage(" ucDefectCorrection " + ((int)m_pCorrect.ucDefectCorrection).ToString() +
+                " ucGainCorrection " + ((int)m_pCorrect.ucGainCorrection).ToString() +
+                " ucDefectCorrection  " + ((int)m_pCorrect.ucDefectCorrection).ToString());
+
+            if (ret == 0)
+            {
+                ShowMessage("\tHBI_UpdateCorrectEnable success!\n");
+                return true;
+            }
+            else
+            {
+                ShowMessage("\tHBI_UpdateCorrectEnable failed!");
+                return false;
+            }
+        }
+
         public bool NV_SaveParamFile()
         {
             return true;
@@ -1441,6 +1495,37 @@ namespace Detector
 
         }
 
+        // 获取图像数据信息
+        private void btnImageProperty_Click()
+        {
+            Log("get Image property begin!\n");
+            IMAGE_PROPERTY img_pro = new IMAGE_PROPERTY();
+            int ret = HBI_FPD_DLL.HBI_GetImageProperty(HBI_FPD_DLL._handel, ref img_pro);
+            if (ret == 0)
+            {
+                Log(string.Format("HBI_GetImageProperty:width={0},hight={1}\n", img_pro.nwidth, img_pro.nheight));
+                //
+                if (img_pro.datatype == 0) Log("\tdatatype is unsigned char.\n");
+                else if (img_pro.datatype == 1) Log("\tdatatype is char.\n");
+                else if (img_pro.datatype == 2) Log("\tdatatype is unsigned short.\n");
+                else if (img_pro.datatype == 3) Log("\tdatatype is float.\n");
+                else if (img_pro.datatype == 4) Log("\tdatatype is double.\n");
+                else Log("\tdatatype is not support.\n");
+                //
+                if (img_pro.ndatabit == 0) Log("\tdatabit is 16bits.\n");
+                else if (img_pro.ndatabit == 1) Log("\tdatabit is 14bits.\n");
+                else if (img_pro.ndatabit == 2) Log("\tdatabit is 12bits.\n");
+                else if (img_pro.ndatabit == 3) Log("\tdatabit is 8bits.\n");
+                else Log("\tdatatype is unsigned char.\n");
+                //
+                if (img_pro.nendian == 0) Log("\tdata is little endian.\n");
+                else Log("\tdata is bigger endian.\n");
+            }
+            else
+            {
+                Log("HBI_GetImageProperty failed!\n");
+            }
+        }
 
 
 
