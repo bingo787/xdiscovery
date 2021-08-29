@@ -264,14 +264,14 @@ namespace NV.DetectionPlatform.UCtrls
             else if (type == ExamType.Expose)
             {
                 _detector.IsStored = isStored;
-                _detector.MaxFrames = 0;
+                _detector.MaxFrames = 0; // 连续获取
                 _curExpTime = (int)(1000.0 / Global.CurrentParam.Fps);
             }
             else if (type == ExamType.MultiEnergyAvg)
             {
                 _detector.IsStored = true;
-                //_detector.MaxFrames = maxCount;
-                _detector.MaxFrames = 0;
+                _detector.MaxFrames = maxCount;
+               // _detector.MaxFrames = 0;
                 _curExpTime = (int)(Global.CurrentParam.Time * 1000);
             }
             // _detector.HB_SetExpTime((int)(_curExpTime * 10 - DETECTOR_READTIME));

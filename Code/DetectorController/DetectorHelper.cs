@@ -171,7 +171,7 @@ namespace Detector
             stMode.nLiveMode = 2;     // 1-固件做offset模板并上图；2-只上图；3-固件做只做offset模板。
             stMode.ndiscard = 0;     // 这里默认位0，不抛弃前几帧图像
             stMode.nframeid = 0;     // 这里默认位0
-            stMode.nframesum = 20;    // 0-表示一直采图，20表示采集20帧图结束。这里默认采集20帧
+            stMode.nframesum = MaxFrames;    // 0-表示一直采图，20表示采集20帧图结束。这里默认采集20帧
             stMode.ngroupno = 0;     // 这里默认位0
             stMode.bSimpleGT = false; // 表示不启用快速生成模板
             stMode.isOverLap = false; // 不要做叠加
@@ -667,6 +667,7 @@ namespace Detector
         private void AcqMaxFrame()
         {
             ShowMessage("DEBUG ");
+            
             if (AcqMaxFramesEvent != null)
             {
                 AcqMaxFramesEvent.Invoke();
