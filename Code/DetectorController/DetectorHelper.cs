@@ -458,7 +458,7 @@ namespace Detector
                         NV_ImageInfo _ImageInfo;
                         
                         //todo: ZQB 像素格式这里需要确认下是怎么搞？
-                        _ImageInfo.iPixelType = (Int32)NV_PixelFormat.NV_PF_Mono16;	///< 像素格式
+                        _ImageInfo.iPixelType = 0;	///< 像素格式[没有用到]
                         _ImageInfo.iSizeX = _imageWidth;             ///< 图像宽
                         _ImageInfo.iSizeY = _imageHeight;             ///< 图像高
                         _ImageInfo.iImageSize = len ;         ///< 图像所占的字节数
@@ -1149,9 +1149,9 @@ namespace Detector
             _offsetWaitHandle.WaitOne(600000, true);
 
             Thread.Sleep(5000);
-            NVDentalSDK.NV_SetDefectCal(NV_CorrType.NV_CORR_NO);
-            NVDentalSDK.NV_SetOffsetCal(NV_CorrType.NV_CORR_SOFT);
-            NVDentalSDK.NV_SetGainCal(NV_CorrType.NV_CORR_NO);
+            //NVDentalSDK.NV_SetDefectCal(NV_CorrType.NV_CORR_NO);
+            //NVDentalSDK.NV_SetOffsetCal(NV_CorrType.NV_CORR_SOFT);
+            //NVDentalSDK.NV_SetGainCal(NV_CorrType.NV_CORR_NO);
 
             return GetImage(count);
         }
@@ -1174,9 +1174,9 @@ namespace Detector
                 }));
             }
 
-            NVDentalSDK.NV_SetDefectCal(NV_CorrType.NV_CORR_NO);
-            NVDentalSDK.NV_SetOffsetCal(NV_CorrType.NV_CORR_SOFT);
-            NVDentalSDK.NV_SetGainCal(NV_CorrType.NV_CORR_SOFT);
+            //NVDentalSDK.NV_SetDefectCal(NV_CorrType.NV_CORR_NO);
+            //NVDentalSDK.NV_SetOffsetCal(NV_CorrType.NV_CORR_SOFT);
+            //NVDentalSDK.NV_SetGainCal(NV_CorrType.NV_CORR_SOFT);
             return GetImage(count);
         }
 
@@ -1289,11 +1289,11 @@ namespace Detector
             public ushort[] Pixel { set; get; }
         }
 
-        public bool NV_SetGain(NV_Gain nV_Gain)
-        {
-            // HBI_FPD_DLL.HBI_SetGainMode(HBI_FPD_DLL._handel,);
-            return NVDentalSDK.NV_SetGain(nV_Gain) == NV_StatusCodes.NV_SC_SUCCESS;
-        }
+        //public bool NV_SetGain(NV_Gain nV_Gain)
+        //{
+        //    // HBI_FPD_DLL.HBI_SetGainMode(HBI_FPD_DLL._handel,);
+        //    return NVDentalSDK.NV_SetGain(nV_Gain) == NV_StatusCodes.NV_SC_SUCCESS;
+        //}
         public bool HB_SetGain(int mode) {
 
             int ret = HBI_FPD_DLL.HBI_SetGainMode(HBI_FPD_DLL._handel, mode);
@@ -1352,33 +1352,34 @@ namespace Detector
             return ret == 0;
         }
 
-        public bool NV_SetBinningMode(NV_BinningMode nV_BinningMode)
-        {
-            bool res = NVDentalSDK.NV_SetBinningMode(nV_BinningMode) == NV_StatusCodes.NV_SC_SUCCESS;
-            if (nV_BinningMode == NV_BinningMode.NV_BINNING_2X2)
-            {
-                _imageWidth = _detectorWidth / 2;
-                _imageHeight = _detectorHeight / 2;
-            }
-            else
-            {
-                _imageWidth = _detectorWidth;
-                _imageHeight = _detectorHeight;
-            }
 
-            return res;
-        }
+        //public bool NV_SetBinningMode(NV_BinningMode nV_BinningMode)
+        //{
+        //    bool res = NVDentalSDK.NV_SetBinningMode(nV_BinningMode) == NV_StatusCodes.NV_SC_SUCCESS;
+        //    if (nV_BinningMode == NV_BinningMode.NV_BINNING_2X2)
+        //    {
+        //        _imageWidth = _detectorWidth / 2;
+        //        _imageHeight = _detectorHeight / 2;
+        //    }
+        //    else
+        //    {
+        //        _imageWidth = _detectorWidth;
+        //        _imageHeight = _detectorHeight;
+        //    }
 
-        public bool NV_SetShutterMode(NV_ShutterMode nV_ShutterMode)
-        {
-            return NVDentalSDK.NV_SetShutterMode(nV_ShutterMode) == NV_StatusCodes.NV_SC_SUCCESS;
-        }
+        //    return res;
+        //}
+
+        //public bool NV_SetShutterMode(NV_ShutterMode nV_ShutterMode)
+        //{
+        //    return NVDentalSDK.NV_SetShutterMode(nV_ShutterMode) == NV_StatusCodes.NV_SC_SUCCESS;
+        //}
 
       
 
         public bool HB_SetAcquisitionMode(int t) {
 
-            ShowMessage("DEBUG  设置触发模式为 7");
+            ShowMessage("DEBUG  固定设置触发模式为 7");
             // 这里出发模式只能选择07
             int ret = HBI_FPD_DLL.HBI_UpdateTriggerMode(HBI_FPD_DLL._handel,7);
             return ret == 0;    

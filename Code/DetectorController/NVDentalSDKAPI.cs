@@ -13,7 +13,24 @@ namespace Detector
     public delegate void ExcutedCallbackHandler();
     public delegate void ExcutedCallbackHandlerWithValue(int targetValue);
 
+    public unsafe struct NV_ImageInfo
+    {
+        public Int32 iPixelType;			///< 像素格式[暂时未用到]
+        public Int32 iSizeX;             ///< 图像宽
+        public Int32 iSizeY;             ///< 图像高
+        public Int32 iImageSize;         ///< 图像所占的字节数
 
+        public ushort* pImageBuffer;		///< 图像数据指针
+        public Int32 iTimeStamp;			///< 时间戳
+        public Int32 iMissingPackets;    ///< 丢失的包数量
+        public Int32 iAnnouncedBuffers;  ///< 声明缓存区大小[暂为0]
+        public Int32 iQueuedBuffers;     ///< 队列缓存区大小[暂为0]
+        public Int32 iOffsetX;           ///< x方向偏移量[暂未设置]
+        public Int32 iOffsetY;           ///< y方向偏移量[暂未设置]
+        public Int32 iAwaitDelivery;     ///< 等待传送的帧数[暂为0]
+        public Int32 iBlockId;			///< GVSP协议的block-id
+    }
+#if NV4343
     public enum NV_StatusCodes
     {
         NV_SC_SUCCESS = 0,      ///< OK      
@@ -87,23 +104,11 @@ namespace Detector
     }
 
 
-    public unsafe struct NV_ImageInfo
-    {
-        public Int32 iPixelType;			///< 像素格式
-        public Int32 iSizeX;             ///< 图像宽
-        public Int32 iSizeY;             ///< 图像高
-        public Int32 iImageSize;         ///< 图像所占的字节数
 
-        public ushort* pImageBuffer;		///< 图像数据指针
-        public Int32 iTimeStamp;			///< 时间戳
-        public Int32 iMissingPackets;    ///< 丢失的包数量
-        public Int32 iAnnouncedBuffers;  ///< 声明缓存区大小[暂为0]
-        public Int32 iQueuedBuffers;     ///< 队列缓存区大小[暂为0]
-        public Int32 iOffsetX;           ///< x方向偏移量[暂未设置]
-        public Int32 iOffsetY;           ///< y方向偏移量[暂未设置]
-        public Int32 iAwaitDelivery;     ///< 等待传送的帧数[暂为0]
-        public Int32 iBlockId;			///< GVSP协议的block-id
-    }
+
+
+
+
     public static class NVDentalSDK
     {
 
@@ -619,4 +624,7 @@ namespace Detector
         [DllImport("nvDentalDet.dll", CharSet = CharSet.Auto)]
         public static extern NV_StatusCodes NV_GetTestDAC(out int tdac);
     }
+
+#endif
+
 }

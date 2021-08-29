@@ -938,7 +938,8 @@ namespace NV.DetectionPlatform.UCtrls
 
         private void UnLoaded(object sender, RoutedEventArgs e)
         {
-            NVDentalSDK.NV_CloseDet();
+           // NVDentalSDK.NV_CloseDet();
+            HBI_FPD_DLL.HBI_Destroy(HBI_FPD_DLL._handel);
         }
 
         /// <summary>
