@@ -38,9 +38,9 @@
                 <ComboBox ItemsSource="{Binding BinningModes}" SelectedValue="{Binding BinningMode}"/>
                 <!--<TextBlock Text="Shutter:"/>
                 <ComboBox SelectedValue="{Binding ShutterMode}" ItemsSource="{Binding ShutterModes}"/>-->
-                <TextBlock Text="Acquisition:"/>
+                <!--<TextBlock Text="Acquisition:"/>
                 <ComboBox x:Name="cboParities" ItemsSource="{Binding AcquisitionModes}" SelectedValue="{Binding AcquisitionMode}">
-                </ComboBox>
+                </ComboBox>-->
                 <TextBlock Text="{DynamicResource OffsetCorType}"/>
                 <ComboBox ItemsSource="{Binding OffsetCorrectionModes}" SelectedValue="{Binding OffsetCorMode}"/>
                 <TextBlock Text="{DynamicResource GainCorType}"/>

@@ -1300,7 +1300,7 @@ namespace Detector
             return ret==0;
         }
 
-        public bool HB_SetExpTime(int p)
+        public bool HB_SetAqcSpanTime(int p)
         {
             ShowMessage("采集帧率(ms) " + p.ToString() );
             int ret = HBI_FPD_DLL.HBI_SetAcqSpanTm(HBI_FPD_DLL._handel,p);

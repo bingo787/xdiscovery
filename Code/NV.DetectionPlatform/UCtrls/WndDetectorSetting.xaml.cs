@@ -46,19 +46,19 @@ namespace NV.DetectionPlatform.UCtrls
             detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
             detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
             detector.HB_SetGain((int)Data.Gain);
-            detector.HB_SetExpTime(Data.ExpTime);
-            detector.HB_SetMaxFrames(Data.MaxFrames);
+            //detector.HB_SetAqcSpanTime(Data.ExpTime);
+            //detector.HB_SetMaxFrames(Data.MaxFrames);
             string autoOffset = Data.IsAutoPreOffset ? "1" : "0";
             NV.Infrastructure.UICommon.IniFile.WriteString("System", "AutoOffsetCalOnOpen", autoOffset, System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "nvDentalDet.ini"));
             detector.HB_SetBinningMode((byte)Data.BinningMode);
-            detector.NV_SetShutterMode((NV_ShutterMode)Data.ShutterMode);
-            detector.HB_SetAcquisitionMode((int)Data.AcquisitionMode);
+           // detector.NV_SetShutterMode((NV_ShutterMode)Data.ShutterMode);
+           // detector.HB_SetAcquisitionMode((int)Data.AcquisitionMode);
             detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
             detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
             detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
             detector.HBUpdateCorrectEnable();
             detector.Delay = Data.Delay;
-            detector.NV_SaveParamFile();
+           // detector.NV_SaveParamFile();
 
             CMessageBox.Show("操作成功。\nOperation completed");
         }
