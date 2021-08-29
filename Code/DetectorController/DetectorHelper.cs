@@ -119,8 +119,6 @@ namespace Detector
 
                 //add by zhao 
             HBIEventCallback = new USER_CALLBACK_HANDLE_ENVENT(RecieveImageAndEvent);
-            HBIProcessCallback = new USER_CALLBACK_HANDLE_PROCESS(HandleProcessCallback);
-
 
         }
 
@@ -435,8 +433,9 @@ namespace Detector
                         else
                             ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG, unknown err {}");
 
-                        break;
+
                     }
+                    break;
                 case eCallbackEventCommType.ECALLBACK_TYPE_ROM_UPLOAD:
                     {
                         ShowMessage("ECALLBACK_TYPE_ROM_UPLOAD...");
@@ -448,8 +447,9 @@ namespace Detector
                         //    XLOG_INFO("Serial Number : {}", INSTANCE->m_pLastRegCfg->m_SysBaseInfo.m_cSnNumber);
 
                         //}
-                        break;
+
                     }
+                    break;
                 case eCallbackEventCommType.ECALLBACK_TYPE_SINGLE_IMAGE:
                 case eCallbackEventCommType.ECALLBACK_TYPE_MULTIPLE_IMAGE:
                     {
@@ -477,26 +477,10 @@ namespace Detector
 
                         ShowImageCallBack(0, _ImageInfo);
 
-                        break;
+
                     }
-                case eCallbackEventCommType.ECALLBACK_TYPE_THREAD_EVENT:
-                    {
-                        if (len == 112)// offset使能，校正反馈信息
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},offset calibrate:success!");
-                        else if (len == 113)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},offset calibrate:failed!");
-                        else if (len == 114)// gain使能，校正反馈信息
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},gain calibrate:success!");
-                        else if (len == 115)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},gain calibrate:failed!");
-                        else if (len == 116)// defect使能，校正反馈信息
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},defect calibrate:success!");
-                        else if (len == 117)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},defect calibrate:failed!");
-                        else
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},other feedback message!");
-                        break;
-                    }
+                    break;
+
                 case eCallbackEventCommType.ECALLBACK_TYPE_FPD_STATUS:
                     {
                         ShowMessage("TYPE_FPD_STATUS, command= " + cmd.ToString());
@@ -508,41 +492,99 @@ namespace Detector
                             {
                                 bOffsetTemplateOk = true; // 表示生成offset模板成功
                                 Log(string.Format("\tECALLBACK_TYPE_FPD_STATUS,bOffsetTemplateOk is true!aqc_mode:{0}\n", (int)(m_stMode.aqc_mode)));
-                                FinishedOffsetEvent(true);    
+                               // FinishedOffsetEvent(true);    
                             }
                             //
                             if (m_stMode.aqc_mode == EnumIMAGE_ACQ_MODE.DYNAMIC_ACQ_BRIGHT_MODE)
                             {
                                 bGainAcqFinished = true;// 表示defect采图成功
                                 Log(string.Format("\tECALLBACK_TYPE_FPD_STATUS,bGainAcqFinished is true!aqc_mode:{0}\n", (int)(m_stMode.aqc_mode)));
-                                FinishedDetectEvent(true);
+                             //   FinishedDetectEvent(true);
                             }
                             //
                             if (m_stMode.aqc_mode == EnumIMAGE_ACQ_MODE.DYNAMIC_DEFECT_ACQ_MODE && m_stMode.bSimpleGT)
                             {
                                 bDefectAcqFinished = true;// 表示defect采图成功
                                 Log(string.Format("\tECALLBACK_TYPE_FPD_STATUS,bDefectAcqFinished is true!aqc_mode:{0}\n", (int)(m_stMode.aqc_mode)));
-                                FinishedDetectEvent(false);
+                              //  FinishedDetectEvent(true);
                             }
 
                         }
-                        break;
+
                     }
-                case eCallbackEventCommType.ECALLBACK_TYPE_GAIN_ERR_MSG:
+                    break;
+                case (eCallbackEventCommType.ECALLBACK_TYPE_GAIN_ERR_MSG):
                     {
-                        break;
+                        if (len == 0)
+                        {
+                            bGainsetTemplateOk = true; // 表示生成gain模板成功
+                            ShowMessage("ECALLBACK_TYPE_GAIN_ERR_MSG,bGainsetTemplateOk is true!\n");
+                        }
                     }
-                case eCallbackEventCommType.ECALLBACK_TYPE_DEFECT_ERR_MSG:
+
+                    break;
+                case (eCallbackEventCommType.ECALLBACK_TYPE_DEFECT_ERR_MSG):
                     {
-                        break;
+                        if (len == 0)
+                        {
+                            bDefectAcqFinished = true; // 表示生成defect模板成功
+                            ShowMessage("ECALLBACK_TYPE_DEFECT_ERR_MSG,bDefectAcqFinished is true!\n");
+                        }
                     }
+
+                    break;
                 case eCallbackEventCommType.ECALLBACK_TYPE_PACKET_MISS:
                 case eCallbackEventCommType.ECALLBACK_TYPE_PACKET_MISS_MSG:
                     {
                         ShowMessage("Packet miss  " + len.ToString());
                         _MissedPacketNum = len;
-                        break;
+
                     }
+                    break;
+
+                case eCallbackEventCommType.ECALLBACK_TYPE_THREAD_EVENT:
+                    {
+                        if (len == 100)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,start recv data!\n");
+                        else if (len == 101)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,end recv data!\n");
+                        else if (len == 104)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Packet Retransmission:start recv data!\n");
+                        else if (len == 105)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Frame Retransmission:start recv data!\n");
+                        else if (len == 106)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Frame loss retransmission over,end recv data!\n");
+                        else if (len == 107)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,image buff is null:end recv data!\n");
+                        else if (len == 108)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Generate Offset Template:start thread!\n");
+                        else if (len == 109)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Generate Offset Template:end thread!\n");
+                        else if (len == 110)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Generate Gain Template:start thread!\n");
+                        else if (len == 111)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Generate Gain Template:end thread!\n");
+                        else if (len == 112)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,offset calibrate:success!\n");
+                        else if (len == 113)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,offset calibrate:failed!\n");
+                        else if (len == 114)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,gain calibrate:success!\n");
+                        else if (len == 115)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,gain calibrate:failed!\n");
+                        else if (len == 116)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,defect calibrate:success!\n");
+                        else if (len == 117)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,defect calibrate:failed!\n");
+                        else if (len == 118)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,InitGainTemplate:failed!\n");
+                        else if (len == 119)
+                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,firmare offset calibrate:success!\n");
+                        else
+                            ShowMessage(string.Format("ECALLBACK_TYPE_THREAD_EVENT,Err:未知错误[{0}]\n", len));
+                    }        
+                    break;
+
                 default:
                     {
                         ShowMessage("ECALLBACK_TYPE_INVALID, command " + cmd.ToString(), true);
@@ -551,17 +593,7 @@ namespace Detector
             }
             return 0;
         }
-        /// <summary>
-        /// HBI 的处理回调函数
-        /// </summary>
-        /// <param name="cmd"></param>
-        /// <param name="retcode"></param>
-        /// <param name="buff"></param>
-        /// <returns></returns>
-        private unsafe int HandleProcessCallback(byte cmd, int retcode, IntPtr buff) {
-            Log(cmd.ToString() + " " + retcode.ToString());
-            return 0;
-        }
+
 
         /// <summary>
         /// 实时处理探测器采集到的图像
@@ -820,13 +852,13 @@ namespace Detector
             int ret = HBI_FPD_DLL.HBI_GenerateTemplateEx(HBI_FPD_DLL._handel, enumTemplateType);
             if (ret != 0)
             {
-                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(),true);
+                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString());
                 return;
             }
             else
             {
                
-                ShowMessage("Do pre-offset template success!",true);
+                ShowMessage("Do pre-offset template success!");
             }
 
         }
@@ -1377,7 +1409,7 @@ namespace Detector
 
       
 
-        public bool HB_SetAcquisitionMode(int t) {
+        public bool HB_SetTriggerMode(int t) {
 
             ShowMessage("DEBUG  固定设置触发模式为 7");
             // 这里出发模式只能选择07
