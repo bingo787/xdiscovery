@@ -20,6 +20,9 @@ using NV.DetectionPlatform.Service;
 using System.Diagnostics;
 using NV.DetectionPlatform.Entity;
 using System.Drawing;
+
+using OpenCvSharp;
+
 namespace NV.DetectionPlatform.UCtrls
 {
     /// <summary>
@@ -232,7 +235,7 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="type"></param>
         public void StartAcq(ExamType type = ExamType.Spot, bool isStored = false, int maxCount = 1, double stepKv = 0, int stepUA = 0)
         {
-            Window wnd = Window.GetWindow(this);
+            System.Windows.Window wnd = System.Windows.Window.GetWindow(this);
             if (wnd != null && (wnd as MainWindow) != null && (wnd as MainWindow)._hVView != null)
             {
                 (wnd as MainWindow)._hVView.Visibility = Visibility.Hidden; ;
@@ -863,6 +866,16 @@ namespace NV.DetectionPlatform.UCtrls
                 DragDrop.DoDragDrop(sender as FrameworkElement, fileName, DragDropEffects.Copy);
             }
         }
+
+        
+        private void SharpImageUSM() {
+            Mat source = new Mat(@"C:\Users\zhaoqibin\Pictures\Saved Pictures\000.png", ImreadModes.Color);
+            Cv2.ImShow("Demo", source);
+            Cv2.WaitKey(0);
+
+
+        }
+
         /// <summary>
         /// 图像处理
         /// </summary>
@@ -879,8 +892,9 @@ namespace NV.DetectionPlatform.UCtrls
             switch (tag)
             {
                 case "Sharp":
-                    if (ipUC.CurrentDv.HasImage)
-                        ipUC.CurrentDv.SharpImage(1);
+                    SharpImageUSM();
+                    //if (ipUC.CurrentDv.HasImage)
+                    //    ipUC.CurrentDv.SharpImage(1);
                     break;
                 case "EqualHist":
                     if (ipUC.CurrentDv.HasImage)
@@ -1337,7 +1351,7 @@ namespace NV.DetectionPlatform.UCtrls
                 return;
 
             System.Windows.Point start = ipUC.PointToScreen(new System.Windows.Point(0d, 0d));
-            Rect area = new Rect(start.X, start.Y, ipUC.ActualWidth, ipUC.ActualHeight);
+            System.Windows.Rect area = new System.Windows.Rect(start.X, start.Y, ipUC.ActualWidth, ipUC.ActualHeight);
             Bitmap image = new Bitmap((int)area.Width, (int)area.Height);
             Graphics imgGraphics = Graphics.FromImage(image);
             //设置截屏区域
