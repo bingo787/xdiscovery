@@ -125,6 +125,9 @@
     <sys:String x:Key="BubbleUpperlimit">BubbleUpperlimit:</sys:String>
     <sys:String x:Key="BubbleLowerlimit">BubbleLowerlimit:</sys:String>
     <sys:String x:Key="BubbleQualification">BubbleQualification:</sys:String>
+    <sys:String x:Key="UsmAmount">Amount:</sys:String>
+    <sys:String x:Key="UsmRadius">Radius:</sys:String>
+    <sys:String x:Key="UsmThreshould">Threshold:</sys:String>
     <sys:String x:Key="BubbleSave">Save</sys:String>
     <sys:String x:Key="BubbleClose">Close</sys:String>
     <sys:String x:Key="OffsetCorType">OffsetCorType:</sys:String>

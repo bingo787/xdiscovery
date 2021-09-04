@@ -54,6 +54,7 @@ namespace NV.DetectionPlatform.UCtrls
         void PageProductExam_Loaded(object sender, RoutedEventArgs e)
         {
             WndAOISetting.InitAOI();
+            WndUSMSetting.InitUSM();
             InitilizePlayAcqThread();
         }
 
@@ -1342,6 +1343,16 @@ namespace NV.DetectionPlatform.UCtrls
             wnd.Top = SystemParameters.PrimaryScreenHeight - wnd.Height - 120;
             wnd.ShowDialog();
         }
+
+        private void OpenUSMSetting(object sender, MouseButtonEventArgs e)
+        {
+            var wnd = new WndUSMSetting();
+            wnd.Left = SystemParameters.PrimaryScreenWidth - wnd.Width - 20;
+            wnd.Top = SystemParameters.PrimaryScreenHeight - wnd.Height - 60;
+            wnd.ShowDialog();
+        }
+
+
 
         internal void SaveScreenImage()
         {

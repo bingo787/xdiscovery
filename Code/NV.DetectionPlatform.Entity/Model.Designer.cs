@@ -144,6 +144,22 @@ namespace NV.DetectionPlatform.Entity
             }
         }
         private ObjectSet<AOIParam> _AOIParam;
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        public ObjectSet<USMParam> USMParamSet
+        {
+            get
+            {
+                if ((_USMParamSet == null))
+                {
+                    _USMParamSet = base.CreateObjectSet<USMParam>("USMParamSet");
+                }
+                return _USMParamSet;
+            }
+        }
+        private ObjectSet<USMParam> _USMParamSet;
 
         #endregion
 
@@ -187,6 +203,14 @@ namespace NV.DetectionPlatform.Entity
         public void AddToAOIParam(AOIParam aOIParam)
         {
             base.AddObject("AOIParam", aOIParam);
+        }
+    
+        /// <summary>
+        /// 用于向 USMParamSet EntitySet 添加新对象的方法，已弃用。请考虑改用关联的 ObjectSet&lt;T&gt; 属性的 .Add 方法。
+        /// </summary>
+        public void AddToUSMParamSet(USMParam uSMParam)
+        {
+            base.AddObject("USMParamSet", uSMParam);
         }
 
         #endregion
@@ -1268,6 +1292,159 @@ namespace NV.DetectionPlatform.Entity
         private global::System.String _ImageFolder;
         partial void OnImageFolderChanging(global::System.String value);
         partial void OnImageFolderChanged();
+
+        #endregion
+
+    
+    }
+    
+    /// <summary>
+    /// 没有元数据文档可用。
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Model", Name="USMParam")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class USMParam : EntityObject
+    {
+        #region 工厂方法
+    
+        /// <summary>
+        /// 创建新的 USMParam 对象。
+        /// </summary>
+        /// <param name="gUID">GUID 属性的初始值。</param>
+        public static USMParam CreateUSMParam(global::System.String gUID)
+        {
+            USMParam uSMParam = new USMParam();
+            uSMParam.GUID = gUID;
+            return uSMParam;
+        }
+
+        #endregion
+
+        #region 基元属性
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String GUID
+        {
+            get
+            {
+                return _GUID;
+            }
+            set
+            {
+                if (_GUID != value)
+                {
+                    OnGUIDChanging(value);
+                    ReportPropertyChanging("GUID");
+                    _GUID = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("GUID");
+                    OnGUIDChanged();
+                }
+            }
+        }
+        private global::System.String _GUID;
+        partial void OnGUIDChanging(global::System.String value);
+        partial void OnGUIDChanged();
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Amount
+        {
+            get
+            {
+                return _Amount;
+            }
+            set
+            {
+                OnAmountChanging(value);
+                ReportPropertyChanging("Amount");
+                _Amount = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Amount");
+                OnAmountChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Amount;
+        partial void OnAmountChanging(Nullable<global::System.Int32> value);
+        partial void OnAmountChanged();
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Radius
+        {
+            get
+            {
+                return _Radius;
+            }
+            set
+            {
+                OnRadiusChanging(value);
+                ReportPropertyChanging("Radius");
+                _Radius = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Radius");
+                OnRadiusChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Radius;
+        partial void OnRadiusChanging(Nullable<global::System.Int32> value);
+        partial void OnRadiusChanged();
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Threshold
+        {
+            get
+            {
+                return _Threshold;
+            }
+            set
+            {
+                OnThresholdChanging(value);
+                ReportPropertyChanging("Threshold");
+                _Threshold = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Threshold");
+                OnThresholdChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Threshold;
+        partial void OnThresholdChanging(Nullable<global::System.Int32> value);
+        partial void OnThresholdChanged();
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Name
+        {
+            get
+            {
+                return _Name;
+            }
+            set
+            {
+                OnNameChanging(value);
+                ReportPropertyChanging("Name");
+                _Name = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Name");
+                OnNameChanged();
+            }
+        }
+        private global::System.String _Name;
+        partial void OnNameChanging(global::System.String value);
+        partial void OnNameChanged();
 
         #endregion
 
