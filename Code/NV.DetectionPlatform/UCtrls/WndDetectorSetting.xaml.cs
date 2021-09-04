@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using NV.DRF.Controls;
 using Detector;
+using NV.Config;
 
 namespace NV.DetectionPlatform.UCtrls
 {

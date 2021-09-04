@@ -20,7 +20,7 @@ using NV.DetectionPlatform.Service;
 using System.Diagnostics;
 using NV.DetectionPlatform.Entity;
 using System.Drawing;
-
+using NV.Config;
 using OpenCvSharp;
 
 namespace NV.DetectionPlatform.UCtrls

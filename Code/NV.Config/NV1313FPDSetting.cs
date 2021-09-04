@@ -94,11 +94,12 @@ namespace NV.Config
         HB_CORR_HARD_PRE = 3
     }
 
-    public enum HB_CorrType {
+    public enum HB_CorrType
+    {
 
         HB_CORR_NO = 0,				///< 不应用校正使能
-        HB_CORR_SOFT =1,			///< 应用硬件校正使能
-        HB_CORR_HARD =2			///< 应用软件校正使能
+        HB_CORR_SOFT = 1,			///< 应用硬件校正使能
+        HB_CORR_HARD = 2			///< 应用软件校正使能
     }
 
 

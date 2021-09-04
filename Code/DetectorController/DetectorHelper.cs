@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using NV.Config;
 using NV.DRF.Controls;
 using NV.DRF.Core.Common;
 
