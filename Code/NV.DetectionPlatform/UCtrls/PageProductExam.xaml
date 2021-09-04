@@ -349,7 +349,7 @@
                             </Path.Data>
                         </Path>
                     </Button>
-                    <Button Grid.Column="1" Margin="4" Foreground="LightGray" FontSize="14" Style="{DynamicResource GrayButtonStyle}" ToolTip="{DynamicResource ExamTips_27}" Tag="Sharp" Name="btnSharpen" Click="radioBtnDo">
+                    <Button Grid.Column="1" Margin="4" Foreground="LightGray" FontSize="14" Style="{DynamicResource GrayButtonStyle}" ToolTip="{DynamicResource ExamTips_27}" Tag="Sharp" Name="btnSharpen" Click="radioBtnDo" MouseRightButtonDown="OpenUSMSetting">
                         <Path Data="M1003.994875 974.365556 43.19529 974.365556 523.595594 38.84675 1003.994875 974.365556zM93.470323 943.66637l860.250542 0L523.595594 106.051361 93.470323 943.66637z"/>
                     </Button>
                     <Button Grid.Column="2" Margin="4" Foreground="LightGray" FontSize="14" Style="{DynamicResource GrayButtonStyle}" ToolTip="{DynamicResource ExamTips_28}" Tag="EqualHist" Name="btnGamma" Click="radioBtnDo">

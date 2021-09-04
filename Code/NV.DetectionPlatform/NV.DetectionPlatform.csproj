@@ -146,6 +146,9 @@
       <DependentUpon>PageProductExam.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UCtrls\WndUSMSetting.xaml.cs">
+      <DependentUpon>WndUSMSetting.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UCtrls\WndAOISetting.xaml.cs">
       <DependentUpon>WndAOISetting.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -216,6 +219,10 @@
     <Page Include="UCtrls\PageProductExam.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UCtrls\WndUSMSetting.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UCtrls\WndAOISetting.xaml">
       <SubType>Designer</SubType>
