@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\binWin32",
+    "\\Code",
+    "\\Code\\DetectorController",
+    "\\Code\\NV.DetectionPlatform.Entity",
+    "\\Code\\packages\\OpenCvSharp3-AnyCPU.4.0.0.20181129"
+  ],
+  "SelectedNode": "\\Code\\NV.DetectionPlatform.Entity\\Model.edmx",
+  "PreviewInSolutionExplorer": false
+}

@@ -886,7 +886,9 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 case "Sharp":
                     if (ipUC.CurrentDv.HasImage) {
-                        
+
+                        // ipUC.CurrentDv.SharpImage(1);
+                      
                         WndUSMSetting.UnsharpenMaskByDatabaseParam(ref ipUC);
                     }
                        
