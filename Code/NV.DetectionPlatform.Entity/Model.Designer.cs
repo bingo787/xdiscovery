@@ -68,18 +68,34 @@ namespace NV.DetectionPlatform.Entity
         /// <summary>
         /// 没有元数据文档可用。
         /// </summary>
-        public ObjectSet<Product> Product
+        public ObjectSet<USMParam> USMParam
         {
             get
             {
-                if ((_Product == null))
+                if ((_USMParam == null))
                 {
-                    _Product = base.CreateObjectSet<Product>("Product");
+                    _USMParam = base.CreateObjectSet<USMParam>("USMParam");
                 }
-                return _Product;
+                return _USMParam;
             }
         }
-        private ObjectSet<Product> _Product;
+        private ObjectSet<USMParam> _USMParam;
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        public ObjectSet<AOIParam> AOIParam
+        {
+            get
+            {
+                if ((_AOIParam == null))
+                {
+                    _AOIParam = base.CreateObjectSet<AOIParam>("AOIParam");
+                }
+                return _AOIParam;
+            }
+        }
+        private ObjectSet<AOIParam> _AOIParam;
     
         /// <summary>
         /// 没有元数据文档可用。
@@ -116,6 +132,22 @@ namespace NV.DetectionPlatform.Entity
         /// <summary>
         /// 没有元数据文档可用。
         /// </summary>
+        public ObjectSet<Product> Product
+        {
+            get
+            {
+                if ((_Product == null))
+                {
+                    _Product = base.CreateObjectSet<Product>("Product");
+                }
+                return _Product;
+            }
+        }
+        private ObjectSet<Product> _Product;
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
         public ObjectSet<Overlay> Overlay
         {
             get
@@ -128,49 +160,25 @@ namespace NV.DetectionPlatform.Entity
             }
         }
         private ObjectSet<Overlay> _Overlay;
-    
-        /// <summary>
-        /// 没有元数据文档可用。
-        /// </summary>
-        public ObjectSet<AOIParam> AOIParam
-        {
-            get
-            {
-                if ((_AOIParam == null))
-                {
-                    _AOIParam = base.CreateObjectSet<AOIParam>("AOIParam");
-                }
-                return _AOIParam;
-            }
-        }
-        private ObjectSet<AOIParam> _AOIParam;
-    
-        /// <summary>
-        /// 没有元数据文档可用。
-        /// </summary>
-        public ObjectSet<USMParam> USMParamSet
-        {
-            get
-            {
-                if ((_USMParamSet == null))
-                {
-                    _USMParamSet = base.CreateObjectSet<USMParam>("USMParamSet");
-                }
-                return _USMParamSet;
-            }
-        }
-        private ObjectSet<USMParam> _USMParamSet;
 
         #endregion
 
         #region AddTo 方法
     
         /// <summary>
-        /// 用于向 Product EntitySet 添加新对象的方法，已弃用。请考虑改用关联的 ObjectSet&lt;T&gt; 属性的 .Add 方法。
+        /// 用于向 USMParam EntitySet 添加新对象的方法，已弃用。请考虑改用关联的 ObjectSet&lt;T&gt; 属性的 .Add 方法。
         /// </summary>
-        public void AddToProduct(Product product)
+        public void AddToUSMParam(USMParam uSMParam)
         {
-            base.AddObject("Product", product);
+            base.AddObject("USMParam", uSMParam);
+        }
+    
+        /// <summary>
+        /// 用于向 AOIParam EntitySet 添加新对象的方法，已弃用。请考虑改用关联的 ObjectSet&lt;T&gt; 属性的 .Add 方法。
+        /// </summary>
+        public void AddToAOIParam(AOIParam aOIParam)
+        {
+            base.AddObject("AOIParam", aOIParam);
         }
     
         /// <summary>
@@ -190,27 +198,19 @@ namespace NV.DetectionPlatform.Entity
         }
     
         /// <summary>
+        /// 用于向 Product EntitySet 添加新对象的方法，已弃用。请考虑改用关联的 ObjectSet&lt;T&gt; 属性的 .Add 方法。
+        /// </summary>
+        public void AddToProduct(Product product)
+        {
+            base.AddObject("Product", product);
+        }
+    
+        /// <summary>
         /// 用于向 Overlay EntitySet 添加新对象的方法，已弃用。请考虑改用关联的 ObjectSet&lt;T&gt; 属性的 .Add 方法。
         /// </summary>
         public void AddToOverlay(Overlay overlay)
         {
             base.AddObject("Overlay", overlay);
-        }
-    
-        /// <summary>
-        /// 用于向 AOIParam EntitySet 添加新对象的方法，已弃用。请考虑改用关联的 ObjectSet&lt;T&gt; 属性的 .Add 方法。
-        /// </summary>
-        public void AddToAOIParam(AOIParam aOIParam)
-        {
-            base.AddObject("AOIParam", aOIParam);
-        }
-    
-        /// <summary>
-        /// 用于向 USMParamSet EntitySet 添加新对象的方法，已弃用。请考虑改用关联的 ObjectSet&lt;T&gt; 属性的 .Add 方法。
-        /// </summary>
-        public void AddToUSMParamSet(USMParam uSMParam)
-        {
-            base.AddObject("USMParamSet", uSMParam);
         }
 
         #endregion
@@ -1355,7 +1355,7 @@ namespace NV.DetectionPlatform.Entity
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Double> Amount
+        public Nullable<global::System.Int32> Amount
         {
             get
             {
@@ -1370,8 +1370,8 @@ namespace NV.DetectionPlatform.Entity
                 OnAmountChanged();
             }
         }
-        private Nullable<global::System.Double> _Amount;
-        partial void OnAmountChanging(Nullable<global::System.Double> value);
+        private Nullable<global::System.Int32> _Amount;
+        partial void OnAmountChanging(Nullable<global::System.Int32> value);
         partial void OnAmountChanged();
     
         /// <summary>

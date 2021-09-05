@@ -76,7 +76,7 @@ namespace NV.DetectionPlatform.UCtrls
                 USMParams.Clear();
                 using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
                 {
-                    db.USMParamSet.ToList().ForEach(t => USMParams.Add(t));
+                    db.USMParam.ToList().ForEach(t => USMParams.Add(t));
                 }
                 if (USMParams.Count > 0)
                 {
@@ -98,37 +98,49 @@ namespace NV.DetectionPlatform.UCtrls
         {
             using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
             {
-                var ps = db.USMParamSet.ToList();
+                var ps = db.USMParam.ToList();
                 if (ps.Count > 0)
                 {
-                    if (DicomViewer.Current != null)
-                    {
-                        //  设置USM的参数，做锐化
-                        //  DicomViewer.Current.SetAOIParam((int)ps[0].UpperlimitofBubble, (int)ps[0].LowerlimitofBubble, (int)ps[0].PercentofBubblePass);
-                        double radius = (double)ps[0].Radius;
-                        float amount = (float)ps[0].Amount;
-                        int threshold = (int)ps[0].Threshold;
-                        if (DicomViewer.Current != null)
-                        {
-                            UnsharpenMaskByCurrentParam(radius, amount, threshold);
-                            // DicomViewer.Current.SetAOIParam(();
-                            // DicomViewer.Current.Invalidate();
-                            DicomViewer.Current.Invalidate();
-                        }
-
-                       
-                    }
+                    //if (DicomViewer.Current != null)
+                    //{
+                    //    //  设置USM的参数，做锐化
+                    //    //  DicomViewer.Current.SetAOIParam((int)ps[0].UpperlimitofBubble, (int)ps[0].LowerlimitofBubble, (int)ps[0].PercentofBubblePass);
+                    //    int radius = (int)ps[0].Radius;
+                    //    int amount = (int)ps[0].Amount;
+                    //    int threshold = (int)ps[0].Threshold;
+                    //    if (DicomViewer.Current != null)
+                    //    {
+                    //        UnsharpenMaskByCurrentParam();
+                    //        // DicomViewer.Current.SetAOIParam(();
+                    //        // DicomViewer.Current.Invalidate();
+                    //        DicomViewer.Current.Invalidate();
+                    //    }
+                    //}
                 }
             }
         }
 
 
-        public static void UnsharpenMaskByCurrentParam(double radius, float amount , int threshold) {
-            Mat imgsrc = Cv2.ImRead(@"C:\Users\zhaoqibin\Pictures\Saved Pictures\000.png");
-            Mat imgblurred = new Mat();
-            Mat usm = new Mat();
+        public static void UnsharpenMaskByCurrentParam(ref NV.DRF.Core.Ctrl.Film film, USMParam param) {
 
-            amount /= 100;
+            if (!film.CurrentDv.HasImage) {
+                return;
+            }
+
+           
+            film.CurrentDv.GetImageData(out ushort width, out ushort height,out ushort bits, out ushort pixel, ImageViewLib.tagGET_IMAGE_FLAG.GIF_CROP, false);
+            Mat imgsrc = new Mat(width, height, MatType.CV_16U, pixel);
+            //Mat imgsrc = Cv2.ImRead(@"C:\Users\zhaoqibin\Pictures\Saved Pictures\000.png");
+            Mat imgblurred = new Mat();
+
+
+            float amount = (float)param.Amount / 100;
+            double radius = (float)param.Radius / 100;
+            int threshold = (int)param.Threshold;
+
+            string msg =  (string.Format("amount:{0} radius:{1} threshold:{2}", amount, radius,threshold));
+            CMessageBox.Show(msg);
+
             Cv2.GaussianBlur(imgsrc, imgblurred, new OpenCvSharp.Size(0, 0), radius, radius);
             // Cv2.AddWeighted(imgsrc, 1.5, imgblurred, -0.5, 0, usm);
 
@@ -144,25 +156,31 @@ namespace NV.DetectionPlatform.UCtrls
             Mat imgdst = imgsrc * (1 + amount) + imgblurred * (-amount);
             imgsrc.CopyTo(imgdst, lowcontrastmask);
 
-            Cv2.ImShow("USM", imgdst);
+            ushort[] data = new ushort[width*height];
+            imgdst.GetArray(width,height,data);
+           
+
+            film.PutData((ushort)imgdst.Width,(ushort)imgdst.Height,16, data,true);
+
+           // Cv2.ImShow("USM", imgdst);
         }
 
-        public static void UnsharpenMaskByDatabaseParam() {
+        public static void UnsharpenMaskByDatabaseParam(ref NV.DRF.Core.Ctrl.Film film) {
 
-            double radius = 1.5;
-            float amount = 1.5F;
+            int radius = 1;
+            int amount = 1;
             int threshold = 22;
             using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
             {
-                var ps = db.USMParamSet.ToList();
+                var ps = db.USMParam.ToList();
                 if (ps.Count > 0)
                 {
-                    radius = (double)ps[0].Radius;
-                    amount = (float)ps[0].Amount;
+                    radius = (int)ps[0].Radius;
+                    amount = (int)ps[0].Amount;
                     threshold = (int)ps[0].Threshold;
                     if (DicomViewer.Current != null)
                     {
-                        UnsharpenMaskByCurrentParam(radius,amount,threshold);
+                        UnsharpenMaskByCurrentParam(ref film ,ps[0]);
                         // DicomViewer.Current.SetAOIParam(();
                        // DicomViewer.Current.Invalidate();
                     }
@@ -203,7 +221,7 @@ namespace NV.DetectionPlatform.UCtrls
             }
             using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
             {
-                var repeat = db.USMParamSet.FirstOrDefault(para => para.Name == name);
+                var repeat = db.USMParam.FirstOrDefault(para => para.Name == name);
                 if (repeat != null)
                 {
                     CMessageBox.Show("已存在该名称方案。\nThe name already exists");
@@ -218,7 +236,7 @@ namespace NV.DetectionPlatform.UCtrls
                     param.Amount = amount;
                     param.Threshold = threshold;
 
-                    db.USMParamSet.AddObject(param);
+                    db.USMParam.AddObject(param);
                     db.SaveChanges();
                     CMessageBox.Show("添加成功\nOperation completed");
                     CurrentParam = param;
@@ -245,10 +263,10 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
                 {
-                    var repeat = db.USMParamSet.FirstOrDefault(para => para.GUID == p.GUID);
+                    var repeat = db.USMParam.FirstOrDefault(para => para.GUID == p.GUID);
                     if (repeat != null)
                     {
-                        db.USMParamSet.DeleteObject(repeat);
+                        db.USMParam.DeleteObject(repeat);
                         db.SaveChanges();
                         WndExamSetting_Loaded(null, null);
                     }
@@ -291,7 +309,7 @@ namespace NV.DetectionPlatform.UCtrls
             USMParam p = lstParams.SelectedItem as USMParam;
             using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
             {
-                var repeat = db.USMParamSet.FirstOrDefault(para => para.GUID == p.GUID);
+                var repeat = db.USMParam.FirstOrDefault(para => para.GUID == p.GUID);
                 if (repeat != null)
                 {
                     repeat.Name = txtName.Text;
@@ -324,14 +342,14 @@ namespace NV.DetectionPlatform.UCtrls
         {
             if (!this.IsLoaded)
                 return;
-            double radius = (double)sldrRadius.Value;
-            float amount = (float)sldrAmount.Value;
+            int radius = (int)sldrRadius.Value;
+            int amount = (int)sldrAmount.Value;
             int threshold = (int)sldrThreshold.Value;
 
             if (DicomViewer.Current != null)
             {
 
-                UnsharpenMaskByCurrentParam(radius,amount,threshold);
+              //  UnsharpenMaskByCurrentParam(radius,amount,threshold);
              //   DicomViewer.Current
                // DicomViewer.Current.SetAOIParam(radius, amount, threshold);
               //  DicomViewer.Current.Invalidate();

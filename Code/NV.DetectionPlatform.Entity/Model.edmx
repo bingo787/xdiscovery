@@ -4,113 +4,131 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Model.Store" Alias="Self" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
-  <EntityContainer Name="ModelStoreContainer">
-    <EntitySet Name="Product" EntityType="Model.Store.Product" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="ExamParam" EntityType="Model.Store.ExamParam" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="ImageParam" EntityType="Model.Store.ImageParam" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="Overlay" EntityType="Model.Store.Overlay" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="AOIParam" EntityType="Model.Store.AOIParam" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="USMParamSet" EntityType="Model.Store.USMParamSet" store:Type="Tables" Schema="dbo" />
-  </EntityContainer>
-  <EntityType Name="Product">
-    <Key>
-      <PropertyRef Name="GUID" />
-    </Key>
-    <Property Name="GUID" Type="nvarchar" Nullable="false" MaxLength="254" />
-    <Property Name="ProductName" Type="nvarchar" Nullable="true" MaxLength="254" />
-    <Property Name="ProductTypeID" Type="nvarchar" Nullable="true" MaxLength="254" />
-    <Property Name="ProductSpecification" Type="nvarchar" Nullable="true" MaxLength="254" />
-    <Property Name="ProductKeywords" Type="nvarchar" Nullable="true" MaxLength="254" />
-    <Property Name="StartTime" Type="nvarchar" Nullable="true" MaxLength="254" />
-    <Property Name="EndTime" Type="nvarchar" Nullable="true" MaxLength="254" />
-    <Property Name="ImageFolder" Type="nvarchar" Nullable="true" MaxLength="254" />
-  </EntityType>
-  <EntityType Name="ExamParam">
-    <Key>
-      <PropertyRef Name="GUID" />
-    </Key>
-    <Property Name="KV" Type="float" Nullable="true" />
-    <Property Name="UA" Type="int" Nullable="true" />
-    <Property Name="Time" Type="float" Nullable="true" />
-    <Property Name="Fps" Type="int" Nullable="true" />
-    <Property Name="ProductType" Type="nvarchar" Nullable="true" MaxLength="254" />
-    <Property Name="FILA" Type="int" Nullable="true" />
-    <Property Name="PREH" Type="int" Nullable="true" />
-    <Property Name="Name" Type="nvarchar" Nullable="true" MaxLength="254" />
-    <Property Name="GUID" Type="nvarchar" Nullable="false" MaxLength="254" />
-  </EntityType>
-  <EntityType Name="ImageParam">
-    <Key>
-      <PropertyRef Name="GUID" />
-    </Key>
-    <Property Name="GUID" Type="nvarchar" Nullable="false" MaxLength="254" />
-    <Property Name="Name" Type="nvarchar" Nullable="true" MaxLength="254" />
-    <Property Name="WindowWidth" Type="int" Nullable="true" />
-    <Property Name="WindowLevel" Type="int" Nullable="true" />
-    <Property Name="Gamma" Type="float" Nullable="true" />
-    <Property Name="SharpLevel" Type="int" Nullable="true" />
-    <Property Name="ReduceNoiseLevel" Type="int" Nullable="true" />
-    <Property Name="FalseColor" Type="bit" Nullable="true" />
-    <Property Name="EqualHist" Type="bit" Nullable="true" />
-    <Property Name="ProductType" Type="nvarchar" Nullable="true" MaxLength="254" />
-  </EntityType>
-  <EntityType Name="Overlay">
-    <Key>
-      <PropertyRef Name="OverlayID" />
-    </Key>
-    <Property Name="OverlayDesc" Type="nvarchar" Nullable="true" MaxLength="254" />
-    <Property Name="TagGroup" Type="nvarchar" Nullable="true" MaxLength="254" />
-    <Property Name="TagElement" Type="nvarchar" Nullable="true" MaxLength="254" />
-    <Property Name="DisplayFormat" Type="nvarchar" Nullable="true" MaxLength="254" />
-    <Property Name="OverlayID" Type="int" Nullable="false" />
-    <Property Name="IsUseful" Type="bit" Nullable="true" />
-  </EntityType>
-  <EntityType Name="AOIParam">
-    <Key>
-      <PropertyRef Name="GUID" />
-    </Key>
-    <Property Name="GUID" Type="nvarchar" Nullable="false" MaxLength="254" />
-    <Property Name="UpperlimitofBubble" Type="int" Nullable="true" />
-    <Property Name="LowerlimitofBubble" Type="int" Nullable="true" />
-    <Property Name="PercentofBubblePass" Type="int" Nullable="true" />
-    <Property Name="Name" Type="nvarchar" Nullable="true" MaxLength="254" />
-  </EntityType>
-  <EntityType Name="USMParamSet">
-    <Key>
-      <PropertyRef Name="GUID" />
-    </Key>
-    <Property Name="GUID" Type="nvarchar" Nullable="false" MaxLength="254" />
-    <Property Name="Amount" Type="float" Nullable="true" />
-    <Property Name="Radius" Type="int" Nullable="true" />
-    <Property Name="Threshold" Type="int" Nullable="true" />
-    <Property Name="Name" Type="nvarchar" Nullable="true" MaxLength="254" />
-  </EntityType>
-</Schema></edmx:StorageModels>
-    <!-- CSDL content -->
-    <edmx:ConceptualModels>
-      <Schema Namespace="Model" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+    <Schema Namespace="Model.Store" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityType Name="AOIParam">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="nvarchar" MaxLength="254" Nullable="false" />
+          <Property Name="UpperlimitofBubble" Type="int" />
+          <Property Name="LowerlimitofBubble" Type="int" />
+          <Property Name="PercentofBubblePass" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="254" />
+        </EntityType>
+        <EntityType Name="ExamParam">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="KV" Type="float" />
+          <Property Name="UA" Type="int" />
+          <Property Name="Time" Type="float" />
+          <Property Name="Fps" Type="int" />
+          <Property Name="ProductType" Type="nvarchar" MaxLength="254" />
+          <Property Name="FILA" Type="int" />
+          <Property Name="PREH" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="254" />
+          <Property Name="GUID" Type="nvarchar" MaxLength="254" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ImageParam">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="nvarchar" MaxLength="254" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="254" />
+          <Property Name="WindowWidth" Type="int" />
+          <Property Name="WindowLevel" Type="int" />
+          <Property Name="Gamma" Type="float" />
+          <Property Name="SharpLevel" Type="int" />
+          <Property Name="ReduceNoiseLevel" Type="int" />
+          <Property Name="FalseColor" Type="bit" />
+          <Property Name="EqualHist" Type="bit" />
+          <Property Name="ProductType" Type="nvarchar" MaxLength="254" />
+        </EntityType>
+        <!--生成过程中发现错误:
+警告 6002: 表/视图“Overlay”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="Overlay">
+          <Key>
+            <PropertyRef Name="OverlayID" />
+          </Key>
+          <Property Name="OverlayDesc" Type="nvarchar" MaxLength="254" />
+          <Property Name="TagGroup" Type="nvarchar" MaxLength="254" />
+          <Property Name="TagElement" Type="nvarchar" MaxLength="254" />
+          <Property Name="DisplayFormat" Type="nvarchar" MaxLength="254" />
+          <Property Name="OverlayID" Type="int" Nullable="false" />
+          <Property Name="IsUseful" Type="bit" />
+        </EntityType>
         <EntityType Name="Product">
           <Key>
             <PropertyRef Name="GUID" />
           </Key>
-          <Property Name="GUID" Type="String" MaxLength="254" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ProductName" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="ProductTypeID" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="ProductSpecification" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="ProductKeywords" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="StartTime" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="EndTime" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="ImageFolder" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="GUID" Type="nvarchar" MaxLength="254" Nullable="false" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="254" />
+          <Property Name="ProductTypeID" Type="nvarchar" MaxLength="254" />
+          <Property Name="ProductSpecification" Type="nvarchar" MaxLength="254" />
+          <Property Name="ProductKeywords" Type="nvarchar" MaxLength="254" />
+          <Property Name="StartTime" Type="nvarchar" MaxLength="254" />
+          <Property Name="EndTime" Type="nvarchar" MaxLength="254" />
+          <Property Name="ImageFolder" Type="nvarchar" MaxLength="254" />
         </EntityType>
+        <EntityType Name="USMParam">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="nvarchar" MaxLength="254" Nullable="false" />
+          <Property Name="Amount" Type="int" />
+          <Property Name="Radius" Type="int" />
+          <Property Name="Threshold" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="254" />
+        </EntityType>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="AOIParam" EntityType="Self.AOIParam" store:Type="Tables" />
+          <EntitySet Name="ExamParam" EntityType="Self.ExamParam" store:Type="Tables" />
+          <EntitySet Name="ImageParam" EntityType="Self.ImageParam" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" store:Type="Tables" />
+          <EntitySet Name="USMParam" EntityType="Self.USMParam" store:Type="Tables" />
+          <EntitySet Name="Overlay" EntityType="Self.Overlay" store:Type="Tables">
+            <DefiningQuery>SELECT 
+[Overlay].[OverlayDesc] AS [OverlayDesc], 
+[Overlay].[TagGroup] AS [TagGroup], 
+[Overlay].[TagElement] AS [TagElement], 
+[Overlay].[DisplayFormat] AS [DisplayFormat], 
+[Overlay].[OverlayID] AS [OverlayID], 
+[Overlay].[IsUseful] AS [IsUseful]
+FROM [Overlay] AS [Overlay]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Product" EntityType="Self.Product" />
+          <EntitySet Name="USMParam" EntityType="Model.USMParam" />
+          <EntitySet Name="AOIParam" EntityType="Model.AOIParam" />
           <EntitySet Name="ExamParam" EntityType="Model.ExamParam" />
           <EntitySet Name="ImageParam" EntityType="Model.ImageParam" />
+          <EntitySet Name="Product" EntityType="Model.Product" />
           <EntitySet Name="Overlay" EntityType="Model.Overlay" />
-          <EntitySet Name="AOIParam" EntityType="Model.AOIParam" />
-          <EntitySet Name="USMParamSet" EntityType="Model.USMParam" />
         </EntityContainer>
+        <EntityType Name="USMParam">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Nullable="false" MaxLength="254" FixedLength="false" Unicode="true" Type="String" />
+          <Property Name="Amount" Type="Int32" />
+          <Property Name="Radius" Type="Int32" />
+          <Property Name="Threshold" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="AOIParam">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="String" Nullable="false" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="UpperlimitofBubble" Type="Int32" />
+          <Property Name="LowerlimitofBubble" Type="Int32" />
+          <Property Name="PercentofBubblePass" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="ExamParam">
           <Key>
             <PropertyRef Name="GUID" />
@@ -140,6 +158,19 @@
           <Property Name="EqualHist" Type="Boolean" />
           <Property Name="ProductType" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="String" Nullable="false" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="ProductName" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="ProductTypeID" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="ProductSpecification" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="ProductKeywords" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="StartTime" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="EndTime" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="ImageFolder" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="Overlay">
           <Key>
             <PropertyRef Name="OverlayID" />
@@ -151,112 +182,92 @@
           <Property Name="OverlayID" Type="Int32" Nullable="false" />
           <Property Name="IsUseful" Type="Boolean" />
         </EntityType>
-        <EntityType Name="AOIParam">
-          <Key>
-            <PropertyRef Name="GUID" />
-          </Key>
-          <Property Name="GUID" Type="String" Nullable="false" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="UpperlimitofBubble" Type="Int32" />
-          <Property Name="LowerlimitofBubble" Type="Int32" />
-          <Property Name="PercentofBubblePass" Type="Int32" />
-          <Property Name="Name" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="USMParam">
-          <Key>
-            <PropertyRef Name="GUID" />
-          </Key>
-          <Property Name="GUID" Type="String" Nullable="false" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="Amount" Type="Double" />
-          <Property Name="Radius" Type="Int32" />
-          <Property Name="Threshold" Type="Int32" />
-          <Property Name="Name" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
-    <EntitySetMapping Name="Product">
-      <EntityTypeMapping TypeName="IsTypeOf(Model.Product)">
-        <MappingFragment StoreEntitySet="Product">
-          <ScalarProperty Name="GUID" ColumnName="GUID" />
-          <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-          <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
-          <ScalarProperty Name="ProductSpecification" ColumnName="ProductSpecification" />
-          <ScalarProperty Name="ProductKeywords" ColumnName="ProductKeywords" />
-          <ScalarProperty Name="StartTime" ColumnName="StartTime" />
-          <ScalarProperty Name="EndTime" ColumnName="EndTime" />
-          <ScalarProperty Name="ImageFolder" ColumnName="ImageFolder" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ExamParam">
-      <EntityTypeMapping TypeName="IsTypeOf(Model.ExamParam)">
-        <MappingFragment StoreEntitySet="ExamParam">
-          <ScalarProperty Name="GUID" ColumnName="GUID" />
-          <ScalarProperty Name="KV" ColumnName="KV" />
-          <ScalarProperty Name="UA" ColumnName="UA" />
-          <ScalarProperty Name="Time" ColumnName="Time" />
-          <ScalarProperty Name="Fps" ColumnName="Fps" />
-          <ScalarProperty Name="ProductType" ColumnName="ProductType" />
-          <ScalarProperty Name="FILA" ColumnName="FILA" />
-          <ScalarProperty Name="PREH" ColumnName="PREH" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ImageParam">
-      <EntityTypeMapping TypeName="IsTypeOf(Model.ImageParam)">
-        <MappingFragment StoreEntitySet="ImageParam">
-          <ScalarProperty Name="GUID" ColumnName="GUID" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="WindowWidth" ColumnName="WindowWidth" />
-          <ScalarProperty Name="WindowLevel" ColumnName="WindowLevel" />
-          <ScalarProperty Name="Gamma" ColumnName="Gamma" />
-          <ScalarProperty Name="SharpLevel" ColumnName="SharpLevel" />
-          <ScalarProperty Name="ReduceNoiseLevel" ColumnName="ReduceNoiseLevel" />
-          <ScalarProperty Name="FalseColor" ColumnName="FalseColor" />
-          <ScalarProperty Name="EqualHist" ColumnName="EqualHist" />
-          <ScalarProperty Name="ProductType" ColumnName="ProductType" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Overlay">
-      <EntityTypeMapping TypeName="IsTypeOf(Model.Overlay)">
-        <MappingFragment StoreEntitySet="Overlay">
-          <ScalarProperty Name="OverlayID" ColumnName="OverlayID" />
-          <ScalarProperty Name="OverlayDesc" ColumnName="OverlayDesc" />
-          <ScalarProperty Name="TagGroup" ColumnName="TagGroup" />
-          <ScalarProperty Name="TagElement" ColumnName="TagElement" />
-          <ScalarProperty Name="DisplayFormat" ColumnName="DisplayFormat" />
-          <ScalarProperty Name="IsUseful" ColumnName="IsUseful" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="AOIParam">
-      <EntityTypeMapping TypeName="IsTypeOf(Model.AOIParam)">
-        <MappingFragment StoreEntitySet="AOIParam">
-          <ScalarProperty Name="GUID" ColumnName="GUID" />
-          <ScalarProperty Name="UpperlimitofBubble" ColumnName="UpperlimitofBubble" />
-          <ScalarProperty Name="LowerlimitofBubble" ColumnName="LowerlimitofBubble" />
-          <ScalarProperty Name="PercentofBubblePass" ColumnName="PercentofBubblePass" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="USMParamSet">
-      <EntityTypeMapping TypeName="IsTypeOf(Model.USMParam)">
-        <MappingFragment StoreEntitySet="USMParamSet">
-          <ScalarProperty Name="GUID" ColumnName="GUID" />
-          <ScalarProperty Name="Amount" ColumnName="Amount" />
-          <ScalarProperty Name="Radius" ColumnName="Radius" />
-          <ScalarProperty Name="Threshold" ColumnName="Threshold" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-  </EntityContainerMapping>
+    <EntitySetMapping Name="USMParam">
+            <EntityTypeMapping TypeName="Model.USMParam">
+              <MappingFragment StoreEntitySet="USMParam">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Threshold" ColumnName="Threshold" />
+                <ScalarProperty Name="Radius" ColumnName="Radius" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AOIParam">
+            <EntityTypeMapping TypeName="Model.AOIParam">
+              <MappingFragment StoreEntitySet="AOIParam">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PercentofBubblePass" ColumnName="PercentofBubblePass" />
+                <ScalarProperty Name="LowerlimitofBubble" ColumnName="LowerlimitofBubble" />
+                <ScalarProperty Name="UpperlimitofBubble" ColumnName="UpperlimitofBubble" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExamParam">
+            <EntityTypeMapping TypeName="Model.ExamParam">
+              <MappingFragment StoreEntitySet="ExamParam">
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PREH" ColumnName="PREH" />
+                <ScalarProperty Name="FILA" ColumnName="FILA" />
+                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
+                <ScalarProperty Name="Fps" ColumnName="Fps" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="UA" ColumnName="UA" />
+                <ScalarProperty Name="KV" ColumnName="KV" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ImageParam">
+            <EntityTypeMapping TypeName="Model.ImageParam">
+              <MappingFragment StoreEntitySet="ImageParam">
+                <ScalarProperty Name="ProductType" ColumnName="ProductType" />
+                <ScalarProperty Name="EqualHist" ColumnName="EqualHist" />
+                <ScalarProperty Name="FalseColor" ColumnName="FalseColor" />
+                <ScalarProperty Name="ReduceNoiseLevel" ColumnName="ReduceNoiseLevel" />
+                <ScalarProperty Name="SharpLevel" ColumnName="SharpLevel" />
+                <ScalarProperty Name="Gamma" ColumnName="Gamma" />
+                <ScalarProperty Name="WindowLevel" ColumnName="WindowLevel" />
+                <ScalarProperty Name="WindowWidth" ColumnName="WindowWidth" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Product">
+            <EntityTypeMapping TypeName="Model.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="ImageFolder" ColumnName="ImageFolder" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="ProductKeywords" ColumnName="ProductKeywords" />
+                <ScalarProperty Name="ProductSpecification" ColumnName="ProductSpecification" />
+                <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Overlay">
+            <EntityTypeMapping TypeName="Model.Overlay">
+              <MappingFragment StoreEntitySet="Overlay">
+                <ScalarProperty Name="IsUseful" ColumnName="IsUseful" />
+                <ScalarProperty Name="OverlayID" ColumnName="OverlayID" />
+                <ScalarProperty Name="DisplayFormat" ColumnName="DisplayFormat" />
+                <ScalarProperty Name="TagElement" ColumnName="TagElement" />
+                <ScalarProperty Name="TagGroup" ColumnName="TagGroup" />
+                <ScalarProperty Name="OverlayDesc" ColumnName="OverlayDesc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
@@ -277,13 +288,13 @@
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram DiagramId="26145d9a15284a01a58d4a54f0eb35d2" Name="Diagram1">
-        <EntityTypeShape EntityType="Model.Product" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.ExamParam" Width="1.5" PointX="3.375" PointY="0.75" />
-        <EntityTypeShape EntityType="Model.ImageParam" Width="1.5" PointX="0.75" PointY="4.75" />
-        <EntityTypeShape EntityType="Model.Overlay" Width="1.5" PointX="3.375" PointY="4.75" />
-        <EntityTypeShape EntityType="Model.AOIParam" Width="1.5" PointX="5.375" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.USMParam" Width="2.75" PointX="7.5" PointY="1.5" />
+      <Diagram DiagramId="26145d9a15284a01a58d4a54f0eb35d2" Name="Diagram1" ZoomLevel="127">
+        <EntityTypeShape EntityType="Model.USMParam" PointX="3.375" PointY="4" Width="1.5" />
+        <EntityTypeShape EntityType="Model.AOIParam" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Model.ExamParam" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Model.ImageParam" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Model.Product" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="Model.Overlay" Width="1.5" PointX="6.75" PointY="0.75" />
       </Diagram>
     </Diagrams>
   </Designer>
