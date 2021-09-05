@@ -840,43 +840,6 @@ namespace NV.DetectionPlatform.UCtrls
             }
         }
 
-        static int global_threshold = 10;
-        private void SharpImageUSM() {
-            //Mat source = new Mat(@"C:\Users\zhaoqibin\Pictures\Saved Pictures\000.png", ImreadModes.Color);
-            //Cv2.ImShow("Demo", source);
-            //Cv2.WaitKey(0);
-
-            //sigmaa += 3;
-            global_threshold += 10;
-            double sigma = 3;
-            int threshold = global_threshold;
-            float amount = 1;
-
-
-            Mat imgsrc = Cv2.ImRead(@"C:\Users\zhaoqibin\Pictures\Saved Pictures\000.png");
-            Mat imgblurred = new Mat();
-            Mat usm = new Mat();
-
-            Cv2.GaussianBlur(imgsrc, imgblurred, new OpenCvSharp.Size(0, 0), sigma, sigma);
-            // Cv2.AddWeighted(imgsrc, 1.5, imgblurred, -0.5, 0, usm);
-
-            Mat lowcontrastmask = new Mat();// = Cv2.Abs(imgsrc - imgblurred) < threshold;
-            Cv2.Absdiff(imgsrc, imgblurred, lowcontrastmask);
-            //lowcontrastmask = lowcontrastmask < threshold;
-
-            //cv2.THRESH_BINARY_INV 大于阈值部分被置为0，小于部分被置为255
-            Cv2.Threshold(lowcontrastmask, lowcontrastmask, threshold, 255, ThresholdTypes.BinaryInv);
-            lowcontrastmask /= 255;
-            // Mat lowcontrastmask = Cv2.Abs(imgsrc - imgblurred) < threshold;
-
-            Mat imgdst = imgsrc * (1 + amount) + imgblurred * (-amount);
-            imgsrc.CopyTo(imgdst, lowcontrastmask);
-
-            Cv2.ImShow("USM", imgdst);
-            // Cv2.WaitKey(0);
-
-
-        }
 
         /// <summary>
         /// 图像处理
@@ -894,8 +857,10 @@ namespace NV.DetectionPlatform.UCtrls
             switch (tag)
             {
                 case "Sharp":
-                    if (ipUC.CurrentDv.HasImage)
-                        ipUC.CurrentDv.SharpImage(1);
+                    if (ipUC.CurrentDv.HasImage) {
+                        WndUSMSetting.UnsharpenMaskByDatabaseParam();
+                    }
+                       
                     break;
                 case "EqualHist":
                     if (ipUC.CurrentDv.HasImage)
