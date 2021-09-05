@@ -44,13 +44,13 @@
                     <Label Content="{DynamicResource UsmRadius}" Grid.Row="2" HorizontalAlignment="Center"/>
                     <Label Content="{DynamicResource UsmThreshould}" Grid.Row="4" HorizontalAlignment="Center"/>
 
-                    <TextBox Grid.Column="1" x:Name="txtUpper" Text="{Binding Path=CurrentParam.UpperlimitofBubble}" Width="100" HorizontalAlignment="Left"/>
-                    <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtLower" Text="{Binding CurrentParam.LowerlimitofBubble}"  Width="100" HorizontalAlignment="Left"/>
-                    <TextBox Grid.Column="1" Grid.Row="4" x:Name="txtPass" Text="{Binding CurrentParam.PercentofBubblePass}"  Width="100" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Column="1" x:Name="txtRadius" Text="{Binding Path=CurrentParam.Radius}" Width="100" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtAmount" Text="{Binding CurrentParam.Amount}"  Width="100" HorizontalAlignment="Left"/>
+                    <TextBox Grid.Column="1" Grid.Row="4" x:Name="txtThreshold" Text="{Binding CurrentParam.Threshold}"  Width="100" HorizontalAlignment="Left"/>
 
-                    <Slider Grid.ColumnSpan="3" Grid.Row="1" x:Name="sldrAOIUpper" Minimum="1" Value="{Binding CurrentParam.UpperlimitofBubble}" TickFrequency="1" Maximum="65535" ValueChanged="SetAOI"/>
-                    <Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrAOILower" Minimum="1" Value="{Binding CurrentParam.LowerlimitofBubble}" Maximum="{Binding Value,ElementName=sldrAOIUpper}"  ValueChanged="SetAOI"/>
-                    <Slider Grid.ColumnSpan="3" Grid.Row="5" x:Name="sldrAOIPass" Minimum="1" Value="{Binding CurrentParam.PercentofBubblePass}" Maximum="100"  ValueChanged="SetAOI"/>
+                    <Slider Grid.ColumnSpan="3" Grid.Row="1" x:Name="sldrRadius" Minimum="1" Value="{Binding CurrentParam.Radius}" TickFrequency="0.1" Maximum="100" ValueChanged="SetUSM"/>
+                    <Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrAmount" Minimum="1" Value="{Binding CurrentParam.Amount}" Maximum="100"  ValueChanged="SetUSM"/>
+                    <Slider Grid.ColumnSpan="3" Grid.Row="5" x:Name="sldrThreshold" Minimum="1" Value="{Binding CurrentParam.Threshold}" Maximum="255"  ValueChanged="SetUSM"/>
 
                     <Grid Grid.Row="7" Grid.ColumnSpan="3" Margin="5,0">
                         <Grid.ColumnDefinitions>

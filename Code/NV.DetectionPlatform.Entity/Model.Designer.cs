@@ -1355,7 +1355,7 @@ namespace NV.DetectionPlatform.Entity
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int32> Amount
+        public Nullable<global::System.Double> Amount
         {
             get
             {
@@ -1370,8 +1370,8 @@ namespace NV.DetectionPlatform.Entity
                 OnAmountChanged();
             }
         }
-        private Nullable<global::System.Int32> _Amount;
-        partial void OnAmountChanging(Nullable<global::System.Int32> value);
+        private Nullable<global::System.Double> _Amount;
+        partial void OnAmountChanging(Nullable<global::System.Double> value);
         partial void OnAmountChanged();
     
         /// <summary>

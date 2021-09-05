@@ -81,7 +81,7 @@
       <PropertyRef Name="GUID" />
     </Key>
     <Property Name="GUID" Type="nvarchar" Nullable="false" MaxLength="254" />
-    <Property Name="Amount" Type="int" Nullable="true" />
+    <Property Name="Amount" Type="float" Nullable="true" />
     <Property Name="Radius" Type="int" Nullable="true" />
     <Property Name="Threshold" Type="int" Nullable="true" />
     <Property Name="Name" Type="nvarchar" Nullable="true" MaxLength="254" />
@@ -166,7 +166,7 @@
             <PropertyRef Name="GUID" />
           </Key>
           <Property Name="GUID" Type="String" Nullable="false" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="Amount" Type="Int32" />
+          <Property Name="Amount" Type="Double" />
           <Property Name="Radius" Type="Int32" />
           <Property Name="Threshold" Type="Int32" />
           <Property Name="Name" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />

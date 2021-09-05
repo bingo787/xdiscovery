@@ -17,32 +17,33 @@ using NV.DRF.Controls;
 using NV.DRF.Core.Global;
 using SerialPortController;
 using NV.DRF.Core.Ctrl;
+using OpenCvSharp;
 
 namespace NV.DetectionPlatform.UCtrls
 {
     /// <summary>
     /// WndPortSetting.xaml 的交互逻辑
     /// </summary>
-    public partial class WndUSMSetting : Window, INotifyPropertyChanged
+    public partial class WndUSMSetting : System.Windows.Window, INotifyPropertyChanged
     {
         public WndUSMSetting()
         {
             InitializeComponent();
 
             this.DataContext = this;
-            AOIParams = new System.Collections.ObjectModel.ObservableCollection<AOIParam>();
-            CurrentParam = new AOIParam();
+            USMParams = new System.Collections.ObjectModel.ObservableCollection<USMParam>();
+            CurrentParam = new USMParam();
             this.Loaded += WndExamSetting_Loaded;
         }
 
         /// <summary>
         /// 属性
         /// </summary>
-        private AOIParam _currentParam;
+        private USMParam _currentParam;
         /// <summary>
         /// 获取或设置属性
         /// </summary>
-        public AOIParam CurrentParam
+        public USMParam CurrentParam
         {
             get
             {
@@ -61,7 +62,7 @@ namespace NV.DetectionPlatform.UCtrls
         /// <summary>
         /// 图像参数列表
         /// </summary>
-        public System.Collections.ObjectModel.ObservableCollection<AOIParam> AOIParams { set; get; }
+        public System.Collections.ObjectModel.ObservableCollection<USMParam> USMParams { set; get; }
         /// <summary>
         /// 初始化方案
         /// </summary>
@@ -72,16 +73,16 @@ namespace NV.DetectionPlatform.UCtrls
             try
             {
                 string oldGUID = CurrentParam == null ? "null" : CurrentParam.GUID;
-                AOIParams.Clear();
+                USMParams.Clear();
                 using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
                 {
-                    db.AOIParam.ToList().ForEach(t => AOIParams.Add(t));
+                    db.USMParamSet.ToList().ForEach(t => USMParams.Add(t));
                 }
-                if (AOIParams.Count > 0)
+                if (USMParams.Count > 0)
                 {
-                    var selected = AOIParams.FirstOrDefault(t => t.GUID == oldGUID);
+                    var selected = USMParams.FirstOrDefault(t => t.GUID == oldGUID);
                     if (selected == null)
-                        CurrentParam = AOIParams[0];
+                        CurrentParam = USMParams[0];
                     else
                     {
                         CurrentParam = selected;
@@ -97,16 +98,79 @@ namespace NV.DetectionPlatform.UCtrls
         {
             using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
             {
-                var ps = db.AOIParam.ToList();
+                var ps = db.USMParamSet.ToList();
                 if (ps.Count > 0)
                 {
                     if (DicomViewer.Current != null)
                     {
-                        DicomViewer.Current.SetAOIParam((int)ps[0].UpperlimitofBubble, (int)ps[0].LowerlimitofBubble, (int)ps[0].PercentofBubblePass);
-                        DicomViewer.Current.Invalidate();
+                        //  设置USM的参数，做锐化
+                        //  DicomViewer.Current.SetAOIParam((int)ps[0].UpperlimitofBubble, (int)ps[0].LowerlimitofBubble, (int)ps[0].PercentofBubblePass);
+                        double radius = (double)ps[0].Radius;
+                        float amount = (float)ps[0].Amount;
+                        int threshold = (int)ps[0].Threshold;
+                        if (DicomViewer.Current != null)
+                        {
+                            UnsharpenMaskByCurrentParam(radius, amount, threshold);
+                            // DicomViewer.Current.SetAOIParam(();
+                            // DicomViewer.Current.Invalidate();
+                            DicomViewer.Current.Invalidate();
+                        }
+
+                       
                     }
                 }
             }
+        }
+
+
+        public static void UnsharpenMaskByCurrentParam(double radius, float amount , int threshold) {
+            Mat imgsrc = Cv2.ImRead(@"C:\Users\zhaoqibin\Pictures\Saved Pictures\000.png");
+            Mat imgblurred = new Mat();
+            Mat usm = new Mat();
+
+            amount /= 100;
+            Cv2.GaussianBlur(imgsrc, imgblurred, new OpenCvSharp.Size(0, 0), radius, radius);
+            // Cv2.AddWeighted(imgsrc, 1.5, imgblurred, -0.5, 0, usm);
+
+            Mat lowcontrastmask = new Mat();// = Cv2.Abs(imgsrc - imgblurred) < threshold;
+            Cv2.Absdiff(imgsrc, imgblurred, lowcontrastmask);
+            //lowcontrastmask = lowcontrastmask < threshold;
+
+            //cv2.THRESH_BINARY_INV 大于阈值部分被置为0，小于部分被置为255
+            Cv2.Threshold(lowcontrastmask, lowcontrastmask, threshold, 255, ThresholdTypes.BinaryInv);
+            lowcontrastmask /= 255;
+            // Mat lowcontrastmask = Cv2.Abs(imgsrc - imgblurred) < threshold;
+
+            Mat imgdst = imgsrc * (1 + amount) + imgblurred * (-amount);
+            imgsrc.CopyTo(imgdst, lowcontrastmask);
+
+            Cv2.ImShow("USM", imgdst);
+        }
+
+        public static void UnsharpenMaskByDatabaseParam() {
+
+            double radius = 1.5;
+            float amount = 1.5F;
+            int threshold = 22;
+            using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
+            {
+                var ps = db.USMParamSet.ToList();
+                if (ps.Count > 0)
+                {
+                    radius = (double)ps[0].Radius;
+                    amount = (float)ps[0].Amount;
+                    threshold = (int)ps[0].Threshold;
+                    if (DicomViewer.Current != null)
+                    {
+                        UnsharpenMaskByCurrentParam(radius,amount,threshold);
+                        // DicomViewer.Current.SetAOIParam(();
+                       // DicomViewer.Current.Invalidate();
+                    }
+                }
+            }
+
+
+          
         }
         /// <summary>
         /// 添加方案
@@ -116,30 +180,30 @@ namespace NV.DetectionPlatform.UCtrls
         private void Add(object sender, RoutedEventArgs e)
         {
             string name = txtName.Text;
-            int upper, lower, pass;
+            int radius, amount, threshold;
             if (string.IsNullOrEmpty(name))
             {
                 CMessageBox.Show("请输入新方案名称\nPlease input solution name");
                 return;
             }
-            if (!int.TryParse(txtUpper.Text, out upper))
+            if (!int.TryParse(txtRadius.Text, out radius))
             {
-                CMessageBox.Show("上限值不合法。\nInvalid BubbleUpperlimit");
+                CMessageBox.Show("半径值不合法。\nInvalid radius");
                 return;
             }
-            if (!int.TryParse(txtLower.Text, out lower))
+            if (!int.TryParse(txtAmount.Text, out amount))
             {
-                CMessageBox.Show("下限值不合法。\nInvolid BubbleLowerlimit");
+                CMessageBox.Show("数量值不合法。\nInvolid amount");
                 return;
             }
-            if (!int.TryParse(txtPass.Text, out pass))
+            if (!int.TryParse(txtThreshold.Text, out threshold))
             {
-                CMessageBox.Show("合格率值不合法。\nInvalid BubbleQualification");
+                CMessageBox.Show("阀值不合法。\nInvalid threshold");
                 return;
             }
             using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
             {
-                var repeat = db.AOIParam.FirstOrDefault(para => para.Name == name);
+                var repeat = db.USMParamSet.FirstOrDefault(para => para.Name == name);
                 if (repeat != null)
                 {
                     CMessageBox.Show("已存在该名称方案。\nThe name already exists");
@@ -147,14 +211,14 @@ namespace NV.DetectionPlatform.UCtrls
                 }
                 else
                 {
-                    AOIParam param = new AOIParam();
+                    USMParam param = new USMParam();
                     param.GUID = System.Guid.NewGuid().ToString();
                     param.Name = name;
-                    param.UpperlimitofBubble = upper;
-                    param.LowerlimitofBubble = lower;
-                    param.PercentofBubblePass = pass;
+                    param.Radius = radius;
+                    param.Amount = amount;
+                    param.Threshold = threshold;
 
-                    db.AOIParam.AddObject(param);
+                    db.USMParamSet.AddObject(param);
                     db.SaveChanges();
                     CMessageBox.Show("添加成功\nOperation completed");
                     CurrentParam = param;
@@ -174,17 +238,17 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 return;
             }
-            AOIParam p = lstParams.SelectedItem as AOIParam;
+            USMParam p = lstParams.SelectedItem as USMParam;
             if (CMessageBox.Show("确定要删除该方案吗？\nAre you sure you want to delete it?", "提示", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
                 return;
             else
             {
                 using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
                 {
-                    var repeat = db.AOIParam.FirstOrDefault(para => para.GUID == p.GUID);
+                    var repeat = db.USMParamSet.FirstOrDefault(para => para.GUID == p.GUID);
                     if (repeat != null)
                     {
-                        db.AOIParam.DeleteObject(repeat);
+                        db.USMParamSet.DeleteObject(repeat);
                         db.SaveChanges();
                         WndExamSetting_Loaded(null, null);
                     }
@@ -203,37 +267,37 @@ namespace NV.DetectionPlatform.UCtrls
                 return;
             }
             string name = txtName.Text;
-            int upper, lower, pass;
+            int raduis, amount, threshold;
             if (string.IsNullOrEmpty(name))
             {
                 CMessageBox.Show("请输入新方案名称\n\nPlease input solution name");
                 return;
             }
-            if (!int.TryParse(txtUpper.Text, out upper))
+            if (!int.TryParse(txtRadius.Text, out raduis))
             {
-                CMessageBox.Show("上限值不合法。\nInvalid BubbleUpperlimit");
+                CMessageBox.Show("半径值不合法。\nInvalid radius");
                 return;
             }
-            if (!int.TryParse(txtLower.Text, out lower))
+            if (!int.TryParse(txtAmount.Text, out amount))
             {
-                CMessageBox.Show("下限值不合法。\nInvolid BubbleLowerlimit");
+                CMessageBox.Show("数量值不合法。\nInvolid amount");
                 return;
             }
-            if (!int.TryParse(txtPass.Text, out pass))
+            if (!int.TryParse(txtThreshold.Text, out threshold))
             {
-                CMessageBox.Show("合格率值不合法。\nInvalid BubbleQualification");
+                CMessageBox.Show("阀值不合法。\nInvalid threshold");
                 return;
             }
-            AOIParam p = lstParams.SelectedItem as AOIParam;
+            USMParam p = lstParams.SelectedItem as USMParam;
             using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
             {
-                var repeat = db.AOIParam.FirstOrDefault(para => para.GUID == p.GUID);
+                var repeat = db.USMParamSet.FirstOrDefault(para => para.GUID == p.GUID);
                 if (repeat != null)
                 {
                     repeat.Name = txtName.Text;
-                    repeat.UpperlimitofBubble = upper;
-                    repeat.LowerlimitofBubble = lower;
-                    repeat.PercentofBubblePass = pass;
+                    repeat.Radius = raduis;
+                    repeat.Amount = amount;
+                    repeat.Threshold = threshold;
                     db.SaveChanges();
                     CMessageBox.Show("保存成功\nOperation completed");
                     WndExamSetting_Loaded(null, null);
@@ -255,52 +319,22 @@ namespace NV.DetectionPlatform.UCtrls
 
         public delegate void CloseEventHandler();
         public event CloseEventHandler CloseSettingEvent;
-        ///// <summary>
-        ///// 关闭设置
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void Close(object sender, RoutedEventArgs e)
-        //{
-        //    if (CloseSettingEvent != null)
-        //    {
-        //        CloseSettingEvent.Invoke((int)CurrentParam.WindowWidth, (int)CurrentParam.WindowLevel);
-        //    }
-        //}
-        ///// <summary>
-        ///// 设置参数
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void SetWWWL(object sender, RoutedPropertyChangedEventArgs<double> e)
-        //{
-        //    try
-        //    {
-        //        int ww = (int)sldrWW.Value;
-        //        int wl = (int)sldrWL.Value;
-        //        if (WindowWLChangedEvent != null)
-        //        {
-        //            WindowWLChangedEvent(ww, wl);
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
 
-        //    }
-        //}
-
-        private void SetAOI(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void SetUSM(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (!this.IsLoaded)
                 return;
-            int upper = (int)sldrAOIUpper.Value;
-            int lower = (int)sldrAOILower.Value;
-            int pass = (int)sldrAOIPass.Value;
+            double radius = (double)sldrRadius.Value;
+            float amount = (float)sldrAmount.Value;
+            int threshold = (int)sldrThreshold.Value;
 
             if (DicomViewer.Current != null)
             {
-                DicomViewer.Current.SetAOIParam(upper, lower, pass);
-                DicomViewer.Current.Invalidate();
+
+                UnsharpenMaskByCurrentParam(radius,amount,threshold);
+             //   DicomViewer.Current
+               // DicomViewer.Current.SetAOIParam(radius, amount, threshold);
+              //  DicomViewer.Current.Invalidate();
             }
 
         }

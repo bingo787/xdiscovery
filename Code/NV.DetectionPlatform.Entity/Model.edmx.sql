@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server Compact Edition
 -- --------------------------------------------------
--- Date Created: 09/04/2021 17:50:23
+-- Date Created: 09/05/2021 01:25:16
 -- Generated from EDMX file: D:\swork\xdiscovery\Code\NV.DetectionPlatform.Entity\Model.edmx
 -- --------------------------------------------------
 
@@ -18,16 +18,6 @@
 -- NOTE: if the table does not exist, an ignorable error will be reported.
 -- --------------------------------------------------
 
-    DROP TABLE [AOIParam];
-GO
-    DROP TABLE [ExamParam];
-GO
-    DROP TABLE [ImageParam];
-GO
-    DROP TABLE [Product];
-GO
-    DROP TABLE [Overlay];
-GO
 
 -- --------------------------------------------------
 -- Creating all tables
@@ -99,7 +89,7 @@ GO
 -- Creating table 'USMParamSet'
 CREATE TABLE [USMParamSet] (
     [GUID] nvarchar(254)  NOT NULL,
-    [Amount] int  NULL,
+    [Amount] float  NULL,
     [Radius] int  NULL,
     [Threshold] int  NULL,
     [Name] nvarchar(254)  NULL
