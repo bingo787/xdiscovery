@@ -18,3 +18,717 @@
 08-15 09:35:42 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
 08-15 09:35:42 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.13_beta_build20210624
 08-15 09:35:42 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][623] HBI_GetSDKVerion:SDK_Dynamic_x64_jumbo_Ver3.1.0.13_beta_build20210624
+09-05 13:43:16 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 13:43:16 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 13:43:16 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 13:43:17 [17792] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 14:03:55 [07988] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 14:06:56 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 14:06:56 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 14:06:56 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 14:06:57 [01932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 14:08:52 [16584] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 14:11:58 [13480] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 15:41:55 [15496] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 15:46:44 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 15:46:44 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 15:46:44 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 15:46:45 [11620] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 15:58:30 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 15:58:30 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 15:58:30 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 15:58:31 [02004] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 16:41:26 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 16:41:26 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 16:41:26 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 16:41:27 [18812] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 16:43:44 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 16:43:44 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 16:43:45 [16184] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 16:46:23 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 16:46:23 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 16:46:23 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 16:46:24 [02328] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 16:59:00 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 16:59:00 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 16:59:00 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 16:59:01 [11624] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 16:59:29 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 16:59:29 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 16:59:29 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 16:59:30 [18376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 17:02:07 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 17:02:07 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 17:02:07 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 17:02:08 [16556] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 17:09:45 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 17:09:45 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 17:09:45 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 17:09:46 [09180] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 17:12:36 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 17:12:36 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 17:12:36 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 17:12:37 [11212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 17:16:37 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 17:16:37 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 17:16:37 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 17:16:38 [14456] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 17:19:23 [13504] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 17:24:11 [15460] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 17:28:48 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 17:28:48 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 17:28:49 [19712] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 17:29:43 [02376] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 18:19:13 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 18:19:13 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 18:19:13 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 18:19:14 [10040] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 21:14:00 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 21:14:00 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 21:14:00 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 21:14:00 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 21:14:00 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 21:14:01 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 21:14:01 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 21:14:01 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 21:14:01 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 21:14:01 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 21:14:01 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 21:14:01 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 21:14:01 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 21:14:01 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 21:14:01 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 21:14:01 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 21:14:01 [19616] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 21:17:50 [20044] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 21:51:05 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 21:51:05 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 21:51:05 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 21:51:06 [17940] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 21:53:02 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 21:53:02 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 21:53:02 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 21:53:02 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 21:53:02 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 21:53:02 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 21:53:02 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 21:53:02 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 21:53:02 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 21:53:02 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 21:53:02 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 21:53:02 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 21:53:02 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 21:53:03 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 21:53:03 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 21:53:03 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 21:53:03 [02340] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 22:00:28 [18048] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 22:01:45 [14464] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 22:04:53 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 22:04:53 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 22:04:53 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 22:04:54 [15268] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 22:07:40 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 22:07:40 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 22:07:40 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 22:07:41 [10352] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 22:10:44 [18068] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 22:13:12 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 22:13:12 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 22:13:12 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 22:13:13 [18956] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 22:15:31 [20760] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 22:30:56 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 22:30:56 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 22:30:56 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 22:30:56 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 22:30:56 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 22:30:56 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 22:30:57 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 22:30:57 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 22:30:57 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 22:30:57 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 22:30:57 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 22:30:57 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 22:30:57 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 22:30:57 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 22:30:57 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 22:30:57 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 22:30:57 [12784] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 22:42:35 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 22:42:35 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 22:42:35 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 22:42:36 [13764] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 22:44:49 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 22:44:49 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 22:44:49 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 22:44:50 [01756] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 22:50:35 [13932] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 22:54:17 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 22:54:17 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 22:54:17 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 22:54:18 [16212] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 23:03:04 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 23:03:04 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 23:03:04 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 23:03:05 [17076] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 23:04:33 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 23:04:33 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 23:04:33 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 23:04:34 [21160] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 23:08:30 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 23:08:30 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 23:08:30 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 23:08:31 [06916] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][97] HBI_FPD start£¡!
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][147] SDK_Dynamic_x64_jumbo_Ver3.1.0.15_beta_build20210812
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][213] HBI_Destroy
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][739] HBI_RegEventCallBackFun
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][758] HBI_RegEventCallBackFun:succss!
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][278] HBI_ConnectDetector
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][311] HBI_ConnectDetecto,Open socket!
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][312] szRemoteIp=192.168.10.40:32897
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][313] szlocalIp=192.168.10.20:32896
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][314] offsetTemp:0
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][242] Open:192.168.10.40:32897
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][243] Open:192.168.10.20:32896
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][244] Open:20
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][56] UDP_CREATE
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\myudp.cpp][89] UDP_CREATE Err:bind local port failed,because of 10049
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\fpdclient.cpp][247] err:UDP_CREATE failed!
+09-05 23:22:52 [13800] :[f:\xdiscovery_dynamic_ver\xdiscovery_dynamic_ethernet\hbi_fpd\hbi_fpd.cpp][317] err:HBI_ConnectDetector Err:hdl->Open failed!

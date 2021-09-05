@@ -123,61 +123,65 @@ namespace NV.DetectionPlatform.UCtrls
 
         public static void UnsharpenMaskByCurrentParam(ref NV.DRF.Core.Ctrl.Film film, USMParam param) {
 
-            if (!film.CurrentDv.HasImage) {
-                return;
-            }
+            
+            //1 读取照片数据
+            film.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+            ushort[] data = new ushort[width * height];
+            film.CurrentDv.GetImageData(out width, out height, out bits, out data[0], ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
+            Mat src = new Mat(width, height, MatType.CV_16U, data);
 
-           
-            film.CurrentDv.GetImageData(out ushort width, out ushort height,out ushort bits, out ushort pixel, ImageViewLib.tagGET_IMAGE_FLAG.GIF_CROP, false);
-            Mat imgsrc = new Mat(width, height, MatType.CV_16U, pixel);
-            //Mat imgsrc = Cv2.ImRead(@"C:\Users\zhaoqibin\Pictures\Saved Pictures\000.png");
-            Mat imgblurred = new Mat();
+          //  CMessageBox.Show("src size " + src.Size().ToString());
 
-
-            float amount = (float)param.Amount / 100;
-            double radius = (float)param.Radius / 100;
+            int amount = (int)param.Amount;
+            int radius = (int)param.Radius;
             int threshold = (int)param.Threshold;
 
-            string msg =  (string.Format("amount:{0} radius:{1} threshold:{2}", amount, radius,threshold));
-            CMessageBox.Show(msg);
 
-            Cv2.GaussianBlur(imgsrc, imgblurred, new OpenCvSharp.Size(0, 0), radius, radius);
-            // Cv2.AddWeighted(imgsrc, 1.5, imgblurred, -0.5, 0, usm);
+            if (radius % 2 == 0) {
+                radius += 1;
+            }
+           string p =  (string.Format("amount:{0} radius:{1} threshold:{2}", amount, radius, threshold));
+           CMessageBox.Show(p);
 
-            Mat lowcontrastmask = new Mat();// = Cv2.Abs(imgsrc - imgblurred) < threshold;
-            Cv2.Absdiff(imgsrc, imgblurred, lowcontrastmask);
-            //lowcontrastmask = lowcontrastmask < threshold;
 
-            //cv2.THRESH_BINARY_INV 大于阈值部分被置为0，小于部分被置为255
-            Cv2.Threshold(lowcontrastmask, lowcontrastmask, threshold, 255, ThresholdTypes.BinaryInv);
-            lowcontrastmask /= 255;
-            // Mat lowcontrastmask = Cv2.Abs(imgsrc - imgblurred) < threshold;
 
-            Mat imgdst = imgsrc * (1 + amount) + imgblurred * (-amount);
-            imgsrc.CopyTo(imgdst, lowcontrastmask);
+            //2 高斯模糊
 
-            ushort[] data = new ushort[width*height];
-            imgdst.GetArray(width,height,data);
-           
+            Mat usm = new Mat();// (width, height, MatType.CV_16U);
+            Mat blured = new Mat();// (width, height, MatType.CV_16U);
+            Cv2.GaussianBlur(src, blured, new OpenCvSharp.Size(radius, radius), 0, 0);
 
-            film.PutData((ushort)imgdst.Width,(ushort)imgdst.Height,16, data,true);
+            //CMessageBox.Show("blured size " + blured.Size().ToString());
+
+            double fac = (double)threshold / 100;
+            Cv2.AddWeighted(src, fac, blured, 1-fac, 0, usm);
+
+           // CMessageBox.Show("usm size " + usm.Size().ToString() + "  height " + usm.Height);
+            int w = usm.Size().Width;
+            int h = usm.Size().Height;
+
+            ushort[] result = new ushort[w * h];
+
+            for (int i = 0; i < usm.Rows; i++) {
+                for (int j = 0; j < usm.Cols; j++) {
+                       result[i * usm.Cols + j] = usm.At<ushort>(i, j);
+                }
+            }
+
+            film.PutData((ushort)w,(ushort)h,16, result, true);
 
            // Cv2.ImShow("USM", imgdst);
         }
 
         public static void UnsharpenMaskByDatabaseParam(ref NV.DRF.Core.Ctrl.Film film) {
 
-            int radius = 1;
-            int amount = 1;
-            int threshold = 22;
+
             using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
             {
+
                 var ps = db.USMParam.ToList();
                 if (ps.Count > 0)
                 {
-                    radius = (int)ps[0].Radius;
-                    amount = (int)ps[0].Amount;
-                    threshold = (int)ps[0].Threshold;
                     if (DicomViewer.Current != null)
                     {
                         UnsharpenMaskByCurrentParam(ref film ,ps[0]);
@@ -338,6 +342,7 @@ namespace NV.DetectionPlatform.UCtrls
         public delegate void CloseEventHandler();
         public event CloseEventHandler CloseSettingEvent;
 
+
         private void SetUSM(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (!this.IsLoaded)
@@ -349,7 +354,7 @@ namespace NV.DetectionPlatform.UCtrls
             if (DicomViewer.Current != null)
             {
 
-              //  UnsharpenMaskByCurrentParam(radius,amount,threshold);
+             //  UnsharpenMaskByCurrentParam(radius,amount,threshold);
              //   DicomViewer.Current
                // DicomViewer.Current.SetAOIParam(radius, amount, threshold);
               //  DicomViewer.Current.Invalidate();
