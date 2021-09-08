@@ -43,6 +43,8 @@ namespace NV.DetectionPlatform.UCtrls
         /// <summary>
         /// 获取或设置属性
         /// </summary>
+       
+        public static USMParam globalCurrentParam;
         public USMParam CurrentParam
         {
             get
@@ -56,6 +58,7 @@ namespace NV.DetectionPlatform.UCtrls
                     return;
                 }
                 _currentParam = value;
+                globalCurrentParam = _currentParam;
                 RaisePropertyChanged("CurrentParam");
             }
         }
@@ -88,6 +91,8 @@ namespace NV.DetectionPlatform.UCtrls
                         CurrentParam = selected;
                     }
                 }
+
+                globalCurrentParam = CurrentParam;
             }
             catch (Exception)
             {
@@ -121,79 +126,107 @@ namespace NV.DetectionPlatform.UCtrls
         }
 
 
-        public static void UnsharpenMaskByCurrentParam(ref NV.DRF.Core.Ctrl.Film film, USMParam param) {
-
-            
-            //1 读取照片数据
-            film.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
-            ushort[] data = new ushort[width * height];
-            film.CurrentDv.GetImageData(out width, out height, out bits, out data[0], ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
-            Mat src = new Mat(width, height, MatType.CV_16U, data);
-
-          //  CMessageBox.Show("src size " + src.Size().ToString());
+        public static void UnsharpenMask(ref NV.DRF.Core.Ctrl.Film film, USMParam param) {
 
             int amount = (int)param.Amount;
             int radius = (int)param.Radius;
             int threshold = (int)param.Threshold;
 
 
-            if (radius % 2 == 0) {
+            if (radius % 2 == 0)
+            {
                 radius += 1;
             }
-           string p =  (string.Format("amount:{0} radius:{1} threshold:{2}", amount, radius, threshold));
-           CMessageBox.Show(p);
+            string p = (string.Format("amount:{0} radius:{1} threshold:{2}", amount, radius, threshold));
+            CMessageBox.Show(p);
 
 
 
-            //2 高斯模糊
+            //1 读取照片数据
+            film.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
 
-            Mat usm = new Mat();// (width, height, MatType.CV_16U);
-            Mat blured = new Mat();// (width, height, MatType.CV_16U);
-            Cv2.GaussianBlur(src, blured, new OpenCvSharp.Size(radius, radius), 0, 0);
+           // CMessageBox.Show(string.Format("width:{0} height:{1} bits:{2}", width, height, bits));
 
-            //CMessageBox.Show("blured size " + blured.Size().ToString());
-
-            double fac = (double)threshold / 100;
-            Cv2.AddWeighted(src, fac, blured, 1-fac, 0, usm);
-
-           // CMessageBox.Show("usm size " + usm.Size().ToString() + "  height " + usm.Height);
-            int w = usm.Size().Width;
-            int h = usm.Size().Height;
-
-            ushort[] result = new ushort[w * h];
-
-            for (int i = 0; i < usm.Rows; i++) {
-                for (int j = 0; j < usm.Cols; j++) {
-                       result[i * usm.Cols + j] = usm.At<ushort>(i, j);
-                }
-            }
-
-            film.PutData((ushort)w,(ushort)h,16, result, true);
-
-           // Cv2.ImShow("USM", imgdst);
-        }
-
-        public static void UnsharpenMaskByDatabaseParam(ref NV.DRF.Core.Ctrl.Film film) {
+            ushort[] data = new ushort[width * height];
+            film.CurrentDv.GetImageData(out width, out height, out bits, out data[0], ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
+            Mat src = new Mat(height, width, MatType.CV_16UC1, data);
 
 
-            using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
+         //   2 高斯模糊
+
+            Mat dst = new Mat();
+            Cv2.GaussianBlur(src, dst, new OpenCvSharp.Size(radius, radius), 0, 0);
+
+
+            for (int h = 0; h < height; ++h)
             {
-
-                var ps = db.USMParam.ToList();
-                if (ps.Count > 0)
+                for (int w = 0; w < width; ++w)
                 {
-                    if (DicomViewer.Current != null)
+
+                    int bValue =src.At<Vec3b>(h, w)[0] - dst.At<Vec3b>(h, w)[0];
+                //    int gValue =src.At<Vec3b>(h, w)[1] - dst.At<Vec3b>(h, w)[1];
+                 //   int rValue =src.At<Vec3b>(h, w)[2] - dst.At<Vec3b>(h, w)[2];
+                    if (Math.Abs(bValue) > threshold)
                     {
-                        UnsharpenMaskByCurrentParam(ref film ,ps[0]);
-                        // DicomViewer.Current.SetAOIParam(();
-                       // DicomViewer.Current.Invalidate();
+                        bValue =src.At<Vec3b>(h, w)[0] + amount * bValue / 100;
+                        if (bValue > 255)
+                            bValue = 255;
+                        else if (bValue < 0)
+                            bValue = 0;
+                        //  dst.At<Vec3b>(h, w)[0] = bValue;
+                        IntPtr pos = dst.Ptr(h, w, 0);
+                        unsafe {
+                            *(ushort*)pos = (ushort)bValue;
+                        }
+                       
+
                     }
+#if THRChannel
+                    if (Math.Abs(gValue) > threshold)
+                    {
+                        gValue =src.At<Vec3b>(h, w)[1] + amount * gValue / 100;
+                        if (gValue > 255)
+                            gValue = 255;
+                        else if (gValue < 0)
+                            gValue = 0;
+                        IntPtr pos = dst.Ptr(h, w);
+                        unsafe
+                        {
+                            *(ushort*)pos = (ushort)bValue;
+                        }
+                    }
+                    if (Math.Abs(rValue) > threshold)
+                    {
+                        rValue =src.At<Vec3b>(h, w)[2] + amount * rValue / 100;
+                        if (rValue > 255)
+                            rValue = 255;
+                        else if (rValue < 0)
+                            rValue = 0;
+                        IntPtr pos = dst.Ptr(h, w);
+                        unsafe
+                        {
+                            *(ushort*)pos = (ushort)bValue;
+                        }
+                    }
+#endif
                 }
             }
 
 
-          
+            ushort[] result = new ushort[width * height];
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    result[i * width + j] = dst.At<ushort>(i, j);
+                }
+            }
+            film.PutData(width, height, bits, result, true);
+
+
         }
+
+
         /// <summary>
         /// 添加方案
         /// </summary>
@@ -327,7 +360,7 @@ namespace NV.DetectionPlatform.UCtrls
             }
         }
 
-        #region INotifyPropertyChanged 成员
+#region INotifyPropertyChanged 成员
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged(string p)
@@ -337,7 +370,7 @@ namespace NV.DetectionPlatform.UCtrls
                 PropertyChanged(this, new PropertyChangedEventArgs(p));
             }
         }
-        #endregion
+#endregion
 
         public delegate void CloseEventHandler();
         public event CloseEventHandler CloseSettingEvent;
