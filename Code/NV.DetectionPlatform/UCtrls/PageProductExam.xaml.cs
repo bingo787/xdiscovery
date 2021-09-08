@@ -860,8 +860,8 @@ namespace NV.DetectionPlatform.UCtrls
                     if (ipUC.CurrentDv.HasImage) {
 
                         // ipUC.CurrentDv.SharpImage(1);
-                      
-                        WndUSMSetting.UnsharpenMaskByDatabaseParam(ref ipUC);
+
+                        WndUSMSetting.UnsharpenMask(ref ipUC, WndUSMSetting.globalCurrentParam);
                     }
                        
                     break;

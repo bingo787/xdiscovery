@@ -48,8 +48,8 @@
                     <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtAmount" Text="{Binding CurrentParam.Amount}"  Width="100" HorizontalAlignment="Left"/>
                     <TextBox Grid.Column="1" Grid.Row="4" x:Name="txtThreshold" Text="{Binding CurrentParam.Threshold}"  Width="100" HorizontalAlignment="Left"/>
 
-                    <Slider Grid.ColumnSpan="3" Grid.Row="1" x:Name="sldrRadius" Minimum="1" Value="{Binding CurrentParam.Radius}"  Maximum="100"  ValueChanged="SetUSM"/>
-                    <Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrAmount" Minimum="1" Value="{Binding CurrentParam.Amount}"  Maximum="100"  ValueChanged="SetUSM"/>
+                    <Slider Grid.ColumnSpan="3" Grid.Row="1" x:Name="sldrRadius" Minimum="1" Value="{Binding CurrentParam.Radius}"  Maximum="500"  ValueChanged="SetUSM"/>
+                    <Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrAmount" Minimum="1" Value="{Binding CurrentParam.Amount}"  Maximum="500"  ValueChanged="SetUSM"/>
                     <Slider Grid.ColumnSpan="3" Grid.Row="5" x:Name="sldrThreshold" Minimum="1" Value="{Binding CurrentParam.Threshold}" Maximum="255"  ValueChanged="SetUSM"/>
 
                     <Grid Grid.Row="7" Grid.ColumnSpan="3" Margin="5,0">
