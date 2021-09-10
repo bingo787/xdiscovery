@@ -43,7 +43,7 @@ namespace NV.DetectionPlatform.UCtrls
         /// <summary>
         /// 获取或设置属性
         /// </summary>
-       
+
         public static USMParam globalCurrentParam;
         public USMParam CurrentParam
         {
@@ -106,26 +106,17 @@ namespace NV.DetectionPlatform.UCtrls
                 var ps = db.USMParam.ToList();
                 if (ps.Count > 0)
                 {
-                    //if (DicomViewer.Current != null)
-                    //{
-                    //    //  设置USM的参数，做锐化
-                    //    //  DicomViewer.Current.SetAOIParam((int)ps[0].UpperlimitofBubble, (int)ps[0].LowerlimitofBubble, (int)ps[0].PercentofBubblePass);
-                    //    int radius = (int)ps[0].Radius;
-                    //    int amount = (int)ps[0].Amount;
-                    //    int threshold = (int)ps[0].Threshold;
-                    //    if (DicomViewer.Current != null)
-                    //    {
-                    //        UnsharpenMaskByCurrentParam();
-                    //        // DicomViewer.Current.SetAOIParam(();
-                    //        // DicomViewer.Current.Invalidate();
-                    //        DicomViewer.Current.Invalidate();
-                    //    }
-                    //}
+                    if (DicomViewer.Current != null)
+                    {
+                        //  设置USM的参数，做锐化
+                        //  DicomViewer.Current.SetAOIParam((int)ps[0].UpperlimitofBubble, (int)ps[0].LowerlimitofBubble, (int)ps[0].PercentofBubblePass);
+                        globalCurrentParam = ps[0];
+                    }
                 }
             }
         }
 
-
+        /*
         public static void UnsharpenMask(ref NV.DRF.Core.Ctrl.Film film, USMParam param) {
 
             int amount = (int)param.Amount;
@@ -145,14 +136,14 @@ namespace NV.DetectionPlatform.UCtrls
             //1 读取照片数据
             film.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
 
-           // CMessageBox.Show(string.Format("width:{0} height:{1} bits:{2}", width, height, bits));
+            // CMessageBox.Show(string.Format("width:{0} height:{1} bits:{2}", width, height, bits));
 
             ushort[] data = new ushort[width * height];
             film.CurrentDv.GetImageData(out width, out height, out bits, out data[0], ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
             Mat src = new Mat(height, width, MatType.CV_16UC1, data);
 
 
-         //   2 高斯模糊
+            //   2 高斯模糊
 
             Mat dst = new Mat();
             Cv2.GaussianBlur(src, dst, new OpenCvSharp.Size(radius, radius), 0, 0);
@@ -163,12 +154,12 @@ namespace NV.DetectionPlatform.UCtrls
                 for (int w = 0; w < width; ++w)
                 {
 
-                    int bValue =src.At<Vec3b>(h, w)[0] - dst.At<Vec3b>(h, w)[0];
-                //    int gValue =src.At<Vec3b>(h, w)[1] - dst.At<Vec3b>(h, w)[1];
-                 //   int rValue =src.At<Vec3b>(h, w)[2] - dst.At<Vec3b>(h, w)[2];
+                    int bValue = src.At<Vec3b>(h, w)[0] - dst.At<Vec3b>(h, w)[0];
+                    //    int gValue =src.At<Vec3b>(h, w)[1] - dst.At<Vec3b>(h, w)[1];
+                    //   int rValue =src.At<Vec3b>(h, w)[2] - dst.At<Vec3b>(h, w)[2];
                     if (Math.Abs(bValue) > threshold)
                     {
-                        bValue =src.At<Vec3b>(h, w)[0] + amount * bValue / 100;
+                        bValue = src.At<Vec3b>(h, w)[0] + amount * bValue / 100;
                         if (bValue > 255)
                             bValue = 255;
                         else if (bValue < 0)
@@ -178,7 +169,7 @@ namespace NV.DetectionPlatform.UCtrls
                         unsafe {
                             *(ushort*)pos = (ushort)bValue;
                         }
-                       
+
 
                     }
 #if THRChannel
@@ -223,6 +214,126 @@ namespace NV.DetectionPlatform.UCtrls
             }
             film.PutData(width, height, bits, result, true);
 
+
+        }
+        */
+
+        static void SaturateCast(ref double a)
+        {
+            if (a > ushort.MaxValue)
+            {
+                a = ushort.MaxValue;
+            }
+            else if (a < 0)
+            {
+                a = ushort.MinValue;
+            }
+        }
+
+        public static void UnsharpenMask(ref NV.DRF.Core.Ctrl.Film film, USMParam param)
+        {
+
+            int radius = (int)param.Radius;
+            int amount = (int)param.Amount;
+            int threshold = (int)param.Threshold;
+            
+            if (radius % 2 == 0) radius += 1;
+            int window_level = 0, window_width = 0;
+            film.CurrentDv.GetWindowLevel(ref  window_width,ref  window_level);
+        
+            //1 读取照片数据
+            film.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+
+            ushort[] data = new ushort[width * height];
+            film.CurrentDv.GetImageData(out width, out height, out bits, out data[0], ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
+            Mat src = new Mat(height, width, MatType.CV_16UC1, data);
+
+            //   2 高斯模糊
+            Mat temp = new Mat();
+            Cv2.GaussianBlur(src, temp, new OpenCvSharp.Size(radius, radius), 0, 0);
+
+            double iLow = (2 * window_level - window_width) / 2.0 + 0.5;
+            double iHigh = (2 * window_level + window_width) / 2.0 + 0.5;
+            double dFactor = 65535.0 / (double)(iHigh - iLow);
+
+            SaturateCast(ref iLow);
+            SaturateCast(ref iHigh);
+
+            int imgH = height;
+            int imgW = width;
+
+
+            /// 处理图像
+            for (int x = 0; x < imgH; x++)
+            {
+                for (int y = 0; y < imgW; y++)
+                {
+                    int value = src.At<ushort>(x, y) - temp.At<ushort>(x, y);
+                    if (Math.Abs(value) > threshold)
+                    {
+                        int new_value =  src.At<ushort>(x, y) + (ushort)(amount * value / 100);
+
+                        if (new_value > ushort.MaxValue) {
+                            new_value = ushort.MaxValue;
+                        }     
+                        else if (new_value < 0) {
+                            new_value = ushort.MinValue;
+                        }
+                         
+                        IntPtr pos = src.Ptr(x, y);
+                        unsafe
+                        {
+                            *(ushort*)pos = (ushort)new_value;
+                        }
+                    }
+
+                    if (src.At<ushort>(x, y) < iLow) {
+                        IntPtr pos = temp.Ptr(x, y);
+                        unsafe
+                        {
+                            *(ushort*)pos = ushort.MinValue;
+                        }
+                    } else if (src.At<ushort>(x, y) >iHigh) {
+                        IntPtr pos = src.Ptr(x, y);
+                        unsafe
+                        {
+                            *(ushort*)pos = ushort.MaxValue;
+                        }
+                    }
+                    else
+                    {
+                        ushort new_value = src.At<ushort> (x, y);
+                        new_value = (ushort)((new_value  - (iLow - 0.5)) * dFactor);
+
+                        if (new_value > ushort.MaxValue)
+                        {
+                            new_value = ushort.MaxValue;
+                        }
+                        else if (new_value < 0)
+                        {
+                            new_value = ushort.MinValue;
+                        }
+
+                        IntPtr pos = src.Ptr(x, y);
+                        unsafe
+                        {
+                            *(ushort*)pos = new_value;
+                        }
+                    }
+                }
+            }
+
+
+            // 显示
+            ushort[] result = new ushort[width * height];
+            for (int i = 0; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    result[i * width + j] = src.At<ushort>(i, j);
+                }
+            }
+            film.PutData(width, height, bits, result, true);
 
         }
 
