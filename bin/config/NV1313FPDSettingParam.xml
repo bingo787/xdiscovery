@@ -2,16 +2,9 @@
 <NV1313FPDSetting xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <自动校正>true</自动校正>
   <增益档>HB_GAIN_72</增益档>
-  <积分时间ms>168</积分时间ms>
   <延时采集时间ms>1000</延时采集时间ms>
-  <最大帧>0</最大帧>
-  <静态多帧叠加降噪>false</静态多帧叠加降噪>
-  <静态多帧均值叠加降噪>false</静态多帧均值叠加降噪>
-  <静态叠加降噪帧数>12</静态叠加降噪帧数>
   <binning模式>HB_BINNING_1X1</binning模式>
-  <shutter模式>NV_GLOBAL_SHUTTER</shutter模式>
-  <触发模式>HB_HIGH_VOLTAGE_TRIGGER</触发模式>
-  <本底校正模式>NV_CORR_NO</本底校正模式>
-  <增益校正模式>NV_CORR_NO</增益校正模式>
-  <坏点校正模式>NV_CORR_NO</坏点校正模式>
+  <本底校正模式>HB_CORR_NO</本底校正模式>
+  <增益校正模式>HB_CORR_NO</增益校正模式>
+  <坏点校正模式>HB_CORR_NO</坏点校正模式>
 </NV1313FPDSetting>
