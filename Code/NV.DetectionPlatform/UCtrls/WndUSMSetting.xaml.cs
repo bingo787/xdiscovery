@@ -264,22 +264,25 @@ namespace NV.DetectionPlatform.UCtrls
 
 
             /// 处理图像
-            for (int x = 0; x < imgH; x++)
+            System.Threading.Tasks.Parallel.For(0, imgH, x =>
+            // for (int x = 0; x < imgH; x++)
             {
                 for (int y = 0; y < imgW; y++)
                 {
                     int value = src.At<ushort>(x, y) - temp.At<ushort>(x, y);
                     if (Math.Abs(value) > threshold)
                     {
-                        int new_value =  src.At<ushort>(x, y) + (ushort)(amount * value / 100);
+                        int new_value = src.At<ushort>(x, y) + (ushort)(amount * value / 100);
 
-                        if (new_value > ushort.MaxValue) {
+                        if (new_value > ushort.MaxValue)
+                        {
                             new_value = ushort.MaxValue;
-                        }     
-                        else if (new_value < 0) {
+                        }
+                        else if (new_value < 0)
+                        {
                             new_value = ushort.MinValue;
                         }
-                         
+
                         IntPtr pos = src.Ptr(x, y);
                         unsafe
                         {
@@ -287,13 +290,16 @@ namespace NV.DetectionPlatform.UCtrls
                         }
                     }
 
-                    if (src.At<ushort>(x, y) < iLow) {
+                    if (src.At<ushort>(x, y) < iLow)
+                    {
                         IntPtr pos = temp.Ptr(x, y);
                         unsafe
                         {
                             *(ushort*)pos = ushort.MinValue;
                         }
-                    } else if (src.At<ushort>(x, y) >iHigh) {
+                    }
+                    else if (src.At<ushort>(x, y) > iHigh)
+                    {
                         IntPtr pos = src.Ptr(x, y);
                         unsafe
                         {
@@ -302,8 +308,8 @@ namespace NV.DetectionPlatform.UCtrls
                     }
                     else
                     {
-                        ushort new_value = src.At<ushort> (x, y);
-                        new_value = (ushort)((new_value  - (iLow - 0.5)) * dFactor);
+                        ushort new_value = src.At<ushort>(x, y);
+                        new_value = (ushort)((new_value - (iLow - 0.5)) * dFactor);
 
                         if (new_value > ushort.MaxValue)
                         {
@@ -321,7 +327,7 @@ namespace NV.DetectionPlatform.UCtrls
                         }
                     }
                 }
-            }
+            });
 
 
             // 显示
