@@ -59,7 +59,7 @@
                         </Grid.ColumnDefinitions>
 
                         <Button Content="{DynamicResource BubbleSave}" VerticalAlignment="Stretch" Margin="3" Click="Save"/>
-                        <Button Content="{DynamicResource BubbleClose}" Grid.Column="1" VerticalAlignment="Stretch" Margin="3" Click="Close" IsCancel="True"/>
+                        <Button Content="{DynamicResource BubbleApply}" Grid.Column="1" VerticalAlignment="Stretch" Margin="3" Click="Apply"/>
                         
                     </Grid>
                 </Grid>

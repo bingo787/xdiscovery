@@ -44,7 +44,7 @@ namespace NV.DetectionPlatform.UCtrls
         /// 获取或设置属性
         /// </summary>
 
-        public static USMParam globalCurrentParam;
+      
         public USMParam CurrentParam
         {
             get
@@ -58,7 +58,6 @@ namespace NV.DetectionPlatform.UCtrls
                     return;
                 }
                 _currentParam = value;
-                globalCurrentParam = _currentParam;
                 RaisePropertyChanged("CurrentParam");
             }
         }
@@ -92,15 +91,15 @@ namespace NV.DetectionPlatform.UCtrls
                     }
                 }
 
-                globalCurrentParam = CurrentParam;
             }
             catch (Exception)
             {
             }
         }
 
-        public static void InitUSM()
+        public  void InitUSM()
         {
+
             using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
             {
                 var ps = db.USMParam.ToList();
@@ -110,7 +109,10 @@ namespace NV.DetectionPlatform.UCtrls
                     {
                         //  设置USM的参数，做锐化
                         //  DicomViewer.Current.SetAOIParam((int)ps[0].UpperlimitofBubble, (int)ps[0].LowerlimitofBubble, (int)ps[0].PercentofBubblePass);
-                        globalCurrentParam = ps[0];
+                        CurrentParam = ps[0];
+
+
+
                     }
                 }
             }
@@ -244,26 +246,32 @@ namespace NV.DetectionPlatform.UCtrls
             return (ushort)a;
         }
 
+        public ushort[] UnsharpenMask(DicomViewer dic) {
 
+            int amount = (int)CurrentParam.Amount;
+            int radius = (int)CurrentParam.Radius;
+            int threshold = (int)CurrentParam.Threshold;
+            return UnsharpenMask(dic, amount, radius, threshold);
+        }
 
-        public static void UnsharpenMask(ref NV.DRF.Core.Ctrl.Film film, USMParam param)
+        public  ushort[] UnsharpenMask( DicomViewer dic, int amount, int radius, int threshold)
         {
 
-            int radius = (int)param.Radius;
-            int amount = (int)param.Amount;
-            int threshold = (int)param.Threshold;
+
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             
             if (radius % 2 == 0) radius += 1;
             int window_level = 0, window_width = 0;
-            film.CurrentDv.GetWindowLevel(ref  window_width,ref  window_level);
+            dic.GetWindowLevel(ref  window_width,ref  window_level);
 
-            CMessageBox.Show("获取到的WL和WW " + window_level.ToString() + " "  + window_width.ToString());
-        
+           // CMessageBox.Show("获取到的WL和WW " + window_level.ToString() + " "  + window_width.ToString());
+
             //1 读取照片数据
-            film.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+            dic.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
 
             ushort[] data = new ushort[width * height];
-            film.CurrentDv.GetImageData(out width, out height, out bits, out data[0], ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
+            dic.GetImageData(out width, out height, out bits, out data[0], ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
 
 
             Mat src = new Mat(height, width, MatType.CV_16UC1, data);
@@ -351,7 +359,8 @@ namespace NV.DetectionPlatform.UCtrls
             });
 
 
-            CMessageBox.Show("处理完毕，确定显示?" );
+            watch.Stop();
+            CMessageBox.Show("处理完毕，耗时: " + watch.Elapsed.Seconds.ToString() + " 秒");
             // 显示
             ushort[] result = new ushort[width * height];
             // for (int i = 0; i < height; i++)
@@ -363,11 +372,9 @@ namespace NV.DetectionPlatform.UCtrls
                 }
             });
 
-            film.PutData(width, height, bits, result, true);
 
-           // film.CurrentDv.SetWindowLevel(window_width,window_level);
-            film.AutoWindowLevel();
-            film.CurrentDv.Invalidate();
+            return result;
+
 
         }
 
@@ -515,8 +522,9 @@ namespace NV.DetectionPlatform.UCtrls
                 PropertyChanged(this, new PropertyChangedEventArgs(p));
             }
         }
-#endregion
-
+        #endregion
+        public delegate void UsmParamChanged(int amount, int radius, int threshold);
+        public event UsmParamChanged UsmParamChangedEvent;
         public delegate void CloseEventHandler();
         public event CloseEventHandler CloseSettingEvent;
 
@@ -525,24 +533,36 @@ namespace NV.DetectionPlatform.UCtrls
         {
             if (!this.IsLoaded)
                 return;
-            int radius = (int)sldrRadius.Value;
-            int amount = (int)sldrAmount.Value;
-            int threshold = (int)sldrThreshold.Value;
 
-            if (DicomViewer.Current != null)
-            {
-
-             //  UnsharpenMaskByCurrentParam(radius,amount,threshold);
-             //   DicomViewer.Current
-               // DicomViewer.Current.SetAOIParam(radius, amount, threshold);
-              //  DicomViewer.Current.Invalidate();
-            }
+            //System.Console.WriteLine(String.Format("SetUSM  ---------"));
+            //if ( UsmParamChangedEvent != null)
+            //{
+            //    int radius = (int)sldrRadius.Value;
+            //    int amount = (int)sldrAmount.Value;
+            //    int threshold = (int)sldrThreshold.Value;
+            //     System.Console.WriteLine(String.Format("SetUSM  {0},{1},{2}", amount,radius,threshold));
+            //    UsmParamChangedEvent(amount,radius,threshold);
+               
+            //}
 
         }
 
         private void Close(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void Apply(object sender, RoutedEventArgs e)
+        {
+            if (UsmParamChangedEvent != null)
+            {
+                int radius = (int)sldrRadius.Value;
+                int amount = (int)sldrAmount.Value;
+                int threshold = (int)sldrThreshold.Value;
+                System.Console.WriteLine(String.Format("SetUSM  {0},{1},{2}", amount, radius, threshold));
+                UsmParamChangedEvent(amount, radius, threshold);
+
+            }
         }
     }
 }

@@ -33,7 +33,6 @@ namespace NV.DetectionPlatform.UCtrls
             CurrentParam = new ImageParam();
             this.Loaded += WndExamSetting_Loaded;
         }
-
         /// <summary>
         /// 属性
         /// </summary>

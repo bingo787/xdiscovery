@@ -40,6 +40,9 @@ namespace NV.DetectionPlatform.UCtrls
         private KrayDicomLib.DicomFile _file = new KrayDicomLib.DicomFile();
         private int _curExpTime;
         private ExamType _curExpType;
+
+        private WndUSMSetting usmSetting = new WndUSMSetting();
+
         public PageProductExam()
         {
             InitializeComponent();
@@ -54,7 +57,8 @@ namespace NV.DetectionPlatform.UCtrls
         void PageProductExam_Loaded(object sender, RoutedEventArgs e)
         {
             WndAOISetting.InitAOI();
-            WndUSMSetting.InitUSM();
+            usmSetting.InitUSM();
+          
             InitilizePlayAcqThread();
         }
 
@@ -62,9 +66,17 @@ namespace NV.DetectionPlatform.UCtrls
         {
             PlatformModels = new ObservableCollection<PlatformFilesModel>();
             _lstSeries.ItemsSource = PlatformModels;
+
+         
+           usmSetting.UsmParamChangedEvent += usmSetting_UsmParamChanged;
+           usmSetting.CloseSettingEvent += usmSetting_Close;
+
+
             this.Log("初始化快速窗位窗宽设定");
             var wlSetting = new WndWLSetting();
             bdWL.Child = wlSetting;
+           
+
             wlSetting.WindowWLChangedEvent += wlSetting_WindowWLChangedEvent;
             wlSetting.CloseSettingEvent += wlSetting_CloseSettingEvent;
             var wlsetting = NV.Config.SerializeHelper.LoadFromFile<ImageParam>(System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "config\\wlsetting.xaml"));
@@ -106,6 +118,23 @@ namespace NV.DetectionPlatform.UCtrls
                 ipUC.CurrentDv.Invalidate();
             }
         }
+
+        void usmSetting_UsmParamChanged(int amount, int radius, int threshold)
+        {
+            if (ipUC != null && ipUC.CurrentDv != null)
+            {
+                ushort[] result = usmSetting.UnsharpenMask(ipUC.CurrentDv,amount,radius,threshold);
+
+                ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+                ipUC.PutData(width, height, bits, result, true);
+                ipUC.AutoWindowLevel();
+                ipUC.CurrentDv.Invalidate();
+
+            }
+        }
+        void usmSetting_Close() {
+        }
+
         /// <summary>
         /// 实时显示图像线程
         /// </summary>
@@ -860,13 +889,17 @@ namespace NV.DetectionPlatform.UCtrls
                     if (ipUC.CurrentDv.HasImage) {
 
                         // ipUC.CurrentDv.SharpImage(1);
-
-                     WndUSMSetting.UnsharpenMask(ref ipUC, WndUSMSetting.globalCurrentParam);
-
-
-                       //  Puzzle();
+                     
+                  
+                     ushort[] result=  usmSetting.UnsharpenMask(ipUC.CurrentDv);
+                        //1 读取照片数据
+                     ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+                     ipUC.PutData(width, height, bits, result, true);
+                     ipUC.AutoWindowLevel();
+                     ipUC.CurrentDv.Invalidate();
+                     //  Puzzle();
                     }
-                       
+
                     break;
                 case "EqualHist":
                     if (ipUC.CurrentDv.HasImage)
@@ -1317,10 +1350,13 @@ namespace NV.DetectionPlatform.UCtrls
 
         private void OpenUSMSetting(object sender, MouseButtonEventArgs e)
         {
-            var wnd = new WndUSMSetting();
-            wnd.Left = SystemParameters.PrimaryScreenWidth - wnd.Width - 20;
-            wnd.Top = SystemParameters.PrimaryScreenHeight - wnd.Height - 60;
-            wnd.ShowDialog();
+            usmSetting = new WndUSMSetting();
+            usmSetting.Left = SystemParameters.PrimaryScreenWidth - usmSetting.Width - 20;
+            usmSetting.Top = SystemParameters.PrimaryScreenHeight - usmSetting.Height - 60;
+
+         //   usmSetting.InitUSM();
+            usmSetting.UsmParamChangedEvent += usmSetting_UsmParamChanged;
+            usmSetting.ShowDialog();
         }
 
 
