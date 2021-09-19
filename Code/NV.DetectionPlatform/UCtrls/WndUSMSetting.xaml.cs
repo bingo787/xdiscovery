@@ -218,17 +218,33 @@ namespace NV.DetectionPlatform.UCtrls
         }
         */
 
-        static void SaturateCast(ref double a)
+        static ushort SaturateCast( double a)
         {
-            if (a > ushort.MaxValue)
+            if (a >= ushort.MaxValue)
             {
-                a = ushort.MaxValue;
+                return  ushort.MaxValue;
             }
             else if (a < 0)
             {
-                a = ushort.MinValue;
+               return  ushort.MinValue;
             }
+            return (ushort)a;
         }
+
+        static ushort SaturateCast(int a)
+        {
+            if (a >= ushort.MaxValue)
+            {
+                return ushort.MaxValue;
+            }
+            else if (a < 0)
+            {
+                return ushort.MinValue;
+            }
+            return (ushort)a;
+        }
+
+
 
         public static void UnsharpenMask(ref NV.DRF.Core.Ctrl.Film film, USMParam param)
         {
@@ -240,12 +256,16 @@ namespace NV.DetectionPlatform.UCtrls
             if (radius % 2 == 0) radius += 1;
             int window_level = 0, window_width = 0;
             film.CurrentDv.GetWindowLevel(ref  window_width,ref  window_level);
+
+            CMessageBox.Show("获取到的WL和WW " + window_level.ToString() + " "  + window_width.ToString());
         
             //1 读取照片数据
             film.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
 
             ushort[] data = new ushort[width * height];
             film.CurrentDv.GetImageData(out width, out height, out bits, out data[0], ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
+
+
             Mat src = new Mat(height, width, MatType.CV_16UC1, data);
 
             //   2 高斯模糊
@@ -256,32 +276,30 @@ namespace NV.DetectionPlatform.UCtrls
             double iHigh = (2 * window_level + window_width) / 2.0 + 0.5;
             double dFactor = 65535.0 / (double)(iHigh - iLow);
 
-            SaturateCast(ref iLow);
-            SaturateCast(ref iHigh);
+          //  SaturateCast(ref iLow);
+          //  SaturateCast(ref iHigh);
 
             int imgH = height;
             int imgW = width;
 
+         //   CMessageBox.Show(String.Format("{0},{1},{2},{3},{4},{5},{6},{7}",iLow,iHigh,dFactor,imgH,imgW,radius,amount,threshold));
 
+
+            ushort point_value = 0;
             /// 处理图像
             System.Threading.Tasks.Parallel.For(0, imgH, x =>
             // for (int x = 0; x < imgH; x++)
             {
                 for (int y = 0; y < imgW; y++)
                 {
+                    point_value = src.At<ushort>(x, y);
+
                     int value = src.At<ushort>(x, y) - temp.At<ushort>(x, y);
                     if (Math.Abs(value) > threshold)
                     {
-                        int new_value = src.At<ushort>(x, y) + (ushort)(amount * value / 100);
+                        int new_value = src.At<ushort>(x, y) + (int)(amount * value / 100);
 
-                        if (new_value > ushort.MaxValue)
-                        {
-                            new_value = ushort.MaxValue;
-                        }
-                        else if (new_value < 0)
-                        {
-                            new_value = ushort.MinValue;
-                        }
+                        new_value = SaturateCast(new_value);
 
                         IntPtr pos = src.Ptr(x, y);
                         unsafe
@@ -290,9 +308,11 @@ namespace NV.DetectionPlatform.UCtrls
                         }
                     }
 
+
+
                     if (src.At<ushort>(x, y) < iLow)
                     {
-                        IntPtr pos = temp.Ptr(x, y);
+                        IntPtr pos = src.Ptr(x, y);
                         unsafe
                         {
                             *(ushort*)pos = ushort.MinValue;
@@ -311,7 +331,7 @@ namespace NV.DetectionPlatform.UCtrls
                         ushort new_value = src.At<ushort>(x, y);
                         new_value = (ushort)((new_value - (iLow - 0.5)) * dFactor);
 
-                        if (new_value > ushort.MaxValue)
+                        if (new_value >= ushort.MaxValue)
                         {
                             new_value = ushort.MaxValue;
                         }
@@ -319,6 +339,7 @@ namespace NV.DetectionPlatform.UCtrls
                         {
                             new_value = ushort.MinValue;
                         }
+
 
                         IntPtr pos = src.Ptr(x, y);
                         unsafe
@@ -330,16 +351,23 @@ namespace NV.DetectionPlatform.UCtrls
             });
 
 
+            CMessageBox.Show("处理完毕，确定显示?" );
             // 显示
             ushort[] result = new ushort[width * height];
-            for (int i = 0; i < height; i++)
+            // for (int i = 0; i < height; i++)
+            System.Threading.Tasks.Parallel.For(0, height, i =>
             {
                 for (int j = 0; j < width; j++)
                 {
                     result[i * width + j] = src.At<ushort>(i, j);
                 }
-            }
+            });
+
             film.PutData(width, height, bits, result, true);
+
+           // film.CurrentDv.SetWindowLevel(window_width,window_level);
+            film.AutoWindowLevel();
+            film.CurrentDv.Invalidate();
 
         }
 
