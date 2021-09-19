@@ -889,7 +889,10 @@ namespace NV.DetectionPlatform.UCtrls
 
                         // ipUC.CurrentDv.SharpImage(1);
 
-                        WndUSMSetting.UnsharpenMask(ref ipUC, WndUSMSetting.globalCurrentParam);
+                     WndUSMSetting.UnsharpenMask(ref ipUC, WndUSMSetting.globalCurrentParam);
+
+
+                       //  Puzzle();
                     }
                        
                     break;
@@ -1350,6 +1353,51 @@ namespace NV.DetectionPlatform.UCtrls
         }
 
 
+        private void Puzzle()
+        {
+          
+            bool divide_images = false;
+            Stitcher.Mode mode = Stitcher.Mode.Scans;
+
+            string folderName = @"C:\Users\zhaoqibin\Pictures\Saved Pictures\";
+            string[] imageFiles = { "right.jpg", "left.jpg" };
+
+            string result_name = "result.png";
+            Mat[] imgs = new Mat[imageFiles.Length];
+
+            //读入图像
+            for (int i = 0; i < imageFiles.Length; i++)
+            {
+                imgs[i] = new Mat(folderName + imageFiles[i], ImreadModes.Color);
+
+          
+                
+              //  Cv2.ImShow("1",imgs[i]);
+              //  Cv2.WaitKey(0);
+            }
+
+            CMessageBox.Show("准备缝合图片");
+            Mat pano = new Mat();
+            Stitcher stitcher = Stitcher.Create(mode);
+            CMessageBox.Show(String.Format("imgs size{0} {0}",imgs.Length, imgs[0].Size()));
+
+            
+            Stitcher.Status status = stitcher.Stitch(imgs, pano);
+            if (status != Stitcher.Status.OK)
+            {
+                CMessageBox.Show(String.Format("Can't stitch images, error code = {0} ", (int)status));
+               // Console.WriteLine("Can't stitch images, error code = {0} ", (int)status);
+                return;
+            }
+            CMessageBox.Show("缝合完毕，准备显示");
+            Cv2.ImWrite(folderName + result_name, pano);
+            Cv2.ImShow("PANO",pano);
+            Cv2.WaitKey(0);
+
+
+
+        }
+
 
         internal void SaveScreenImage()
         {
@@ -1428,4 +1476,7 @@ namespace NV.DetectionPlatform.UCtrls
             }
         }
     }
+
+
+  
 }
