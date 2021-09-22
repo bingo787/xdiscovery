@@ -288,11 +288,11 @@ namespace NV.DetectionPlatform.UCtrls
             }
 
             _curExpType = type;
-            var Data = NV.Config.NV1313FPDSetting.Instance;
-            _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
-            _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
-            _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
-            _detector.HBUpdateCorrectEnable();
+            //var Data = NV.Config.NV1313FPDSetting.Instance;
+            //_detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
+            //_detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
+            //_detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
+            //_detector.HBUpdateCorrectEnable();
 
             DicomViewer.Current.ClearImage();
 
