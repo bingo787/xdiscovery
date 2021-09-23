@@ -167,12 +167,11 @@ namespace NV.DetectionPlatform.UCtrls
                // NV.Infrastructure.UICommon.IniFile.WriteString("System", "AutoOffsetCalOnOpen", autoOffset, System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "nvDentalDet.ini"));
                 _detector.HB_SetBinningMode((byte)Data.BinningMode);
                 _detector.HB_SetTriggerMode(7);
-                _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
-                _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
-                _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
-                _detector.HBUpdateCorrectEnable();
+                //_detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
+                //_detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
+                //_detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
+                //_detector.HBUpdateCorrectEnable();
                 _detector.Delay = Data.Delay;
-                // _detector.NV_SaveParamFile();
                 if (autoOffset == "1")
                 {
                     _detector.StartAutoDetect();
@@ -288,11 +287,6 @@ namespace NV.DetectionPlatform.UCtrls
             }
 
             _curExpType = type;
-            //var Data = NV.Config.NV1313FPDSetting.Instance;
-            //_detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
-            //_detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
-            //_detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
-            //_detector.HBUpdateCorrectEnable();
 
             DicomViewer.Current.ClearImage();
 
