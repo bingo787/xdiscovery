@@ -919,7 +919,7 @@ namespace NV.DetectionPlatform.UCtrls
                      ipUC.PutData(width, height, bits, result, true);
                      ipUC.AutoWindowLevel();
                      ipUC.CurrentDv.Invalidate();
-                     //  Puzzle();
+                     
                     }
 
                     break;
@@ -949,17 +949,31 @@ namespace NV.DetectionPlatform.UCtrls
                     ipUC.CurrentDv.Invalidate();
                     break;
                 case "EdgeEnhancement":
+
                     if (ipUC.CurrentDv.HasImage)
                     {
                         ipUC.CurrentDv.EdgeEnhancement();
                     }
                     break;
                 case "Cameo":
-                    if (ipUC.CurrentDv.HasImage)
+
+                    System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
+                    dialog.Multiselect = true;
+                    dialog.Filter = "image files|*.bmp;*.jpg;*.jpeg;*.png";
+                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        ipUC.CurrentDv.Cameo();
-                        // ipUC.AutoWindowLevel();
+                        ushort width = 0;
+                        ushort height = 0;
+                        ushort[] result = Stitching(dialog.FileNames,ref width, ref height);
+
+                    
+                       // ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+                        System.Console.WriteLine("result " + width.ToString() + " " + height.ToString());
+                        ipUC.PutData(width, height, 16, result, true);
+                        ipUC.AutoWindowLevel();
+                        ipUC.CurrentDv.Invalidate();
                     }
+               
                     break;
                 case "Back":
                     ipUC.CurrentDv.BackFromStack();
@@ -1383,48 +1397,51 @@ namespace NV.DetectionPlatform.UCtrls
         }
 
 
-        private void Puzzle()
+        private ushort[] Stitching(string[] imageFiles, ref ushort width, ref ushort height)
         {
-          
-            bool divide_images = false;
-            Stitcher.Mode mode = Stitcher.Mode.Scans;
 
-            string folderName = @"C:\Users\zhaoqibin\Pictures\Saved Pictures\";
-            string[] imageFiles = { "right.jpg", "left.jpg" };
-
-            string result_name = "result.png";
+            Stitcher.Mode mode = Stitcher.Mode.Panorama;
             Mat[] imgs = new Mat[imageFiles.Length];
 
+            string names = "";
             //读入图像
             for (int i = 0; i < imageFiles.Length; i++)
             {
-                imgs[i] = new Mat(folderName + imageFiles[i], ImreadModes.Color);
+                imgs[i] = new Mat(imageFiles[i], ImreadModes.Color);
+                names += imageFiles[i] + " \n";
 
-          
-                
-              //  Cv2.ImShow("1",imgs[i]);
-              //  Cv2.WaitKey(0);
             }
 
-            CMessageBox.Show("准备缝合图片");
+            CMessageBox.Show("准备缝合图片 " + names);
             Mat pano = new Mat();
             Stitcher stitcher = Stitcher.Create(mode);
-            CMessageBox.Show(String.Format("imgs size{0} {0}",imgs.Length, imgs[0].Size()));
+           // CMessageBox.Show(String.Format("imgs size{0} {0}",imgs.Length, imgs[0].Size()));
 
-            
             Stitcher.Status status = stitcher.Stitch(imgs, pano);
+            width = (ushort)pano.Width;
+            height = (ushort)pano.Height;
+            ushort[] result = new ushort[width * height];
+
             if (status != Stitcher.Status.OK)
             {
-                CMessageBox.Show(String.Format("Can't stitch images, error code = {0} ", (int)status));
+                CMessageBox.Show(String.Format("缝合失败! 请保证图片大于1张，且每张之间至少具有30%的重复。 error code = {0} ", (int)status));
                // Console.WriteLine("Can't stitch images, error code = {0} ", (int)status);
-                return;
+                return result;
             }
-            CMessageBox.Show("缝合完毕，准备显示");
-            Cv2.ImWrite(folderName + result_name, pano);
-            Cv2.ImShow("PANO",pano);
-            Cv2.WaitKey(0);
+          //  CMessageBox.Show("缝合完毕，准备显示");
+           // Cv2.ImWrite("123.bmp",pano);
 
+            // 显示
+            // for (int i = 0; i < height; i++)
+            System.Threading.Tasks.Parallel.For(0, height, i =>
+            {
+                for (int j = 0; j < pano.Width; j++)
+                {
+                    result[i * pano.Width + j] = pano.At<ushort>(i, j);
+                }
+            });
 
+            return result;
 
         }
 
