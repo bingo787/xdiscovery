@@ -1412,7 +1412,7 @@ namespace NV.DetectionPlatform.UCtrls
 
             }
 
-            CMessageBox.Show("准备缝合图片 " + names);
+            CMessageBox.Show("开始缝合图片? " + names);
             Mat pano = new Mat();
             Stitcher stitcher = Stitcher.Create(mode);
            // CMessageBox.Show(String.Format("imgs size{0} {0}",imgs.Length, imgs[0].Size()));

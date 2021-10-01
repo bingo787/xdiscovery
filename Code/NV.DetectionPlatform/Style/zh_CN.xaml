@@ -111,7 +111,7 @@
     <sys:String x:Key="ExamTips_28">去雾，直方图均衡</sys:String>
     <sys:String x:Key="ExamTips_29">伪彩,『右击』进入方案设置</sys:String>
     <sys:String x:Key="ExamTips_30">边缘增强</sys:String>
-    <sys:String x:Key="ExamTips_31">浮雕</sys:String>
+    <sys:String x:Key="ExamTips_31">图片缝合</sys:String>
     <sys:String x:Key="ExamTips_32">回退</sys:String>
     <sys:String x:Key="ExamTips_33">重置图像</sys:String>
     

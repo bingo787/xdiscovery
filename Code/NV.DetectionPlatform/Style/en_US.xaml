@@ -110,7 +110,7 @@
     <sys:String x:Key="ExamTips_28">histogram equalization</sys:String>
     <sys:String x:Key="ExamTips_29">Colorize,『right-click』to enter settings.</sys:String>
     <sys:String x:Key="ExamTips_30">Edge enhancement</sys:String>
-    <sys:String x:Key="ExamTips_31">Cameo</sys:String>
+    <sys:String x:Key="ExamTips_31">Image stitching</sys:String>
     <sys:String x:Key="ExamTips_32">back</sys:String>
     <sys:String x:Key="ExamTips_33">Reset</sys:String>
 
