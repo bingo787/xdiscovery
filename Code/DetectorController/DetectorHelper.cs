@@ -471,7 +471,7 @@ namespace Detector
                         {
                             bDefectAcqFinished = true; // 表示生成defect模板成功
                             ShowMessage("ECALLBACK_TYPE_DEFECT_ERR_MSG,bDefectAcqFinished is true!\n");
-                            FinishedGainEvent(true);
+                            FinishedDetectEvent(true);
                         }
                     }
 
@@ -793,13 +793,13 @@ namespace Detector
             int ret = HBI_FPD_DLL.HBI_GenerateTemplateEx(HBI_FPD_DLL._handel, enumTemplateType);
             if (ret != 0)
             {
-                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString());
+                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(), true);
                 return;
             }
             else
             {
                
-                ShowMessage("Do pre-offset template success!");
+                ShowMessage("Do pre-offset template success!",true);
             }
 
         }
