@@ -154,12 +154,12 @@ namespace NV.DetectionPlatform.UCtrls
             int _ret = HBI_FPD_DLL.HBI_GetSDKVerion(HBI_FPD_DLL._handel, strSDKVerionbuf);
             if (0 != _ret)
             {
-                MessageBox.Show("HBI_GetSDKVerion failed!");
+                _detector.ShowMessage("HBI_GetSDKVerion failed!",true);
                 return;
             }
             else
             {
-                _detector.ShowMessage("HBI_GetSDKVerion:" + strSDKVerionbuf.ToString(),true);
+                _detector.ShowMessage("HBI_GetSDKVerion:" + strSDKVerionbuf.ToString());
             }
         }
 
