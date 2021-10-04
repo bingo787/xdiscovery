@@ -146,39 +146,70 @@ namespace NV.DetectionPlatform.UCtrls
             _playAcqImage = new Thread(new ThreadStart(delegate { PlayBackground(); }));
             _playAcqImage.Start();
         }
+
+        // 获取SDK版本信息
+        private void btnGetSdkVer_Click()
+        {
+            System.Text.StringBuilder strSDKVerionbuf = new System.Text.StringBuilder(64);//
+            int _ret = HBI_FPD_DLL.HBI_GetSDKVerion(HBI_FPD_DLL._handel, strSDKVerionbuf);
+            if (0 != _ret)
+            {
+                MessageBox.Show("HBI_GetSDKVerion failed!");
+                return;
+            }
+            else
+            {
+                _detector.ShowMessage("HBI_GetSDKVerion:" + strSDKVerionbuf.ToString(),true);
+            }
+        }
+
         /// <summary>
         /// 初始化探测器
         /// </summary>
         public void InitilizeDetector()
         {
+
             string res;
             if (_detector.InitDetector(out res))
             {
-                var Data = NV.Config.NV1313FPDSetting.Instance;
+
+                 var Data = NV.Config.NV1313FPDSetting.Instance;
                 _detector.IsMultiFramesOverlay = Data.IsMultiFramesOverlay;
                 _detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
                 _detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
-                _detector.HB_SetGain((int)Data.Gain);
-               // _detector.HB_SetAqcSpanTime(Data.ExpTime);
-               // _detector.HB_SetMaxFrames(Data.MaxFrames);
+
+
                 string autoOffset = Data.IsAutoPreOffset ? "1" : "0";
-
-
-               // NV.Infrastructure.UICommon.IniFile.WriteString("System", "AutoOffsetCalOnOpen", autoOffset, System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "nvDentalDet.ini"));
-                _detector.HB_SetBinningMode((byte)Data.BinningMode);
-                _detector.HB_SetTriggerMode(7);
-                //_detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
-                //_detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
-                //_detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
-                //_detector.HBUpdateCorrectEnable();
-                _detector.Delay = Data.Delay;
+                // 连接是否做固件offset模板，1-做offset模板，其他不做
+                int offsettemplate = 0;
                 if (autoOffset == "1")
+                    offsettemplate = 1;
+
+                string local_ip = "192.168.10.20";
+                string remote_ip = "192.168.10.40";
+                int ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, remote_ip, 0x8081, local_ip, 0x8080, offsettemplate);
+
+                _detector.ShowMessage("local ip: " + local_ip + " <---> " + remote_ip);
+
+                if (ret != 0)
                 {
-                    _detector.StartAutoDetect();
+                    res += "探测器连接失败。" + _detector.GetLastError(ret);
                 }
+                else
+                {
+                    _detector.Delay = Data.Delay;
+                    _detector.HB_SetBinningMode((byte)Data.BinningMode);
+                    _detector.HB_SetTriggerMode(7);
+                    _detector.HB_SetGain((int)Data.Gain);
+                    _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
+                    _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
+                    _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
+                    _detector.HBUpdateCorrectEnable();
 
+                    res += "探测器已连接。";
+                }
+                _detector.ShowMessage(res, true);
                 IsConnected = true;
-
 
             }
             else
@@ -188,6 +219,8 @@ namespace NV.DetectionPlatform.UCtrls
                 CMessageBox.Show(res);
                 this.Log("探测器初始化失败");
             }
+
+          btnGetSdkVer_Click();
         }
         /// <summary>
         /// 后台实时采集显示
@@ -294,23 +327,23 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 _detector.IsStored = true;
                 _detector.MaxFrames = 1;
-                _curExpTime = (int)(Global.CurrentParam.Time * 1000);
             }
             else if (type == ExamType.Expose)
             {
                 _detector.IsStored = isStored;
                 _detector.MaxFrames = 0; // 连续获取
-                _curExpTime = (int)(1000.0 / Global.CurrentParam.Fps);
             }
             else if (type == ExamType.MultiEnergyAvg)
             {
                 _detector.IsStored = true;
                 _detector.MaxFrames = maxCount;
-               // _detector.MaxFrames = 0;
-                _curExpTime = (int)(Global.CurrentParam.Time * 1000);
             }
-            // _detector.HB_SetExpTime((int)(_curExpTime * 10 - DETECTOR_READTIME));
-            _detector.HB_SetAqcSpanTime((int)(_curExpTime));
+
+            // 设置采集帧率 ： 1，2，4
+            _detector.HB_SetAqcSpanTime((int)(1000.0 / Global.CurrentParam.Fps));
+            // 设置准备时间
+            _detector.HBI_SetSinglePrepareTime((int)(Global.CurrentParam.Time * 1000));
+
             _imageCount = 0;
 
             MainWindow.ControlSystem.XRayOn();

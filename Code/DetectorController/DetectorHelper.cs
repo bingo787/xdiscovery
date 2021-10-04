@@ -35,7 +35,7 @@ namespace Detector
         //    DOWNLOAD_FILE m_pdownloadmode = new DOWNLOAD_FILE();
         FPD_AQC_MODE m_stMode = new FPD_AQC_MODE();
 
-        public string log_path = System.Environment.CurrentDirectory;
+        public string logPath = System.Environment.CurrentDirectory + "\\Log";
 
         /// <summary>
         /// 是否丢包
@@ -257,6 +257,13 @@ namespace Detector
         /// </summary>
         public bool InitDetector(out string res)
         {
+
+            _detectorHeight = 3072;
+            _detectorWidth = 3072;
+            _imageHeight = _detectorHeight;
+            _imageWidth = _detectorWidth;
+            _bits = 16;
+
             res = string.Empty;
 
             // 因为要重新连接，所以需要先销毁
@@ -270,74 +277,6 @@ namespace Detector
                 res += ("HBI_RegEventCallBackFun Failed");
             else
                 ShowMessage("HBI_RegEventCallBackFun success.");
-
-
-            string local_ip = "192.168.10.20";
-            string remote_ip = "192.168.10.40";
-            ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, remote_ip, 0x8081, local_ip, 0x8080);
-
-            ShowMessage("local ip: " + local_ip + " <---> " + remote_ip);
-
-            if (ret != 0)
-            {
-                res += "探测器连接失败。" + GetLastError(ret);
-                return false;
-            }
-            else
-            {
-                //if (NVDentalSDK.NV_MonitorTemperature(TemperatureCallBack) != NV_StatusCodes.NV_SC_SUCCESS)
-                //    res += ("Temperature failed");
-                //if (NVDentalSDK.NV_MonitorSystemStatus(SystemStatusCallBack) != NV_StatusCodes.NV_SC_SUCCESS)
-                //    res += ("SystemStatus failed");
-                //if (NVDentalSDK.NV_MonitorConnbreak(ConnBreakCallBack) != NV_StatusCodes.NV_SC_SUCCESS)
-                //    res += ("ConnBreak failed");
-
-
-                IMAGE_PROPERTY img_pro = new IMAGE_PROPERTY();
-                ret = HBI_FPD_DLL.HBI_GetImageProperty(HBI_FPD_DLL._handel, ref img_pro);
-
-                if (ret != (int)HBIRETCODE.HBI_SUCCSS)
-                {
-                    res += ("HBI_GetImageProperty failed");
-                }
-                else
-                {
-                    _detectorHeight = 3072;
-                    _detectorWidth = 3072;
-
-                    _imageWidth = (int)img_pro.nwidth;
-                    _imageHeight = (int)img_pro.nheight;
-                    if (img_pro.ndatabit == 0)
-                    {
-                        _bits = 16;
-                    }
-                    else if (img_pro.ndatabit == 1)
-                    {
-                        _bits = 14;
-                    }
-                    else if (img_pro.ndatabit == 2)
-                    {
-                        _bits = 12;
-                    }
-                    else if (img_pro.ndatabit == 3)
-                    {
-                        _bits = 8;
-                    }
-                    else {
-                        _bits = 16;
-                    }
-                  
-
-                    ShowMessage("W:"+_imageWidth.ToString() + " H:"+_imageHeight.ToString() +" B:"+ _bits.ToString());
-
-
-                }
-                res += (string.Format("Size w:{0} h:{1} bits:{2}", ImageWidth, ImageHeight, Bits));
-                res += "探测器已连接。";
-
-                btnGetFirmwareCfg_Click();
-                btnImageProperty_Click();
-            }
             return true;
         }
 
@@ -493,7 +432,7 @@ namespace Detector
                             {
                                 bOffsetTemplateOk = true; // 表示生成offset模板成功
                                 Log(string.Format("\tECALLBACK_TYPE_FPD_STATUS,bOffsetTemplateOk is true!aqc_mode:{0}\n", (int)(m_stMode.aqc_mode)));
-                               // FinishedOffsetEvent(true);    
+                                FinishedOffsetEvent(true);    
                             }
                             //
                             if (m_stMode.aqc_mode == EnumIMAGE_ACQ_MODE.DYNAMIC_ACQ_BRIGHT_MODE)
@@ -520,6 +459,8 @@ namespace Detector
                         {
                             bGainsetTemplateOk = true; // 表示生成gain模板成功
                             ShowMessage("ECALLBACK_TYPE_GAIN_ERR_MSG,bGainsetTemplateOk is true!\n");
+
+                            FinishedGainEvent(true);
                         }
                     }
 
@@ -530,6 +471,7 @@ namespace Detector
                         {
                             bDefectAcqFinished = true; // 表示生成defect模板成功
                             ShowMessage("ECALLBACK_TYPE_DEFECT_ERR_MSG,bDefectAcqFinished is true!\n");
+                            FinishedGainEvent(true);
                         }
                     }
 
@@ -588,7 +530,7 @@ namespace Detector
 
                 default:
                     {
-                        ShowMessage("ECALLBACK_TYPE_INVALID, command " + cmd.ToString(), true);
+                    //    ShowMessage("ECALLBACK_TYPE_INVALID, command " + cmd.ToString(), true);
                         break;
                     }
             }
@@ -715,7 +657,7 @@ namespace Detector
         /// <param name="isShowMessageBox"></param>
         public void ShowMessage(string p, bool isShowMessageBox = false)
         {
-            Log(p);
+           Log(p);
 
             if (isShowMessageBox)
             {
@@ -729,21 +671,18 @@ namespace Detector
         private void Log(string p)
         {
 
-            System.Diagnostics.StackTrace st = new System.Diagnostics.StackTrace(1, true);
-            string file = st.GetFrame(1).GetFileName();
-            int line = st.GetFrame(1).GetFileLineNumber();
-            string method = st.GetFrame(1).GetMethod().ToString();
 
+         //   System.Console.WriteLine(p);
             try
             {
                 //如果日志目录不存在,则创建该目录
-                if (!Directory.Exists(log_path))
+                if (!Directory.Exists(logPath))
                 {
-                    Directory.CreateDirectory(log_path);
+                    Directory.CreateDirectory(logPath);
                 }
-                string logFileName = log_path + "\\调试日志_" + DateTime.Now.ToString("yyyy_MM_dd_HH") + ".log";
+                string logFileName = logPath + "\\调试日志_" + DateTime.Now.ToString("yyyy_MM_dd_HH") + ".log";
                 StringBuilder logContents = new StringBuilder();
-                logContents.AppendLine(p + " " + method + " " + file +":" + line.ToString());
+                logContents.AppendLine(p);
                 //当天的日志文件不存在则新建，否则追加内容
                 StreamWriter sw = new StreamWriter(logFileName, true, System.Text.Encoding.Unicode);
                 sw.Write(DateTime.Now.ToString("yyyy-MM-dd hh:mm:sss") + " " + logContents.ToString());
@@ -752,6 +691,7 @@ namespace Detector
             }
             catch (Exception)
             {
+                throw new System.InvalidOperationException("调试日志写入异常");
             }
         }
         /// <summary>
@@ -840,7 +780,7 @@ namespace Detector
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void StartOffset()
+        public void StartCorrectOffsetTemplate()
         {
             count = 0;
 
@@ -878,7 +818,7 @@ namespace Detector
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void StartAutoDetect()
+        public void StartCorrectDetectTemplate()
         {
             count = 0;
 
@@ -898,7 +838,7 @@ namespace Detector
             }
             else
             {
-                ShowMessage("Do defect group1 success!",true);
+                ShowMessage("Do defect group1 success!", true);
             }
             // 第二步：第二组亮场(剂量要求：正常高压，毫安秒调节正常的 50%)-发送采集命令
             enumTemplateType = EnumGENERATE_TEMPLATE_TYPE.DEFECT_TEMPLATE_GROUP2;
@@ -910,7 +850,7 @@ namespace Detector
             }
             else
             {
-                ShowMessage("Do defect group2 success!",true);
+                ShowMessage("Do defect group2 success!", true);
             }
             // 第三步：第三组亮场(剂量要求：正常高压，毫安秒调节正常的 100%)-发送采集命令
             enumTemplateType = EnumGENERATE_TEMPLATE_TYPE.DEFECT_TEMPLATE_GROUP3;
@@ -922,7 +862,7 @@ namespace Detector
             }
             else
             {
-                ShowMessage("Do defect group2 success and Generate Template success!",true);
+                ShowMessage("Do defect group2 success and Generate Template success!", true);
             }
             // 第四步：注册回调函数
             ret = HBI_FPD_DLL.HBI_RegProgressCallBack(HBI_FPD_DLL._handel, DownloadCallBack, HBI_FPD_DLL._handel);
@@ -940,7 +880,7 @@ namespace Detector
             HBI_FPD_DLL.HBI_DownloadTemplateEx(HBI_FPD_DLL._handel, m_emfiletype);
             if (ret != 0)
             {
-                ShowMessage("HBI_DownloadTemplateEx:gain template failed!ret:[{0}]" + ret.ToString(),true);
+                ShowMessage("HBI_DownloadTemplateEx:gain template failed!ret:[{0}]" + ret.ToString());
                 return;
             }
             // 第六步：更新矫正使能
@@ -1037,7 +977,7 @@ namespace Detector
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void StartGain()
+        public void StartCorrectGainTemplate()
         {
 
             m_stMode.aqc_mode = EnumIMAGE_ACQ_MODE.DYNAMIC_ACQ_BRIGHT_MODE;
@@ -1178,7 +1118,7 @@ namespace Detector
         /// <returns></returns>
         public List<ushort[]> GetOffsetImage(int count = 10)
         {
-            StartOffset();
+            StartCorrectOffsetTemplate();
             _offsetWaitHandle.WaitOne(600000, true);
 
             Thread.Sleep(5000);
@@ -1198,7 +1138,7 @@ namespace Detector
         {
             if (runGainCal)
             {
-                StartGain();
+                StartCorrectGainTemplate();
                 _gainWaitHandle.WaitOne(60000, true);
                 Thread.Sleep(1000);
                 this.Dispatcher.Invoke(new Action(() =>
@@ -1344,7 +1284,16 @@ namespace Detector
             // return NVDentalSDK.NV_SetExpTime(p) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
-   
+        public bool HBI_SetSinglePrepareTime(int p)
+        {
+            int ret = HBI_FPD_DLL.HBI_SetSinglePrepareTime(HBI_FPD_DLL._handel, p);
+
+            return true;
+            //  int ret = HBI_FPD_DLL.HBI_SetSinglePrepareTime(HBI_FPD_DLL._handel, p);
+            //  return ret == 0;
+            // return NVDentalSDK.NV_SetExpTime(p) == NV_StatusCodes.NV_SC_SUCCESS;
+        }
+
 
         public bool HB_SetMaxFrames(int p)
         {

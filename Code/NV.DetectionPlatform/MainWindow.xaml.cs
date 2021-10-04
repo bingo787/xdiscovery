@@ -544,15 +544,15 @@ namespace NV.DetectionPlatform
             }
             if (tag == "DetectorOffsetCorrection")
             {
-                Detector.DetectorController.Instance.StartOffset();
+                Detector.DetectorController.Instance.StartCorrectOffsetTemplate();
             }
             if (tag == "DetectorGainCorrection")
             {
-                Detector.DetectorController.Instance.StartGain();
+                Detector.DetectorController.Instance.StartCorrectGainTemplate();
             }
             if (tag == "DetectorDefectCorrection")
             {
-                Detector.DetectorController.Instance.StartAutoDetect();
+                Detector.DetectorController.Instance.StartCorrectDetectTemplate();
             }
             if (tag == "GeneralSetting")
             {
