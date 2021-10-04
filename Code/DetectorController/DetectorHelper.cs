@@ -12,7 +12,8 @@ using System.Windows;
 using NV.Config;
 using NV.DRF.Controls;
 using NV.DRF.Core.Common;
-
+using NV.Infrastructure.UICommon;
+using SerialPortController;
 namespace Detector
 {
 
@@ -36,6 +37,11 @@ namespace Detector
         FPD_AQC_MODE m_stMode = new FPD_AQC_MODE();
 
         public string logPath = System.Environment.CurrentDirectory + "\\Log";
+
+        /// <summary>
+        /// 高压控制器
+        /// </summary>
+        public static SerialPortControler_RS232PROTOCOL xRayControler = SerialPortControler_RS232PROTOCOL.Instance;
 
         /// <summary>
         /// 是否丢包
@@ -432,21 +438,20 @@ namespace Detector
                             {
                                 bOffsetTemplateOk = true; // 表示生成offset模板成功
                                 Log(string.Format("\tECALLBACK_TYPE_FPD_STATUS,bOffsetTemplateOk is true!aqc_mode:{0}\n", (int)(m_stMode.aqc_mode)));
-                                FinishedOffsetEvent(true);    
+
                             }
-                            //
+
                             if (m_stMode.aqc_mode == EnumIMAGE_ACQ_MODE.DYNAMIC_ACQ_BRIGHT_MODE)
                             {
                                 bGainAcqFinished = true;// 表示defect采图成功
                                 Log(string.Format("\tECALLBACK_TYPE_FPD_STATUS,bGainAcqFinished is true!aqc_mode:{0}\n", (int)(m_stMode.aqc_mode)));
-                             //   FinishedDetectEvent(true);
+
                             }
-                            //
+
                             if (m_stMode.aqc_mode == EnumIMAGE_ACQ_MODE.DYNAMIC_DEFECT_ACQ_MODE && m_stMode.bSimpleGT)
                             {
                                 bDefectAcqFinished = true;// 表示defect采图成功
                                 Log(string.Format("\tECALLBACK_TYPE_FPD_STATUS,bDefectAcqFinished is true!aqc_mode:{0}\n", (int)(m_stMode.aqc_mode)));
-                              //  FinishedDetectEvent(true);
                             }
 
                         }
@@ -459,7 +464,6 @@ namespace Detector
                         {
                             bGainsetTemplateOk = true; // 表示生成gain模板成功
                             ShowMessage("ECALLBACK_TYPE_GAIN_ERR_MSG,bGainsetTemplateOk is true!\n");
-
                             FinishedGainEvent(true);
                         }
                     }
@@ -798,7 +802,6 @@ namespace Detector
             }
             else
             {
-               
                 ShowMessage("Do pre-offset template success!",true);
             }
 
@@ -809,7 +812,8 @@ namespace Detector
         /// <param name="isSuccess"></param>
         private void FinishedOffset(bool isSuccess)
         {
-            ShowMessage("本底校正" + isSuccess, true);
+            string msg = isSuccess ? "成功" : "失败";
+            ShowMessage("Offset 校正" + isSuccess, true);
             _offsetWaitHandle.Set();
         }
 
@@ -818,8 +822,9 @@ namespace Detector
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void StartCorrectDetectTemplate()
-        {
+        /// 
+
+        public bool StartCorrectDetectTemplate_Step1() {
             count = 0;
 
             m_stMode.aqc_mode = EnumIMAGE_ACQ_MODE.DYNAMIC_DEFECT_ACQ_MODE;
@@ -828,44 +833,64 @@ namespace Detector
             bDefectAcqFinished = false;
             bDefectTemplateOk = false;
             bDownloadTemplateOk = false;
+
+           // ShowMessage("第一步：第一组亮场(剂量要求：正常高压，毫安秒调节正常的 10%)",true);
             // 第一步：第一组亮场(剂量要求：正常高压，毫安秒调节正常的 10%)-发送采集命令
             enumTemplateType = EnumGENERATE_TEMPLATE_TYPE.DEFECT_TEMPLATE_GROUP1;
             int ret = HBI_FPD_DLL.HBI_GenerateTemplateEx(HBI_FPD_DLL._handel, enumTemplateType);   //6
             if (ret != 0)
             {
-                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(),true);
-                return;
+                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(), true);
+                return false;
             }
             else
             {
                 ShowMessage("Do defect group1 success!", true);
+                return true;
             }
+        }
+        public bool StartCorrectDetectTemplate_Step2()
+        {
+
+           
             // 第二步：第二组亮场(剂量要求：正常高压，毫安秒调节正常的 50%)-发送采集命令
             enumTemplateType = EnumGENERATE_TEMPLATE_TYPE.DEFECT_TEMPLATE_GROUP2;
-            ret = HBI_FPD_DLL.HBI_GenerateTemplateEx(HBI_FPD_DLL._handel, enumTemplateType);   //6
+            int ret = HBI_FPD_DLL.HBI_GenerateTemplateEx(HBI_FPD_DLL._handel, enumTemplateType);   //6
             if (ret != 0)
             {
-                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(),true);
-                return;
+                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(), true);
+                return false;
             }
             else
             {
                 ShowMessage("Do defect group2 success!", true);
+                return true;
             }
+        }
+        public bool StartCorrectDetectTemplate_Step3()
+        {
+           
             // 第三步：第三组亮场(剂量要求：正常高压，毫安秒调节正常的 100%)-发送采集命令
             enumTemplateType = EnumGENERATE_TEMPLATE_TYPE.DEFECT_TEMPLATE_GROUP3;
-            ret = HBI_FPD_DLL.HBI_GenerateTemplateEx(HBI_FPD_DLL._handel, enumTemplateType);   //6
+            int ret = HBI_FPD_DLL.HBI_GenerateTemplateEx(HBI_FPD_DLL._handel, enumTemplateType);   //6
             if (ret != 0)
             {
-                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(),true);
-                return;
+                ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(), true);
+                return false;
             }
             else
             {
-                ShowMessage("Do defect group2 success and Generate Template success!", true);
+                return true;
+                
             }
+        }
+
+
+        public void StartCorrectDetectTemplate_Step4()
+        {
+
             // 第四步：注册回调函数
-            ret = HBI_FPD_DLL.HBI_RegProgressCallBack(HBI_FPD_DLL._handel, DownloadCallBack, HBI_FPD_DLL._handel);
+            int ret = HBI_FPD_DLL.HBI_RegProgressCallBack(HBI_FPD_DLL._handel, DownloadCallBack, HBI_FPD_DLL._handel);
             if (ret != 0)
             {
                 ShowMessage("err:HBI_RegProgressCallBack failed,TimeOut!", true);
@@ -883,6 +908,9 @@ namespace Detector
                 ShowMessage("HBI_DownloadTemplateEx:gain template failed!ret:[{0}]" + ret.ToString());
                 return;
             }
+            
+         
+
             // 第六步：更新矫正使能
             m_pCorrect.bFeedbackCfg = true;  // true  - ECALLBACK_TYPE_ROM_UPLOAD Event,false - ECALLBACK_TYPE_SET_CFG_OK Event
             m_pCorrect.ucOffsetCorrection = (char)3;
@@ -929,9 +957,14 @@ namespace Detector
                     {
                         Log(string.Format("err:ECALLBACK_DTFile_STATUS_PROGRESS,tf_mode is not exits,recode={0}\n", code));
                     }
+
+                
+
                     break;
                 case (byte)(eCallbackDownloadTemplateFileStatus.ECALLBACK_DTFile_STATUS_RESULT):   // 结果
-                    Log(string.Format("DownloadCallBack,%{0}\n", code));
+                    ShowMessage(string.Format("DownloadCallBack,%{0}\n", code),true);
+                   
+
                     //最后一包发完成
                     if (code == 100)
                     {
@@ -969,7 +1002,8 @@ namespace Detector
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                ShowMessage("Detect校正" + isSuccess, true);
+                string msg = isSuccess ? "成功" : "失败";
+                ShowMessage("defect模板生成 " + isSuccess, true);
             }));
         }
         /// <summary>
@@ -986,6 +1020,9 @@ namespace Detector
             bGainAcqFinished = false;
             bGainsetTemplateOk = false;
             bDownloadTemplateOk = false;
+
+            xRayControler.XRayOn();
+            Thread.Sleep(3000);
             // 第一步：一组亮场(剂量要求：正常高压和电流)-发送采集命令
             // 高压的剂量一般为正常采图的剂量即可，等高压到达稳定值后开始调用生成接口直到采图完成结束。
             enumTemplateType = EnumGENERATE_TEMPLATE_TYPE.GAIN_TEMPLATE;
@@ -995,25 +1032,25 @@ namespace Detector
                 ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(),true);
                 return;
             }
-            else
-            {
-                ShowMessage("Do gain template success!");
-            }
+            
+
             // 第二步：注册回调函数
             ret = HBI_FPD_DLL.HBI_RegProgressCallBack(HBI_FPD_DLL._handel, DownloadCallBack, HBI_FPD_DLL._handel);
             if (ret != 0)
             {
-                ShowMessage("HBI_RegProgressCallBack failed!ret:[{0}]" + ret.ToString(),true);
+                ShowMessage("HBI_RegProgressCallBack failed! ret: " + ret.ToString(),true);
                 return;
             }
             else
                 ShowMessage("HBI_RegProgressCallBack success!");
+
+            xRayControler.XRayOff();
             // 第三步：将gain模板下载到固件
             m_emfiletype = emTFILE_MODE.GAIN_T;
             HBI_FPD_DLL.HBI_DownloadTemplateEx(HBI_FPD_DLL._handel, m_emfiletype);
             if (ret != 0)
             {
-                ShowMessage("HBI_DownloadTemplateEx:gain template failed!ret:[{0}]" + ret.ToString());
+                ShowMessage("HBI_DownloadTemplateEx:gain template failed!ret:[{0}]" + ret.ToString(),true);
                 return;
             }
             // 第四步：更新矫正使能
@@ -1035,7 +1072,7 @@ namespace Detector
             }
             else
             {
-                ShowMessage("\tHBI_UpdateCorrectEnable failed!");
+                ShowMessage("\tHBI_UpdateCorrectEnable failed!",true);
                 return;
             }
         }
@@ -1072,7 +1109,9 @@ namespace Detector
         {
             this.Dispatcher.Invoke(new Action(() =>
             {
-                CMessageBox.Show("Gain校正" + isSuccess);
+                string msg = isSuccess ? "成功" : "失败";
+                ShowMessage("Gain校正" + msg,true);
+
             }));
             _gainWaitHandle.Set();
         }

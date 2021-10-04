@@ -107,6 +107,10 @@
       <Project>{0565E9C0-A1BB-4DAF-8017-76D4F53C4913}</Project>
       <Name>NV.Config</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SerialPortController\SerialPortController.csproj">
+      <Project>{a7bada4f-d672-4dc9-a075-434b4c2a15f5}</Project>
+      <Name>SerialPortController</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

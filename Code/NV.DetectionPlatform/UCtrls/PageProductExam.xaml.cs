@@ -352,7 +352,6 @@ namespace NV.DetectionPlatform.UCtrls
 
             new Thread(new ThreadStart(delegate
             {
-                _detector.ShowMessage("DEBUG ");
                 Thread.Sleep(_detector.Delay);
                 if (_detector.StartAcq())
                 {
