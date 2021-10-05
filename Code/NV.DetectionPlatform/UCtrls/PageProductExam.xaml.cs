@@ -247,8 +247,9 @@ namespace NV.DetectionPlatform.UCtrls
                        if (IsAcqing)
                         {
                                
-                            _detector.ShowMessage("acqing... and putdata to display "+ data.Length.ToString() + " " + H.ToString() + " " + W.ToString() + " " + Bits.ToString());
                             ipUC.PutData(W,H ,Bits,data, true);
+                            ApplyConfigWL(true);
+                            ipUC.CurrentDv.Invalidate();
 
                         }
                             

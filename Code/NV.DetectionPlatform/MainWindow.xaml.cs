@@ -548,6 +548,7 @@ namespace NV.DetectionPlatform
             }
             if (tag == "DetectorGainCorrection")
             {
+                _hVView.ShowDialog();
                 Detector.DetectorController.Instance.StartCorrectGainTemplate();
             }
             if (tag == "DetectorDefectCorrection")
