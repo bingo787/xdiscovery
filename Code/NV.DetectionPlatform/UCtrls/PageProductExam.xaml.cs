@@ -187,7 +187,7 @@ namespace NV.DetectionPlatform.UCtrls
 
                 string local_ip = "192.168.10.20";
                 string remote_ip = "192.168.10.40";
-                int ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, remote_ip, 0x8081, local_ip, 0x8080);
+                int ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, remote_ip, 0x8081, local_ip, 0x8080,20);
 
                 _detector.ShowMessage("local ip: " + local_ip + " <---> " + remote_ip);
 
@@ -197,14 +197,15 @@ namespace NV.DetectionPlatform.UCtrls
                 }
                 else
                 {
-                    _detector.Delay = Data.Delay;
-                    _detector.HB_SetBinningMode((byte)Data.BinningMode);
-                    _detector.HB_SetTriggerMode(7);
-                    _detector.HB_SetGain((int)Data.Gain);
-                    _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
-                    _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
-                    _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
+                    //_detector.Delay = Data.Delay;
+                    //_detector.HB_SetBinningMode((byte)Data.BinningMode);
+                    //_detector.HB_SetTriggerMode(4);
+                    //_detector.HB_SetGain((int)Data.Gain);
+                    //_detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
+                    //_detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
+                    //_detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
                     _detector.HBUpdateCorrectEnable();
+
 
                     res += "探测器已连接。";
                 }

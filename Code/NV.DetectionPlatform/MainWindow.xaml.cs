@@ -536,8 +536,8 @@ namespace NV.DetectionPlatform
             }
             if (tag == "DetectorSetting")
             {
-                UCtrls.WndDetectorSetting wnd = new UCtrls.WndDetectorSetting();
-                wnd.ShowDialogEx();
+              //  UCtrls.WndDetectorSetting wnd = new UCtrls.WndDetectorSetting();
+              //  wnd.ShowDialogEx();
             }
             if (tag == "DetectorReConnect")
             {
@@ -560,40 +560,40 @@ namespace NV.DetectionPlatform
             }
             if (tag == "DetectorOffsetCorrection")
             {
-                Detector.DetectorController.Instance.StartCorrectOffsetTemplate();
+              //  Detector.DetectorController.Instance.StartCorrectOffsetTemplate();
             }
             if (tag == "DetectorGainCorrection")
             {
-                _hVView.ShowDialog();
-                Detector.DetectorController.Instance.StartCorrectGainTemplate();
+             //   _hVView.ShowDialog();
+             //   Detector.DetectorController.Instance.StartCorrectGainTemplate();
             }
             if (tag == "DetectorDefectCorrection")
             {
                 
-                Detector.DetectorController.Instance.ShowMessage("第一步：第一组亮场(剂量要求：正常高压，毫安秒调节正常的 10%)", true);
-                _hVView.ShowDialog();
-                MainWindow.ControlSystem.XRayOn();
-                bool ret = Detector.DetectorController.Instance.StartCorrectDetectTemplate_Step1();
-                MainWindow.ControlSystem.XRayOff();
-                if (!ret) return;
+                //Detector.DetectorController.Instance.ShowMessage("第一步：第一组亮场(剂量要求：正常高压，毫安秒调节正常的 10%)", true);
+                //_hVView.ShowDialog();
+                //MainWindow.ControlSystem.XRayOn();
+                //bool ret = Detector.DetectorController.Instance.StartCorrectDetectTemplate_Step1();
+                //MainWindow.ControlSystem.XRayOff();
+                //if (!ret) return;
 
 
-                Detector.DetectorController.Instance.ShowMessage("第二步：第二组亮场(剂量要求：正常高压，毫安秒调节正常的 50%)", true);
-                _hVView.ShowDialog();
-                MainWindow.ControlSystem.XRayOn();
-                ret = Detector.DetectorController.Instance.StartCorrectDetectTemplate_Step2();
-                MainWindow.ControlSystem.XRayOff();
-                if (!ret) return;
+                //Detector.DetectorController.Instance.ShowMessage("第二步：第二组亮场(剂量要求：正常高压，毫安秒调节正常的 50%)", true);
+                //_hVView.ShowDialog();
+                //MainWindow.ControlSystem.XRayOn();
+                //ret = Detector.DetectorController.Instance.StartCorrectDetectTemplate_Step2();
+                //MainWindow.ControlSystem.XRayOff();
+                //if (!ret) return;
 
-                Detector.DetectorController.Instance.ShowMessage("第三步：第三组亮场(剂量要求：正常高压，毫安秒调节正常的 100%)", true);
-                _hVView.ShowDialog();
-                MainWindow.ControlSystem.XRayOn();
-                ret = Detector.DetectorController.Instance.StartCorrectDetectTemplate_Step3();
-                MainWindow.ControlSystem.XRayOff();
-                if (!ret) return;
+                //Detector.DetectorController.Instance.ShowMessage("第三步：第三组亮场(剂量要求：正常高压，毫安秒调节正常的 100%)", true);
+                //_hVView.ShowDialog();
+                //MainWindow.ControlSystem.XRayOn();
+                //ret = Detector.DetectorController.Instance.StartCorrectDetectTemplate_Step3();
+                //MainWindow.ControlSystem.XRayOff();
+                //if (!ret) return;
 
-                Detector.DetectorController.Instance.ShowMessage("第四步：下载模板到探测器", true);
-                Detector.DetectorController.Instance.StartCorrectDetectTemplate_Step4();
+                //Detector.DetectorController.Instance.ShowMessage("第四步：下载模板到探测器", true);
+                //Detector.DetectorController.Instance.StartCorrectDetectTemplate_Step4();
 
             }
             if (tag == "GeneralSetting")
