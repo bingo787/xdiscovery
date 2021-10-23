@@ -12,7 +12,7 @@ namespace NV.Config
     /// </summary>
     public class ConcatPictureParam : NotifyModel
     {
-        private static ConcatPictureParam _portParam;
+        private static ConcatPictureParam _catParam;
         /// <summary>
         /// 配置文件路径
         /// </summary>
@@ -26,13 +26,13 @@ namespace NV.Config
         {
             get
             {
-                if (_portParam == null)
+                if (_catParam == null)
                 {
                     Load();
-                    return _portParam;
+                    return _catParam;
                 }
 
-                return _portParam;
+                return _catParam;
             }
         }
         /// <summary>
@@ -40,14 +40,14 @@ namespace NV.Config
         /// </summary>
         private static void Load()
         {
-            _portParam = SerializeHelper.LoadFromFile<ConcatPictureParam>(_fileName);
+            _catParam = SerializeHelper.LoadFromFile<ConcatPictureParam>(_fileName);
         }
         /// <summary>
         /// 保存到配置文件
         /// </summary>
         public void Save()
         {
-            SerializeHelper.SaveToFile(_portParam, _fileName);
+            SerializeHelper.SaveToFile(_catParam, _fileName);
         }
         /// <summary>
         /// LEFT_1.X

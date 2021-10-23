@@ -1466,6 +1466,10 @@ namespace NV.DetectionPlatform.UCtrls
             //区域的左上角点的坐标为（10,10）区域宽为150，高为100
 
             var cp = ConcatPictureParam.Instance;
+
+            this.Log(string.Format("左图A点({0},{1})，左图B点({2},{3}),右图A点({4},{5}),右图B点({6},{7})", 
+                cp.LeftPicAX, cp.LeftPicAY, cp.LeftPicBX, cp.LeftPicBY,
+                cp.RightPicAX, cp.RightPicAY, cp.RightPicBX, cp.RightPicBY));
             
             OpenCvSharp.Point leftPicPointA = new OpenCvSharp.Point(cp.LeftPicAX,cp.LeftPicAY);
             OpenCvSharp.Point leftPicPointB = new OpenCvSharp.Point(cp.LeftPicBX, cp.LeftPicBY);
