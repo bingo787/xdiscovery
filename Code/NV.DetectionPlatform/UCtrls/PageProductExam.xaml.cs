@@ -1316,7 +1316,7 @@ namespace NV.DetectionPlatform.UCtrls
             if (dv == null || !dv.HasImage)
                 return;
 
-            dv.SaveAnnotation(System.IO.Path.ChangeExtension(dv.CurrentFileName, ".xml"));
+           // dv.SaveAnnotation(System.IO.Path.ChangeExtension(dv.CurrentFileName, ".xml"));
 
             System.Windows.Forms.SaveFileDialog dialog = new System.Windows.Forms.SaveFileDialog();
             dialog.Filter = "*.bmp|*.bmp|*.png|*.png|*.jpeg|*.jpeg|*.tiff|*.tiff";
