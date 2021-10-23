@@ -989,7 +989,7 @@ namespace NV.DetectionPlatform.UCtrls
                         ipUC.CurrentDv.EdgeEnhancement();
                     }
                     break;
-                case "Cameo":
+                case "Cameo2": //
 
                     System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
                     dialog.Multiselect = true;
@@ -1007,7 +1007,29 @@ namespace NV.DetectionPlatform.UCtrls
                         ipUC.AutoWindowLevel();
                         ipUC.CurrentDv.Invalidate();
                     }
-               
+                    break;
+                case "Cameo":
+                    System.Windows.Forms.OpenFileDialog dialogg = new System.Windows.Forms.OpenFileDialog();
+                    dialogg.Multiselect = true;
+                    dialogg.Filter = "image files|*.bmp;*.jpg;*.jpeg;*.png";
+                    if (dialogg.ShowDialog() == System.Windows.Forms.DialogResult.OK && 
+                        (dialogg.FileNames.Length==2 || dialogg.FileNames.Length == 4))
+                    {
+                        ushort width = 0;
+                        ushort height = 0;
+                        ushort[] result = ConactPictures(dialogg.FileNames, ref width, ref height);
+
+
+                        // ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+                        System.Console.WriteLine("result " + width.ToString() + " " + height.ToString());
+                        ipUC.PutData(width, height, 16, result, true);
+                        ipUC.AutoWindowLevel();
+                        ipUC.CurrentDv.Invalidate();
+                    }
+                    else {
+                        CMessageBox.Show("图片数量错误!! 必须是2张或者4张");
+                    }
+
                     break;
                 case "Back":
                     ipUC.CurrentDv.BackFromStack();
@@ -1429,9 +1451,81 @@ namespace NV.DetectionPlatform.UCtrls
             usmSetting.UsmParamChangedEvent += usmSetting_UsmParamChanged;
             usmSetting.ShowDialog();
         }
+        private ushort[] ConactPictures(string[] imageFiles, ref ushort width, ref ushort height)
+        {
+            Mat[] imgs = new Mat[imageFiles.Length];
+            //读入图像
+            for (int i = 0; i < imageFiles.Length; i++)
+            {
+                System.Console.WriteLine(imageFiles[i]);
+                imgs[i] = new Mat(imageFiles[i], ImreadModes.Color);
+            }
 
 
-        private ushort[] Stitching(string[] imageFiles, ref ushort width, ref ushort height)
+            //设置需要剪裁的区域
+            //区域的左上角点的坐标为（10,10）区域宽为150，高为100
+            
+            OpenCvSharp.Point p01 = new OpenCvSharp.Point(720,0);
+            OpenCvSharp.Point p02 = new OpenCvSharp.Point(1470, 0);
+            OpenCvSharp.Rect rect0 = new OpenCvSharp.Rect(p01.X, p01.Y, Math.Abs(p01.X-p02.X), 3072);
+
+            OpenCvSharp.Point p11 = new OpenCvSharp.Point(1680, 0);
+            OpenCvSharp.Point p12 = new OpenCvSharp.Point(2380, 0);
+            OpenCvSharp.Rect rect1 = new OpenCvSharp.Rect(p11.X, p11.Y, Math.Abs(p11.X - p12.X), 3072);
+
+            OpenCvSharp.Rect rect2 = rect0;
+            OpenCvSharp.Rect rect3 = rect1;
+            OpenCvSharp.Rect[] rects = { rect0, rect1, rect2, rect3 };
+            //剪裁各个图片
+            for (int i = 0; i < imageFiles.Length; i++) {
+                imgs[i] = new Mat(imgs[i], rects[i]);
+            }
+
+            Mat fullPic = new Mat();
+            if (imageFiles.Length == 2)
+            {
+                //左右拼接两张图片
+                Cv2.HConcat(imgs, fullPic);
+            }
+            else {
+                Mat[] temp = new Mat[2];
+
+                // 拼接上半部分
+                temp[0] = imgs[0];
+                temp[1] = imgs[1];
+                Mat topPic = new Mat();
+                Cv2.HConcat(temp, topPic);
+
+                // 拼接下半部分
+                temp[0] = imgs[2];
+                temp[1] = imgs[3];
+                Mat bottomPic = new Mat();
+                Cv2.HConcat(temp, bottomPic);
+
+                // 上下拼接
+                temp[0] = topPic;
+                temp[1] = bottomPic;
+                Cv2.VConcat(temp,fullPic);
+
+            }
+
+            // 转换为一维数组输出
+            
+            width = (ushort)fullPic.Width;
+            height = (ushort)fullPic.Height;
+            ushort[] result = new ushort[width * height];
+            System.Threading.Tasks.Parallel.For(0, height, i =>
+            {
+                for (int j = 0; j < fullPic.Width; j++)
+                {
+                    result[i * fullPic.Width + j] = fullPic.At<ushort>(i, j);
+                }
+            });
+
+            return result;
+        }
+
+            private ushort[] Stitching(string[] imageFiles, ref ushort width, ref ushort height)
         {
 
             Stitcher.Mode mode = Stitcher.Mode.Panorama;
