@@ -78,6 +78,7 @@
     <Compile Include="Common\SerializeHelper.cs" />
     <Compile Include="NV1313FPDSetting.cs" />
     <Compile Include="HVGeneratorParam.cs" />
+    <Compile Include="ConcatPictureParam.cs" />
     <Compile Include="PortPara.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

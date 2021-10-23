@@ -1464,14 +1464,16 @@ namespace NV.DetectionPlatform.UCtrls
 
             //设置需要剪裁的区域
             //区域的左上角点的坐标为（10,10）区域宽为150，高为100
-            
-            OpenCvSharp.Point p01 = new OpenCvSharp.Point(720,0);
-            OpenCvSharp.Point p02 = new OpenCvSharp.Point(1470, 0);
-            OpenCvSharp.Rect rect0 = new OpenCvSharp.Rect(p01.X, p01.Y, Math.Abs(p01.X-p02.X), 3072);
 
-            OpenCvSharp.Point p11 = new OpenCvSharp.Point(1680, 0);
-            OpenCvSharp.Point p12 = new OpenCvSharp.Point(2380, 0);
-            OpenCvSharp.Rect rect1 = new OpenCvSharp.Rect(p11.X, p11.Y, Math.Abs(p11.X - p12.X), 3072);
+            var cp = ConcatPictureParam.Instance;
+            
+            OpenCvSharp.Point leftPicPointA = new OpenCvSharp.Point(cp.LeftPicAX,cp.LeftPicAY);
+            OpenCvSharp.Point leftPicPointB = new OpenCvSharp.Point(cp.LeftPicBX, cp.LeftPicBY);
+            OpenCvSharp.Rect rect0 = new OpenCvSharp.Rect(leftPicPointA.X, leftPicPointA.Y, Math.Abs(leftPicPointA.X-leftPicPointB.X), 3072);
+
+            OpenCvSharp.Point rightPicPointA = new OpenCvSharp.Point(cp.RightPicAX, cp.RightPicAY);
+            OpenCvSharp.Point rightPicPointB = new OpenCvSharp.Point(cp.RightPicBX, cp.RightPicBY);
+            OpenCvSharp.Rect rect1 = new OpenCvSharp.Rect(rightPicPointA.X, rightPicPointA.Y, Math.Abs(rightPicPointA.X - rightPicPointB.X), 3072);
 
             OpenCvSharp.Rect rect2 = rect0;
             OpenCvSharp.Rect rect3 = rect1;
