@@ -1461,57 +1461,55 @@ namespace NV.DetectionPlatform.UCtrls
                 imgs[i] = new Mat(imageFiles[i], ImreadModes.Color);
             }
 
-
-            //设置需要剪裁的区域
-            //区域的左上角点的坐标为（10,10）区域宽为150，高为100
-
             var cp = ConcatPictureParam.Instance;
 
-            this.Log(string.Format("左图A点({0},{1})，左图B点({2},{3}),右图A点({4},{5}),右图B点({6},{7})", 
+            this.Log(string.Format("左图A点({0},{1})，左图B点({2},{3}),右图A点({4},{5}),右图B点({6},{7})",
                 cp.LeftPicAX, cp.LeftPicAY, cp.LeftPicBX, cp.LeftPicBY,
                 cp.RightPicAX, cp.RightPicAY, cp.RightPicBX, cp.RightPicBY));
-            
-            OpenCvSharp.Point leftPicPointA = new OpenCvSharp.Point(cp.LeftPicAX,cp.LeftPicAY);
-            OpenCvSharp.Point leftPicPointB = new OpenCvSharp.Point(cp.LeftPicBX, cp.LeftPicBY);
-            OpenCvSharp.Rect rect0 = new OpenCvSharp.Rect(leftPicPointA.X, leftPicPointA.Y, Math.Abs(leftPicPointA.X-leftPicPointB.X), 3072);
 
-            OpenCvSharp.Point rightPicPointA = new OpenCvSharp.Point(cp.RightPicAX, cp.RightPicAY);
-            OpenCvSharp.Point rightPicPointB = new OpenCvSharp.Point(cp.RightPicBX, cp.RightPicBY);
-            OpenCvSharp.Rect rect1 = new OpenCvSharp.Rect(rightPicPointA.X, rightPicPointA.Y, Math.Abs(rightPicPointA.X - rightPicPointB.X), 3072);
+            // A，B，C，D ： 720,1400,1700,2400,
+            int A = cp.LeftPicAX;
+            int B = cp.LeftPicBX;
+            int C = cp.RightPicAX;
+            int D = cp.RightPicBX;
 
-            OpenCvSharp.Rect rect2 = rect0;
-            OpenCvSharp.Rect rect3 = rect1;
-            OpenCvSharp.Rect[] rects = { rect0, rect1, rect2, rect3 };
+            OpenCvSharp.Rect rectL = new OpenCvSharp.Rect(A, 0, Math.Abs(A-B), 3072);
+            OpenCvSharp.Rect rectR = new OpenCvSharp.Rect(C, 0, Math.Abs(C-D), 3072);
             //剪裁各个图片
-            for (int i = 0; i < imageFiles.Length; i++) {
-                imgs[i] = new Mat(imgs[i], rects[i]);
-            }
+            OpenCvSharp.Rect[] rects ={ rectL, rectR };
+            Mat[] imgSlices = new Mat[2* imageFiles.Length];
+            for (int i = 0; i < imageFiles.Length ; i++) {
+                imgSlices[i * 2] = new Mat(imgs[i], rectL);
+                imgSlices[i * 2 + 1 ] = new Mat(imgs[i], rectR);
 
+            }
+                 
             Mat fullPic = new Mat();
             if (imageFiles.Length == 2)
             {
                 //左右拼接两张图片
-                Cv2.HConcat(imgs, fullPic);
+                Cv2.HConcat(imgSlices, fullPic);
             }
             else {
-                Mat[] temp = new Mat[2];
-
+                Mat[] temp = new Mat[4];
+                for (int i = 0; i < 4; i++) {
+                    temp[i] = imgSlices[i];
+                }
                 // 拼接上半部分
-                temp[0] = imgs[0];
-                temp[1] = imgs[1];
                 Mat topPic = new Mat();
                 Cv2.HConcat(temp, topPic);
 
                 // 拼接下半部分
-                temp[0] = imgs[2];
-                temp[1] = imgs[3];
+                for (int i = 4; i < 8; i++)
+                {
+                    temp[i-4] = imgSlices[i];
+                }
                 Mat bottomPic = new Mat();
                 Cv2.HConcat(temp, bottomPic);
 
                 // 上下拼接
-                temp[0] = topPic;
-                temp[1] = bottomPic;
-                Cv2.VConcat(temp,fullPic);
+                Mat[] temp2 = { topPic, bottomPic };
+                Cv2.VConcat(temp2, fullPic);
 
             }
 
