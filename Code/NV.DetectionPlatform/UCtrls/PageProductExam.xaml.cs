@@ -343,18 +343,19 @@ namespace NV.DetectionPlatform.UCtrls
 
             // 设置采集帧率 ： 1，2，4
             _detector.HB_SetAqcSpanTime((int)(1000.0 / Global.CurrentParam.Fps));
-            // 设置准备时间
-            _detector.HBI_SetSinglePrepareTime((int)(Global.CurrentParam.Time * 1000));
-
+           
+            // 设置曝光时间
+            int timeOfExposure = (int)(Global.CurrentParam.Time * 1000);
+            _detector.HBI_SetSinglePrepareTime(timeOfExposure);
             _imageCount = 0;
 
             MainWindow.ControlSystem.XRayOn();
             IsAcqing = true;
 
-
             new Thread(new ThreadStart(delegate
             {
                 Thread.Sleep(_detector.Delay);
+
                 if (_detector.StartAcq())
                 {
                     if (Global.MainWindow != null)
