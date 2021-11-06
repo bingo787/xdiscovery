@@ -263,14 +263,13 @@ namespace Detector
         /// </summary>
         public bool InitDetector(out string res)
         {
+            res = string.Empty;
 
             _detectorHeight = 3072;
             _detectorWidth = 3072;
             _imageHeight = _detectorHeight;
             _imageWidth = _detectorWidth;
             _bits = 16;
-
-            res = string.Empty;
 
             // 因为要重新连接，所以需要先销毁
             HBI_FPD_DLL.HBI_Destroy(HBI_FPD_DLL._handel);
@@ -1519,13 +1518,19 @@ namespace Detector
         }
 
         // 获取图像数据信息
-        private void btnImageProperty_Click()
+        public void btnGetImageProperty()
         {
+
+
             Log("get Image property begin!\n");
             IMAGE_PROPERTY img_pro = new IMAGE_PROPERTY();
             int ret = HBI_FPD_DLL.HBI_GetImageProperty(HBI_FPD_DLL._handel, ref img_pro);
             if (ret == 0)
             {
+                _detectorHeight = img_pro.nheight;
+                _detectorWidth = img_pro.nwidth;
+                _imageHeight = _detectorHeight;
+                _imageWidth = _detectorWidth;
                 Log(string.Format("HBI_GetImageProperty:width={0},hight={1}\n", img_pro.nwidth, img_pro.nheight));
                 //
                 if (img_pro.datatype == 0) Log("\tdatatype is unsigned char.\n");
@@ -1535,10 +1540,22 @@ namespace Detector
                 else if (img_pro.datatype == 4) Log("\tdatatype is double.\n");
                 else Log("\tdatatype is not support.\n");
                 //
-                if (img_pro.ndatabit == 0) Log("\tdatabit is 16bits.\n");
-                else if (img_pro.ndatabit == 1) Log("\tdatabit is 14bits.\n");
-                else if (img_pro.ndatabit == 2) Log("\tdatabit is 12bits.\n");
-                else if (img_pro.ndatabit == 3) Log("\tdatabit is 8bits.\n");
+                if (img_pro.ndatabit == 0)
+                {
+                    _bits = 16;
+                    Log("\tdatabit is 16bits.\n");
+                }
+                else if (img_pro.ndatabit == 1) {
+                    _bits = 14;
+                    Log("\tdatabit is 14bits.\n"); }
+                else if (img_pro.ndatabit == 2) {
+                    _bits = 12;
+                    Log("\tdatabit is 12bits.\n");
+                }
+                else if (img_pro.ndatabit == 3) {
+                    _bits = 8;
+                    Log("\tdatabit is 8bits.\n");
+                } 
                 else Log("\tdatatype is unsigned char.\n");
                 //
                 if (img_pro.nendian == 0) Log("\tdata is little endian.\n");
@@ -1546,7 +1563,7 @@ namespace Detector
             }
             else
             {
-                Log("HBI_GetImageProperty failed!\n");
+                ShowMessage("HBI_GetImageProperty failed!\n",true);
             }
         }
 

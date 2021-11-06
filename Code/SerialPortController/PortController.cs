@@ -418,8 +418,8 @@ namespace SerialPortController
                 _serialPort.Write(command.ToArray(), 0, command.Count);
             }
             _isNeedFeeddingDog = false;
-#if DEBUG000
-            Console.WriteLine("Send-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + message);
+#if DEBUG
+         //   Console.WriteLine("Send-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + message);
 #endif
         }
         /// <summary>

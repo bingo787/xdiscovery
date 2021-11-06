@@ -208,6 +208,8 @@ namespace NV.DetectionPlatform.UCtrls
 
                     res += "探测器已连接。";
                 }
+
+                _detector.btnGetImageProperty();
                 _detector.ShowMessage(res, true);
                 IsConnected = true;
                 _detector.StartCorrectOffsetTemplate();
@@ -220,7 +222,7 @@ namespace NV.DetectionPlatform.UCtrls
                 this.Log("探测器初始化失败");
             }
 
-          btnGetSdkVer_Click();
+
         }
         /// <summary>
         /// 后台实时采集显示
