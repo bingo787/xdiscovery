@@ -257,15 +257,11 @@ namespace NV.DetectionPlatform.UCtrls
         public  ushort[] UnsharpenMask( DicomViewer dic, int amount, int radius, int threshold)
         {
 
-
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-
-            
-            if (radius % 2 == 0) radius += 1;
-            int window_level = 0, window_width = 0;
-            dic.GetWindowLevel(ref  window_width,ref  window_level);
-
-           // CMessageBox.Show("获取到的WL和WW " + window_level.ToString() + " "  + window_width.ToString());
+            ProgressDialog dia = new ProgressDialog("锐化图像");
+            dia.Summary = "正在处理图像，请稍候...";
+            dia.MaxValue = 100;
+            dia.CurValue = 50;
+            dia.CanCancel = false;
 
             //1 读取照片数据
             dic.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
@@ -290,6 +286,7 @@ namespace NV.DetectionPlatform.UCtrls
             int imgH = height;
             int imgW = width;
 
+<<<<<<< HEAD
          //   CMessageBox.Show(String.Format("{0},{1},{2},{3},{4},{5},{6},{7}",iLow,iHigh,dFactor,imgH,imgW,radius,amount,threshold));
 
 
@@ -299,6 +296,12 @@ namespace NV.DetectionPlatform.UCtrls
             // for (int x = 0; x < imgH; x++)
             {
                 for (int y = 0; y < imgW; y++)
+=======
+                dia.CurValue = 90;
+                ushort point_value = 0;
+                /// 处理图像
+                System.Threading.Tasks.Parallel.For(0, imgH, x =>
+>>>>>>> 9287427 (修改锐化进度的初始值)
                 {
                     point_value = src.At<ushort>(x, y);
 
