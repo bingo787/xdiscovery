@@ -673,29 +673,7 @@ namespace Detector
 
         private void Log(string p)
         {
-
-
              System.Console.WriteLine(p);
-        //    try
-        //    {
-        //        //如果日志目录不存在,则创建该目录
-        //        if (!Directory.Exists(logPath))
-        //        {
-        //            Directory.CreateDirectory(logPath);
-        //        }
-        //        string logFileName = logPath + "\\调试日志_" + DateTime.Now.ToString("yyyy_MM_dd_HH") + ".log";
-        //        StringBuilder logContents = new StringBuilder();
-        //        logContents.AppendLine(p);
-        //        //当天的日志文件不存在则新建，否则追加内容
-        //        StreamWriter sw = new StreamWriter(logFileName, true, System.Text.Encoding.Unicode);
-        //        sw.Write(DateTime.Now.ToString("yyyy-MM-dd hh:mm:sss") + " " + logContents.ToString());
-        //        sw.Flush();
-        //        sw.Close();
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw new System.InvalidOperationException("调试日志写入异常");
-        //    }
          }
         /// <summary>
         /// 设置探测器采集时间、增益
