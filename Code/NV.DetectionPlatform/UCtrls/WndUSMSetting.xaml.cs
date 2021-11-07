@@ -262,6 +262,7 @@ namespace NV.DetectionPlatform.UCtrls
             ProgressDialog dia = new ProgressDialog("锐化图像");
             dia.Summary = "正在处理图像，请稍候...";
             dia.MaxValue = 100;
+            dia.CurValue = 50;
             dia.CanCancel = false;
 
             //1 读取照片数据
@@ -292,7 +293,7 @@ namespace NV.DetectionPlatform.UCtrls
                 int imgH = height;
                 int imgW = width;
 
-                dia.CurValue = 50;
+                dia.CurValue = 90;
                 ushort point_value = 0;
                 /// 处理图像
                 System.Threading.Tasks.Parallel.For(0, imgH, x =>
