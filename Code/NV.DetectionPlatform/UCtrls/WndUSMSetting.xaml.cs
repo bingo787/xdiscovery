@@ -18,6 +18,7 @@ using NV.DRF.Core.Global;
 using SerialPortController;
 using NV.DRF.Core.Ctrl;
 using OpenCvSharp;
+using NV.Infrastructure.UICommon;
 
 namespace NV.DetectionPlatform.UCtrls
 {
@@ -44,7 +45,7 @@ namespace NV.DetectionPlatform.UCtrls
         /// 获取或设置属性
         /// </summary>
 
-      
+
         public USMParam CurrentParam
         {
             get
@@ -97,7 +98,7 @@ namespace NV.DetectionPlatform.UCtrls
             }
         }
 
-        public  void InitUSM()
+        public void InitUSM()
         {
 
             using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
@@ -220,15 +221,15 @@ namespace NV.DetectionPlatform.UCtrls
         }
         */
 
-        static ushort SaturateCast( double a)
+        static ushort SaturateCast(double a)
         {
             if (a >= ushort.MaxValue)
             {
-                return  ushort.MaxValue;
+                return ushort.MaxValue;
             }
             else if (a < 0)
             {
-               return  ushort.MinValue;
+                return ushort.MinValue;
             }
             return (ushort)a;
         }
@@ -246,7 +247,8 @@ namespace NV.DetectionPlatform.UCtrls
             return (ushort)a;
         }
 
-        public ushort[] UnsharpenMask(DicomViewer dic) {
+        public ushort[] UnsharpenMask(DicomViewer dic)
+        {
 
             int amount = (int)CurrentParam.Amount;
             int radius = (int)CurrentParam.Radius;
@@ -254,125 +256,122 @@ namespace NV.DetectionPlatform.UCtrls
             return UnsharpenMask(dic, amount, radius, threshold);
         }
 
-        public  ushort[] UnsharpenMask( DicomViewer dic, int amount, int radius, int threshold)
+        public ushort[] UnsharpenMask(DicomViewer dic, int amount, int radius, int threshold)
         {
 
-
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-
-            
-            if (radius % 2 == 0) radius += 1;
-            int window_level = 0, window_width = 0;
-            dic.GetWindowLevel(ref  window_width,ref  window_level);
-
-           // CMessageBox.Show("获取到的WL和WW " + window_level.ToString() + " "  + window_width.ToString());
+            ProgressDialog dia = new ProgressDialog("锐化图像");
+            dia.Summary = "正在处理图像，请稍候...";
+            dia.MaxValue = 100;
+            dia.CanCancel = false;
 
             //1 读取照片数据
             dic.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
 
             ushort[] data = new ushort[width * height];
-            dic.GetImageData(out width, out height, out bits, out data[0], ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
-
-
-            Mat src = new Mat(height, width, MatType.CV_16UC1, data);
-
-            //   2 高斯模糊
-            Mat temp = new Mat();
-            Cv2.GaussianBlur(src, temp, new OpenCvSharp.Size(radius, radius), 0, 0);
-
-            double iLow = (2 * window_level - window_width) / 2.0 + 0.5;
-            double iHigh = (2 * window_level + window_width) / 2.0 + 0.5;
-            double dFactor = 65535.0 / (double)(iHigh - iLow);
-
-          //  SaturateCast(ref iLow);
-          //  SaturateCast(ref iHigh);
-
-            int imgH = height;
-            int imgW = width;
-
-         //   CMessageBox.Show(String.Format("{0},{1},{2},{3},{4},{5},{6},{7}",iLow,iHigh,dFactor,imgH,imgW,radius,amount,threshold));
-
-
-            ushort point_value = 0;
-            /// 处理图像
-            System.Threading.Tasks.Parallel.For(0, imgH, x =>
-            // for (int x = 0; x < imgH; x++)
-            {
-                for (int y = 0; y < imgW; y++)
-                {
-                    point_value = src.At<ushort>(x, y);
-
-                    int value = src.At<ushort>(x, y) - temp.At<ushort>(x, y);
-                    if (Math.Abs(value) > threshold)
-                    {
-                        int new_value = src.At<ushort>(x, y) + (int)(amount * value / 100);
-
-                        new_value = SaturateCast(new_value);
-
-                        IntPtr pos = src.Ptr(x, y);
-                        unsafe
-                        {
-                            *(ushort*)pos = (ushort)new_value;
-                        }
-                    }
-
-
-
-                    if (src.At<ushort>(x, y) < iLow)
-                    {
-                        IntPtr pos = src.Ptr(x, y);
-                        unsafe
-                        {
-                            *(ushort*)pos = ushort.MinValue;
-                        }
-                    }
-                    else if (src.At<ushort>(x, y) > iHigh)
-                    {
-                        IntPtr pos = src.Ptr(x, y);
-                        unsafe
-                        {
-                            *(ushort*)pos = ushort.MaxValue;
-                        }
-                    }
-                    else
-                    {
-                        ushort new_value = src.At<ushort>(x, y);
-                        new_value = (ushort)((new_value - (iLow - 0.5)) * dFactor);
-
-                        if (new_value >= ushort.MaxValue)
-                        {
-                            new_value = ushort.MaxValue;
-                        }
-                        else if (new_value < 0)
-                        {
-                            new_value = ushort.MinValue;
-                        }
-
-
-                        IntPtr pos = src.Ptr(x, y);
-                        unsafe
-                        {
-                            *(ushort*)pos = new_value;
-                        }
-                    }
-                }
-            });
-
-
-            watch.Stop();
-            CMessageBox.Show("处理完毕，耗时: " + watch.Elapsed.Seconds.ToString() + " 秒");
-            // 显示
             ushort[] result = new ushort[width * height];
-            // for (int i = 0; i < height; i++)
-            System.Threading.Tasks.Parallel.For(0, height, i =>
+
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
+            System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
             {
-                for (int j = 0; j < width; j++)
+
+                //    var watch = System.Diagnostics.Stopwatch.StartNew();
+                if (radius % 2 == 0) radius += 1;
+                int window_level = 0, window_width = 0;
+                dic.GetWindowLevel(ref window_width, ref window_level);
+                dic.GetImageData(out width, out height, out bits, out data[0], ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
+                Mat src = new Mat(height, width, MatType.CV_16UC1, data);
+
+                //   2 高斯模糊
+                Mat temp = new Mat();
+                Cv2.GaussianBlur(src, temp, new OpenCvSharp.Size(radius, radius), 0, 0);
+
+                double iLow = (2 * window_level - window_width) / 2.0 + 0.5;
+                double iHigh = (2 * window_level + window_width) / 2.0 + 0.5;
+                double dFactor = 65535.0 / (double)(iHigh - iLow);
+
+                int imgH = height;
+                int imgW = width;
+
+                dia.CurValue = 50;
+                ushort point_value = 0;
+                /// 处理图像
+                System.Threading.Tasks.Parallel.For(0, imgH, x =>
                 {
-                    result[i * width + j] = src.At<ushort>(i, j);
-                }
-            });
+                    for (int y = 0; y < imgW; y++)
+                    {
+                        point_value = src.At<ushort>(x, y);
+
+                        int value = src.At<ushort>(x, y) - temp.At<ushort>(x, y);
+                        if (Math.Abs(value) > threshold)
+                        {
+                            int new_value = src.At<ushort>(x, y) + (int)(amount * value / 100);
+
+                            new_value = SaturateCast(new_value);
+
+                            IntPtr pos = src.Ptr(x, y);
+                            unsafe
+                            {
+                                *(ushort*)pos = (ushort)new_value;
+                            }
+                        }
 
 
+
+                        if (src.At<ushort>(x, y) < iLow)
+                        {
+                            IntPtr pos = src.Ptr(x, y);
+                            unsafe
+                            {
+                                *(ushort*)pos = ushort.MinValue;
+                            }
+                        }
+                        else if (src.At<ushort>(x, y) > iHigh)
+                        {
+                            IntPtr pos = src.Ptr(x, y);
+                            unsafe
+                            {
+                                *(ushort*)pos = ushort.MaxValue;
+                            }
+                        }
+                        else
+                        {
+                            ushort new_value = src.At<ushort>(x, y);
+                            new_value = (ushort)((new_value - (iLow - 0.5)) * dFactor);
+
+                            if (new_value >= ushort.MaxValue)
+                            {
+                                new_value = ushort.MaxValue;
+                            }
+                            else if (new_value < 0)
+                            {
+                                new_value = ushort.MinValue;
+                            }
+
+
+                            IntPtr pos = src.Ptr(x, y);
+                            unsafe
+                            {
+                                *(ushort*)pos = new_value;
+                            }
+                        }
+                    }
+                });
+
+                result = new ushort[width * height];
+                System.Threading.Tasks.Parallel.For(0, height, i =>
+                {
+                    for (int j = 0; j < width; j++)
+                    {
+                        result[i * width + j] = src.At<ushort>(i, j);
+                    }
+                });
+
+                dia.CurValue = 100;
+                dia.Summary = "处理完毕";
+                dia.Close();
+            }));
+
+            System.Console.WriteLine("锐化处理结束！");
             return result;
 
 
@@ -512,7 +511,7 @@ namespace NV.DetectionPlatform.UCtrls
             }
         }
 
-#region INotifyPropertyChanged 成员
+        #region INotifyPropertyChanged 成员
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged(string p)
@@ -542,7 +541,7 @@ namespace NV.DetectionPlatform.UCtrls
             //    int threshold = (int)sldrThreshold.Value;
             //     System.Console.WriteLine(String.Format("SetUSM  {0},{1},{2}", amount,radius,threshold));
             //    UsmParamChangedEvent(amount,radius,threshold);
-               
+
             //}
 
         }

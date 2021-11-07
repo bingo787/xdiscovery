@@ -947,15 +947,13 @@ namespace NV.DetectionPlatform.UCtrls
                     if (ipUC.CurrentDv.HasImage) {
 
                         // ipUC.CurrentDv.SharpImage(1);
-                     
-                  
-                     ushort[] result=  usmSetting.UnsharpenMask(ipUC.CurrentDv);
-                        //1 读取照片数据
-                     ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
-                     ipUC.PutData(width, height, bits, result, true);
-                     ipUC.AutoWindowLevel();
-                     ipUC.CurrentDv.Invalidate();
-                     
+
+                        ushort[] result = usmSetting.UnsharpenMask(ipUC.CurrentDv);
+                        ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+                        ipUC.CurrentDv.PutImageData(width, height, bits, ref result[0]);     
+                        ipUC.AutoWindowLevel();
+                        ipUC.CurrentDv.Invalidate();
+                      
                     }
 
                     break;
