@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigHelper.cs" />
+    <Compile Include="MC110PortController.cs" />
     <Compile Include="PortController.cs" />
     <Compile Include="PortPara.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
