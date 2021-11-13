@@ -127,12 +127,9 @@ namespace NV.DetectionPlatform.UCtrls
             if (ipUC != null && ipUC.CurrentDv != null)
             {
                 ushort[] result = usmSetting.UnsharpenMask(ipUC.CurrentDv,amount,radius,threshold);
-
                 ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
-                ipUC.PutData(width, height, bits, result, true);
-                ipUC.AutoWindowLevel();
-                ipUC.CurrentDv.Invalidate();
-
+                ipUC.CurrentDv.PutImageData(width, height, bits, ref result[0]);
+                ipUC.CurrentDv.RefreshImage();
             }
         }
         void usmSetting_Close() {
@@ -947,12 +944,10 @@ namespace NV.DetectionPlatform.UCtrls
                     if (ipUC.CurrentDv.HasImage) {
 
                         // ipUC.CurrentDv.SharpImage(1);
-
                         ushort[] result = usmSetting.UnsharpenMask(ipUC.CurrentDv);
                         ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
                         ipUC.CurrentDv.PutImageData(width, height, bits, ref result[0]);     
-                        ipUC.AutoWindowLevel();
-                        ipUC.CurrentDv.Invalidate();
+                        ipUC.CurrentDv.RefreshImage();
                       
                     }
 
