@@ -247,7 +247,7 @@ namespace NV.DetectionPlatform.UCtrls
             return (ushort)a;
         }
 
-        public ushort[] UnsharpenMask(DicomViewer dic)
+        public ushort[] UnsharpenMask( DicomViewer dic)
         {
 
             int amount = (int)CurrentParam.Amount;
