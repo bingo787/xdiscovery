@@ -246,7 +246,8 @@ namespace NV.DetectionPlatform.UCtrls
             return (ushort)a;
         }
 
-        public ushort[] UnsharpenMask(DicomViewer dic) {
+        public ushort[] UnsharpenMask( DicomViewer dic)
+        {
 
             int amount = (int)CurrentParam.Amount;
             int radius = (int)CurrentParam.Radius;
@@ -286,22 +287,10 @@ namespace NV.DetectionPlatform.UCtrls
             int imgH = height;
             int imgW = width;
 
-<<<<<<< HEAD
-         //   CMessageBox.Show(String.Format("{0},{1},{2},{3},{4},{5},{6},{7}",iLow,iHigh,dFactor,imgH,imgW,radius,amount,threshold));
-
-
-            ushort point_value = 0;
-            /// 处理图像
-            System.Threading.Tasks.Parallel.For(0, imgH, x =>
-            // for (int x = 0; x < imgH; x++)
-            {
-                for (int y = 0; y < imgW; y++)
-=======
                 dia.CurValue = 90;
                 ushort point_value = 0;
                 /// 处理图像
                 System.Threading.Tasks.Parallel.For(0, imgH, x =>
->>>>>>> 9287427 (修改锐化进度的初始值)
                 {
                     point_value = src.At<ushort>(x, y);
 
