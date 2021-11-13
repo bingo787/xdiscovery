@@ -27,7 +27,7 @@ namespace NV.DetectionPlatform
         /// <summary>
         /// 高压控制器
         /// </summary>
-        public static SerialPortControler_RS232PROTOCOL ControlSystem = SerialPortControler_RS232PROTOCOL.Instance;
+        public static SerialPortControler_RS232PROTOCOL_MC110 ControlSystem = SerialPortControler_RS232PROTOCOL_MC110.Instance;
         /// <summary>
         /// 采集控件
         /// </summary>
