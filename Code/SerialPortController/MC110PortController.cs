@@ -37,53 +37,29 @@ namespace SerialPortController
 
         private SerialPortControler_RS232PROTOCOL_MC110()
         {
-            InitilizeHVStatusThread();
+             InitilizeHVStatusThread();
         }
         /// <summary>
         /// 初始化高压XRay曝光状态
         /// </summary>
         private void InitilizeHVStatusThread()
         {
-/*
             new Thread(new ThreadStart(delegate
             {
-                int tag = 1;
                 while (_running)
                 {
                     try
                     {
                         if (_serialPort == null)
                             continue;
-
-                        //检查是否需要喂狗
-                        if (!_isNeedFeeddingDog)
-                        {
-                            _isNeedFeeddingDog = true;
-                            Thread.Sleep(350 * 1);
-                            continue;
-                        }
-
                         GetHVStatus();
                         Thread.Sleep(200);
 
-                        tag++;
-                        tag = tag % 2;
-
-                        if (tag == 0)
-                        {
-                            Thread.Sleep(150 * 1);
-                            SendCommand("MON");
-                        }
-                        else if (tag == 1)
-                        {
-                            Thread.Sleep(150 * 1);
-                            SendCommand("FLT");
-                        }
                     }
                     catch { }
                 }
             })) { IsBackground = true }.Start();
-*/
+
         }
 #region 字段
         SerialPort _serialPort;
@@ -168,14 +144,14 @@ namespace SerialPortController
                     {
                         string m = messes[i];
 #if DEBUG
-                        Console.WriteLine("ReceiveMid-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + m);
+                      //  Console.WriteLine("ReceiveMid-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + m);
 #endif
                         if (m.StartsWith(StartTag.ToString()))
                         {
                             string mes = messes[i].TrimStart(StartTag);
                             ReceivedMessage(mes);
 #if DEBUG
-                            Console.WriteLine("ReceiveCommand-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + mes);
+                      //      Console.WriteLine("ReceiveCommand-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + mes);
 #endif
 
                         }
@@ -235,7 +211,7 @@ namespace SerialPortController
         public event BoolValueChangedDelegate WatchDogOnChanged;
         public event ReportedHandler StateReported;
         private string _lastCommand;
-        private bool _isNeedFeeddingDog = true;
+        private bool _isNeedFeeddingDog = false;
         /// <summary>
         /// 收到命令答复
         /// </summary>
@@ -253,13 +229,19 @@ namespace SerialPortController
 
             string RES_OK = "[ERR:0]";
 
+            Console.WriteLine("ReceivedMessage(remove tag)" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + message + " lastComand:" + _lastCommand);
+
+
             if (_lastCommand.StartsWith("EH:") && message == RES_OK)
             {
                 isXRayEnabled = _lastCommand[3] == '1';
-                XRayEnableChanged(isXRayEnabled);
+                if (Connected != null) {
+                    Connected();
+                }
+                System.Console.WriteLine("Enable Heater Success!!");
                 _lastCommand = string.Empty;
             }
-            else if (_lastCommand == "EP" && message == RES_OK )
+            else if (_lastCommand.StartsWith("EP:") && message == RES_OK )
             {
                 isXrayOn = _lastCommand[3] == '1';
                 if (XRayOnChanged != null)
@@ -288,35 +270,37 @@ namespace SerialPortController
                     if (VoltageSettingChanged != null)
                         VoltageSettingChanged(kv);
                 }
+                _lastCommand = string.Empty;
             }
             else if (_lastCommand.StartsWith("SPWR:") && message == RES_OK)
             {
                 arg = _lastCommand.TrimStart("SPWR:".ToArray());
                 if (int.TryParse(arg, out temp))
                 {
-                    double power = temp*0.1;
-                    if (PowerSettingChanged != null)
-                        PowerSettingChanged(power);
+                    uint uA = (uint)(temp*0.1 / (setKvValue*1000) * 0.001 * 0.001);
+                    if (CurrentSettingChanged != null)
+                        CurrentSettingChanged(uA);  //uA
                 }
+                _lastCommand = string.Empty;
             }
-            else if (message.StartsWith("HV:") && message.EndsWith(RES_OK))
+            else if (message.StartsWith("AV:") && message.EndsWith(RES_OK))
             {
-                //< H V: 4 5 0 0[E R R: 0] >   单位mv
-                arg = message.TrimStart("HV:".ToArray()).Replace(RES_OK, "");
+                //< A V: 4 5 0 0[E R R: 0] >   单位V
+                arg = message.TrimStart("AV:".ToArray()).Replace(RES_OK, "");
                 if (int.TryParse(arg, out temp))
                 {
-                    int value = temp;
+                    double value = (double)temp*0.001;
                     if (VoltageChanged != null)
                         VoltageChanged(value);
                 }
             }
-            else if (message.StartsWith("HC:") && message.EndsWith(RES_OK))
+            else if (message.StartsWith("TC:") && message.EndsWith(RES_OK))
             {
-                //< HC: 4 5 0 0[E R R: 0] > 单位ma
-                arg = message.TrimStart("HC:".ToArray()).Replace(RES_OK, "");
+                //< HC: 4 5 0 0[E R R: 0] > 单位uA
+                arg = message.TrimStart("TC:".ToArray()).Replace(RES_OK, "");
                 if (int.TryParse(arg, out temp))
                 {
-                    uint value = (uint)temp;
+                    uint value = (uint)((double)temp*0.01);
                     if (CurrentChanged != null)
                         CurrentChanged(value);
                 }
@@ -332,13 +316,18 @@ namespace SerialPortController
                         TemperatureChanged(value);
                 }
             }
-            else {
+            else if (message.StartsWith("[ERR:")){
                 /// 错误码
 
-                string error_code = "1";
-                string error_message = "";
+                string error_code = message.Split(':').ElementAt(1).TrimEnd(']');
+                string error_message = string.Empty;
                 switch (error_code) {
-                    case "0": error_message = "No Error"; break;
+                    case "0": {
+                           // error_message = "No Error";
+                            if (FaultCleared != null) {
+                                FaultCleared();
+                            }
+                        } break;
                     case "1": error_message = "Invalid Command"; break;
                     case "2": error_message = "Exceed Maximum Specified Value"; break;
                     case "3": error_message = "Exceed Voltage Limit"; break;
@@ -395,7 +384,7 @@ namespace SerialPortController
             }
             _isNeedFeeddingDog = false;
 #if DEBUG
-         //   Console.WriteLine("Send-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + message);
+           Console.WriteLine("Send-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + message);
 #endif
         }
         /// <summary>
@@ -538,28 +527,27 @@ namespace SerialPortController
         {
             new Thread(new ThreadStart(delegate
             {
-               
-                XRayOn();
                 System.Threading.Thread.Sleep(200);
                 SetKV(kv);
                 System.Threading.Thread.Sleep(200);
                 SetCurrent(ua);
                 System.Threading.Thread.Sleep(200);
-                SendCommand("EP:1");
+                XRayOn();
 
             })).Start();
 
         }
+        bool isStabled = false;
         public void XRayOn()
         {
-
-            SendCommand("EH:1");
-            SendCommand("EP:1");
+           SendCommand("EP:1");
         }
         public void XRayOff()
         {
-            SendCommand("EH:0");
+            SendCommand("EP:0");
         }
+
+        private double setKvValue = 0.0f;
         /// <summary>
         /// 设置KV
         /// </summary>
@@ -568,7 +556,8 @@ namespace SerialPortController
         {
             if (kv < 0)
                 kv = 0;
-            SendCommand("SAV:" + ((int)(kv * 1000)).ToString("D4"));
+            setKvValue = kv;
+            SendCommand("SAV:" + ((int)(kv * 1000)).ToString());
         }
         /// <summary>
         /// 设置电流
@@ -578,17 +567,18 @@ namespace SerialPortController
         {
             if (ua < 0)
                 ua = 0;
-            SendCommand("CP" + ua.ToString("D4"));
+            int power = (int)((double)ua * 0.01 * setKvValue);
+            SetPower(power);
         }
         /// <summary>
         /// 设置功率
         /// </summary>
         /// <param name="p"></param>
-        public void SetPower(double p)
+        public void SetPower(int p)
         {
             if (p < 0)
                 p = 0;
-            SendCommand("SPWR:" + p.ToString("D4"));
+            SendCommand("SPWR:" + p.ToString());
         }
 
         /// <summary>
@@ -616,9 +606,12 @@ namespace SerialPortController
              Get Temperature    <GTMP:x     x=1,2> °C 
              Enable Bootloader Mode   <EBLM> Get Error Report     <GRPT> 
              */
-            SendCommand("GHVM");
-            SendCommand("GHAM");
-            SendCommand("GTMP1");
+            SendCommand("GAVM");
+            Thread.Sleep(200);
+            SendCommand("GTCM");
+            Thread.Sleep(200);
+            SendCommand("GTMP:1");
+            Thread.Sleep(200);
         }
 
         public void Connect()
@@ -631,12 +624,9 @@ namespace SerialPortController
             3.Enable the Heater - < EH:1 >
             4.Enable the Power Supply - < EP:1 >
             */
-          //  SendCommand("SAV:10");
-          //  SendCommand("SPWR:10");
-          //  SendCommand("SAV:10");
-          //  SendCommand("SAV:10");
-
-
+           
+           SendCommand("EH:1");
+           Thread.Sleep(10*1000);
 
         }
     }
