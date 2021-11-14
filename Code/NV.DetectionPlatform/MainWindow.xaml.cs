@@ -238,9 +238,6 @@ namespace NV.DetectionPlatform
                 lblHVConn.Content = "--";
 
                 ControlSystem.Connect();
-                Thread.Sleep(150);
-
-                ControlSystem.SendCommand("MON");
             }
             catch (Exception)
             {

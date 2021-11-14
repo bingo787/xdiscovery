@@ -610,6 +610,8 @@ namespace SerialPortController
         public void Connect()
         {
             SendCommand("FREV");
+            Thread.Sleep(150);
+            SendCommand("MON");
         }
     }
 }
