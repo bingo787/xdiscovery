@@ -779,7 +779,7 @@ namespace Detector
             }
             else
             {
-                ShowMessage("Do pre-offset template success!",true);
+                ShowMessage("Do pre-offset template success!",false);
             }
 
         }
