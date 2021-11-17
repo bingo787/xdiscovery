@@ -59,6 +59,7 @@ namespace SerialPortController
                         }
 
                         GetHVStatus();
+                        Thread.Sleep(200);
 
                         tag++;
                         tag = tag % 2;
