@@ -48,7 +48,7 @@ namespace SerialPortController
                         if (_serialPort == null)
                             continue;
                         GetHVStatus();
-                        Thread.Sleep(5000);
+                        Thread.Sleep(200);
 
                     }
                     catch { }
