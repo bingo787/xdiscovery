@@ -1124,6 +1124,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
             }
         }
         "Release"
@@ -1131,7 +1139,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\XrayStudioSetup.msi"
+        "OutputFilename" = "8:Release\\XrayStudioMSetup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -1190,7 +1198,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform.Entity, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
+            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform.Entity, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_01AF848B0760DE21005830C621C7673D"
@@ -1625,7 +1633,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Detector, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
+            "AssemblyAsmDisplayName" = "8:Detector, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_334E314086AC116DB4620354ECF06D5E"
@@ -2127,7 +2135,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform.Entity, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
+            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform.Entity, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_5D6EE7D1FAC24108B3EC99B5BC1C60BE"
@@ -3119,7 +3127,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Detector, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
+            "AssemblyAsmDisplayName" = "8:Detector, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_BCF56A88EA4E41A3A1C3A5116881B34E"
@@ -4205,10 +4213,10 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Xray Studio"
-        "ProductCode" = "8:{3DCE6FB6-0695-48B0-910B-194DE4AC563D}"
+        "ProductName" = "8:XrayStudioM"
+        "ProductCode" = "8:{943A68B2-F27A-4BDE-B45F-29692521FE63}"
         "PackageCode" = "8:{474DBEFF-EC6B-4CBD-B63B-CD852C0E337F}"
-        "UpgradeCode" = "8:{0DD09F27-5302-4C02-9B1C-43B791B528BF}"
+        "UpgradeCode" = "8:{A5679C59-3EC6-41A4-A6D4-7A915783E8B8}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
