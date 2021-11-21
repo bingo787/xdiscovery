@@ -209,12 +209,14 @@ namespace NV.DetectionPlatform.UCtrls
                     _detector.HBUpdateCorrectEnable();
 
                     res += "探测器已连接。";
-                }
+                    IsConnected = true;
 
-                _detector.btnGetImageProperty();
+                }              
                 _detector.ShowMessage(res, true);
-                IsConnected = true;
-                _detector.StartCorrectOffsetTemplate();
+                if (IsConnected) {
+                    _detector.btnGetImageProperty();
+                 //   _detector.StartCorrectOffsetTemplate();
+                }
             }
             else
             {
