@@ -2379,7 +2379,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform, Version=1.2.2021.1121, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_71E77F9F93D84AF7A335C4FFF7FB80CA"
@@ -4214,15 +4214,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:XrayStudioM"
-        "ProductCode" = "8:{943A68B2-F27A-4BDE-B45F-29692521FE63}"
-        "PackageCode" = "8:{474DBEFF-EC6B-4CBD-B63B-CD852C0E337F}"
+        "ProductCode" = "8:{F6CFED34-7B35-4908-AD81-1A59199804E0}"
+        "PackageCode" = "8:{CA1D786E-EABE-4137-A954-A6741D77B536}"
         "UpgradeCode" = "8:{A5679C59-3EC6-41A4-A6D4-7A915783E8B8}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.2.0"
         "Manufacturer" = "8:RAYON"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
