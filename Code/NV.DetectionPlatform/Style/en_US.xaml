@@ -131,6 +131,7 @@
     <sys:String x:Key="BubbleSave">Save</sys:String>
     <sys:String x:Key="BubbleClose">Close</sys:String>
 	<sys:String x:Key="BubbleApply">Apply</sys:String>
+    <sys:String x:Key="BubbleBack">Cancel</sys:String>
     <sys:String x:Key="OffsetCorType">OffsetCorType:</sys:String>
     <sys:String x:Key="GainCorType">GainCorType:</sys:String>
     <sys:String x:Key="DefectCorType">DefectCorType:</sys:String>

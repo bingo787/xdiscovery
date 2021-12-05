@@ -119,107 +119,7 @@ namespace NV.DetectionPlatform.UCtrls
             }
         }
 
-        /*
-        public static void UnsharpenMask(ref NV.DRF.Core.Ctrl.Film film, USMParam param) {
 
-            int amount = (int)param.Amount;
-            int radius = (int)param.Radius;
-            int threshold = (int)param.Threshold;
-
-
-            if (radius % 2 == 0)
-            {
-                radius += 1;
-            }
-            string p = (string.Format("amount:{0} radius:{1} threshold:{2}", amount, radius, threshold));
-            CMessageBox.Show(p);
-
-
-
-            //1 读取照片数据
-            film.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
-
-            // CMessageBox.Show(string.Format("width:{0} height:{1} bits:{2}", width, height, bits));
-
-            ushort[] data = new ushort[width * height];
-            film.CurrentDv.GetImageData(out width, out height, out bits, out data[0], ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
-            Mat src = new Mat(height, width, MatType.CV_16UC1, data);
-
-
-            //   2 高斯模糊
-
-            Mat dst = new Mat();
-            Cv2.GaussianBlur(src, dst, new OpenCvSharp.Size(radius, radius), 0, 0);
-
-
-            for (int h = 0; h < height; ++h)
-            {
-                for (int w = 0; w < width; ++w)
-                {
-
-                    int bValue = src.At<Vec3b>(h, w)[0] - dst.At<Vec3b>(h, w)[0];
-                    //    int gValue =src.At<Vec3b>(h, w)[1] - dst.At<Vec3b>(h, w)[1];
-                    //   int rValue =src.At<Vec3b>(h, w)[2] - dst.At<Vec3b>(h, w)[2];
-                    if (Math.Abs(bValue) > threshold)
-                    {
-                        bValue = src.At<Vec3b>(h, w)[0] + amount * bValue / 100;
-                        if (bValue > 255)
-                            bValue = 255;
-                        else if (bValue < 0)
-                            bValue = 0;
-                        //  dst.At<Vec3b>(h, w)[0] = bValue;
-                        IntPtr pos = dst.Ptr(h, w, 0);
-                        unsafe {
-                            *(ushort*)pos = (ushort)bValue;
-                        }
-
-
-                    }
-#if THRChannel
-                    if (Math.Abs(gValue) > threshold)
-                    {
-                        gValue =src.At<Vec3b>(h, w)[1] + amount * gValue / 100;
-                        if (gValue > 255)
-                            gValue = 255;
-                        else if (gValue < 0)
-                            gValue = 0;
-                        IntPtr pos = dst.Ptr(h, w);
-                        unsafe
-                        {
-                            *(ushort*)pos = (ushort)bValue;
-                        }
-                    }
-                    if (Math.Abs(rValue) > threshold)
-                    {
-                        rValue =src.At<Vec3b>(h, w)[2] + amount * rValue / 100;
-                        if (rValue > 255)
-                            rValue = 255;
-                        else if (rValue < 0)
-                            rValue = 0;
-                        IntPtr pos = dst.Ptr(h, w);
-                        unsafe
-                        {
-                            *(ushort*)pos = (ushort)bValue;
-                        }
-                    }
-#endif
-                }
-            }
-
-
-            ushort[] result = new ushort[width * height];
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < width; j++)
-                {
-                    result[i * width + j] = dst.At<ushort>(i, j);
-                }
-            }
-            film.PutData(width, height, bits, result, true);
-
-
-        }
-        */
 
         static ushort SaturateCast(double a)
         {
@@ -525,8 +425,12 @@ namespace NV.DetectionPlatform.UCtrls
         #endregion
         public delegate void UsmParamChanged(int amount, int radius, int threshold);
         public event UsmParamChanged UsmParamChangedEvent;
+
         public delegate void CloseEventHandler();
         public event CloseEventHandler CloseSettingEvent;
+
+        public delegate void BackEventHandler();
+        public event BackEventHandler BackSettingEvent;
 
 
         private void SetUSM(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -561,6 +465,15 @@ namespace NV.DetectionPlatform.UCtrls
                 int threshold = (int)sldrThreshold.Value;
                 System.Console.WriteLine(String.Format("SetUSM  {0},{1},{2}", amount, radius, threshold));
                 UsmParamChangedEvent(amount, radius, threshold);
+
+            }
+        }
+
+        private void Back(object sender, RoutedEventArgs e)
+        {
+            if (BackSettingEvent != null)
+            {
+                BackSettingEvent();
 
             }
         }

@@ -56,11 +56,12 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
                         <Button Content="{DynamicResource BubbleSave}" VerticalAlignment="Stretch" Margin="3" Click="Save"/>
                         <Button Content="{DynamicResource BubbleApply}" Grid.Column="1" VerticalAlignment="Stretch" Margin="3" Click="Apply"/>
-                        
+                        <Button Content="{DynamicResource BubbleBack}" Grid.Column="2" VerticalAlignment="Stretch" Margin="3" Click="Back"/>
                     </Grid>
                 </Grid>
 

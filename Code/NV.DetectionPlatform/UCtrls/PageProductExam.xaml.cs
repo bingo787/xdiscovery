@@ -72,6 +72,7 @@ namespace NV.DetectionPlatform.UCtrls
 
          
            usmSetting.UsmParamChangedEvent += usmSetting_UsmParamChanged;
+           usmSetting.BackSettingEvent += usmSetting_Back;
            usmSetting.CloseSettingEvent += usmSetting_Close;
 
 
@@ -124,20 +125,23 @@ namespace NV.DetectionPlatform.UCtrls
 
         void usmSetting_UsmParamChanged(int amount, int radius, int threshold)
         {
-            
+             
             if (ipUC != null && ipUC.CurrentDv != null)
             {
-                if (usmTryCount != 0) {
-                    ipUC.CurrentDv.BackFromStack();
-                }
+                ipUC.CurrentDv.SaveToStack();
                 ushort[] result = usmSetting.UnsharpenMask(ipUC.CurrentDv,amount,radius,threshold);
                 ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
                 ipUC.CurrentDv.PutImageData(width, height, bits, ref result[0]);
                 ipUC.CurrentDv.RefreshImage();
-                usmTryCount += 1;
             }
         }
         void usmSetting_Close() {
+        }
+
+        void usmSetting_Back()
+        {
+            ipUC.CurrentDv.BackFromStack();
+            ApplyConfigWL(true);     
         }
 
         /// <summary>
@@ -1011,6 +1015,7 @@ namespace NV.DetectionPlatform.UCtrls
                     break;
                 case "Back":
                     ipUC.CurrentDv.BackFromStack();
+                    ApplyConfigWL(true);
                     break;
                 default:
                     break;
@@ -1419,16 +1424,16 @@ namespace NV.DetectionPlatform.UCtrls
             wnd.ShowDialog();
         }
 
-        private int usmTryCount = 0;
+
         private void OpenUSMSetting(object sender, MouseButtonEventArgs e)
         {
             usmSetting = new WndUSMSetting();
             usmSetting.Left = SystemParameters.PrimaryScreenWidth - usmSetting.Width - 20;
             usmSetting.Top = SystemParameters.PrimaryScreenHeight - usmSetting.Height - 60;
 
-            usmTryCount = 0;
-            ipUC.CurrentDv.SaveToStack();
             usmSetting.UsmParamChangedEvent += usmSetting_UsmParamChanged;
+            usmSetting.BackSettingEvent += usmSetting_Back;
+            
             usmSetting.ShowDialog();
         }
 
