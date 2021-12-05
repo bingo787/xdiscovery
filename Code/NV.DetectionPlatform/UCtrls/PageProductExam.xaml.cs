@@ -211,16 +211,16 @@ namespace NV.DetectionPlatform.UCtrls
                     _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
                     _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
                     _detector.HBUpdateCorrectEnable();
-
+                    _detector.btnGetImageProperty();
+                    if (offsettemplate == 1)
+                    {
+                        _detector.StartCorrectOffsetTemplate();
+                    }
                     res += "探测器已连接。";
                     IsConnected = true;
-
                 }              
                 _detector.ShowMessage(res, true);
-                if (IsConnected) {
-                    _detector.btnGetImageProperty();
-                 //   _detector.StartCorrectOffsetTemplate();
-                }
+
             }
             else
             {
