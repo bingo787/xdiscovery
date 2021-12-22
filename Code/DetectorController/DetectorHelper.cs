@@ -195,6 +195,34 @@ namespace Detector
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+
+        public bool StartSingleShot() {
+            _imageBuffer.Clear();
+            _multiFramesOverlayBuffer.Clear();
+            count = 0;
+            FPD_AQC_MODE stMode = new FPD_AQC_MODE();
+            stMode.aqc_mode = EnumIMAGE_ACQ_MODE.STATIC_ACQ_DEFAULT_MODE;
+            stMode.nLiveMode = 2;     // 1-固件做offset模板并上图；2-只上图；3-固件做只做offset模板。
+            stMode.ndiscard = 0;     // 这里默认位0，不抛弃前几帧图像
+            stMode.nframeid = 0;     // 这里默认位0
+            stMode.nframesum = 1;    // 0-表示一直采图，20表示采集20帧图结束。这里默认采集20帧
+            stMode.ngroupno = 0;     // 这里默认位0
+            stMode.bSimpleGT = false; // 表示不启用快速生成模板
+            stMode.isOverLap = false; // 不要做叠加
+            stMode.nGrayBit = emGRAY_MODE.GRAY_16;
+            int ret = HBI_FPD_DLL.HBI_SingleAcquisition(HBI_FPD_DLL._handel, stMode);
+
+            if (ret != 0)
+            {
+                ShowMessage("StartSingleShot Failed——" + GetLastError(ret), true);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         public bool StartAcq()
         {
 
