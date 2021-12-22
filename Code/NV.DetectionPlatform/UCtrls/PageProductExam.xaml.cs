@@ -153,21 +153,7 @@ namespace NV.DetectionPlatform.UCtrls
             _playAcqImage.Start();
         }
 
-        // 获取SDK版本信息
-        private void btnGetSdkVer_Click()
-        {
-            System.Text.StringBuilder strSDKVerionbuf = new System.Text.StringBuilder(64);//
-            int _ret = HBI_FPD_DLL.HBI_GetSDKVerion(HBI_FPD_DLL._handel, strSDKVerionbuf);
-            if (0 != _ret)
-            {
-                _detector.ShowMessage("HBI_GetSDKVerion failed!",true);
-                return;
-            }
-            else
-            {
-                _detector.ShowMessage("HBI_GetSDKVerion:" + strSDKVerionbuf.ToString());
-            }
-        }
+       
 
         /// <summary>
         /// 初始化探测器
@@ -212,12 +198,15 @@ namespace NV.DetectionPlatform.UCtrls
                     _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
                     _detector.HBUpdateCorrectEnable();
                     _detector.btnGetImageProperty();
+                    _detector.btnGetSdkVer_Click();
+                    _detector.btnFirmwareVer_Click();
                     if (offsettemplate == 1)
                     {
                         _detector.StartCorrectOffsetTemplate();
                     }
                     res += "探测器已连接。";
                     IsConnected = true;
+
                 }              
                 _detector.ShowMessage(res, true);
 
@@ -334,28 +323,27 @@ namespace NV.DetectionPlatform.UCtrls
 
             DicomViewer.Current.ClearImage();
 
-            if (type == ExamType.Spot)
+            if (type == ExamType.Spot )
             {
                 _detector.IsStored = true;
                 _detector.MaxFrames = 1;
+                // 设置曝光时间
+                _curExpTime = (int)(Global.CurrentParam.Time * 1000);
             }
             else if (type == ExamType.Expose)
             {
                 _detector.IsStored = isStored;
                 _detector.MaxFrames = 0; // 连续获取
+                _detector.HB_SetAqcSpanTime((int)(1000.0 / Global.CurrentParam.Fps));// 设置采集帧率 ： 1，2，4
+
             }
             else if (type == ExamType.MultiEnergyAvg)
             {
                 _detector.IsStored = true;
-                _detector.MaxFrames = maxCount;
+                _detector.MaxFrames = 0;
             }
 
-            // 设置采集帧率 ： 1，2，4
-            _detector.HB_SetAqcSpanTime((int)(1000.0 / Global.CurrentParam.Fps));
-           
-            // 设置曝光时间
-            int timeOfExposure = (int)(Global.CurrentParam.Time * 1000);
-            _detector.HBI_SetSinglePrepareTime(timeOfExposure);
+
             _imageCount = 0;
 
             MainWindow.ControlSystem.XRayOn();
@@ -365,7 +353,21 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 Thread.Sleep(_detector.Delay);
 
-                if (_detector.StartAcq())
+
+                bool ret = false;
+                if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
+                {
+                    _detector.HB_SetTriggerMode(1);
+                    ret = _detector.StartSingleShot(_curExpTime);
+                }
+                else
+                {
+                    // 动态模式下，需要设置为连续
+                    _detector.HB_SetTriggerMode(7);
+                    ret = _detector.StartAcq();
+                }
+
+                if (ret)
                 {
                     if (Global.MainWindow != null)
                     {
@@ -380,9 +382,11 @@ namespace NV.DetectionPlatform.UCtrls
                             double kv = (double)Global.CurrentParam.KV - i * stepKv;
                             int ua = (int)Global.CurrentParam.UA - i * stepUA;
                             MainWindow.ControlSystem.SetKV(kv);
-                            Thread.Sleep(75);
+                            Thread.Sleep(150);
                             MainWindow.ControlSystem.SetCurrent(ua);
-                            Thread.Sleep(75);
+                            Thread.Sleep(150);
+                            System.Console.WriteLine("MultiEnergyAvg count{0}, kv {1}, ua {2}", i, kv, ua);
+
                         }
 
                         this.Dispatcher.BeginInvoke(new Action(() =>

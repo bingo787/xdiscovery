@@ -138,7 +138,7 @@ namespace SerialPortController
                 int len = port.Read(buffer, 0, buffer.Length);
                 string message = ASCIIEncoding.ASCII.GetString(buffer, 0, len);
 #if DEBUG
-                Console.WriteLine("Receive-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + message);
+               // Console.WriteLine("Receive-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + message);
 #endif
                 if (!string.IsNullOrEmpty(_lastMessage))
                     message = _lastMessage + message;
@@ -160,14 +160,14 @@ namespace SerialPortController
                     {
                         string m = messes[i];
 #if DEBUG
-                        Console.WriteLine("ReceiveMid-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + m);
+                       // Console.WriteLine("ReceiveMid-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + m);
 #endif
                         if (m.StartsWith(StartTag.ToString()))
                         {
                             string mes = messes[i].TrimStart(StartTag);
                             ReceivedMessage(mes);
 #if DEBUG
-                            Console.WriteLine("ReceiveCommand-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + mes);
+                        //    Console.WriteLine("ReceiveCommand-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + mes);
 #endif
 
                         }
