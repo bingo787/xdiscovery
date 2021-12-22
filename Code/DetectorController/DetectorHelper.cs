@@ -196,21 +196,35 @@ namespace Detector
         /// <param name="sender"></param>
         /// <param name="e"></param>
 
-        public bool StartSingleShot() {
+        public bool StartSingleShot(int prepare_time) {
+            ShowMessage("StartSingleShot");
             _imageBuffer.Clear();
             _multiFramesOverlayBuffer.Clear();
             count = 0;
+            int  ret = -1;
+
+            HBI_SetSinglePrepareTime(prepare_time);
+
+            ret = HBI_FPD_DLL.HBI_Prepare(HBI_FPD_DLL._handel);
+            if (ret != 0)
+            {
+                ShowMessage("HBI_Prepare Failed——" + GetLastError(ret), true);
+                return false;
+            }
+
             FPD_AQC_MODE stMode = new FPD_AQC_MODE();
             stMode.aqc_mode = EnumIMAGE_ACQ_MODE.STATIC_ACQ_DEFAULT_MODE;
             stMode.nLiveMode = 2;     // 1-固件做offset模板并上图；2-只上图；3-固件做只做offset模板。
             stMode.ndiscard = 0;     // 这里默认位0，不抛弃前几帧图像
             stMode.nframeid = 0;     // 这里默认位0
-            stMode.nframesum = 1;    // 0-表示一直采图，20表示采集20帧图结束。这里默认采集20帧
+            stMode.nframesum = 0;    // 0-表示一直采图，20表示采集20帧图结束。这里默认采集20帧
             stMode.ngroupno = 0;     // 这里默认位0
             stMode.bSimpleGT = false; // 表示不启用快速生成模板
             stMode.isOverLap = false; // 不要做叠加
             stMode.nGrayBit = emGRAY_MODE.GRAY_16;
-            int ret = HBI_FPD_DLL.HBI_SingleAcquisition(HBI_FPD_DLL._handel, stMode);
+            ret = HBI_FPD_DLL.HBI_SingleAcquisition(HBI_FPD_DLL._handel, stMode);
+
+       
 
             if (ret != 0)
             {
@@ -260,7 +274,7 @@ namespace Detector
         /// <returns></returns>
         public bool StopAcq()
         {
-            ShowMessage("DEBUG ");
+            ShowMessage("StopAcq ");
 
             int ret = HBI_FPD_DLL.HBI_StopAcquisition(HBI_FPD_DLL._handel);
             if (ret !=0)
@@ -347,7 +361,7 @@ namespace Detector
 
         private void ConnBreak()
         {
-            ShowMessage("DEBUG ");
+            ShowMessage("ConnBreak ");
             if (ConnBreakEvent != null)
             {
                 ConnBreakEvent();
@@ -393,7 +407,7 @@ namespace Detector
                 }
             }
 
-            ShowMessage("================== RecieveImageAndEvent cmd " + cmd.ToString());
+            ShowMessage("================== RecieveImageAndEvent cmd 0X" + cmd.ToString("X2"));
 
 
             switch (command)
@@ -462,7 +476,7 @@ namespace Detector
                         ShowMessage("image size " + len.ToString() + " nID " + nID.ToString());
                         NV_ImageInfo _ImageInfo;
                         
-                        //todo: ZQB 像素格式这里需要确认下是怎么搞？
+                        
                         _ImageInfo.iPixelType = 0;	///< 像素格式[没有用到]
                         _ImageInfo.iSizeX = _imageWidth;             ///< 图像宽
                         _ImageInfo.iSizeY = _imageHeight;             ///< 图像高
@@ -481,6 +495,12 @@ namespace Detector
                         _ImageInfo.iBlockId = 0;          ///< GVSP协议的block-id
 
                         ShowImageCallBack(0, _ImageInfo);
+
+                        // 单张的时候，需要在这里停止
+                        if (command == eCallbackEventCommType.ECALLBACK_TYPE_SINGLE_IMAGE) {
+                            AcqMaxFrameEvent();
+                        }
+                      
 
 
                     }
@@ -608,7 +628,7 @@ namespace Detector
         /// <param name="image"></param>
         private unsafe void ReceiveImage(byte wnd, NV_ImageInfo image)
         {
-            ShowMessage("DEBUG ");
+            ShowMessage("ReceiveImage ");
             if (image.iMissingPackets > 0)
             {
                 return;//跳过丢包图像 
@@ -653,7 +673,7 @@ namespace Detector
         /// <param name="buffer"></param>
         private void MultiFramesOverlay(ref ushort[] buffer)
         {
-            ShowMessage("DEBUG ");
+            ShowMessage("MultiFramesOverlay ");
             _multiFramesOverlayBuffer.Enqueue(buffer);
             //低于降噪帧数直接返回
             if (_multiFramesOverlayBuffer.Count < MultiFramesOverlayNumber)
@@ -704,7 +724,7 @@ namespace Detector
         /// </summary>
         private void AcqMaxFrame()
         {
-            ShowMessage("DEBUG ");
+            ShowMessage("AcqMaxFrame ");
             
             if (AcqMaxFramesEvent != null)
             {
@@ -1374,20 +1394,33 @@ namespace Detector
             ShowMessage("采集帧率(ms) " + p.ToString() );
             int ret = HBI_FPD_DLL.HBI_SetAcqSpanTm(HBI_FPD_DLL._handel,p);
 
-            return true;
-          //  int ret = HBI_FPD_DLL.HBI_SetSinglePrepareTime(HBI_FPD_DLL._handel, p);
-          //  return ret == 0;
-            // return NVDentalSDK.NV_SetExpTime(p) == NV_StatusCodes.NV_SC_SUCCESS;
+            if (ret != 0)
+            {
+                ShowMessage("HB_SetAqcSpanTime Failed——" + GetLastError(ret), true);
+                return false;
+            }
+            else
+            {
+                return true;
+
+            }
+
         }
 
         public bool HBI_SetSinglePrepareTime(int p)
         {
-          //  int ret = HBI_FPD_DLL.HBI_SetSinglePrepareTime(HBI_FPD_DLL._handel, p);
+            int ret = HBI_FPD_DLL.HBI_SetSinglePrepareTime(HBI_FPD_DLL._handel, p);
+            ShowMessage("HBI_SetSinglePrepareTime " + p.ToString() + " ms" );
+            if (ret != 0)
+            {
+                ShowMessage("HBI_SetSinglePrepareTime Failed——" + GetLastError(ret), true);
+                return false;
+            }
+            else {
+                return true;
 
-            return true;
-            //  int ret = HBI_FPD_DLL.HBI_SetSinglePrepareTime(HBI_FPD_DLL._handel, p);
-            //  return ret == 0;
-            // return NVDentalSDK.NV_SetExpTime(p) == NV_StatusCodes.NV_SC_SUCCESS;
+            }
+           
         }
 
 
@@ -1457,10 +1490,17 @@ namespace Detector
 
         public bool HB_SetTriggerMode(int t) {
 
-          //  ShowMessage("DEBUG  固定设置触发模式为 7");
+            ShowMessage("设置触发模式为  " + t.ToString());
             // 这里出发模式只能选择07
             int ret = HBI_FPD_DLL.HBI_UpdateTriggerMode(HBI_FPD_DLL._handel,t);
-            return ret == 0;    
+            if (ret != 0)
+            {
+                ShowMessage("  HBI_UpdateTriggerMode Failed", true);
+                return false;
+            }
+            else {
+                return true;
+            }
         }
 
         //public bool NV_SetAcquisitionMode(NV_AcquisitionMode nV_AcquisitionMode)
@@ -1577,7 +1617,36 @@ namespace Detector
             UInt32 value = (UInt32)m_pLastRegCfg.m_SysCfgInfo.m_unSelfDumpingSpanTime;
 
         }
-
+        // 获取SDK版本信息
+        public void btnGetSdkVer_Click()
+        {
+            System.Text.StringBuilder strSDKVerionbuf = new System.Text.StringBuilder(64);//
+            int _ret = HBI_FPD_DLL.HBI_GetSDKVerion(HBI_FPD_DLL._handel, strSDKVerionbuf);
+            if (0 != _ret)
+            {
+                Log("HBI_GetSDKVerion failed!");
+                return;
+            }
+            else
+            {
+                Log("HBI_GetSDKVerion:" + strSDKVerionbuf.ToString());
+            }
+        }
+        // 获取固件版本信息
+        public void btnFirmwareVer_Click()
+        {
+            System.Text.StringBuilder strFirmwareVersion = new System.Text.StringBuilder(64);//
+            int _ret = HBI_FPD_DLL.HBI_GetFirmareVerion(HBI_FPD_DLL._handel, strFirmwareVersion);
+            if (0 != _ret)
+            {
+                Log("HBI_GetFirmareVerion failed!");
+                return;
+            }
+            else
+            {
+                Log("HBI_GetFirmareVerion:" + strFirmwareVersion.ToString());
+            }
+        }
         // 获取图像数据信息
         private void btnImageProperty_Click()
         {
