@@ -214,14 +214,14 @@ namespace Detector
 
             FPD_AQC_MODE stMode = new FPD_AQC_MODE();
             stMode.aqc_mode = EnumIMAGE_ACQ_MODE.STATIC_ACQ_DEFAULT_MODE;
-            stMode.nLiveMode = 2;     // 1-固件做offset模板并上图；2-只上图；3-固件做只做offset模板。
+          //  stMode.nLiveMode = 2;     // 1-固件做offset模板并上图；2-只上图；3-固件做只做offset模板。
             stMode.ndiscard = 0;     // 这里默认位0，不抛弃前几帧图像
             stMode.nframeid = 0;     // 这里默认位0
             stMode.nframesum = 0;    // 0-表示一直采图，20表示采集20帧图结束。这里默认采集20帧
             stMode.ngroupno = 0;     // 这里默认位0
-            stMode.bSimpleGT = false; // 表示不启用快速生成模板
-            stMode.isOverLap = false; // 不要做叠加
-            stMode.nGrayBit = emGRAY_MODE.GRAY_16;
+          //  stMode.bSimpleGT = false; // 表示不启用快速生成模板
+          //  stMode.isOverLap = false; // 不要做叠加
+          //  stMode.nGrayBit = emGRAY_MODE.GRAY_16;
             ret = HBI_FPD_DLL.HBI_SingleAcquisition(HBI_FPD_DLL._handel, stMode);
 
        
@@ -328,8 +328,61 @@ namespace Detector
         public int MaxFrames = 0;
 
         public static USER_CALLBACK_HANDLE_ENVENT HBIEventCallback;
-      //  public static USER_CALLBACK_HANDLE_PROCESS HBIProcessCallback;
+        //  public static USER_CALLBACK_HANDLE_PROCESS HBIProcessCallback;
 
+        // 获取图像数据信息
+        public void btnGetImageProperty()
+        {
+
+
+            Log("get Image property begin!\n");
+            IMAGE_PROPERTY img_pro = new IMAGE_PROPERTY();
+            int ret = HBI_FPD_DLL.HBI_GetImageProperty(HBI_FPD_DLL._handel, ref img_pro);
+            if (ret == 0)
+            {
+                _detectorHeight = img_pro.nheight;
+                _detectorWidth = img_pro.nwidth;
+                _imageHeight = _detectorHeight;
+                _imageWidth = _detectorWidth;
+                Log(string.Format("HBI_GetImageProperty:width={0},hight={1}\n", img_pro.nwidth, img_pro.nheight));
+                //
+                if (img_pro.datatype == 0) Log("\tdatatype is unsigned char.\n");
+                else if (img_pro.datatype == 1) Log("\tdatatype is char.\n");
+                else if (img_pro.datatype == 2) Log("\tdatatype is unsigned short.\n");
+                else if (img_pro.datatype == 3) Log("\tdatatype is float.\n");
+                else if (img_pro.datatype == 4) Log("\tdatatype is double.\n");
+                else Log("\tdatatype is not support.\n");
+                //
+                if (img_pro.ndatabit == 0)
+                {
+                    _bits = 16;
+                    Log("\tdatabit is 16bits.\n");
+                }
+                else if (img_pro.ndatabit == 1)
+                {
+                    _bits = 14;
+                    Log("\tdatabit is 14bits.\n");
+                }
+                else if (img_pro.ndatabit == 2)
+                {
+                    _bits = 12;
+                    Log("\tdatabit is 12bits.\n");
+                }
+                else if (img_pro.ndatabit == 3)
+                {
+                    _bits = 8;
+                    Log("\tdatabit is 8bits.\n");
+                }
+                else Log("\tdatatype is unsigned char.\n");
+                //
+                if (img_pro.nendian == 0) Log("\tdata is little endian.\n");
+                else Log("\tdata is bigger endian.\n");
+            }
+            else
+            {
+                ShowMessage("HBI_GetImageProperty failed!\n", true);
+            }
+        }
 
         /// <summary>
         /// 初始化探测器
@@ -862,23 +915,18 @@ namespace Detector
         public void StartCorrectOffsetTemplate()
         {
             count = 0;
+ 
 
-          //  m_stMode.aqc_mode = EnumIMAGE_ACQ_MODE.DYNAMIC_DEFECT_ACQ_MODE;
-          ////  m_stMode.bSimpleGT = true;
-          ////  m_stMode.nLiveMode = 3;
-          //  bOffsetTemplateOk = false;
-          //  //
-          //  enumTemplateType = EnumGENERATE_TEMPLATE_TYPE.OFFSET_TEMPLATE;
-          //  int ret = HBI_FPD_DLL.HBI_GenerateTemplateEx(HBI_FPD_DLL._handel, enumTemplateType);
-          //  if (ret != 0)
-          //  {
-          //      ShowMessage("HBI_GenerateTemplateEx failed!" + ret.ToString(), true);
-          //      return;
-          //  }
-          //  else
-          //  {
-          //      ShowMessage("Do pre-offset template success!",true);
-          //  }
+            int ret = HBI_FPD_DLL.HBI_ImmediateGenerateTemplate(HBI_FPD_DLL._handel, EnumIMAGE_ACQ_MODE.OFFSET_TEMPLATE_MODE);
+            if (ret != 0)
+            {
+                ShowMessage("HBI_ImmediateGenerateTemplate failed!" + ret.ToString(), true);
+                return;
+            }
+            else
+            {
+                ShowMessage("Do pre-offset template success!");
+            }
 
         }
         /// <summary>
@@ -1409,7 +1457,7 @@ namespace Detector
 
         public bool HBI_SetSinglePrepareTime(int p)
         {
-            int ret = HBI_FPD_DLL.HBI_SetSinglePrepareTime(HBI_FPD_DLL._handel, p);
+            int ret = HBI_FPD_DLL.HBI_SetPreAcqTm(HBI_FPD_DLL._handel, p);
             ShowMessage("HBI_SetSinglePrepareTime " + p.ToString() + " ms" );
             if (ret != 0)
             {

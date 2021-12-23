@@ -379,6 +379,29 @@ namespace Detector
         [DllImport("HBI_FPD.dll", EntryPoint = "HBI_GetPreAcqTm", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_GetPreAcqTm(IntPtr handle, ref int outtime);
 
+        /*********************************************************
+* 编    号: No087
+* 函 数 名: HBI_ImmediateGenerateTemplate
+* 功能描述: 一键生成模板
+* 参数说明:
+		In: void *handle - 句柄(无符号指针)
+		    EnumIMAGE_ACQ_MODE _mode - 生成模板类型
+				OFFSET_TEMPLATE_MODE    连续采集一组暗场图 - offset
+				GAIN_TEMPLATE_MODE      连续采集一组亮场图 - gain
+				DEFECT_ACQ_GROUP1,      连续采集一组亮场图 - defect group1
+	            DEFECT_ACQ_GROUP2,      连续采集一组亮场图 - defect group2
+	            DEFECT_ACQ_AND_TEMPLATE 连续采集一组亮场图 - defect group3 and generate template
+			int bprevew - 是否生成preview模板，1-生成，0-不生成
+		Out: 无
+* 返 回 值：int
+		0   - 成功
+		非0 - 失败
+* 备    注:
+*********************************************************/
+        [DllImport("HBI_FPD.dll", EntryPoint = "HBI_ImmediateGenerateTemplate", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int  HBI_ImmediateGenerateTemplate(IntPtr handle,  EnumIMAGE_ACQ_MODE _mode, int bprevew = 0);
+
+
         ////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////
         //// 其他接口类似,用户根据需求添加
@@ -432,7 +455,14 @@ namespace Detector
         DYNAMIC_ACQ_BRIGHT_MODE,                 // 创建Gain模板-连续采集亮场图
         STATIC_ACQ_BRIGHT_MODE,                  // 创建Gain模板-单帧采集亮场图
         STATIC_DEFECT_ACQ_MODE,                  // 创建Defect模板-单帧采集亮场图
-        DYNAMIC_DEFECT_ACQ_MODE                  // 创建Defect模板-连续采集亮场图
+        DYNAMIC_DEFECT_ACQ_MODE,                 // 创建Defect模板-连续采集亮场图
+
+            // ADD BY MHYANG 20201013
+        OFFSET_TEMPLATE_MODE,           // 连续采集一组暗场图 - offset 
+        GAIN_TEMPLATE_MODE,             // 连续采集一组亮场图 - gain
+        DEFECT_ACQ_GROUP1,              // 连续采集一组亮场图 - defect group1
+        DEFECT_ACQ_GROUP2,              // 连续采集一组亮场图 - defect group2
+        DEFECT_ACQ_AND_TEMPLATE         // 连续采集一组亮场图 - defect group3 and generate template
     };
     // Notice: After Each Member Variables, show Variables enum , 
     // before '-' is variables' value, after '-' is the meaning of the value;

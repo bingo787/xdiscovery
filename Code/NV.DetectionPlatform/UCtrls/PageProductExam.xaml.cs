@@ -167,7 +167,7 @@ namespace NV.DetectionPlatform.UCtrls
 
                 string autoOffset = Data.IsAutoPreOffset ? "1" : "0";
                 // 连接是否做固件offset模板，1-做offset模板，其他不做
-                int offsettemplate = 0;
+                int offsettemplate = 1; // 默认做
                 if (autoOffset == "1")
                     offsettemplate = 1;
 
@@ -204,7 +204,7 @@ namespace NV.DetectionPlatform.UCtrls
                 }              
                 _detector.ShowMessage(res, true);
                 IsConnected = true;
-                _detector.StartCorrectOffsetTemplate();
+
             }
             else
             {
@@ -214,7 +214,7 @@ namespace NV.DetectionPlatform.UCtrls
                 this.Log("探测器初始化失败");
             }
 
-          btnGetSdkVer_Click();
+          //btnGetSdkVer_Click();
         }
         /// <summary>
         /// 后台实时采集显示
