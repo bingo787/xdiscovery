@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ConcatPictureParam xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <左图A点坐标X>720</左图A点坐标X>
+  <左图A点坐标Y>0</左图A点坐标Y>
+  <左图B点坐标X>1470</左图B点坐标X>
+  <左图B点坐标Y>0</左图B点坐标Y>
+  <右图A点坐标X>1680</右图A点坐标X>
+  <右图A点坐标Y>0</右图A点坐标Y>
+  <右图B点坐标X>2380</右图B点坐标X>
+  <右图B点坐标Y>0</右图B点坐标Y>
+</ConcatPictureParam>

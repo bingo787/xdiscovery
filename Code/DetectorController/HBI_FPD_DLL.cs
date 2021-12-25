@@ -358,8 +358,8 @@ namespace Detector
 		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_GetAcqSpanTm", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
-        public static extern int HBI_GetAcqSpanTm(IntPtr handle, ref int time);
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_GetLiveAcquisitionTime", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int HBI_GetLiveAcquisitionTime(IntPtr handle, ref int time);
 
         /*********************************************************
         * 函 数 名: HBI_SetSinglePrepareTime
