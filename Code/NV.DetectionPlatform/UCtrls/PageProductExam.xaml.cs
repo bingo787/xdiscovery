@@ -226,27 +226,19 @@ namespace NV.DetectionPlatform.UCtrls
             int clear = 0;
             while (_running)
             {
-
                 clear++;
-                
                 if (_detector.PlayBuffer.Count > 0)
                 {
                     ushort[] data = _detector.PlayBuffer.Dequeue();
                     ushort W = (ushort)_detector.ImageWidth;
                     ushort H = (ushort)_detector.ImageHeight;
                     ushort Bits = (ushort)_detector.Bits;
- 
-
                     _imageCount++;
                     this.Dispatcher.Invoke(new Action(() =>
                     {
                        if (IsAcqing)
                         {
-                               
                             ipUC.PutData(W,H ,Bits,data, true);
-                            ApplyConfigWL(true);
-                            ipUC.CurrentDv.Invalidate();
-
                         }
                             
                         if (_detector.PlayBuffer.Count > 90)
