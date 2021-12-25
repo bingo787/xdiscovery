@@ -362,6 +362,22 @@ namespace Detector
         public static extern int HBI_GetLiveAcquisitionTime(IntPtr handle, ref int time);
 
         /*********************************************************
+            * 编    号: No026
+            * 函 数 名: HBI_SetSelfDumpingTime
+            * 功能描述: 设置采集时间间隔(动态平板)
+            * 参数说明:
+		            In: void *handle - 句柄(无符号指针)
+			            int time - 间隔时间,单位是毫秒ms，>= 1000ms
+		            Out: 无
+            * 返 回 值：int
+		            0   - 成功
+		            非0 - 失败
+            * 备    注:
+    *********************************************************/
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_SetSelfDumpingTime", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int HBI_SetSelfDumpingTime(IntPtr handle, int time);
+
+        /*********************************************************
         * 函 数 名: HBI_SetSinglePrepareTime
         * 功能描述: 设置软触发单帧采集清空和采集之间的时间间隔
         * 参数说明:

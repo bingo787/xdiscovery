@@ -1430,11 +1430,11 @@ namespace Detector
         public bool HB_SetAqcSpanTime(int p)
         {
             ShowMessage("采集帧率(ms) " + p.ToString() );
-            int ret = HBI_FPD_DLL.HBI_SetLiveAcquisitionTime(HBI_FPD_DLL._handel,p);
+            int ret = HBI_FPD_DLL.HBI_SetSelfDumpingTime(HBI_FPD_DLL._handel,p);
 
             if (ret != 0)
             {
-                ShowMessage("HBI_SetLiveAcquisitionTime Failed——" + GetLastError(ret), true);
+                ShowMessage("HBI_SetSelfDumpingTime Failed——" + GetLastError(ret), true);
                 return false;
             }
             else
