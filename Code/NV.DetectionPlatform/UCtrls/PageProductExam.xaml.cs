@@ -179,7 +179,7 @@ namespace NV.DetectionPlatform.UCtrls
 
                 string local_ip = "192.168.10.20";
                 string remote_ip = "192.168.10.40";
-                int ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, remote_ip, 0x8081, local_ip, 0x8080);
+                int ret = HBI_FPD_DLL.HBI_ConnectDetectorJumbo(HBI_FPD_DLL._handel, remote_ip, 0x8081, local_ip, 0x8080, offsettemplate);
 
                 _detector.ShowMessage("local ip: " + local_ip + " <---> " + remote_ip);
 
@@ -191,7 +191,7 @@ namespace NV.DetectionPlatform.UCtrls
                 {
                     _detector.Delay = Data.Delay;
                     _detector.HB_SetBinningMode((byte)Data.BinningMode);
-                    _detector.HB_SetTriggerMode(7);
+                  //  _detector.HB_SetTriggerMode(7);
                     _detector.HB_SetGain((int)Data.Gain);
                     _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
                     _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
@@ -200,10 +200,7 @@ namespace NV.DetectionPlatform.UCtrls
                     _detector.btnGetImageProperty();
                     _detector.btnGetSdkVer_Click();
                     _detector.btnFirmwareVer_Click();
-                    if (offsettemplate == 1)
-                    {
-                        _detector.StartCorrectOffsetTemplate();
-                    }
+                  
                     res += "探测器已连接。";
                     IsConnected = true;
 
@@ -411,32 +408,30 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="e"></param>
         public void StopAcq(object sender, RoutedEventArgs e)
         {
-            MainWindow.ControlSystem.XRayOff();
-
-            if (IsAcqing)
+            bool ret = _detector.StopAcq();
+            if (IsAcqing && ret)
             {
-                if (_detector.StopAcq())
+                MainWindow.ControlSystem.XRayOff();
+                IsAcqing = false;
+
+                if (_curExpType == ExamType.MultiEnergyAvg)//多能合成
                 {
-                    IsAcqing = false;
-
-                    if (_curExpType == ExamType.MultiEnergyAvg)//多能合成
-                    {
-                        SaveMultiAvgFiles(_detector.ImageBuffer.ToList());
-                    }
-                    else if (_curExpType == ExamType.Spot)
-                    {
-                        SaveFiles(_detector.ImageBuffer.ToList());
-                    }
-                    else if (_curExpType == ExamType.Expose)
-                    {
-                        SaveFiles(_detector.ImageBuffer.ToList());
-                    }
-
-                    if (_curExpType == ExamType.MultiEnergyAvg)
-                        RecoverHVPara();
-
-                    _detector.ImageBuffer.Clear();
+                    SaveMultiAvgFiles(_detector.ImageBuffer.ToList());
                 }
+                else if (_curExpType == ExamType.Spot)
+                {
+                    SaveFiles(_detector.ImageBuffer.ToList());
+                }
+                else if (_curExpType == ExamType.Expose)
+                {
+                    SaveFiles(_detector.ImageBuffer.ToList());
+                }
+
+                if (_curExpType == ExamType.MultiEnergyAvg)
+                    RecoverHVPara();
+
+                _detector.ImageBuffer.Clear();
+
             }
         }
         /// <summary>
@@ -1176,6 +1171,7 @@ namespace NV.DetectionPlatform.UCtrls
                 }
                 catch (Exception ex)
                 {
+                    this.Log(ex.ToString());
                 }
             }
             int time = 12;

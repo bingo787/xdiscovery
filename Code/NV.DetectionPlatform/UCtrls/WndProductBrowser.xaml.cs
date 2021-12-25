@@ -431,6 +431,7 @@ namespace NV.DetectionPlatform.UCtrls
                 }
                 catch (Exception ex)
                 {
+                    this.Log(ex.ToString());
                 }
             }
         }

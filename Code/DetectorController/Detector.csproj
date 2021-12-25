@@ -99,7 +99,6 @@
   <ItemGroup>
     <Compile Include="DetectorHelper.cs" />
     <Compile Include="HBI_FPD_DLL.cs" />
-    <Compile Include="NVDentalSDKAPI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

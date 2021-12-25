@@ -60,8 +60,6 @@ namespace NV.DetectionPlatform
             Process.GetCurrentProcess().Kill();
         }
 
-        public System.Diagnostics.Stopwatch watchOnOff = new Stopwatch();
-        public int  onOffAccTime = 0;
        
         /// <summary>
         /// 双屏显示
@@ -307,6 +305,7 @@ namespace NV.DetectionPlatform
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
                 lblHV_Temperature.Content = arg.ToString("f2") + "℃";
+                this.Log("高压温度: " + lblHV_Temperature.Content.ToString());
             }));
         }
         /// <summary>
@@ -329,6 +328,7 @@ namespace NV.DetectionPlatform
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
                 lblHV_Cur.Content = arg + "uA";
+                this.Log("电流改变为: " + lblHV_Cur.Content.ToString());
             }));
         }
         /// <summary>
@@ -340,6 +340,7 @@ namespace NV.DetectionPlatform
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
                 lblHV_KV.Content = arg + "kV";
+                this.Log("电压改变为: " + lblHV_KV.Content.ToString());
             }));
         }
         /// <summary>
@@ -354,24 +355,13 @@ namespace NV.DetectionPlatform
                 {
                     lblHV_XRayState.Content = "XRay ON";
                     lblHV_XRayState.Foreground = Brushes.Yellow;
-                    if (!watchOnOff.IsRunning) {
-                        watchOnOff.Start();
-                        this.Log("打开X光源");
-                    }
-                  
+                    this.Log("打开X光源");
                 }
                 else
                 {
                     lblHV_XRayState.Content = "XRay OFF";
                     lblHV_XRayState.Foreground = _normalForeground;
-                    onOffAccTime += watchOnOff.Elapsed.Seconds;
-                    if (watchOnOff.IsRunning)
-                    {
-                        watchOnOff.Stop();
-                        this.Log("关闭X光源，累计使用时长(秒)：" + watchOnOff.Elapsed.Seconds.ToString());
-                    }
-                  
-
+                    this.Log("关闭X光源");
                 }
             }));
 

@@ -19,9 +19,6 @@ using System.Text;
 
 namespace Detector
 {
-
-
-
     public class HBI_FPD_DLL
     {
 
@@ -32,7 +29,6 @@ namespace Detector
         /// <returns></returns>
         public static string GetErrorMsgByCode(int code)
         {
-
             switch ((HBIRETCODE)code)
             {
                 case HBIRETCODE.HBI_SUCCSS: return "Success";
@@ -84,8 +80,8 @@ namespace Detector
 		            失败：NULL,成功：非空
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_Init", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
-        public static extern IntPtr HBI_Init();
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_Init", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern IntPtr HBI_Init(int fpd = 0);
 
         /*********************************************************
         * 函 数 名: HBI_Destroy
@@ -96,7 +92,7 @@ namespace Detector
         * 返 回 值：void
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_Destroy", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_Destroy", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern void HBI_Destroy(IntPtr handle);
 
         /*********************************************************
@@ -112,28 +108,39 @@ namespace Detector
                 非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_RegEventCallBackFun", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_RegEventCallBackFun", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_RegEventCallBackFun(IntPtr handle, USER_CALLBACK_HANDLE_ENVENT handleEventfun);
 
         /*********************************************************
-        * 函 数 名: HBI_ConnectDetector
-        * 功能描述: 建立连接
+        // 新增连接平板接口 
+        /*********************************************************
+        * 编    号: No003
+        * 函 数 名: HBI_ConnectDetectorUdp    - 有线标准UDP
+                    HBI_ConnectDetectorJumbo  - 有线标准UDP JUMBO
+			        HBI_ConnectDetectorWlan   - 有线标准UDP wireless
+        * 功能描述: 建立连接（支持以太网UDP协议）
         * 参数说明:
-                In: IntPtr handle - 句柄(无符号指针)
-                    String szRemoteIp - 平板IP地址,如192.168.10.40
-                    ushort remotePort - 平板端口,如32897(0x8081)
-                    String szlocalIp - 上位机地址,如192.168.10.20
-                    ushort localPort -上位机端口,如192.168.10.40
+		        In: void *handle - 句柄(无符号指针)
+			        char *szDetectorIp - 平板IP地址,如192.168.10.40
+			        unsigned short usDetectorPort - 平板端口,如32897(0x8081)
+			        char *szlocalIp - 上位机地址,如192.168.10.20
+			        unsigned short usLocalPort -上位机端口,如32896(0x8080)
 			        int doOffsetTemp - 非1:连接成功后固件不重新做offset模板
-							           1:连接成功后固件重新做offset模板
-                Out: 无
+							           1:连接成功后固件重新做pre-offset模板，矫正offset使能03即可生效
+		        Out: 无
         * 返 回 值：int
-                0   - 成功
-                非0 - 失败
+		        0   - 成功
+		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_ConnectDetector", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
-        public static extern int HBI_ConnectDetector(IntPtr handle, string szRemoteIp, ushort remotePort, string szlocalIp, ushort localPort, int doOffsetTemp = 0);
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_ConnectDetectorUdp", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int HBI_ConnectDetectorUdp(IntPtr handle, string szRemoteIp, ushort remotePort, string szlocalIp, ushort localPort, int doOffsetTemp = 0);
+
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_ConnectDetectorJumbo", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int HBI_ConnectDetectorJumbo(IntPtr handle, string szRemoteIp, ushort remotePort, string szlocalIp, ushort localPort, int doOffsetTemp = 0);
+
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_ConnectDetectorWlan", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int HBI_ConnectDetectorWlan(IntPtr handle, string szRemoteIp, ushort remotePort, string szlocalIp, ushort localPort, int doOffsetTemp = 0);
 
         /*********************************************************
         * 函 数 名: HBI_DisConnectDetector
@@ -146,7 +153,7 @@ namespace Detector
                     非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_DisConnectDetector", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_DisConnectDetector", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_DisConnectDetector(IntPtr handle);
 
         /*********************************************************
@@ -160,11 +167,11 @@ namespace Detector
 	        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_GetDevCfgInfo", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_GetDevCfgInfo", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_GetDevCfgInfo(IntPtr handle, ref RegCfgInfo pRegCfg);
 
         /*********************************************************
-        * 函 数 名: HBI_Prepare
+        * 函 数 名: HBI_SinglePrepare
         * 功能描述: 软触发，清空准备指令
         * 参数说明:
                 In: IntPtr handle - 句柄(无符号指针)
@@ -175,8 +182,8 @@ namespace Detector
         0   成功
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_Prepare", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
-        public static extern int HBI_Prepare(IntPtr handle);
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_SinglePrepare", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int HBI_SinglePrepare(IntPtr handle);
 
         /*********************************************************
         * 函 数 名: HBI_SingleAcquisition
@@ -190,7 +197,7 @@ namespace Detector
                 非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_SingleAcquisition", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_SingleAcquisition", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_SingleAcquisition(IntPtr handle, FPD_AQC_MODE _mode);
 
         /*********************************************************
@@ -205,7 +212,7 @@ namespace Detector
                 非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_LiveAcquisition", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_LiveAcquisition", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_LiveAcquisition(IntPtr handle, FPD_AQC_MODE _mode);
 
         /*********************************************************
@@ -219,7 +226,7 @@ namespace Detector
                 非0 - 失败
         * 备     注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_StopAcquisition", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_StopAcquisition", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_StopAcquisition(IntPtr handle);
 
         /*********************************************************
@@ -233,7 +240,7 @@ namespace Detector
 		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_GetImageProperty", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_GetImageProperty", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_GetImageProperty(IntPtr handle, ref IMAGE_PROPERTY img_pro);
 
         /*********************************************************
@@ -248,7 +255,7 @@ namespace Detector
                 非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_UpdateTriggerMode", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_UpdateTriggerMode", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_UpdateTriggerMode(IntPtr handle, int _triggerMode);
 
         /*********************************************************
@@ -264,7 +271,7 @@ namespace Detector
 		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_TriggerAndCorrectApplay", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_TriggerAndCorrectApplay", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_TriggerAndCorrectApplay(IntPtr handle, int _triggerMode, ref IMAGE_CORRECT_ENABLE pCorrect);
 
         /*********************************************************
@@ -279,7 +286,7 @@ namespace Detector
 		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_UpdateCorrectEnable", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_UpdateCorrectEnable", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_UpdateCorrectEnable(IntPtr handle, ref IMAGE_CORRECT_ENABLE pCorrect);
 
         /*********************************************************
@@ -294,7 +301,7 @@ namespace Detector
 		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_GetCorrectEnable", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_GetCorrectEnable", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_GetCorrectEnable(IntPtr handle, ref IMAGE_CORRECT_ENABLE pCorrect);
 
         /*********************************************************
@@ -308,7 +315,7 @@ namespace Detector
 		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_GetFirmareVerion", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_GetFirmareVerion", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_GetFirmareVerion(IntPtr handle, StringBuilder szFirmwareVer);
 
         /*********************************************************
@@ -322,7 +329,7 @@ namespace Detector
           非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_GetSDKVerion", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_GetSDKVerion", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_GetSDKVerion(IntPtr handle, StringBuilder szSDKVer);
 
         /*********************************************************
@@ -337,8 +344,8 @@ namespace Detector
 		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_SetAcqSpanTm", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
-        public static extern int HBI_SetAcqSpanTm(IntPtr handle, int time);
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_SetLiveAcquisitionTime", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int HBI_SetLiveAcquisitionTime(IntPtr handle, int time);
 
         /*********************************************************
         * 函 数 名: HBI_GetLiveAcquisitionTime
@@ -351,7 +358,7 @@ namespace Detector
 		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_GetAcqSpanTm", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_GetAcqSpanTm", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_GetAcqSpanTm(IntPtr handle, ref int time);
 
         /*********************************************************
@@ -367,7 +374,7 @@ namespace Detector
 		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_SetSinglePrepareTime", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_SetSinglePrepareTime", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_SetSinglePrepareTime(IntPtr handle, int intime);
 
         /*********************************************************
@@ -383,7 +390,7 @@ namespace Detector
 		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_GetSinglePrepareTime", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_GetSinglePrepareTime", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_GetSinglePrepareTime(IntPtr handle, ref int outtime);
 
         /*********************************************************
@@ -398,29 +405,31 @@ namespace Detector
                 非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_16UCConvertTo8UC", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_16UCConvertTo8UC", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_16UCConvertTo8UC(IntPtr handle, IntPtr imgbuff, ref int nbufflen);
 
         /*********************************************************
-        * 编    号: No041
-        * 函 数 名: HBI_GenerateTemplateEx
-        * 功能描述: 快速生成模板（集成开发）
+        * 编    号: No047
+        * 函 数 名: HBI_GenerateTemplate
+        * 功能描述: 快速生成模板
         * 参数说明:
 	        In: void *handle - 句柄(无符号指针)
-		        EnumGENERATE_TEMPLATE_TYPE templateType - 生成模板类型,见HbDllType.h。
+			        EnumIMAGE_ACQ_CMD _mode - 生成模板类型
+			        OFFSET_TEMPLATE_TYPE      连续采集一组暗场图 - Firmware PreOffset Template
+			        GAIN_TEMPLATE_TYPE        连续采集一组亮场图 - gain Template
+			        DEFECT_TEMPLATE_GROUP1,   连续采集一组亮场图 - defect group1
+			        DEFECT_TEMPLATE_GROUP2,   连续采集一组亮场图 - defect group2
+			        DEFECT_ACQ_AND_TEMPLATE,  连续采集一组亮场图 - defect group3 and generate template
+			        SOFTWARE_OFFSET_TEMPLATE  连续采集一组暗场图 - Software PreOffset Template
+		        int bprevew - 是否生成preview模板，1-生成，0-不生成
 	        Out: 无
         * 返 回 值：int
 	        0   - 成功
 	        非0 - 失败
         * 备    注:
-        * 1、OFFSET_TEMPLATE：生成暗场模板，注意球管关闭
-        * 2、GAIN_TEMPLATE：生成增益矫正模板，需要打开球管，调节好剂量开，始平板采集亮场图像并生成gain模板
-        * 3、DEFECT_TEMPLATE_GROUP1：生成坏点矫正模板，需要打开球管，调节好剂量，开始平板采集第1组亮场图像
-        * 4、DEFECT_TEMPLATE_GROUP2：生成坏点矫正模板，需要打开球管，调节好剂量，开始平板采集第2组亮场图像
-        * 5、DEFECT_TEMPLATE_GROUP3：生成坏点矫正模板，需要打开球管，调节好剂量，开始平板采集第3组亮场图像并生成defect模板
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_GenerateTemplateEx", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
-        public static extern int HBI_GenerateTemplateEx(IntPtr handle, EnumGENERATE_TEMPLATE_TYPE templateType);
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_GenerateTemplate", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int HBI_GenerateTemplate(IntPtr handle, EnumIMAGE_ACQ_CMD _mode, int bprevew = 0);
 
         /*********************************************************
         * 编    号: No006
@@ -436,12 +445,12 @@ namespace Detector
 		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_RegProgressCallBack", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_RegProgressCallBack", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_RegProgressCallBack(IntPtr handle, USER_CALLBACK_HANDLE_PROCESS handleStatusfun, IntPtr pContext);
 
         /*********************************************************
         * 编    号: No049
-        * 函 数 名: HBI_DownloadTemplateEx
+        * 函 数 名: HBI_DownloadTemplate
         * 功能描述: 下发gain和defect矫正模板
         * 参数说明:
             In: void *handle - 句柄(无符号指针)
@@ -452,8 +461,24 @@ namespace Detector
             非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_DownloadTemplateEx", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
-        public static extern int HBI_DownloadTemplateEx(IntPtr handle, emTFILE_MODE emfiletype);
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_DownloadTemplate", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int HBI_DownloadTemplate(IntPtr handle, DOWNLOAD_FILE emfiletype);
+
+        /*********************************************************
+        * 编    号: No070
+        * 函 数 名: HBI_DownloadTemplateByType
+        * 功能描述: 按照类型默认下载固定矫正模板文件
+        * 参数说明:
+		        In: void *handle - 句柄(无符号指针)
+			        int infiletype - 下载文件类型0-gain模板，1-defect模板，2-offset模板，其他-不支持
+		        Out: 无
+        * 返 回 值：int
+		        0   - 成功
+		        非0 - 失败
+        * 备    注:
+     *********************************************************/
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_DownloadTemplateByType", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int HBI_DownloadTemplateByType(IntPtr handle, int infiletype);
 
         /*********************************************************
         * 函 数 名: HBI_TriggerBinningAcqTime
@@ -470,7 +495,7 @@ namespace Detector
                 非0 - 失败
         * 备    注:void *handle, int triggerMode, unsigned char binning, int time
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_TriggerBinningAcqTime", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_TriggerBinningAcqTime", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_TriggerBinningAcqTime(IntPtr handle, int triggerMode, byte binning, int time);
         ////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////
@@ -494,33 +519,33 @@ namespace Detector
 		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_SetBinning", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_SetBinning", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern int HBI_SetBinning(IntPtr handle, byte binning);
 
 
         /*********************************************************
-        * 编    号: No023
-        * 函 数 名: HBI_SetGainMode
-        * 功能描述: 设置增益模式
+        * 编    号: No036
+        * 函 数 名: HBI_SetPGALevel
+        * 功能描述: 设置增益挡位,即设置可编程积分电容档位,提高灵敏度
         * 参数说明:
-                In: void *handle - 句柄(无符号指针)
-                    int mode - 模式
-                    [n]-Invalid
-                    [1]-0.6pC
-                    [2]-1.2pC
-                    [3]-2.4pC
-                    [4]-3.6pC
-                    [5]-4.8pC
-                    [6]-7.2pC,默认7.2pC
-                    [7]-9.6pC
-                Out: 无
+		        In: void *handle - 句柄(无符号指针)
+			        int mode - 模式
+			        [n]-Invalid
+			        [1]-0.6pC
+			        [2]-1.2pC
+			        [3]-2.4pC
+			        [4]-3.6pC
+			        [5]-4.8pC
+			        [6]-7.2pC,默认7.2pC
+			        [7]-9.6pC
+		        Out: 无
         * 返 回 值：int
-                0   - 成功
-                非0 - 失败
+		        0   - 成功
+		        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBI_FPD_E.dll", EntryPoint = "HBI_SetGainMode", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
-        public static extern int HBI_SetGainMode(IntPtr handle, int nGainMode);
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_SetPGALevel", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int HBI_SetPGALevel(IntPtr handle, int nGainMode);
 
         #endregion
     }
@@ -528,11 +553,14 @@ namespace Detector
     #region delegate
     // Notice: call back function
     // @USER_CALLBACK_HANDLE_ENVENT
-    // @cmd:enum eEventCallbackCommType
-    // @buff
-    // @len
+    // @byteEventid:enum eEventCallbackCommType
+    // @ufpdId:平板设备ID
+    // @PVEventParam1:fpd config or image data buffer addr
+    // @nEventParam2:参数2，例如data size或状态
+    // @nEventParam3:参数3，例如帧率 frame rate或状态等
+    // @nEventParam4:参数4，例如pcie事件id或预留扩展
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate int USER_CALLBACK_HANDLE_ENVENT(byte cmd, IntPtr buff, int len, int id);
+    public delegate int USER_CALLBACK_HANDLE_ENVENT(IntPtr pContext, int ufpdId, byte byteEventId, IntPtr PVEventParam1, int nEventParam2, int nEventParam3, int nEventParam4);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate int USER_CALLBACK_HANDLE_PROCESS(byte cmd, int retcode, IntPtr pContext);
@@ -543,54 +571,63 @@ namespace Detector
 
     public enum EFpdStatusType
     {
-        FPD_STATUS_DISCONN    = 0x00,
-        FPD_PREPARE_STATUS    = 0x01,
-        FPD_READY_STATUS      = 0x02,
-        FPD_DOOFFSET_TEMPLATE = 0x03,
-        FPD_EXPOSE_STATUS     = 0x04,
-        FPD_CONTINUE_READY    = 0x05,
-        FPD_DWONLOAD_GAIN     = 0x06,
-        FPD_DWONLOAD_DEFECT   = 0x07,
-        FPD_DWONLOAD_OFFSET   = 0x08,
-        FPD_UPDATE_FIRMARE    = 0x09,
-        FPD_CONN_STATUS       = 0x0A,
-        FPD_STATUS_AED        = 0x0B
+        FPD_STATUS_DISCONN = 0,
+        FPD_PREPARE_STATUS = 1,
+        FPD_READY_STATUS = 2,
+        FPD_DOOFFSET_TEMPLATE = 3,
+        FPD_EXPOSE_STATUS = 4,
+        FPD_CONTINUE_READY = 5,
+        FPD_DWONLOAD_GAIN = 6,
+        FPD_DWONLOAD_DEFECT = 7,
+        FPD_DWONLOAD_OFFSET = 8,
+        FPD_UPDATE_FIRMARE = 9,
+        FPD_RETRANS_MISS = 10, // Retransmission
+        FPD_STATUS_AED = 11, // AED mode,avild image data
+        FPD_STATUS_SLEEP = 12, // Energy saving status
+        FPD_STATUS_WAKEUP = 13, // Wake up
+        FPD_DOWNLOAD_NO_IMAGE = 14, // Retransmission
+        FPD_DOWNLOAD_TAIL_IMAGE = 15, // AED mode,avild image data
+        FPD_EMMC_MAX_NUMBER = 16, // emmc save image:Maximum number of stored images
+        FPD_ENDTIME_WARNNING = 17, // AED mode,avild image data
+        FPD_WLAN_BATTERY_STATUS = 18, // WLAN Battery Status Message
+        FPD_CONN_SUCCESS = 100 // fpd connect status
     };
 
     // Notice:Fpd Trigger Work Mode
     public enum EnumTRIGGER_MODE
     {
-        INVALID_TRIGGER_MODE         = 0x00,     // 无效触发模式
-        STATIC_SOFTWARE_TRIGGER_MODE = 0x01,     // 软触发模式
-        STATIC_PREP_TRIGGER_MODE     = 0x02,     // Clear Mode
-        STATIC_HVG_TRIGGER_MODE      = 0x03,     // 高压触发
-        STATIC_AED_TRIGGER_MODE      = 0x04,     // AED
-        DYNAMIC_HVG_TRIGGER_MODE     = 0x05,     // Dynamic:Hvg Sync Mode
-        DYNAMIC_FPD_TRIGGER_MODE     = 0x06,     // Dynamic:Fpd Sync Mode
-        DYNAMIC_FPD_CONTINUE_MODE    = 0x07      // Dynamic:Continue Mode  
+        INVALID_TRIGGER_MODE = 0x00,// 无效模式
+        STATIC_SOFTWARE_TRIGGER_MODE = 0x01,// 静态采集-软触发模式
+        STATIC_PREP_TRIGGER_MODE = 0x02,// 静态采集-软触发模式
+        STATIC_HVG_TRIGGER_MODE = 0x03,// 静态采集-高压触发模式
+        STATIC_AED_TRIGGER_MODE = 0x04,// 静态采集-FreeAED触发模式
+        DYNAMIC_HVG_TRIGGER_MODE = 0x05,// 动态采集-高压同步模式
+        DYNAMIC_FPD_TRIGGER_MODE = 0x06,// 动态采集-FPD同步模式
+        DYNAMIC_FPD_CONTINUE_MODE = 0x07,// 动态采集-FPD Conitnue模式
+        DYNAMIC_FPD_SAEC_MODE = 0x08 // 08-Static:SAECMode;
     };
 
     // Notice: acq mode:static and dynamic
-    public enum EnumIMAGE_ACQ_MODE
+    public enum EnumIMAGE_ACQ_CMD
     {
-        STATIC_ACQ_DEFAULT_MODE = 0x00, // 默认单帧采集
-        DYNAMIC_ACQ_DEFAULT_MODE,       // 默认连续采集
-        DYNAMIC_ACQ_BARK_MODE,          // 创建Offset模板-连续采集暗场图
-        DYNAMIC_ACQ_BRIGHT_MODE,        // 创建Gain模板-连续采集亮场图
-        STATIC_ACQ_BRIGHT_MODE,         // 创建Gain模板-单帧采集亮场图
-        STATIC_DEFECT_ACQ_MODE,         // 创建Defect模板-单帧采集亮场图
-        DYNAMIC_DEFECT_ACQ_MODE,        // 创建Defect模板-连续采集亮场图
+        SINGLE_ACQ_DEFAULT_TYPE = 0x00, // 默认单帧采集
+        LIVE_ACQ_DEFAULT_TYPE,          // 默认连续采集
+                                        // 分布生成矫正模板，用于验证模板
+        LIVE_ACQ_OFFSET_IMAGE,          // 创建Offset模板-连续采集暗场图
+        SINGLE_ACQ_GAIN_IMAGE,          // 创建Gain模板-单帧采集亮场图	
+        LIVE_ACQ_GAIN_IMAGE,            // 创建Gain模板-连续采集亮场图
+        SINGLE_ACQ_DEFECT_IMAGE,        // 创建Defect模板-单帧采集亮场图
+        LIVE_ACQ_DEFECT_IMAGE,          // 创建Defect模板-连续采集亮场图
+                                        // 快速生成矫正模板，用于系统集成
+        OFFSET_TEMPLATE_TYPE,           // 快速生成模板采集类型,连续采集一组暗场图并生成offset模板，固件生成模板
+        GAIN_TEMPLATE_TYPE,             // 快速生成模板采集类型,连续采集一组亮场图并生成gain模板
+        DEFECT_TEMPLATE_GROUP1,         // 快速生成模板采集类型,连续采集一组亮场图 - defect group1
+        DEFECT_TEMPLATE_GROUP2,         // 快速生成模板采集类型,连续采集一组亮场图 - defect group2
+        DEFECT_TEMPLATE_GROUP3,         // 快速生成模板采集类型,连续采集一组亮场图 - defect group3 and generate template
+        SOFTWARE_OFFSET_TEMPLATE        // 快速生成模板采集类型,连续采集一组暗场图 - SDK生成offset模板
     };
 
-    // Notice:Generate Template Type
-    public enum EnumGENERATE_TEMPLATE_TYPE
-    {
-        OFFSET_TEMPLATE = 0x00,    // 连续采集一组暗场图 - offset 
-        GAIN_TEMPLATE,             // 连续采集一组亮场图 - gain
-        DEFECT_TEMPLATE_GROUP1,    // 连续采集一组亮场图 - defect group1
-        DEFECT_TEMPLATE_GROUP2,    // 连续采集一组亮场图 - defect group2
-        DEFECT_TEMPLATE_GROUP3     // 连续采集一组亮场图 - defect group3 and generate template
-    };
+
 
     // Notice: Live Acquisition'properties 
     public enum emGRAY_MODE
@@ -599,14 +636,20 @@ namespace Detector
         GRAY_16 = 0x01,
         GRAY_32 = 0x02
     };
+    public enum emHBI_DATA_TYPE
+    {
+        EHBI_8UC1 = 0X01, // 1 - 8bits
+        EHBI_16UC1 = 0X02, // 2 - 16bits
+        EHBI_32FC1 = 0X04  // 4 - 32bits
+    };
 
     // Notice: upload template file
     // template file type
-    public enum emTFILE_MODE
+    public enum emUPLOAD_FILE_TYPE
     {
-        GAIN_T       = 0x00,
-        DEFECT_T     = 0x01,
-        OFFSET_T     = 0x02
+        OFFSET_TMP = 0x00,
+        GAIN_TMP = 0x01,
+        DEFECT_TMP = 0x02
     };
 
     // upload process status
@@ -622,66 +665,79 @@ namespace Detector
     // each value departed by ';' symbol
     public enum eRequestCommType
     {
-	    EDL_COMMON_TYPE_INVALVE               = 0x00,
-	    EDL_COMMON_TYPE_GLOBAL_RESET          = 0x01,
-	    EDL_COMMON_TYPE_PREPARE               = 0x02,
-	    EDL_COMMON_TYPE_SINGLE_SHORT          = 0x03,
-	    EDL_COMMON_TYPE_LIVE_ACQ              = 0x04,
-	    EDL_COMMON_TYPE_STOP_ACQ              = 0x05,
-	    EDL_COMMON_TYPE_PACKET_MISS           = 0x06,
-	    EDL_COMMON_TYPE_FRAME_MISS            = 0x07,
-	    EDL_COMMON_TYPE_DUMMPING              = 0x08,
-	    EDL_COMMON_TYPE_END_RESPONSE          = 0x0A, // End response packet
-        EDL_COMMON_TYPE_CONNECT_FPD           = 0x0B, // connect command
-        EDL_COMMON_TYPE_DISCONNECT_FPD        = 0x0C,
-        EDL_COMMON_TYPE_SET_RAM_PARAM_CFG     = 0x10,
-	    EDL_COMMON_TYPE_GET_RAM_PARAM_CFG     = 0x11,
-	    EDL_COMMON_TYPE_SET_ROM_PARAM_CFG     = 0x12,
-	    EDL_COMMON_TYPE_GET_ROM_PARAM_CFG     = 0x13,
-	    EDL_COMMON_TYPE_SET_FACTORY_PARAM_CFG = 0x14,
-	    EDL_COMMON_TYPE_GET_FACTORY_PARAM_CFG = 0x15,
-	    EDL_COMMON_TYPE_RESET_FIRM_PARAM_CFG  = 0x16,
-        EDL_COMMON_UPLOAD_OFFSET_TEMPLATE     = 0x2E, //add by MH.YANG 30/12
-        EDL_COMMON_UPLOAD_GAIN_TEMPLATE       = 0x2F, // Upload gain template
-	    EDL_COMMON_UPLOAD_DEFECT_TEMPLATE     = 0x30, // Upload defect template
-	    EDL_COMMON_ERASE_FIRMWARE             = 0x4F, // Erase old firmware package request
-	    EDL_COMMON_UPDATE_FIRMWARE            = 0x50, // Update new firmware package request
-	    EDL_COMMON_TYPE_SET_AQC_MODE          = 0xFF
+        EDL_COMMON_TYPE_INVALVE = 0x00,
+        EDL_COMMON_TYPE_GLOBAL_RESET = 0x01,
+        EDL_COMMON_TYPE_PREPARE = 0x02,
+        EDL_COMMON_TYPE_SINGLE_SHORT = 0x03,
+        EDL_COMMON_TYPE_LIVE_ACQ = 0x04,
+        EDL_COMMON_TYPE_STOP_ACQ = 0x05,
+        EDL_COMMON_TYPE_PACKET_MISS = 0x06,
+        EDL_COMMON_TYPE_FRAME_MISS = 0x07,
+        EDL_COMMON_TYPE_DUMMPING = 0x08,
+        EDL_COMMON_TYPE_FPD_STATUS = 0x09,
+        EDL_COMMON_TYPE_END_RESPONSE = 0x0A, // End response packet
+        EDL_COMMON_TYPE_CONNECT_FPD = 0x0B, // connect fpd
+        EDL_COMMON_TYPE_DOWNLOAD_IMAGE = 0x0C, // wireless download image
+        EDL_COMMON_TYPE_SLEEP_STATE = 0x0D, // wireless set sleep state
+        EDL_COMMON_TYPE_WAKE_UP = 0x0E, // wireless wake up
+        EDL_COMMON_TYPE_DISCONNECT_FPD = 0x0F, // disconnect fpd
+        EDL_COMMON_TYPE_SET_RAM_PARAM_CFG = 0x10,
+        EDL_COMMON_TYPE_GET_RAM_PARAM_CFG = 0x11,
+        EDL_COMMON_TYPE_SET_ROM_PARAM_CFG = 0x12,
+        EDL_COMMON_TYPE_GET_ROM_PARAM_CFG = 0x13,
+        EDL_COMMON_TYPE_SET_FACTORY_PARAM_CFG = 0x14,
+        EDL_COMMON_TYPE_GET_FACTORY_PARAM_CFG = 0x15,
+        EDL_COMMON_TYPE_RESET_FIRM_PARAM_CFG = 0x16,
+        EDL_COMMON_UPLOAD_OFFSET_TEMPLATE = 0x2E, //add by MH.YANG 30/12
+        EDL_COMMON_UPLOAD_GAIN_TEMPLATE = 0x2F,// Upload gain template
+        EDL_COMMON_UPLOAD_DEFECT_TEMPLATE = 0x30,// Upload defect template
+        EDL_COMMON_DEFECT_AUTHOR = 0x31,//
+        EDL_COMMON_ERASE_FIRMWARE = 0x4F,// Erase old firmware package request
+        EDL_COMMON_UPDATE_FIRMWARE = 0x50,// Update new firmware package request
+        EDL_COMMON_UPDATE_EMBEDDED_INIT = 0xFC,// Update embedded software
+        EDL_COMMON_UPDATE_EMBEDDED_SOFTWARE = 0xFD,// Update embedded software
+        EDL_COMMON_TYPE_SWITCH_WALN_MODE = 0xFE,// Switch wlan ap/client Mode and 2.4G/5G net Type
+        EDL_COMMON_TYPE_SET_AQC_MODE = 0xFF
     };
 
     // Notice: After Each Member Variables, show Variables enum , 
     // before '-' is variables' value, after '-' is the meaning of the value;
     // each value departed by ';' symbol
     public enum eCallbackEventCommType
-    {   
+    {
         ECALLBACK_TYPE_INVALVE = 0X00,
         ECALLBACK_TYPE_COMM_RIGHT = 0X01,
         ECALLBACK_TYPE_COMM_WRONG = 0X02,
         ECALLBACK_TYPE_DUMMPLING = 0X03,
         ECALLBACK_TYPE_ACQ_END = 0X04,
-        ECALLBACK_TYPE_FW_UPDATE_PROGRESS = 0x06,
-        ECALLBACK_TYPE_FW_EASE_FINISH = 0x07,
-        ECALLBACK_TYPE_FPD_STATUS = 0X09, // 状态包
+        ECALLBACK_TYPE_UPDATE_FIRMWARE = 0X06, // Update old firmware package answer 
+        ECALLBACK_TYPE_ERASE_FIRMWARE = 0X07, // Update new firmware package answer
+        ECALLBACK_TYPE_FPD_STATUS = 0X09, // Status package
         ECALLBACK_TYPE_ROM_UPLOAD = 0X10,
         ECALLBACK_TYPE_RAM_UPLOAD = 0X11,
         ECALLBACK_TYPE_FACTORY_UPLOAD = 0X12,
+        ECALLBACK_TYPE_WLAN_BATTERY = 0X13,
         ECALLBACK_TYPE_SINGLE_IMAGE = 0X51,
         ECALLBACK_TYPE_MULTIPLE_IMAGE = 0X52,
+        ECALLBACK_TYPE_PREVIEW_IMAGE = 0X53,
         ECALLBACK_TYPE_PACKET_MISS = 0X5B,
-        ECALLBACK_TYPE_LIVE_ACQ_OK = 0XA0,
-        ECALLBACK_TYPE_ADMIN_CFG_UPDATA = 0XA1,
-        ECALLBACK_TYPE_USER_CFG_UPDATA = 0XA2,
+        ECALLBACK_TYPE_OFFSET_TMP = 0X5C,
+        ECALLBACK_OVERLAY_NUMBER = 0X5D,
+        ECALLBACK_OVERLAY_16BIT_IMAGE = 0X5E,
+        ECALLBACK_OVERLAY_32BIT_IMAGE = 0X5F,
+        ECALLBACK_TYPE_SENDTO_WIZARD = 0XA0,
         ECALLBACK_TYPE_PACKET_MISS_MSG = 0XA4,
         ECALLBACK_TYPE_THREAD_EVENT = 0XA5,
-        ECALLBACK_TYPE_CALIBRATE_ACQ_MSG = 0XA6,
+        ECALLBACK_TYPE_ACQ_DISCARDDED = 0XA6,
         ECALLBACK_TYPE_OFFSET_ERR_MSG = 0XA7,
         ECALLBACK_TYPE_GAIN_ERR_MSG = 0XA8,
         ECALLBACK_TYPE_DEFECT_ERR_MSG = 0XA9,
         ECALLBACK_TYPE_NET_ERR_MSG = 0XAA,
         ECALLBACK_TYPE_SET_CFG_OK = 0XAB, // 设置参数成功
-        ECALLBACK_TYPE_ACQ_SUCCESS       = 0XAC, // 反馈采集到一帧图像成功
+        ECALLBACK_TYPE_SAVE_SUCCESS = 0XAC, // 保存图像成功
         ECALLBACK_TYPE_GENERATE_TEMPLATE = 0XAD, // 生成模板
-        ECALLBACK_TYPE_FILE_NOTEXIST     = 0XAE  // 文件不存在
+        ECALLBACK_TYPE_FILE_NOTEXIST = 0XAE, // 文件不存在
+        ECALLBACK_TYPE_WORK_STATUS = 0XAF  // 工作状态(生产模式或测试模式)
     };
 
     public enum eCallbackUpdateFirmwareStatus
@@ -705,38 +761,45 @@ namespace Detector
 
     public enum HBIRETCODE
     {
-	    HBI_SUCCSS = 0,
-	    HBI_ERR_OPEN_DETECTOR_FAILED     = 8001,
-	    HBI_ERR_INVALID_PARAMS           = 8002,
-	    HBI_ERR_CONNECT_FAILED           = 8003,
-	    HBI_ERR_MALLOC_FAILED            = 8004,
-	    HBI_ERR_RELIMGMEM_FAILED         = 8005,
-	    HBI_ERR_RETIMGMEM_FAILED         = 8006,
-	    HBI_ERR_NODEVICE                 = 8007,
-	    HBI_ERR_NODEVICE_TRY_CONNECT     = 8008,
-	    HBI_ERR_DEVICE_BUSY              = 8009,
-	    HBI_ERR_SENDDATA_FAILED          = 8010,
-	    HBI_ERR_RECEIVE_DATA_FAILED      = 8011,
-	    HBI_ERR_COMMAND_DISMATCH         = 8012,
-	    HBI_ERR_NO_IMAGE_RAW             = 8013,
-	    HBI_ERR_PTHREAD_ACTIVE_FAILED    = 8014,
-	    HBI_ERR_STOP_ACQUISITION         = 8015,
-	    HBI_ERR_INSERT_FAILED            = 8016,
-	    HBI_ERR_GET_CFG_FAILED           = 8017,
-	    HBI_NOT_SUPPORT                  = 8018,
-	    HBI_REGISTER_CALLBACK_FAILED     = 8019,
-	    HBI_SEND_MESSAGE_FAILD           = 8020,
-	    HBI_ERR_WORKMODE                 = 8021,
+        HBI_SUCCSS = 0,
+        HBI_ERR_ININT_FAILED = 8000,
+        HBI_ERR_OPEN_DETECTOR_FAILED = 8001,
+        HBI_ERR_INVALID_PARAMS = 8002,
+        HBI_ERR_CONNECT_FAILED = 8003,
+        HBI_ERR_MALLOC_FAILED = 8004,
+        HBI_ERR_RELIMGMEM_FAILED = 8005,
+        HBI_ERR_RETIMGMEM_FAILED = 8006,
+        HBI_ERR_NODEVICE = 8007,
+        HBI_ERR_NODEVICE_TRY_CONNECT = 8008,
+        HBI_ERR_DEVICE_BUSY = 8009,
+        HBI_ERR_SENDDATA_FAILED = 8010,
+        HBI_ERR_RECEIVE_DATA_FAILED = 8011,
+        HBI_ERR_COMMAND_DISMATCH = 8012,
+        HBI_ERR_NO_IMAGE_RAW = 8013,
+        HBI_ERR_PTHREAD_ACTIVE_FAILED = 8014,
+        HBI_ERR_STOP_ACQUISITION = 8015,
+        HBI_ERR_INSERT_FAILED = 8016,
+        HBI_ERR_GET_CFG_FAILED = 8017,
+        HBI_NOT_SUPPORT = 8018,
+        HBI_REGISTER_CALLBACK_FAILED = 8019,
+        HBI_SEND_MESSAGE_FAILD = 8020,
+        HBI_ERR_WORKMODE = 8021,
         HBI_FAILED = 8022,
         HBI_FILE_NOT_EXISTS = 8023,
         HBI_COMM_TYPE_ERR = 8024,
         HBI_TYPE_IS_NOT_EXISTS = 8025,
         HBI_SAVE_FILE_FAILED = 8026,
         HBI_INIT_PARAM_FAILED = 8027,
-        HBI_TIMEOUT = 8028,
-        HBI_SYSTEM_EXCEPTION = 8028, //System exception
-        HBI_END
+        HBI_INIT_FILE_NOT_EXIST = 8028,
+        HBI_INVALID_FLAT_PANEL = 8029,
+        HBI_INVALID_DLL_HANDLE = 8031,
+        HBI_FPD_IS_DISCONNECT = 8032,
+        HBI_ERR_DETECTOR_NUMBER = 8033,
+        HBI_ERR_DATA_CHECK_FAILED = 8034,
+        HBI_ERR_CFG_ISEMPTY = 8035,
+        HBI_END = 8036
     };
+
 
     public enum eCallbackTemplateStatus
     {
@@ -761,40 +824,39 @@ namespace Detector
         GAINB
     };
 
-    //public static const CodeStringTable CrErrStrList[] = {
-    //{ 0,  HBI_SUCCSS, "Success" },
-    //{ 1,  HBI_ERR_OPEN_DETECTOR_FAILED, "Open device driver failed" },
-    //{ 2,  HBI_ERR_INVALID_PARAMS, "Parameter error" },
-    //{ 3,  HBI_ERR_CONNECT_FAILED, "Connect failed" },
-    //{ 4,  HBI_ERR_MALLOC_FAILED, "Malloc memory failed" },
-    //{ 5,  HBI_ERR_RELIMGMEM_FAILED, "Releaseimagemem fail" },
-    //{ 6,  HBI_ERR_RETIMGMEM_FAILED, "ReturnImageMem fail" },
-    //{ 7,  HBI_ERR_NODEVICE, "No Init DLL Instance" },
-    //{ 8,  HBI_ERR_NODEVICE_TRY_CONNECT, "Disconnect status" },
-    //{ 9,  HBI_ERR_DEVICE_BUSY, "Fpd is busy" },
-    //{ 10, HBI_ERR_SENDDATA_FAILED, "SendData failed" },
-    //{ 11, HBI_ERR_RECEIVE_DATA_FAILED, "Receive Data failed" },
-    //{ 12, HBI_ERR_COMMAND_DISMATCH, "Command dismatch" },
-    //{ 13, HBI_ERR_NO_IMAGE_RAW, "No Image raw" },
-    //{ 14, HBI_ERR_PTHREAD_ACTIVE_FAILED, "Pthread active failed" },
-    //{ 15, HBI_ERR_STOP_ACQUISITION, "Pthread stop data acquisition failed" },
-    //{ 16, HBI_ERR_INSERT_FAILED, "insert calibrate mode failed" },
-    //{ 17, HBI_ERR_GET_CFG_FAILED, "get Fpd config failed" },
-    //{ 18, HBI_NOT_SUPPORT, "not surport yet" },
-    //{ 19, HBI_REGISTER_CALLBACK_FAILED, "failed to register callback function" },
-    //{ 20, HBI_SEND_MESSAGE_FAILD, "send message failed" },
-    //{ 21, HBI_ERR_WORKMODE, "switch work mode failed" },
-    //{ 22, HBI_FAILED, "operation failed" },
-    //{ 23, HBI_FILE_NOT_EXIST, "file does not exist" },
-    //{ 24, HBI_TYPE_IS_NOT_EXISTS, "this type is not exists"},
-    //{ 25, HBI_SAVE_FILE_FAILED, "save file failed"},
-    //{ 26, HBI_INIT_PARAM_FAILED, "Init dll param failed"},
-    //{ 27, HBI_END, "Exit monitoring"}
-    //};
+    public enum EnumLIVE_ACQUISITION
+    {
+        PREOFFSET_IMAGE = 0x01,       // preoffset template and image
+        ONLY_IMAGE = 0x02,       // only image
+        ONLY_PREOFFSET = 0x03,       // only preoffset template
+        OVERLAY_16BIT_IMG = 0x04,       // overlap result is 16bit'image
+        OVERLAY_32BIT_IMG = 0x05        // overlap result is 32bit'image
+
+    }
+
+
     #endregion
 
     #region struct
     #region
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct DOWNLOAD_FILE
+    {
+        public emUPLOAD_FILE_TYPE emfiletype;
+        public int nBinningtype;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 260)]
+        public char[] filepath;
+    }
+    public unsafe struct ImageData
+    {
+        public uint uwidth;       // image width
+        public uint uheight;      // image height
+        public emHBI_DATA_TYPE ndatabits; // data bit:1-8bit,2-16bit,4-32bit,其他默认-16bit
+        public uint uframeid;     // frame id
+        public void* databuff;           // buffer address
+        public uint datalen;      // buffer size
+    }
 
     // Notice:generate calibrate template input param
     public struct CALIBRATE_INPUT_PARAM
@@ -812,32 +874,29 @@ namespace Detector
 
     public struct FPD_AQC_MODE
     {
-        public EnumIMAGE_ACQ_MODE aqc_mode;
-        public int ngroupno;
-        public int nframesum;
-        public int ndiscard;
-        public int nframeid;
-        /* nLiveMode
-        01：Image+OffsetTemplate 带有该参数点击Live Acquisition命令时，探测器会先做OFFSET模板再进行采集图像
-        02：Only Image	         带有该参数点击Live Acquisition命令时,探测器会直接进行上图。不会有做模板的时间
-        03：Only OffsetTemplate   带有该参数点击Live Acquisition命令时,探测器会只做模板。做完模板就会结束状态。
-        */
-        public int nLiveMode;  // 只限于连续采集(LIVE_ACQ_DEFAULT_TYPE)详细任务,1-固件做offset模板并上图；2-只上图；3-固件做只做offset模板。
-        public bool isOverLap;
-        public bool bSimpleGT;
-        public emGRAY_MODE nGrayBit;//16,32
+       public EnumIMAGE_ACQ_CMD eAqccmd;      // 采集命令
+       public EnumLIVE_ACQUISITION eLivetype; // 只限于连续采集(LIVE_ACQ_DEFAULT_TYPE)详细任务, 1-固件做offset模板并上图；2-只上图；3-固件做只做offset模板。
+       public int ngroupno;                  // 组号
+       public int nAcqnumber;                // 实际采集帧数
+       public int ndiscard;                  // 忽略的帧数
+       public int nframeid;                  // 计数器
     };
 
     public struct IMAGE_PROPERTY
     {
-        public int nSize;                //fpd_size
-        public int nwidth;               //image width
-        public int nheight;              //image height
-        public int datatype;             //data type：0-unsigned char,1-char,2-unsigned short,3-float,4-double
-        public int ndatabit;             //data bit:0-16bit,1-14bit,2-12bit,3-8bit
-        public int nendian;              //endian:0-little endian,1-biger endian
-        public int packet_sum;           //fpd send packet sum per frame
-        public int frame_size;           //data size per frame
+        public uint nFpdNum;               //fpd Number
+        public uint nwidth;                //image width
+        public uint nheight;               //image height
+        public uint datatype;              //data type：0-unsigned char,1-char,2-unsigned short,3-float,4-double
+        public uint ndatabit;              //data bit:0-16bit,1-14bit,2-12bit,3-8bit
+        public uint nendian;               //endian:0-little endian,1-biger endian
+        public uint packet_size;           //fpd send the number of packet per frame
+        public uint frame_size;            //data size per frame
+        public uint tailPacketSize;        //Tail packet size
+        public uint frame_number;          //The number of buffer capacity,Integer,[2~32],buff_szie=frame_size * ncapacity
+        // preview
+        public uint npreviewwidth;         //preview image width
+        public uint npreviewheight;		//preview image height
     };
 
     [StructLayout(LayoutKind.Sequential)]
