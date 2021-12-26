@@ -76,6 +76,7 @@
     <Compile Include="Common\IniFile.cs" />
     <Compile Include="Common\NotifyModel.cs" />
     <Compile Include="Common\SerializeHelper.cs" />
+    <Compile Include="ConcatPictureParam.cs" />
     <Compile Include="NV1313FPDSetting.cs" />
     <Compile Include="HVGeneratorParam.cs" />
     <Compile Include="PortPara.cs" />

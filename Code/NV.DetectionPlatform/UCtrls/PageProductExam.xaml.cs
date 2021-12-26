@@ -986,23 +986,28 @@ namespace NV.DetectionPlatform.UCtrls
                     break;
                 case "Cameo":
 
-                    System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
-                    dialog.Multiselect = true;
-                    dialog.Filter = "image files|*.bmp;*.jpg;*.jpeg;*.png";
-                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    System.Windows.Forms.OpenFileDialog dialogg = new System.Windows.Forms.OpenFileDialog();
+                    dialogg.Multiselect = true;
+                    dialogg.Filter = "image files|*.bmp;*.jpg;*.jpeg;*.png";
+                    if (dialogg.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
+                        (dialogg.FileNames.Length == 2 || dialogg.FileNames.Length == 4))
                     {
                         ushort width = 0;
                         ushort height = 0;
-                        ushort[] result = Stitching(dialog.FileNames,ref width, ref height);
+                        ushort[] result = ConactPictures(dialogg.FileNames, ref width, ref height);
 
-                    
-                       // ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+
+                        // ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
                         System.Console.WriteLine("result " + width.ToString() + " " + height.ToString());
                         ipUC.PutData(width, height, 16, result, true);
                         ipUC.AutoWindowLevel();
                         ipUC.CurrentDv.Invalidate();
                     }
-               
+                    else
+                    {
+                        CMessageBox.Show("图片数量错误!! 必须是2张或者4张");
+                    }
+
                     break;
                 case "Back":
                     ipUC.CurrentDv.BackFromStack();
@@ -1013,7 +1018,86 @@ namespace NV.DetectionPlatform.UCtrls
             }
 
         }
+        private ushort[] ConactPictures(string[] imageFiles, ref ushort width, ref ushort height)
+        {
+            Mat[] imgs = new Mat[imageFiles.Length];
+            //读入图像
+            for (int i = 0; i < imageFiles.Length; i++)
+            {
+                System.Console.WriteLine(imageFiles[i]);
+                imgs[i] = new Mat(imageFiles[i], ImreadModes.Color);
+            }
 
+            var cp = ConcatPictureParam.Instance;
+
+            this.Log(string.Format("左图A点({0},{1})，左图B点({2},{3}),右图A点({4},{5}),右图B点({6},{7})",
+                cp.LeftPicAX, cp.LeftPicAY, cp.LeftPicBX, cp.LeftPicBY,
+                cp.RightPicAX, cp.RightPicAY, cp.RightPicBX, cp.RightPicBY));
+
+            // A，B，C，D ： 720,1400,1700,2400,
+            int A = cp.LeftPicAX;
+            int B = cp.LeftPicBX;
+            int C = cp.RightPicAX;
+            int D = cp.RightPicBX;
+
+            OpenCvSharp.Rect rectL = new OpenCvSharp.Rect(A, 0, Math.Abs(A - B), 3072);
+            OpenCvSharp.Rect rectR = new OpenCvSharp.Rect(C, 0, Math.Abs(C - D), 3072);
+            //剪裁各个图片
+            OpenCvSharp.Rect[] rects = { rectL, rectR };
+            Mat[] imgSlices = new Mat[2 * imageFiles.Length];
+            for (int i = 0; i < imageFiles.Length; i++)
+            {
+                imgSlices[i * 2] = new Mat(imgs[i], rectL);
+                imgSlices[i * 2 + 1] = new Mat(imgs[i], rectR);
+
+            }
+
+            Mat fullPic = new Mat();
+            if (imageFiles.Length == 2)
+            {
+                //左右拼接两张图片
+                Cv2.HConcat(imgSlices, fullPic);
+            }
+            else
+            {
+                Mat[] temp = new Mat[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    temp[i] = imgSlices[i];
+                }
+                // 拼接上半部分
+                Mat topPic = new Mat();
+                Cv2.HConcat(temp, topPic);
+
+                // 拼接下半部分
+                for (int i = 4; i < 8; i++)
+                {
+                    temp[i - 4] = imgSlices[i];
+                }
+                Mat bottomPic = new Mat();
+                Cv2.HConcat(temp, bottomPic);
+
+                // 上下拼接
+                Mat[] temp2 = { topPic, bottomPic };
+                Cv2.VConcat(temp2, fullPic);
+
+            }
+
+            // 转换为一维数组输出
+
+            width = (ushort)fullPic.Width;
+            height = (ushort)fullPic.Height;
+            ushort[] result = new ushort[width * height];
+            System.Threading.Tasks.Parallel.For(0, height, i =>
+            {
+                for (int j = 0; j < fullPic.Width; j++)
+                {
+                    result[i * fullPic.Width + j] = fullPic.At<ushort>(i, j);
+                }
+            });
+
+            return result;
+        }
         /// <summary>
         /// 仅用于对处理菜单四个按钮的菜单关闭效果
         /// </summary>
