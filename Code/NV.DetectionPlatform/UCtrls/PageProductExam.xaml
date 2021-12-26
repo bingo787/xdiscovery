@@ -379,7 +379,7 @@
                     <Button Grid.Column="1" Margin="4" Foreground="LightGray" FontSize="14" Style="{DynamicResource GrayButtonStyle}" ToolTip="{DynamicResource ExamTips_30}" Tag="EdgeEnhancement" Click="radioBtnDo">
                         <Path Data="M511.341 57.244l115.823 83.398c6.753 4.73 14.799 9.578 23.043 9.578h143.381l43.515 118.748c2.906 8.126 8.361 13.936 15.546 18.725l113.096 74.664-43.025 125.324c-2.866 8.42-2.885 17.39-0.02 25.81l43.455 127.816-114.665 82.242c-6.889 4.945-12.032 10.952-14.701 19l-43.927 131.23H650.207c-8.244 0-16.29 3.494-23.043 8.224l-115.823 81.554-115.833-81.789c-6.752-4.73-14.809-7.988-23.053-7.988H229.839l-43.917-131.801c-2.699-8.125-7.9-14.701-14.897-19.647l-114.558-81.2 43.554-129.721a40.04 40.04 0 0 0 0-25.536L57.026 358.118l112.192-70.876c7.577-4.789 13.347-9.637 16.36-18.077l43.495-118.944h143.381c8.244 0 16.301-4.848 23.053-9.578l115.834-83.399m0-44.437l-138.886 97.216H200.79l-53.034 145.579L8.87 342.2l53.044 157.12L8.87 657.147l138.886 97.589 53.034 159.24h171.665l138.886 97.217 138.866-97.217h171.664l53.055-158.749 138.887-99.199-53.055-155.845 53.055-154.804-138.887-90.052-53.055-145.304H650.207L511.341 12.807z"/>
                     </Button>
-                    <Button Grid.Column="2" Margin="4" Foreground="LightGray" FontSize="14" Style="{DynamicResource GrayButtonStyle}" ToolTip="{DynamicResource ExamTips_31}" Tag="Cameo" Click="radioBtnDo">
+                    <Button Grid.Column="2" Margin="4" Foreground="LightGray" FontSize="14" Style="{DynamicResource GrayButtonStyle}" ToolTip="{DynamicResource ExamTips_31}" Tag="Cameo" Click="radioBtnDo" IsEnabled="False">
                         <Path>
                             <Path.Data>
                                 <GeometryGroup>
