@@ -179,7 +179,7 @@ namespace NV.DetectionPlatform.UCtrls
 
                 string local_ip = "192.168.10.20";
                 string remote_ip = "192.168.10.40";
-                int ret = HBI_FPD_DLL.HBI_ConnectDetectorJumbo(HBI_FPD_DLL._handel, remote_ip, 0x8081, local_ip, 0x8080, offsettemplate);
+                int ret = HBI_FPD_DLL.HBI_ConnectDetectorUdp(HBI_FPD_DLL._handel, remote_ip, 0x8081, local_ip, 0x8080, offsettemplate);
 
                 _detector.ShowMessage("local ip: " + local_ip + " <---> " + remote_ip);
 

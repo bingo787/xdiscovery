@@ -11,7 +11,7 @@
   <binning模式>HB_BINNING_1X1</binning模式>
   <shutter模式>NV_GLOBAL_SHUTTER</shutter模式>
   <触发模式>HB_SORTWARE_TRIGGER</触发模式>
-  <本底校正模式>HB_CORR_HARD_PRE</本底校正模式>
-  <增益校正模式>HB_CORR_HARD</增益校正模式>
-  <坏点校正模式>HB_CORR_HARD</坏点校正模式>
+  <本底校正模式>HB_CORR_SOFT</本底校正模式>
+  <增益校正模式>HB_CORR_SOFT</增益校正模式>
+  <坏点校正模式>HB_CORR_SOFT</坏点校正模式>
 </NV1313FPDSetting>
