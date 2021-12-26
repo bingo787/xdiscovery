@@ -81,6 +81,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1CBD2F6F4C60453CADCD629E55ED9F30"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_1D02DE2DB0B54232AF4FF475E3B44567"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -207,12 +213,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3F805AB127D84A64BAC770ECD2076673"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_3FF682221A3C48CC9A716C1B61DFE299"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -232,12 +232,6 @@
         "Entry"
         {
         "MsmKey" = "8:_46C7ED83029C4C799AF994C6FF8C60F5"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_49B6D1CDD0B64E0C8E5F1E33B6404827"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -292,12 +286,6 @@
         "Entry"
         {
         "MsmKey" = "8:_547B121DD9E848198FD20EA9F17AFD15"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_591D22258E8C4A988ABEBE51ABB83B15"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -388,6 +376,12 @@
         "Entry"
         {
         "MsmKey" = "8:_7CAD77F6768F4E26A6822A59143A8878"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7FAD8F925D9D43369FFBDDE735FAEA66"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -508,6 +502,12 @@
         "Entry"
         {
         "MsmKey" = "8:_985C061D00C244109BF9D874C9E1181E"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_98E492B3747D4873BF5580D188E80517"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -783,6 +783,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E4A53BA5ACEC4ADFB5B2FC0A2EEA7DA7"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E7EDC44626C14C58A32537F9648F6268"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -862,12 +868,6 @@
         "Entry"
         {
         "MsmKey" = "8:_F66EEA002A7546B0B302C7461AAF8101"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F773E7D5AA0C4209A04B96070D2019F9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1398,6 +1398,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1CBD2F6F4C60453CADCD629E55ED9F30"
+            {
+            "SourcePath" = "8:..\\..\\bin\\HBISDKApi.dll"
+            "TargetName" = "8:HBISDKApi.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1D02DE2DB0B54232AF4FF475E3B44567"
             {
             "SourcePath" = "8:..\\..\\bin\\OpenCvSharp.Blob.pdb"
@@ -1840,26 +1860,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3F805AB127D84A64BAC770ECD2076673"
-            {
-            "SourcePath" = "8:..\\..\\bin\\Log\\2021-11-06.log"
-            "TargetName" = "8:2021-11-06.log"
-            "Tag" = "8:"
-            "Folder" = "8:_5440D487B67C41E68AAACE2BE813A608"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_3FF682221A3C48CC9A716C1B61DFE299"
             {
             "SourcePath" = "8:..\\..\\bin\\install_logo.jpg"
@@ -1926,26 +1926,6 @@
             "TargetName" = "8:NIH_ice.lut"
             "Tag" = "8:"
             "Folder" = "8:_7880580A46D244349AFE3812149801CF"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_49B6D1CDD0B64E0C8E5F1E33B6404827"
-            {
-            "SourcePath" = "8:..\\..\\bin\\HBI_FPD.lib"
-            "TargetName" = "8:HBI_FPD.lib"
-            "Tag" = "8:"
-            "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2057,26 +2037,6 @@
             "TargetName" = "8:OpenCvSharpExtern.dll"
             "Tag" = "8:"
             "Folder" = "8:_7564CAB65FCE4FD99F9391E005E75411"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_591D22258E8C4A988ABEBE51ABB83B15"
-            {
-            "SourcePath" = "8:..\\..\\bin\\HBI_FPD.dll"
-            "TargetName" = "8:HBI_FPD.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2379,7 +2339,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform, Version=1.2.2021.1121, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform, Version=0.2.2021.1226, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_71E77F9F93D84AF7A335C4FFF7FB80CA"
@@ -2430,6 +2390,26 @@
             {
             "SourcePath" = "8:..\\..\\bin\\opencv_imgproc249.dll"
             "TargetName" = "8:opencv_imgproc249.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7FAD8F925D9D43369FFBDDE735FAEA66"
+            {
+            "SourcePath" = "8:..\\..\\bin\\HBISDKApi.lib"
+            "TargetName" = "8:HBISDKApi.lib"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
             "Condition" = "8:"
@@ -2783,6 +2763,26 @@
             {
             "SourcePath" = "8:..\\..\\bin\\Detector.pdb"
             "TargetName" = "8:Detector.pdb"
+            "Tag" = "8:"
+            "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_98E492B3747D4873BF5580D188E80517"
+            {
+            "SourcePath" = "8:..\\..\\bin\\opencv_world341.dll"
+            "TargetName" = "8:opencv_world341.dll"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
             "Condition" = "8:"
@@ -3673,6 +3673,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E4A53BA5ACEC4ADFB5B2FC0A2EEA7DA7"
+            {
+            "SourcePath" = "8:..\\..\\bin\\hbiwdog.dll"
+            "TargetName" = "8:hbiwdog.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E7EDC44626C14C58A32537F9648F6268"
             {
             "SourcePath" = "8:..\\..\\bin\\EntityFramework.xml"
@@ -3930,26 +3950,6 @@
             {
             "SourcePath" = "8:..\\..\\bin\\Dongle_com_x64.dll"
             "TargetName" = "8:Dongle_com_x64.dll"
-            "Tag" = "8:"
-            "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F773E7D5AA0C4209A04B96070D2019F9"
-            {
-            "SourcePath" = "8:..\\..\\bin\\HBI_FPD_E.dll"
-            "TargetName" = "8:HBI_FPD_E.dll"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
             "Condition" = "8:"
@@ -4230,7 +4230,7 @@
         "Subject" = "8:"
         "ARPCONTACT" = "8:RAYON"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:"
+        "ARPCOMMENTS" = "8:适用于动态平板"
         "ARPURLINFOABOUT" = "8:"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
