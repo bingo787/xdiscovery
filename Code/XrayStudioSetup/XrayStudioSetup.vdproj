@@ -303,6 +303,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_5C8555564B16440C9C5517A268B5E5B7"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_5D6EE7D1FAC24108B3EC99B5BC1C60BE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -579,6 +585,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_AF355648F7384C488B94279C06169F16"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_B27781DB82A24E5997AB568A8E5E1F4D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -592,6 +604,12 @@
         "Entry"
         {
         "MsmKey" = "8:_B49D23B44F4D47268A4E836625298550"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B75391B02F8747F6956F6B01E0E7A784"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -783,6 +801,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_E401316DFD22454AA1AEFC3F7DEBFB22"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E4A53BA5ACEC4ADFB5B2FC0A2EEA7DA7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -845,6 +869,12 @@
         {
         "MsmKey" = "8:_F1AF32927EF23E52A018A790E57CC204"
         "OwnerKey" = "8:_71E77F9F93D84AF7A335C4FFF7FB80CA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_F333B5DC9F4A4D6E8CD66E805A814CCB"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1198,7 +1228,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform.Entity, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform.Entity, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
                     "_01AF848B0760DE21005830C621C7673D"
@@ -1653,7 +1683,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Detector, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Detector, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
                     "_334E314086AC116DB4620354ECF06D5E"
@@ -2091,11 +2121,31 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5C8555564B16440C9C5517A268B5E5B7"
+            {
+            "SourcePath" = "8:..\\..\\bin\\vccorlib140.dll"
+            "TargetName" = "8:vccorlib140.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_5D6EE7D1FAC24108B3EC99B5BC1C60BE"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform.Entity, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform.Entity, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
                     "_5D6EE7D1FAC24108B3EC99B5BC1C60BE"
@@ -2339,7 +2389,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform, Version=0.2.2021.1226, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform, Version=1.2.2021.1226, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_71E77F9F93D84AF7A335C4FFF7FB80CA"
@@ -2981,6 +3031,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_AF355648F7384C488B94279C06169F16"
+            {
+            "SourcePath" = "8:..\\..\\bin\\msvcp140.dll"
+            "TargetName" = "8:msvcp140.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B27781DB82A24E5997AB568A8E5E1F4D"
             {
             "SourcePath" = "8:..\\..\\bin\\OpenCvSharp.Extensions.xml"
@@ -3027,6 +3097,26 @@
             "TargetName" = "8:opencv_ffmpeg400.dll"
             "Tag" = "8:"
             "Folder" = "8:_73D82B9272684B418F951FDDBE2DEAB5"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B75391B02F8747F6956F6B01E0E7A784"
+            {
+            "SourcePath" = "8:..\\..\\bin\\vcruntime140.dll"
+            "TargetName" = "8:vcruntime140.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -3127,7 +3217,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Detector, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Detector, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64"
                 "ScatterAssemblies"
                 {
                     "_BCF56A88EA4E41A3A1C3A5116881B34E"
@@ -3673,6 +3763,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E401316DFD22454AA1AEFC3F7DEBFB22"
+            {
+            "SourcePath" = "8:..\\..\\bin\\msvcp140_1.dll"
+            "TargetName" = "8:msvcp140_1.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E4A53BA5ACEC4ADFB5B2FC0A2EEA7DA7"
             {
             "SourcePath" = "8:..\\..\\bin\\hbiwdog.dll"
@@ -3873,6 +3983,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F333B5DC9F4A4D6E8CD66E805A814CCB"
+            {
+            "SourcePath" = "8:..\\..\\bin\\msvcp140_2.dll"
+            "TargetName" = "8:msvcp140_2.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F4CF7B664786497291FA7D8469C21E80"
