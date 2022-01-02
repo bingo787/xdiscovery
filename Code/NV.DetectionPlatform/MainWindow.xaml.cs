@@ -305,7 +305,7 @@ namespace NV.DetectionPlatform
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
                 lblHV_Temperature.Content = arg.ToString("f2") + "℃";
-                this.Log("高压温度: " + lblHV_Temperature.Content.ToString());
+                //this.Log("高压温度: " + lblHV_Temperature.Content.ToString());
             }));
         }
         /// <summary>
@@ -328,7 +328,7 @@ namespace NV.DetectionPlatform
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
                 lblHV_Cur.Content = arg + "uA";
-                this.Log("电流改变为: " + lblHV_Cur.Content.ToString());
+                //this.Log("电流改变为: " + lblHV_Cur.Content.ToString());
             }));
         }
         /// <summary>
@@ -340,7 +340,7 @@ namespace NV.DetectionPlatform
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
                 lblHV_KV.Content = arg + "kV";
-                this.Log("电压改变为: " + lblHV_KV.Content.ToString());
+                //this.Log("电压改变为: " + lblHV_KV.Content.ToString());
             }));
         }
         /// <summary>
@@ -355,13 +355,13 @@ namespace NV.DetectionPlatform
                 {
                     lblHV_XRayState.Content = "XRay ON";
                     lblHV_XRayState.Foreground = Brushes.Yellow;
-                    this.Log("打开X光源");
+                   // this.Log("打开X光源");
                 }
                 else
                 {
                     lblHV_XRayState.Content = "XRay OFF";
                     lblHV_XRayState.Foreground = _normalForeground;
-                    this.Log("关闭X光源");
+                    //this.Log("关闭X光源");
                 }
             }));
 
