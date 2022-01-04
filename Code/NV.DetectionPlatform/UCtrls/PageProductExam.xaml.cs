@@ -191,7 +191,7 @@ namespace NV.DetectionPlatform.UCtrls
                 {
                     _detector.Delay = Data.Delay;
                     _detector.HB_SetBinningMode((byte)Data.BinningMode);
-                  //  _detector.HB_SetTriggerMode(7);
+                    _detector.HB_SetTriggerMode(7);
                     _detector.HB_SetGain((int)Data.Gain);
                     _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
                     _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
@@ -341,18 +341,15 @@ namespace NV.DetectionPlatform.UCtrls
             new Thread(new ThreadStart(delegate
             {
                 Thread.Sleep(_detector.Delay);
-
-
                 bool ret = false;
+
                 if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
                 {
-                    _detector.HB_SetTriggerMode(1);
+
                     ret = _detector.StartSingleShot(_curExpTime);
                 }
                 else
                 {
-                    // 动态模式下，需要设置为连续
-                    _detector.HB_SetTriggerMode(7);
                     ret = _detector.StartAcq();
                 }
 
