@@ -866,7 +866,7 @@ namespace NV.DetectionPlatform.UCtrls
             if (ipUC.CurrentDv != null)
             {
                 ipUC.CurrentDv.ResetImage();
-                ipUC.CurrentDv.SetScaleRatio(0.1);//暂时保留，后续废除
+                ipUC.CurrentDv.SetScaleRatio(0.14);//暂时保留，后续废除
             }
         }
         /// <summary>
@@ -891,7 +891,7 @@ namespace NV.DetectionPlatform.UCtrls
                             ipUC.CurrentDv.SetWindowLevel(ww, wl);
                     }
                     ipUC.CurrentDv.Invalidate();
-                    ipUC.CurrentDv.SetScaleRatio(0.1);//暂时保留，后续废除
+                    ipUC.CurrentDv.SetScaleRatio(0.14);//暂时保留，后续废除
                 }
             }
             catch (Exception ex)
@@ -1329,7 +1329,7 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 dv.DeleteAnnotation(true);
                 dv.LoadFile(dialog.FileName);
-                dv.SetScaleRatio(0.1);//暂时保留，后续废除
+                dv.SetScaleRatio(0.14);//暂时保留，后续废除
                 dv.Invalidate();
             }
         }
