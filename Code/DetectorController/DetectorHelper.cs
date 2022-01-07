@@ -715,8 +715,9 @@ namespace Detector
 
             count++;
 
-            // 达到最大帧数量的时候，通知。
-            if (count == MaxFrames) {
+            
+            if (MaxFrames == 1) {
+                // 单帧的时候，停止
                 AcqMaxFrameEvent();
             }
         }

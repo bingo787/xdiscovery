@@ -236,9 +236,16 @@ namespace NV.DetectionPlatform.UCtrls
                     _imageCount++;
                     this.Dispatcher.Invoke(new Action(() =>
                     {
-                       if (IsAcqing)
+                       // System.Console.WriteLine(String.Format("PlayBackground IsAcqing {0}", IsAcqing));
+                       // if (IsAcqing)
                         {
                             ipUC.PutData(W,H ,Bits,data, true);
+
+                            if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
+                            {
+                                ApplyConfigWL(true);
+                            }
+                            
                         }
                             
                         if (_detector.PlayBuffer.Count > 90)
@@ -397,12 +404,12 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="e"></param>
         public void StopAcq(object sender, RoutedEventArgs e)
         {
-            bool ret = _detector.StopAcq();
-            if (IsAcqing && ret)
-            {
-                MainWindow.ControlSystem.XRayOff();
+           
+            MainWindow.ControlSystem.XRayOff();
+            if (IsAcqing) {
                 IsAcqing = false;
 
+                _detector.StopAcq();  
                 if (_curExpType == ExamType.MultiEnergyAvg)//多能合成
                 {
                     SaveMultiAvgFiles(_detector.ImageBuffer.ToList());
@@ -420,8 +427,9 @@ namespace NV.DetectionPlatform.UCtrls
                     RecoverHVPara();
 
                 _detector.ImageBuffer.Clear();
-
             }
+           
+
         }
         /// <summary>
         /// 恢复设定高压参数
