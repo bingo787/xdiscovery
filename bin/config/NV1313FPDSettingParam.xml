@@ -2,7 +2,7 @@
 <NV1313FPDSetting xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <自动校正>true</自动校正>
   <增益档>HB_GAIN_72</增益档>
-  <积分时间ms>168</积分时间ms>
+  <积分时间ms>100</积分时间ms>
   <延时采集时间ms>1000</延时采集时间ms>
   <最大帧>10</最大帧>
   <静态多帧叠加降噪>false</静态多帧叠加降噪>

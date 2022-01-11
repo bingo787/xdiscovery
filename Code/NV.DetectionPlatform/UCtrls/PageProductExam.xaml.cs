@@ -31,6 +31,7 @@ namespace NV.DetectionPlatform.UCtrls
     public partial class PageProductExam : Page
     {
         private int _imageCount = 0;
+        private double scale_ratio = 0.14;
         /// <summary>
         /// 实时采集显示线程
         /// </summary>
@@ -170,7 +171,7 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
                 _detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
 
-
+                scale_ratio = Data.ExpTime/100.0f;
                 string autoOffset = Data.IsAutoPreOffset ? "1" : "0";
                 // 连接是否做固件offset模板，1-做offset模板，其他不做
                 int offsettemplate = 0;
@@ -874,7 +875,7 @@ namespace NV.DetectionPlatform.UCtrls
             if (ipUC.CurrentDv != null)
             {
                 ipUC.CurrentDv.ResetImage();
-                ipUC.CurrentDv.SetScaleRatio(0.14);//暂时保留，后续废除
+                ipUC.CurrentDv.SetScaleRatio(scale_ratio);//暂时保留，后续废除
             }
         }
         /// <summary>
@@ -899,7 +900,7 @@ namespace NV.DetectionPlatform.UCtrls
                             ipUC.CurrentDv.SetWindowLevel(ww, wl);
                     }
                     ipUC.CurrentDv.Invalidate();
-                    ipUC.CurrentDv.SetScaleRatio(0.14);//暂时保留，后续废除
+                    ipUC.CurrentDv.SetScaleRatio(scale_ratio);//暂时保留，后续废除
                 }
             }
             catch (Exception ex)
@@ -1337,7 +1338,7 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 dv.DeleteAnnotation(true);
                 dv.LoadFile(dialog.FileName);
-                dv.SetScaleRatio(0.14);//暂时保留，后续废除
+                dv.SetScaleRatio(scale_ratio);//暂时保留，后续废除
                 dv.Invalidate();
             }
         }

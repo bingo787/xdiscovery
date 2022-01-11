@@ -47,6 +47,7 @@ namespace NV.DetectionPlatform.UCtrls
             detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
             detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
             detector.Delay = Data.Delay;
+            
 
             string autoOffset = Data.IsAutoPreOffset ? "1" : "0";
             NV.Infrastructure.UICommon.IniFile.WriteString("System", "AutoOffsetCalOnOpen", autoOffset, System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "nvDentalDet.ini"));

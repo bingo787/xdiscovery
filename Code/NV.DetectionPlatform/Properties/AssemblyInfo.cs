@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("NV.NDTStudio")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("RAYON")]
 [assembly: AssemblyProduct("NV.NDTStudio")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
@@ -51,5 +51,5 @@ using System.Windows;
 // 可以指定所有这些值，也可以使用“生成号”和“修订号”的默认值，
 // 方法是按如下所示使用“*”: 
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2.2022.0108")]
-[assembly: AssemblyFileVersion("1.2.2022.0108")]
+[assembly: AssemblyVersion("1.2.2022.0111")]
+[assembly: AssemblyFileVersion("1.2.2022.0111")]
