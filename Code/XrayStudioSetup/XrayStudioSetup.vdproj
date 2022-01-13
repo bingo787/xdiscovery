@@ -3,7 +3,7 @@
 "VSVersion" = "3:800"
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
-"ProjectName" = "8:XrayStudioSetup"
+"ProjectName" = "8:NDTStudioSetup"
 "LanguageId" = "3:2052"
 "CodePage" = "3:936"
 "UILanguageId" = "3:2052"
@@ -1175,7 +1175,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\XrayStudioSetup.msi"
+        "OutputFilename" = "8:Release\\NDTStudioSetup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -1239,11 +1239,11 @@
                 {
                     "_01AF848B0760DE21005830C621C7673D"
                     {
-                    "Name" = "8:NV.DetectionPlatform.Entity.DLL"
+                    "Name" = "8:NV.DetectionPlatform.Entity.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:NV.DetectionPlatform.Entity.DLL"
+            "SourcePath" = "8:NV.DetectionPlatform.Entity.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
@@ -1694,11 +1694,11 @@
                 {
                     "_334E314086AC116DB4620354ECF06D5E"
                     {
-                    "Name" = "8:Detector.DLL"
+                    "Name" = "8:Detector.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:Detector.DLL"
+            "SourcePath" = "8:Detector.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
@@ -2005,11 +2005,11 @@
                 {
                     "_4FDF58FA837935104B4A0B1DBD8A7E04"
                     {
-                    "Name" = "8:OpenCvSharp.DLL"
+                    "Name" = "8:OpenCvSharp.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:OpenCvSharp.DLL"
+            "SourcePath" = "8:OpenCvSharp.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
@@ -2395,7 +2395,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform, Version=1.2.2021.1121, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform, Version=1.2.2022.111, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_71E77F9F93D84AF7A335C4FFF7FB80CA"
@@ -2682,11 +2682,11 @@
                 {
                     "_8B9DCA7C7BC0ACC002AD456DCDDD4AC9"
                     {
-                    "Name" = "8:NV.DRF.Controls.DLL"
+                    "Name" = "8:NV.DRF.Controls.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:NV.DRF.Controls.DLL"
+            "SourcePath" = "8:NV.DRF.Controls.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
@@ -2904,11 +2904,11 @@
                 {
                     "_9DC8CD686604B94D165976C3EA7774B0"
                     {
-                    "Name" = "8:NV.DRF.Core.DLL"
+                    "Name" = "8:NV.DRF.Core.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:NV.DRF.Core.DLL"
+            "SourcePath" = "8:NV.DRF.Core.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
@@ -2955,11 +2955,11 @@
                 {
                     "_9FCD73A6C9BBF22DCF952D7237C52024"
                     {
-                    "Name" = "8:ImageViewLib.DLL"
+                    "Name" = "8:ImageViewLib.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:ImageViewLib.DLL"
+            "SourcePath" = "8:ImageViewLib.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
@@ -3310,11 +3310,11 @@
                 {
                     "_C1E24E188988BC882F615AA5DBBC3EDC"
                     {
-                    "Name" = "8:OpenCvSharp.Extensions.DLL"
+                    "Name" = "8:OpenCvSharp.Extensions.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:OpenCvSharp.Extensions.DLL"
+            "SourcePath" = "8:OpenCvSharp.Extensions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
@@ -3514,11 +3514,11 @@
                 {
                     "_D1D8567334E232C1002372740B14DB2C"
                     {
-                    "Name" = "8:NV.Infrastructure.DLL"
+                    "Name" = "8:NV.Infrastructure.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:NV.Infrastructure.DLL"
+            "SourcePath" = "8:NV.Infrastructure.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
@@ -3716,11 +3716,11 @@
                 {
                     "_DE541EC113B0E8FA138800BB2741DBB9"
                     {
-                    "Name" = "8:SerialPortController.DLL"
+                    "Name" = "8:SerialPortController.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:SerialPortController.DLL"
+            "SourcePath" = "8:SerialPortController.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
@@ -3989,11 +3989,11 @@
                 {
                     "_F1AF32927EF23E52A018A790E57CC204"
                     {
-                    "Name" = "8:AxImageViewLib.DLL"
+                    "Name" = "8:AxImageViewLib.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:AxImageViewLib.DLL"
+            "SourcePath" = "8:AxImageViewLib.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
@@ -4151,11 +4151,11 @@
                 {
                     "_F8F71EEE11A7922F62C95A17D6E02BD0"
                     {
-                    "Name" = "8:NV.Config.DLL"
+                    "Name" = "8:NV.Config.dll"
                     "Attributes" = "3:512"
                     }
                 }
-            "SourcePath" = "8:NV.Config.DLL"
+            "SourcePath" = "8:NV.Config.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_1074085E9C734D14AE92DA94384F3497"
@@ -4369,26 +4369,26 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:XrayStudio"
-        "ProductCode" = "8:{16BA27CD-8DCA-4EDD-934A-7460A40249DD}"
-        "PackageCode" = "8:{3CD37CF9-AA1A-4C93-AD4A-9C1C0DDED49D}"
+        "ProductName" = "8:NDTStudio"
+        "ProductCode" = "8:{D89B7CF9-B8B9-4CDB-B7B3-2110FE0921AA}"
+        "PackageCode" = "8:{3E99F6B7-542A-4855-A889-BA23F2C6889C}"
         "UpgradeCode" = "8:{0DD09F27-5302-4C02-9B1C-43B791B528BF}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.2.0"
+        "ProductVersion" = "8:1.3.0"
         "Manufacturer" = "8:RAYON"
         "ARPHELPTELEPHONE" = "8:"
-        "ARPHELPLINK" = "8:"
-        "Title" = "8:XrayStudioSetup"
+        "ARPHELPLINK" = "8:https://www.x-rayon.com/"
+        "Title" = "8:NDTStudioSetup"
         "Subject" = "8:"
         "ARPCONTACT" = "8:RAYON"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:适用于动态平板"
-        "ARPURLINFOABOUT" = "8:"
-        "ARPPRODUCTICON" = "8:"
+        "ARPCOMMENTS" = "8:X光无损检测软件"
+        "ARPURLINFOABOUT" = "8:https://www.x-rayon.com/"
+        "ARPPRODUCTICON" = "8:_0E8536C486734C198F55172C842FB09B"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
