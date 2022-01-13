@@ -112,6 +112,24 @@ namespace Detector
         public static extern int HBI_RegEventCallBackFun(IntPtr handle, USER_CALLBACK_HANDLE_ENVENT handleEventfun);
 
         /*********************************************************
+        * 编    号: No003
+        * 函 数 名: HBI_ConnectDetector
+        * 功能描述: 建立连接
+        * 参数说明:
+		        In: void *handle - 句柄(无符号指针)
+			        COMM_CFG commCfg - 连接配置参数，详细见《HbiType.h》
+			        int doOffsetTemp - 非1:连接成功后固件不重新做offset模板
+							           1:连接成功后固件重新做offset模板
+		        Out: 无
+        * 返 回 值：int
+		        0   - 成功
+		        非0 - 失败
+        * 备    注:
+*********************************************************/
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_ConnectDetector", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int HBI_ConnectDetector(IntPtr handle, COMM_CFG commCfg, int doOffsetTemp = 0);
+
+        /*********************************************************
         // 新增连接平板接口 
         /*********************************************************
         * 编    号: No003
@@ -815,7 +833,14 @@ namespace Detector
         HBI_ERR_CFG_ISEMPTY = 8035,
         HBI_END = 8036
     };
-
+    //Note:fpd communication Type
+    public enum FPD_COMM_TYPE
+    {
+        UDP_COMM_TYPE = 0,
+        UDP_JUMBO_COMM_TYPE,
+        PCIE_COMM_TYPE,
+        WALN_COMM_TYPE
+    };
 
     public enum eCallbackTemplateStatus
     {
@@ -855,6 +880,18 @@ namespace Detector
 
     #region struct
     #region
+
+    public struct COMM_CFG
+    {
+        public FPD_COMM_TYPE type;
+        // 网口通讯需要设置,PCIe只要设置类型即可
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+        public char[] remoteip;
+        public char[] localip;
+        public ushort loacalPort;
+        public ushort remotePort;
+    }
+
 
     [StructLayout(LayoutKind.Sequential)]
     public struct DOWNLOAD_FILE
