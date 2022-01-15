@@ -204,16 +204,17 @@ namespace NV.DetectionPlatform.UCtrls
                 {
                     _detector.Delay = Data.Delay;
                     _detector.HB_SetBinningMode((byte)Data.BinningMode);
-                    _detector.HB_SetTriggerMode((int)Data.TriggerMode);
+                   // _detector.HB_SetTriggerMode((int)Data.TriggerMode);
                     _detector.HB_SetGain((int)Data.Gain);
                     _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
                     _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
                     _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
-                    _detector.HBUpdateCorrectEnable();
+                    _detector.HB_UpdateTriggerAndCorrectEnable((int)Data.TriggerMode);
                     _detector.btnGetImageProperty();
                     _detector.btnGetSdkVer_Click();
                     _detector.btnFirmwareVer_Click();
-                  
+                    _detector.btnGetFirmwareCfg_Click();
+
                     res += "探测器已连接。";
                     IsConnected = true;
 
@@ -338,6 +339,12 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.MaxFrames = 1;
                 // 设置曝光时间
                 _curExpTime = (int)(Global.CurrentParam.Time * 1000);
+                if (_curExpTime == 0) {
+                    /// 防止曝光时间设置为 0
+                    _curExpTime = 1;
+                }
+                _detector.HBI_SetSinglePrepareTime(_curExpTime);
+
             }
             else if (type == ExamType.Expose)
             {
@@ -366,7 +373,7 @@ namespace NV.DetectionPlatform.UCtrls
                 if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
                 {
 
-                    ret = _detector.StartSingleShot(_curExpTime);
+                    ret = _detector.StartSingleShot();
                 }
                 else
                 {

@@ -175,7 +175,7 @@ namespace Detector
         public static extern int HBI_DisConnectDetector(IntPtr handle);
 
         /*********************************************************
-        * 函 数 名: HBI_GetDevCfgInfo
+        * 函 数 名: HBI_GetFpdCfgInfo
         * 功能描述: 获取固件ROM参数
         * 参数说明:
 	        In: void *handle - 句柄(无符号指针)
@@ -185,8 +185,8 @@ namespace Detector
 	        非0 - 失败
         * 备    注:
         *********************************************************/
-        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_GetDevCfgInfo", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
-        public static extern int HBI_GetDevCfgInfo(IntPtr handle, ref RegCfgInfo pRegCfg);
+        [DllImport("HBISDKApi.dll", EntryPoint = "HBI_GetFpdCfgInfo", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern int HBI_GetFpdCfgInfo(IntPtr handle, ref RegCfgInfo pRegCfg);
 
         /*********************************************************
         * 函 数 名: HBI_SinglePrepare

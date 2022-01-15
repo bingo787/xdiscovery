@@ -168,16 +168,15 @@ namespace Detector
         /// <param name="sender"></param>
         /// <param name="e"></param>
 
-        public bool StartSingleShot(int prepare_time) {
+        public bool StartSingleShot() {
             ShowMessage("StartSingleShot");
             _imageBuffer.Clear();
             _multiFramesOverlayBuffer.Clear();
             count = 0;
             int  ret = -1;
 
-            if (prepare_time > 0)
+            if (true)
             {
-                HBI_SetSinglePrepareTime(prepare_time);
                 ret = HBI_FPD_DLL.HBI_SinglePrepare(HBI_FPD_DLL._handel);
                 if (ret != 0)
                 {
@@ -196,7 +195,7 @@ namespace Detector
                 stMode.eLivetype = EnumLIVE_ACQUISITION.ONLY_IMAGE;     // 1-固件做offset模板并上图；2-只上图；3-固件做只做offset模板。
                 stMode.ndiscard = 0;     // 这里默认位0，不抛弃前几帧图像
                 stMode.nframeid = 0;     // 这里默认位0
-
+                HBI_FPD_DLL.HBI_SinglePrepare(HBI_FPD_DLL._handel);
                 ret = HBI_FPD_DLL.HBI_SingleAcquisition(HBI_FPD_DLL._handel, stMode);
                 if (ret != 0)
                 {
@@ -807,7 +806,7 @@ namespace Detector
 
         private void Log(string p)
         {
-             System.Console.WriteLine(p);
+             System.Console.WriteLine("["+ DateTime.Now.ToString("HH:mm:ss.ffff") + "]" + p);
          }
         /// <summary>
         /// 设置探测器采集时间、增益
@@ -1530,7 +1529,6 @@ namespace Detector
         public bool HB_SetTriggerMode(int t) {
 
             ShowMessage("设置触发模式为  " + t.ToString());
-            // 这里出发模式只能选择07
             int ret = HBI_FPD_DLL.HBI_UpdateTriggerMode(HBI_FPD_DLL._handel,t);
             if (ret != 0)
             {
@@ -1569,11 +1567,10 @@ namespace Detector
             //return NVDentalSDK.NV_SetDefectCal(nV_CorrType) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
-        public bool HBUpdateCorrectEnable() {
+        public bool HB_UpdateTriggerAndCorrectEnable(int trigger) {
 
-            
+            int ret = HBI_FPD_DLL.HBI_TriggerAndCorrectApplay(HBI_FPD_DLL._handel,trigger, ref m_pCorrect);
            // int ret = HBI_FPD_DLL.HBI_UpdateCorrectEnable(HBI_FPD_DLL._handel, ref m_pCorrect);
-            int ret = HBI_FPD_DLL.HBI_TriggerAndCorrectApplay(HBI_FPD_DLL._handel,7, ref m_pCorrect);
             ShowMessage(" ucDefectCorrection " + ((int)m_pCorrect.ucDefectCorrection).ToString() +
                 " ucGainCorrection " + ((int)m_pCorrect.ucGainCorrection).ToString() +
                 " ucDefectCorrection  " + ((int)m_pCorrect.ucDefectCorrection).ToString());
@@ -1597,7 +1594,7 @@ namespace Detector
         }
 
         // 固件最新参数数据
-        private void btnGetFirmwareCfg_Click()
+        public void btnGetFirmwareCfg_Click()
         {
             //if (!m_bOpen)
             //{
@@ -1607,7 +1604,7 @@ namespace Detector
             //
             m_pLastRegCfg = new RegCfgInfo();//RegCfgInfo 1024
             int _ret = Marshal.SizeOf(m_pLastRegCfg);
-            _ret = HBI_FPD_DLL.HBI_GetDevCfgInfo(HBI_FPD_DLL._handel, ref m_pLastRegCfg);       //获取固件参数，连接后即可获取参数
+            _ret = HBI_FPD_DLL.HBI_GetFpdCfgInfo(HBI_FPD_DLL._handel, ref m_pLastRegCfg);       //获取固件参数，连接后即可获取参数
             if (_ret != 0) { Log("Error,HBI_GetDevCfgInfo" + _ret.ToString()); return; }   // WriteLog("HBI_GetDevCfgInfo:\n", img_pro.nwidth, img_pro.nheight);
 
             // 测试，置零，检查结果
@@ -1651,6 +1648,8 @@ namespace Detector
             Log(string.Format("\tImage width={0},hight={1}\n", _imageWidth, _imageHeight));
             // 连续采集时间间隔
             UInt32 value = (UInt32)m_pLastRegCfg.m_SysCfgInfo.m_unSelfDumpingSpanTime;
+
+            Log(string.Format("\tm_pLastRegCfg.m_SysCfgInfo.m_byWorkMode ={0} \n", m_pLastRegCfg.m_SysCfgInfo.m_byWorkMode));
 
         }
         // 获取SDK版本信息

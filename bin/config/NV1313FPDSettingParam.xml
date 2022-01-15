@@ -8,10 +8,11 @@
   <静态多帧叠加降噪>false</静态多帧叠加降噪>
   <静态多帧均值叠加降噪>true</静态多帧均值叠加降噪>
   <静态叠加降噪帧数>2</静态叠加降噪帧数>
-  <binning模式>HB_BINNING_1X1</binning模式>
+  <通讯方式>UDP</通讯方式>
+  <binning模式>BINNING_1X1</binning模式>
   <shutter模式>NV_GLOBAL_SHUTTER</shutter模式>
-  <触发模式>HB_SORTWARE_TRIGGER</触发模式>
-  <本底校正模式>HB_CORR_HARD_PRE</本底校正模式>
-  <增益校正模式>HB_CORR_HARD</增益校正模式>
-  <坏点校正模式>HB_CORR_HARD</坏点校正模式>
+  <触发模式>SORTWARE</触发模式>
+  <本底校正模式>NO</本底校正模式>
+  <增益校正模式>NO</增益校正模式>
+  <坏点校正模式>NO</坏点校正模式>
 </NV1313FPDSetting>
