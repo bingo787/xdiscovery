@@ -7,47 +7,24 @@ using System.Xml.Serialization;
 
 namespace NV.Config
 {
-    public enum NV_StatusCodes
-    {
-        NV_SC_SUCCESS = 0,      ///< OK      
-        NV_SC_ERROR = -1001,  ///< Generic errorcode
-        NV_SC_ERR_NOT_INITIALIZED = -1002,
-        NV_SC_ERR_NOT_IMPLEMENTED = -1003,
-        NV_SC_ERR_RESOURCE_IN_USE = -1004,
-        NV_SC_ACCESS_DENIED = -1005,  ///< Access denied
-        NV_SC_INVALID_HANDLE = -1006,  ///< Invalid handle
-        NV_SC_INVALID_ID = -1007,  ///< Invalid ID
-        NV_SC_NO_DATA = -1008,  ///< No data
-        NV_SC_INVALID_PARAMETER = -1009,  ///< Invalid parameter
-        NV_SC_FILE_IO = -1010,  ///< File IO error
-        NV_SC_TIMEOUT = -1011,  ///< Timeout
-        NV_SC_ERR_ABORT = -1012,  /* GenTL v1.1 */
-        NV_SC_INVALID_BUFFER_SIZE = -1013,  ///< Invalid buffer size
-        NV_SC_ERR_NOT_AVAILABLE = -1014,  /* GenTL v1.2 */
-        NV_SC_INVALID_ADDRESS = -1015,  /* GenTL v1.3 */
 
-        NV_SC_ERR_CUSTOM_ID = -10000,
-        NV_SC_INVALID_FILENAME = -10001, ///< Invalid file name
-        NV_SC_GC_ERROR = -10002, ///< GenICam error. 
-        NV_SC_VALIDATION_ERROR = -10003, ///< Settings File Validation Error. 
-        NV_SC_VALIDATION_WARNING = -10004, ///< Settings File Validation Warning. 
-    }
-    public enum NV_AcquisitionMode
-    {
-        NV_CONTINUE,				///< 连续工作模式(默认值)
-        NV_FALLING_EDGE_TRIGGER,	///< 下降沿触发模式
-        NV_RISING_EDGE_TRIGGER,		///< 上升沿触发模式
-        NV_LOW_LEVEL_TRIGGER,		///< 高电平触发模式
-        NV_HIGH_LEVEL_TRIGGER		///< 低电平触发模式
-    }
 
     public enum HB_TriggerMode
     {
-        HB_SORTWARE_TRIGGER =1 ,
-        HB_HIGH_VOLTAGE_TRIGGER = 3,
-        HB_FREE_AED_TRIGGER = 4,
+        SORTWARE =1 ,
+        CLEAR = 2,
+        HVG = 3,
+        FREE_AED = 4,
+        CONTINUE = 7
     }
 
+    public enum HB_FPD_COMM_TYPE {
+
+        UDP = 0,
+        UDP_JUMBO,
+        PCIE,
+        WLAN
+    }
 
     public enum NV_ShutterMode
     {
@@ -62,9 +39,9 @@ namespace NV.Config
 
     public enum HB_BinningMode
     {
-        HB_BINNING_1X1 = 1,				///< 1x1binning(默认值)
-        HB_BINNING_2X2 = 2,             ///< 2x2binning
-        HB_BINNING_4X4 = 4,				///< 2x2binning
+        BINNING_1X1 = 1,				///< 1x1binning(默认值)
+        BINNING_2X2 = 2,             ///< 2x2binning
+        BINNING_4X4 = 4,				///< 2x2binning
     }
 
     public enum NV_Gain
@@ -88,27 +65,22 @@ namespace NV.Config
 
     public enum HB_OffsetCorrType
     {
-        HB_CORR_NO = 0,				///< 不应用校正使能
-        HB_CORR_SOFT = 1,			///< 应用硬件校正使能
-        HB_CORR_HARD_POST = 2,			///< 应用软件校正使能
-        HB_CORR_HARD_PRE = 3
+        NO = 0,				///< 不应用校正使能
+        SOFTWARE_PRE_OFFSET = 1,			///< 应用硬件校正使能
+        FIRMWARE_PRE_OFFSET = 2,			///< 应用软件校正使能
+        FIRMWARE_POST_OFFSET = 3
     }
 
     public enum HB_CorrType
     {
 
-        HB_CORR_NO = 0,				///< 不应用校正使能
-        HB_CORR_SOFT = 1,			///< 应用硬件校正使能
-        HB_CORR_HARD = 2			///< 应用软件校正使能
+        NO = 0,				///< 不应用校正使能
+        SOFTWARE = 1,			///< 应用硬件校正使能
+        FRIMWARE = 2			///< 应用软件校正使能
     }
 
+ 
 
-    public struct NV_Version
-    {
-        public int FirmwareVersion;	///< 探测器的应用软件版本
-        public int KernelVersion;		///< 探测器的系统内核版本
-        public int HardwareVersion;	///< 探测器的处理板版本
-    }
     /// <summary>
     /// ID:NV1313探测器设置
     /// Describe:保存用户对NV1313探测器设置信息
@@ -315,7 +287,7 @@ namespace NV.Config
             }
         }
 
-        private HB_BinningMode _binningMode = HB_BinningMode.HB_BINNING_1X1;
+        private HB_BinningMode _binningMode = HB_BinningMode.BINNING_1X1;
         /// <summary>
         /// binning模式
         /// </summary>
@@ -333,9 +305,9 @@ namespace NV.Config
         }
         private ObservableCollection<HB_BinningMode> _binningModes = new ObservableCollection<HB_BinningMode>()
         {
-            HB_BinningMode.HB_BINNING_1X1,
-            HB_BinningMode.HB_BINNING_2X2,
-            HB_BinningMode.HB_BINNING_4X4,
+            HB_BinningMode.BINNING_1X1,
+            HB_BinningMode.BINNING_2X2,
+            HB_BinningMode.BINNING_4X4,
         };
         /// <summary>
         /// Binning列表
@@ -390,50 +362,95 @@ namespace NV.Config
             }
         }
 
-        private HB_TriggerMode _acquisitionMode = HB_TriggerMode.HB_SORTWARE_TRIGGER;
+        private HB_TriggerMode _triggerMode = HB_TriggerMode.SORTWARE;
         /// <summary>
         /// 触发模式
         /// </summary>
         [XmlElement(ElementName = "触发模式")]
-        public HB_TriggerMode AcquisitionMode
+        public HB_TriggerMode TriggerMode
         {
             get
             {
-                return _acquisitionMode;
+                return _triggerMode;
             }
             set
             {
-                Set(() => AcquisitionMode, ref _acquisitionMode, value);
+                Set(() => TriggerMode, ref _triggerMode, value);
             }
         }
 
-        private ObservableCollection<HB_TriggerMode> _acquisitionModes = new ObservableCollection<HB_TriggerMode>()
+        private ObservableCollection<HB_TriggerMode> _triggerModes = new ObservableCollection<HB_TriggerMode>()
         {
-            HB_TriggerMode.HB_SORTWARE_TRIGGER,
-            HB_TriggerMode.HB_HIGH_VOLTAGE_TRIGGER,
-            HB_TriggerMode.HB_FREE_AED_TRIGGER,
+            HB_TriggerMode.SORTWARE,
+            HB_TriggerMode.CLEAR,
+            HB_TriggerMode.HVG,
+            HB_TriggerMode.FREE_AED,
+            HB_TriggerMode.CONTINUE
         };
         /// <summary>
         /// 触发模式列表
         /// </summary>
         [XmlIgnoreAttribute]
-        public ObservableCollection<HB_TriggerMode> AcquisitionModes
+        public ObservableCollection<HB_TriggerMode> TriggerModes
         {
             get
             {
-                return _acquisitionModes;
+                return _triggerModes;
             }
             set
             {
-                _acquisitionModes = value;
+                _triggerModes = value;
+            }
+        }
+
+        ///==================================
+        private HB_FPD_COMM_TYPE _communicationType = HB_FPD_COMM_TYPE.UDP;
+        /// <summary>
+        /// 通讯类型
+        /// </summary>
+        [XmlElement(ElementName = "通讯方式")]
+        public HB_FPD_COMM_TYPE CommunicationType
+        {
+            get
+            {
+                return _communicationType;
+            }
+            set
+            {
+                Set(() => CommunicationType, ref _communicationType, value);
+            }
+        }
+
+        private ObservableCollection<HB_FPD_COMM_TYPE> _communicationTypes = new ObservableCollection<HB_FPD_COMM_TYPE>()
+        {
+            HB_FPD_COMM_TYPE.UDP,
+            HB_FPD_COMM_TYPE.UDP_JUMBO,
+            HB_FPD_COMM_TYPE.WLAN,
+            HB_FPD_COMM_TYPE.PCIE
+
+        };
+        /// <summary>
+        /// 通讯类型列表
+        /// </summary>
+        [XmlIgnoreAttribute]
+        public ObservableCollection<HB_FPD_COMM_TYPE> CommunicationTypes
+        {
+            get
+            {
+                return _communicationTypes;
+            }
+            set
+            {
+                _communicationTypes = value;
             }
         }
 
         private ObservableCollection<HB_CorrType> _correctionModes = new ObservableCollection<HB_CorrType>()
         {
-            HB_CorrType.HB_CORR_HARD,
-            HB_CorrType.HB_CORR_NO,
-            HB_CorrType.HB_CORR_SOFT
+
+            HB_CorrType.NO,
+            HB_CorrType.SOFTWARE,
+            HB_CorrType.FRIMWARE
         };
         /// <summary>
         /// 校正模式列表
@@ -455,10 +472,10 @@ namespace NV.Config
 
         private ObservableCollection<HB_OffsetCorrType> _offsetCorrectionModes = new ObservableCollection<HB_OffsetCorrType>()
         {
-            HB_OffsetCorrType.HB_CORR_NO ,              
-            HB_OffsetCorrType.HB_CORR_SOFT ,        
-            HB_OffsetCorrType.HB_CORR_HARD_POST,       
-            HB_OffsetCorrType.HB_CORR_HARD_PRE
+            HB_OffsetCorrType.NO ,              
+            HB_OffsetCorrType.SOFTWARE_PRE_OFFSET ,        
+            HB_OffsetCorrType.FIRMWARE_PRE_OFFSET,       
+            HB_OffsetCorrType.FIRMWARE_POST_OFFSET
         };
         /// <summary>
         /// Offset 校正模式列表
@@ -478,7 +495,7 @@ namespace NV.Config
 
         //
 
-        private HB_OffsetCorrType _offsetCorMode = HB_OffsetCorrType.HB_CORR_HARD_PRE;
+        private HB_OffsetCorrType _offsetCorMode = HB_OffsetCorrType.FIRMWARE_POST_OFFSET;
         /// <summary>
         /// 本底校正模式
         /// </summary>
@@ -494,7 +511,7 @@ namespace NV.Config
                 Set(() => OffsetCorMode, ref _offsetCorMode, value);
             }
         }
-        private HB_CorrType _gainCorMode = HB_CorrType.HB_CORR_SOFT;
+        private HB_CorrType _gainCorMode = HB_CorrType.SOFTWARE;
         /// <summary>
         /// 增益校正模式
         /// </summary>
@@ -510,7 +527,7 @@ namespace NV.Config
                 Set(() => GainCorMode, ref _gainCorMode, value);
             }
         }
-        private HB_CorrType _defectCorMode = HB_CorrType.HB_CORR_SOFT;
+        private HB_CorrType _defectCorMode = HB_CorrType.SOFTWARE;
         /// <summary>
         /// 坏点校正模式
         /// </summary>

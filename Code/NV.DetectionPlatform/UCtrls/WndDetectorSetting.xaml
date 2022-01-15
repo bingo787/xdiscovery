@@ -34,13 +34,15 @@
                 <TextBox Text="{Binding ExpTime,UpdateSourceTrigger=PropertyChanged}" />
                 <!--<TextBlock Text="最大帧数:"/>
                 <TextBox Text="{Binding MaxFrames,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->
+                <TextBlock Text="通讯类型:"/>
+                <ComboBox ItemsSource="{Binding CommunicationTypes}" SelectedValue="{Binding CommunicationType}"/>
                 <TextBlock Text="Binning:"/>
                 <ComboBox ItemsSource="{Binding BinningModes}" SelectedValue="{Binding BinningMode}"/>
                 <!--<TextBlock Text="Shutter:"/>
                 <ComboBox SelectedValue="{Binding ShutterMode}" ItemsSource="{Binding ShutterModes}"/>-->
-                <!--<TextBlock Text="Acquisition:"/>
-                <ComboBox x:Name="cboParities" ItemsSource="{Binding AcquisitionModes}" SelectedValue="{Binding AcquisitionMode}">
-                </ComboBox>-->
+                <TextBlock Text="触发模式:"/>
+                <ComboBox ItemsSource="{Binding TriggerModes}" SelectedValue="{Binding TriggerMode}">
+                </ComboBox>
                 <TextBlock Text="{DynamicResource OffsetCorType}"/>
                 <ComboBox ItemsSource="{Binding OffsetCorrectionModes}" SelectedValue="{Binding OffsetCorMode}"/>
                 <TextBlock Text="{DynamicResource GainCorType}"/>

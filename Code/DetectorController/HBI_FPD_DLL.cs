@@ -880,13 +880,14 @@ namespace Detector
 
     #region struct
     #region
-
+    [StructLayout(LayoutKind.Sequential, Pack = 1, CharSet = CharSet.Ansi)]
     public struct COMM_CFG
     {
         public FPD_COMM_TYPE type;
         // 网口通讯需要设置,PCIe只要设置类型即可
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
         public char[] remoteip;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
         public char[] localip;
         public ushort loacalPort;
         public ushort remotePort;

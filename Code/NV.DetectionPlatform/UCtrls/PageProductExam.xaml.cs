@@ -171,16 +171,28 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
                 _detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
 
-                scale_ratio = Data.ExpTime/100.0f;
-                string autoOffset = Data.IsAutoPreOffset ? "1" : "0";
-                // 连接是否做固件offset模板，1-做offset模板，其他不做
-                int offsettemplate = 0;
-                if (autoOffset == "1")
-                    offsettemplate = 1;
+                scale_ratio = Data.ExpTime/1000.0;
+
 
                 string local_ip = "192.168.10.20";
                 string remote_ip = "192.168.10.40";
-                int ret = HBI_FPD_DLL.HBI_ConnectDetectorJumbo(HBI_FPD_DLL._handel, remote_ip, 0x8081, local_ip, 0x8080, offsettemplate);
+
+                COMM_CFG config;
+                config.type = (FPD_COMM_TYPE)Data.CommunicationType;
+                config.loacalPort = 0x8080;
+                config.localip = local_ip.PadRight(16, '\0').ToCharArray();
+                config.remotePort = 0x8081;
+                config.remoteip = remote_ip.PadRight(16, '\0').ToCharArray();
+
+                string autoOffset = Data.IsAutoPreOffset ? "1" : "0";
+                // 连接是否做固件offset模板，1-做offset模板，其他不做
+                // 静态平板也不能做校正
+                int offsettemplate = 0;
+                if (autoOffset == "1" && config.type != FPD_COMM_TYPE.UDP_COMM_TYPE)
+                    offsettemplate = 1;
+                int ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, config, offsettemplate);
+                
+               // int ret = HBI_FPD_DLL.HBI_ConnectDetectorJumbo(HBI_FPD_DLL._handel, remote_ip, 0x8081, local_ip, 0x8080, offsettemplate);
 
                 _detector.ShowMessage("local ip: " + local_ip + " <---> " + remote_ip);
 
@@ -192,7 +204,7 @@ namespace NV.DetectionPlatform.UCtrls
                 {
                     _detector.Delay = Data.Delay;
                     _detector.HB_SetBinningMode((byte)Data.BinningMode);
-                    _detector.HB_SetTriggerMode(7);
+                    _detector.HB_SetTriggerMode((int)Data.TriggerMode);
                     _detector.HB_SetGain((int)Data.Gain);
                     _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
                     _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);

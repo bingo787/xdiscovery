@@ -53,7 +53,7 @@ namespace NV.DetectionPlatform.UCtrls
             NV.Infrastructure.UICommon.IniFile.WriteString("System", "AutoOffsetCalOnOpen", autoOffset, System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "nvDentalDet.ini"));
 
             detector.HB_SetBinningMode((byte)Data.BinningMode);
-            detector.HB_SetTriggerMode(7);
+            detector.HB_SetTriggerMode((int)Data.TriggerMode);
             detector.HB_SetGain((int)Data.Gain);
             detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
             detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
