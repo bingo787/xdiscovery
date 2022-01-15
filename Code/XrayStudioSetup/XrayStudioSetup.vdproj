@@ -2395,7 +2395,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform, Version=1.2.2022.111, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:NV.DetectionPlatform, Version=1.2.2021.1121, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_71E77F9F93D84AF7A335C4FFF7FB80CA"
@@ -4371,7 +4371,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NDTStudio"
         "ProductCode" = "8:{D89B7CF9-B8B9-4CDB-B7B3-2110FE0921AA}"
-        "PackageCode" = "8:{3E99F6B7-542A-4855-A889-BA23F2C6889C}"
+        "PackageCode" = "8:{4854CCF2-5EB2-4602-9FD4-E459A12EC00F}"
         "UpgradeCode" = "8:{0DD09F27-5302-4C02-9B1C-43B791B528BF}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -4493,7 +4493,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_0E9CF2686BB34543A094E7F6428E6F4F"
             {
-            "Name" = "8:XrayStudio.exe"
+            "Name" = "8:NDTStudio"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
