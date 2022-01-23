@@ -22,7 +22,7 @@ using NV.DetectionPlatform.Entity;
 using System.Drawing;
 using NV.Config;
 using OpenCvSharp;
-
+using SerialPortController;
 namespace NV.DetectionPlatform.UCtrls
 {
     /// <summary>
@@ -31,7 +31,6 @@ namespace NV.DetectionPlatform.UCtrls
     public partial class PageProductExam : Page
     {
         private int _imageCount = 0;
-        private double scale_ratio = 0.14;
         /// <summary>
         /// 实时采集显示线程
         /// </summary>
@@ -44,7 +43,20 @@ namespace NV.DetectionPlatform.UCtrls
         private KrayDicomLib.DicomFile _file = new KrayDicomLib.DicomFile();
         private int _curExpTime;
         private ExamType _curExpType;
+        /// <summary>
+        /// 高压控制器
+        /// </summary>
+        
+        public static SerialPortReporter_RS485PROTOCOL_PLC PostionReporter = SerialPortReporter_RS485PROTOCOL_PLC.Instance;
+        double scaleRatio = 0.1;
+        private double CalculateScaleRatio() {
+            //todo:zhaoqibin
 
+
+            //double distance = PostionReporter.AxisZDistance_mm;
+           
+            return scaleRatio;
+        }
         private WndUSMSetting usmSetting = new WndUSMSetting();
 
         public PageProductExam()
@@ -170,9 +182,7 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.IsMultiFramesOverlay = Data.IsMultiFramesOverlay;
                 _detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
                 _detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
-
-                scale_ratio = Data.ExpTime/1000.0;
-
+                scaleRatio = Data.ExpTime/1000.0;
 
                 string local_ip = "192.168.10.20";
                 string remote_ip = "192.168.10.40";
@@ -363,6 +373,7 @@ namespace NV.DetectionPlatform.UCtrls
             _imageCount = 0;
 
             MainWindow.ControlSystem.XRayOn();
+
             IsAcqing = true;
 
             new Thread(new ThreadStart(delegate
@@ -894,7 +905,7 @@ namespace NV.DetectionPlatform.UCtrls
             if (ipUC.CurrentDv != null)
             {
                 ipUC.CurrentDv.ResetImage();
-                ipUC.CurrentDv.SetScaleRatio(scale_ratio);//暂时保留，后续废除
+                ipUC.CurrentDv.SetScaleRatio(CalculateScaleRatio());//暂时保留，后续废除
             }
         }
         /// <summary>
@@ -919,7 +930,7 @@ namespace NV.DetectionPlatform.UCtrls
                             ipUC.CurrentDv.SetWindowLevel(ww, wl);
                     }
                     ipUC.CurrentDv.Invalidate();
-                    ipUC.CurrentDv.SetScaleRatio(scale_ratio);//暂时保留，后续废除
+                    ipUC.CurrentDv.SetScaleRatio(CalculateScaleRatio());//暂时保留，后续废除
                 }
             }
             catch (Exception ex)
@@ -1357,7 +1368,7 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 dv.DeleteAnnotation(true);
                 dv.LoadFile(dialog.FileName);
-                dv.SetScaleRatio(scale_ratio);//暂时保留，后续废除
+                dv.SetScaleRatio(CalculateScaleRatio());//暂时保留，后续废除
                 dv.Invalidate();
             }
         }

@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="ConfigHelper.cs" />
     <Compile Include="MC110PortController.cs" />
+    <Compile Include="SerialPortReporter_RS485PROTOCOL_PLC.cs" />
     <Compile Include="PortController.cs" />
     <Compile Include="PortPara.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

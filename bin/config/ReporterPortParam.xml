@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<PortPara xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <串口名称>COM1</串口名称>
+  <波特率>9600</波特率>
+  <数据位>8</数据位>
+  <奇偶校验>None</奇偶校验>
+  <停止位>One</停止位>
+</PortPara>

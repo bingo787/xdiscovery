@@ -7,6 +7,8 @@ using System.Threading;
 
 namespace SerialPortController
 {
+
+
     /// <summary>
     /// 端口通讯控制中心
     /// </summary>
@@ -19,6 +21,9 @@ namespace SerialPortController
         Char EndTag = (Char)(CR);
         private static SerialPortControler_RS232PROTOCOL_MC110 _instance;
         private bool _running = true;
+
+        public static SerialPortReporter_RS485PROTOCOL_PLC PostionReporter = SerialPortReporter_RS485PROTOCOL_PLC.Instance;
+
         public static SerialPortControler_RS232PROTOCOL_MC110 Instance
         {
             get
@@ -262,6 +267,16 @@ namespace SerialPortController
                     XRayOnChanged(isXrayOn);
                 }
                 _lastCommand = string.Empty;
+
+                if (isXrayOn)
+                {
+                    PostionReporter.SendCommand("1");
+                }
+                else
+                {
+                    PostionReporter.SendCommand("0");
+                }
+                
 
             }
             else if (_lastCommand.StartsWith("SAV:") && message == RES_OK)
