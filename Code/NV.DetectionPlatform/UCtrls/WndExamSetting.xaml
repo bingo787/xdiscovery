@@ -107,10 +107,10 @@
                         <ComboBoxItem Content="1" Tag="1000"/>
                         <ComboBoxItem Content="2" Tag="1000"/>
                         <ComboBoxItem Content="4" Tag="1000"/>
-                        <!--<ComboBoxItem Content="8" Tag="1000"/>
-                        <ComboBoxItem Content="16" Tag="1000"/>
+                        <ComboBoxItem Content="8" Tag="1000"/>
+                        <ComboBoxItem Content="12" Tag="1000"/>
                         <ComboBoxItem Content="20" Tag="1000"/>
-                        <ComboBoxItem Content="30" Tag="1000"/>-->
+                        <!--<ComboBoxItem Content="30" Tag="1000"/>-->
                     </ComboBox>
                     
                     <Grid Grid.Row="7" Grid.ColumnSpan="3" Margin="5,0">
