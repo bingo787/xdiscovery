@@ -51,10 +51,8 @@ namespace NV.DetectionPlatform.UCtrls
         double scaleRatio = 0.1;
         private double CalculateScaleRatio() {
             //todo:zhaoqibin
+            scaleRatio =  (PostionReporter.AxisZDistance_mm * 2.126526929 + 45)/10000.0;
 
-
-            //double distance = PostionReporter.AxisZDistance_mm;
-           
             return scaleRatio;
         }
         private WndUSMSetting usmSetting = new WndUSMSetting();
@@ -182,7 +180,7 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.IsMultiFramesOverlay = Data.IsMultiFramesOverlay;
                 _detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
                 _detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
-                scaleRatio = Data.ExpTime/1000.0;
+                scaleRatio = Data.ExpTime/10000.0;
 
                 string local_ip = "192.168.10.20";
                 string remote_ip = "192.168.10.40";
@@ -219,7 +217,7 @@ namespace NV.DetectionPlatform.UCtrls
                     _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
                     _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
                     _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
-                    _detector.HB_UpdateTriggerAndCorrectEnable((int)Data.TriggerMode);
+                   // _detector.HB_UpdateTriggerAndCorrectEnable((int)Data.TriggerMode);
                     _detector.btnGetImageProperty();
                     _detector.btnGetSdkVer_Click();
                     _detector.btnFirmwareVer_Click();
@@ -355,6 +353,8 @@ namespace NV.DetectionPlatform.UCtrls
                 }
                 _detector.HBI_SetSinglePrepareTime(_curExpTime);
 
+                Thread.Sleep(200);
+                _detector.HB_SetTriggerMode((int)HB_TriggerMode.SORTWARE);
             }
             else if (type == ExamType.Expose)
             {
@@ -362,11 +362,14 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.MaxFrames = 0; // 连续获取
                 _detector.HB_SetAqcSpanTime((int)(1000.0 / Global.CurrentParam.Fps));// 设置采集帧率 ： 1，2，4
 
+                Thread.Sleep(200);
+                _detector.HB_SetTriggerMode((int)HB_TriggerMode.CONTINUE);
             }
             else if (type == ExamType.MultiEnergyAvg)
             {
                 _detector.IsStored = true;
                 _detector.MaxFrames = 0;
+                _detector.HB_SetTriggerMode((int)HB_TriggerMode.SORTWARE);
             }
 
 

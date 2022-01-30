@@ -1524,10 +1524,7 @@ namespace Detector
         //    return NVDentalSDK.NV_SetShutterMode(nV_ShutterMode) == NV_StatusCodes.NV_SC_SUCCESS;
         //}
 
-      
-
         public bool HB_SetTriggerMode(int t) {
-
             ShowMessage("设置触发模式为  " + t.ToString());
             int ret = HBI_FPD_DLL.HBI_UpdateTriggerMode(HBI_FPD_DLL._handel,t);
             if (ret != 0)

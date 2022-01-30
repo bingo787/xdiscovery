@@ -53,7 +53,7 @@ namespace SerialPortController
                         if (_serialPort == null)
                             continue;
                         GetHVStatus();
-                        Thread.Sleep(200);
+                        Thread.Sleep(1000);
 
                     }
                     catch { }
@@ -144,14 +144,14 @@ namespace SerialPortController
                     {
                         string m = messes[i];
 #if DEBUG
-                      //  Console.WriteLine("ReceiveMid-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + m);
+                       Console.WriteLine("ReceiveMid-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + m);
 #endif
                         if (m.StartsWith(StartTag.ToString()))
                         {
                             string mes = messes[i].TrimStart(StartTag);
                             ReceivedMessage(mes);
 #if DEBUG
-                      //      Console.WriteLine("ReceiveCommand-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + mes);
+                            Console.WriteLine("ReceiveCommand-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + mes);
 #endif
 
                         }
@@ -358,6 +358,8 @@ namespace SerialPortController
                     case "28": error_message = "Temperature Preheat"; break;
                     default: error_message = "Unknow";break;
                 }
+
+                System.Console.WriteLine("Error message : " + error_message);
                 if (StateReported != null && !string.IsNullOrEmpty(error_message))
                     StateReported(error_message);
             }

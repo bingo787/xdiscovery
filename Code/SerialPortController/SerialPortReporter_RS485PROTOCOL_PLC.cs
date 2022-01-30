@@ -39,8 +39,8 @@ namespace SerialPortController
 
         private SerialPortReporter_RS485PROTOCOL_PLC()
         {
-
-            // OpenSerialPort();
+            
+            OpenSerialPort();
             // InitilizeHVStatusThread();
         }
 
@@ -111,60 +111,29 @@ namespace SerialPortController
             }
 
 #if DEBUG
-         //   Console.WriteLine("Send-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + message);
+           Console.WriteLine("Send-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + message);
 #endif
         }
 
         void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort port = sender as SerialPort;
-
+            /*
+             通信格式采用RS485，两线制。波特率9600，数据位8位，停止位1位，无奇偶校验，每秒钟发送2帧数据
+             每帧数据7个字节，帧头是FE，帧尾是FF
+             */
             while (_running && _serialPort.BytesToRead > 0)
             {
                 Thread.Sleep(30); // 30ms
                 byte[] buffer = new byte[1024];
                 int len = port.Read(buffer, 0, buffer.Length);
-                string message = ASCIIEncoding.ASCII.GetString(buffer, 0, len);
-#if DEBUG
-                Console.WriteLine("Receive-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + message);
-#endif
-
-                if (!message.Contains(EndTag) && !message.Contains(EndTag))
-                {
+                if (buffer[0] != StartTag || buffer[len - 1] != EndTag) {
                     continue;
                 }
-
-                // 0xFE,0,0,0,0,0xFF
-                string[] messes = message.Split(EndTag);
-                if (messes.Length > 0)
-                {
-                    for (int i = 0; i < messes.Length; i++)
-                    {
-                        string m = messes[i];
+                AxisZDistance_mm =  buffer[1]*1000 +  buffer[2]* 100 + buffer[3]*10 + buffer[4] + buffer[5]/10.0;
 #if DEBUG
-                        // Console.WriteLine("ReceiveMid-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + m);
+                Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + "AxisZDistance_mm =" + AxisZDistance_mm.ToString());
 #endif
-                        if (m.StartsWith(StartTag.ToString()))
-                        {
-                            string mes = messes[i].TrimStart(StartTag);
-                            int temp;
-                            if (int.TryParse(mes, out temp))
-                            {
-                                AxisZDistance_mm = temp / 10.0;
-
-                                Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + "AxisZDistance_mm =" + AxisZDistance_mm.ToString());
-                            }
-#if DEBUG
-                            //    Console.WriteLine("ReceiveCommand-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + mes);
-#endif
-
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-                }
             }
 
         }
