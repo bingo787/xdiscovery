@@ -120,7 +120,7 @@ namespace NV.DetectionPlatform.UCtrls
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                tbUA.Text = arg.ToString();
+              //  tbUA.Text = arg.ToString();
             }));
         }
 
@@ -149,12 +149,9 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 sldrkv.Maximum = setting.MaxKV;
             }
-            if (setting.MaxCurrent > 0)
-            {
-                sldrua.Maximum = setting.MaxCurrent;
-            }
             if (setting.MaxPower > 0)
             {
+                sldrpower.Maximum = setting.MaxPower;
                 _powerMax = setting.MaxPower;
             }
         }
@@ -174,16 +171,21 @@ namespace NV.DetectionPlatform.UCtrls
         private void Add(object sender, RoutedEventArgs e)
         {
             string name = txtName.Text;
-            double kv, time;
+            double kv,power, time;
             int ua, fps;
             if (string.IsNullOrEmpty(name))
             {
                 CMessageBox.Show("请输入新方案名称\n Please input new solution name");
                 return;
             }
-            if (!int.TryParse(txtua.Text, out ua))
+            //if (!int.TryParse(txtua.Text, out ua))
+            //{
+            //    CMessageBox.Show("电流值不合法。\n Invalid current value");
+            //    return;
+            //}
+            if (!double.TryParse(txtPower.Text, out power))
             {
-                CMessageBox.Show("电流值不合法。\n Invalid current value");
+                CMessageBox.Show("功率值不合法。\n Invalid current value");
                 return;
             }
             if (!double.TryParse(txtkv.Text, out kv))
@@ -219,7 +221,8 @@ namespace NV.DetectionPlatform.UCtrls
                     param.GUID = System.Guid.NewGuid().ToString();
                     param.Name = name;
                     param.KV = kv;
-                    param.UA = ua;
+                    param.Power = power;
+                    param.UA = 0;
                     param.Time = time;
                     param.Fps = fps;
                     if (Global.CurrentProduct != null)
@@ -278,17 +281,22 @@ namespace NV.DetectionPlatform.UCtrls
                 CMessageBox.Show("请输入新方案名称\n Please input new solution name");
                 return;
             }
-            double kv, time;
+            double kv,power, time;
             int ua, fps;
 
-            if (!int.TryParse(txtua.Text, out ua))
-            {
-                CMessageBox.Show("电流值不合法。\n Invalid current value");
-                return;
-            }
+            //if (!int.TryParse(txtua.Text, out ua))
+            //{
+            //    CMessageBox.Show("电流值不合法。\n Invalid current value");
+            //    return;
+            //}
             if (!double.TryParse(txtkv.Text, out kv))
             {
                 CMessageBox.Show("电压值不合法。\nInvalid voltage value");
+                return;
+            }
+            if (!double.TryParse(txtPower.Text, out power))
+            {
+                CMessageBox.Show("功率值不合法。\nInvalid voltage value");
                 return;
             }
             if (!double.TryParse(txtTime.Text, out time))
@@ -312,7 +320,8 @@ namespace NV.DetectionPlatform.UCtrls
                 {
                     repeat.Name = txtName.Text;
                     repeat.KV = kv;
-                    repeat.UA = ua;
+                    repeat.Power = power;
+                    repeat.UA = 0;
                     repeat.Time = time;
                     repeat.Fps = fps;
                     if (Global.CurrentProduct != null)
@@ -332,17 +341,22 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            double kv, time;
-            int ua, fps;
+            double kv, power,time;
+            int ua = 0, fps;
 
-            if (!int.TryParse(txtua.Text, out ua))
-            {
-                CMessageBox.Show("电流值不合法。\n Invalid current value");
-                return;
-            }
+            //if (!int.TryParse(txtua.Text, out ua))
+            //{
+            //    CMessageBox.Show("电流值不合法。\n Invalid current value");
+            //    return;
+            //}
             if (!double.TryParse(txtkv.Text, out kv))
             {
                 CMessageBox.Show("电压值不合法。\nInvalid voltage value");
+                return;
+            }
+            if (!double.TryParse(txtPower.Text, out power))
+            {
+                CMessageBox.Show("功率值不合法。\nInvalid voltage value");
                 return;
             }
             if (!double.TryParse(txtTime.Text, out time))
@@ -362,6 +376,7 @@ namespace NV.DetectionPlatform.UCtrls
             ExamParam param = new ExamParam();
             param.KV = kv;
             param.UA = ua;
+            param.Power = power;
             param.Time = time;
             param.Fps = fps;
 
@@ -370,7 +385,7 @@ namespace NV.DetectionPlatform.UCtrls
 
             controlSystem.SetKV(kv);
             System.Threading.Thread.Sleep(150);
-            controlSystem.SetCurrent(ua);
+            controlSystem.SetPower(power);
             this.Visibility = Visibility.Hidden;
         }
         /// <summary>
@@ -396,32 +411,49 @@ namespace NV.DetectionPlatform.UCtrls
         /// </summary>
         private bool CheckMaxPower()
         {
-            if (sldrkv.Value * sldrua.Value > _powerMax * 1000)
+            if (sldrpower.Value > _powerMax * 1000)
             {
                 CMessageBox.Show("功率上限为：" + _powerMax + "W,当前设置将超出安全额定功率！\n Currnet Power is too large!");
                 return false;
             }
             return true;
         }
+        ///// <summary>
+        ///// 设置电流
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void SetUA(object sender, RoutedEventArgs e)
+        //{
+        //    int ua;
+        //    if (!int.TryParse(txtua.Text, out ua))
+        //    {
+        //        CMessageBox.Show("电流值不合法。\nInvalid voltage value");
+        //        return;
+        //    }
+        //    if (!CheckMaxPower())
+        //        return;
+
+        //    MainWindow.ControlSystem.SetCurrent(ua);
+        //}
         /// <summary>
-        /// 设置电流
+        /// 设置功率
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void SetUA(object sender, RoutedEventArgs e)
+        private void SetP(object sender, RoutedEventArgs e)
         {
-            int ua;
-            if (!int.TryParse(txtua.Text, out ua))
+            double power;
+            if (!double.TryParse(txtPower.Text, out power))
             {
-                CMessageBox.Show("电流值不合法。\nInvalid voltage value");
+                CMessageBox.Show("功率值不合法。\nInvalid voltage value");
                 return;
             }
             if (!CheckMaxPower())
                 return;
 
-            MainWindow.ControlSystem.SetCurrent(ua);
+            MainWindow.ControlSystem.SetPower(power);
         }
-
         /// <summary>
         /// 选择方案
         /// </summary>
@@ -429,17 +461,22 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="e"></param>
         private void Select(object sender, RoutedEventArgs e)
         {
-            double kv, time;
-            int ua, fps;
+            double kv,power, time;
+            int ua = 0, fps;
 
-            if (!int.TryParse(txtua.Text, out ua))
-            {
-                CMessageBox.Show("电流值不合法。\n Invalid current value");
-                return;
-            }
+            //if (!int.TryParse(txtua.Text, out ua))
+            //{
+            //    CMessageBox.Show("电流值不合法。\n Invalid current value");
+            //    return;
+            //}
             if (!double.TryParse(txtkv.Text, out kv))
             {
                 CMessageBox.Show("电压值不合法。\nInvalid voltage value");
+                return;
+            }
+            if (!double.TryParse(txtPower.Text, out power))
+            {
+                CMessageBox.Show("功率值不合法。\nInvalid voltage value");
                 return;
             }
             if (!double.TryParse(txtTime.Text, out time))
@@ -459,6 +496,7 @@ namespace NV.DetectionPlatform.UCtrls
             ExamParam param = new ExamParam();
             param.KV = kv;
             param.UA = ua;
+            param.Power = power;
             param.Time = time;
             param.Fps = fps;
 
@@ -466,7 +504,7 @@ namespace NV.DetectionPlatform.UCtrls
 
             MainWindow.ControlSystem.SetKV(kv);
             System.Threading.Thread.Sleep(150);
-            MainWindow.ControlSystem.SetCurrent(ua);
+            MainWindow.ControlSystem.SetPower(power);
         }
 
 
@@ -484,17 +522,22 @@ namespace NV.DetectionPlatform.UCtrls
 
         private void StartAcq_Click(object sender, RoutedEventArgs e)
         {
-            double kv, time;
-            int ua, fps;
+            double kv, power,time;
+            int ua = 0, fps;
 
-            if (!int.TryParse(txtua.Text, out ua))
-            {
-                CMessageBox.Show("电流值不合法。\n Invalid current value");
-                return;
-            }
+            //if (!int.TryParse(txtua.Text, out ua))
+            //{
+            //    CMessageBox.Show("电流值不合法。\n Invalid current value");
+            //    return;
+            //}
             if (!double.TryParse(txtkv.Text, out kv))
             {
                 CMessageBox.Show("电压值不合法。\nInvalid voltage value");
+                return;
+            }
+            if (!double.TryParse(txtPower.Text, out power))
+            {
+                CMessageBox.Show("功率值不合法。\nInvalid voltage value");
                 return;
             }
             if (!double.TryParse(txtTime.Text, out time))
@@ -514,6 +557,7 @@ namespace NV.DetectionPlatform.UCtrls
             ExamParam param = new ExamParam();
             param.KV = kv;
             param.UA = ua;
+            param.Power = power;
             param.Time = time;
             param.Fps = fps;
 
@@ -522,7 +566,7 @@ namespace NV.DetectionPlatform.UCtrls
 
             controlSystem.SetKV(kv);
             System.Threading.Thread.Sleep(150);
-            controlSystem.SetCurrent(ua);
+            controlSystem.SetPower(power);
             if (StartAcqEvent != null)
             {
                 StartAcqEvent.Invoke(this, null);

@@ -21,11 +21,11 @@
                 </CheckBox>
                 <TextBlock Text="预热电压:" ToolTip="KV"/>
                 <TextBox Text="{Binding Data.PreheatKV,UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Text="预热电流:" ToolTip="UA"/>
-                <TextBox Text="{Binding Data.PreheatCurrent,UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Text="预热功率:" ToolTip="POWER"/>
+                <TextBox Text="{Binding Data.PreheatPower,UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="预热时间:" ToolTip="分钟"/>
                 <TextBox Text="{Binding Data.PreheatMinutes,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock  Text="kV、uA、Minutes" Visibility="Visible" FontSize="10"/>
+                <TextBlock  Text="kV、W、Minutes" Visibility="Visible" FontSize="10"/>
                 <Button  Content="启动端口" Visibility="Hidden"/>
                 <Button  Content="启动端口" Visibility="Hidden"/>
                 <Button x:Name="btnClose" Content="应用" IsEnabled="True" Click="btnClose_Click" Height="30" IsDefault="True"/>

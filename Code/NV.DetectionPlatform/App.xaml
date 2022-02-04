@@ -5,7 +5,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Style/NVStyle.xaml"/>
+                <ResourceDictionary Source="Style/HBStyle.xaml"/>
                 <ResourceDictionary Source="Style/zh_CN.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

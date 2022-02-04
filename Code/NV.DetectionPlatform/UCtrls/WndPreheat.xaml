@@ -69,11 +69,12 @@
                             </GeometryGroup>
                         </Path.Data>
                     </Path>
-                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="8" Grid.Row="1">
+                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="8" Grid.Row="1" RenderTransformOrigin="0.5,0.512">
                         <Path.Data>
                             <GeometryGroup>
+
                                 <PathGeometry Figures="M512 102.370529c-209.646787 0-380.226814 170.580027-380.226814 380.226814 0 209.646787 170.579003 380.225791 380.226814 380.225791 209.645764 0 380.225791-170.579003 380.225791-380.225791C892.225791 272.950556 721.645764 102.370529 512 102.370529zM512 822.561152c-187.467649 0-339.963809-152.498206-339.963809-339.963809 0-187.467649 152.49616-339.963809 339.963809-339.963809 187.466626 0 339.963809 152.497183 339.963809 339.963809C851.963809 670.062945 699.466626 822.561152 512 822.561152z"/>
-                                <PathGeometry Figures="M594.297354 539.02654 429.967682 539.02654l-38.331004 104.008842-50.664913 0 150.656255-390.308427 42.887786 0 148.244322 390.308427-50.664913 0L594.297354 539.02654zM444.713524 499.079736l135.105071 0-67.016323-184.969759L444.713524 499.079736z"/>
+                                <PathGeometry Figures= "M785.6128 334.0288l-118.5792 423.3216h-64.512L517.7344 452.608c-4.3008-14.1312-5.5296-27.648-6.7584-43.008h-1.2288c-1.2288 15.36-4.3008 29.4912-6.7584 43.008l-86.6304 304.128h-62.6688l-122.88-423.3216h60.2112l86.6304 319.488c4.3008 14.1312 5.5296 29.4912 6.7584 43.008h1.2288c1.2288-11.0592 4.3008-25.1904 8.6016-43.008l90.9312-319.488h52.8384l87.8592 321.3312c3.072 11.0592 5.5296 23.9616 6.7584 40.5504h1.2288c1.2288-11.0592 4.3008-25.1904 8.6016-41.7792l82.3296-319.488h60.8256z"/>
                             </GeometryGroup>
                         </Path.Data>
                     </Path>
@@ -86,11 +87,11 @@
                         </Path.Data>
                     </Path>
                     <TextBlock Text="kV" Grid.Column="2"/>
-                    <TextBlock Text="uA" Grid.Row="1" Grid.Column="2"/>
+                    <TextBlock Text="W" Grid.Row="1" Grid.Column="2"/>
                     <TextBlock Text="mA" Grid.Row="2" Grid.Column="2"/>
 
                     <TextBlock Text="0000" Grid.Column="1" FontSize="30" x:Name="tbKV" x:FieldModifier="public"/>
-                    <TextBlock Text="0000" Grid.Row="1" Grid.Column="1" FontSize="30" x:FieldModifier="public" x:Name="tbUA"/>
+                    <TextBlock Text="0000" Grid.Row="1" Grid.Column="1" FontSize="30" x:FieldModifier="public" x:Name="tbPower"/>
                     <TextBlock Text="0000" Grid.Row="2" Grid.Column="1" FontSize="30" x:FieldModifier="public" x:Name="tbFila"/>
                 </Grid>
 

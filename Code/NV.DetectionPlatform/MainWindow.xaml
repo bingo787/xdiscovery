@@ -85,7 +85,7 @@
                         <Label Content="{DynamicResource Top_Solution}" FontSize="17"/>
                         <Label x:Name="lblExamType" Content="--" FontSize="17"/>
                         <Label x:Name="lblKV" Content="0kV" FontSize="17"/>
-                        <Label x:Name="lblUA" Content="0uA" FontSize="17"/>
+                        <Label x:Name="lblPower" Content="0W" FontSize="17"/>
                         <Label x:Name="lblTime" Content="0s" FontSize="17"/>
                         <Label x:Name="lblFps" Content="0Fps" FontSize="17"/>
                         <Label Content="∥"/>

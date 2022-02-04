@@ -151,6 +151,7 @@
     <sys:String x:Key="AcqSolution">AcqSolution</sys:String>
     <sys:String x:Key="AcqSolution_Voltage">Voltage:</sys:String>
     <sys:String x:Key="AcqSolution_Current">Current:</sys:String>
+    <sys:String x:Key="AcqSolution_Power">Power:</sys:String>
     <sys:String x:Key="SpotTime">SpotTime:</sys:String>
     <sys:String x:Key="ExposeFPS">ExposeFPS:</sys:String>
     <sys:String x:Key="StartAcq">StartAcq</sys:String>

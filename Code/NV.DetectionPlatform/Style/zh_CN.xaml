@@ -153,6 +153,7 @@
     <sys:String x:Key="AcqSolution">拍摄方案</sys:String>
     <sys:String x:Key="AcqSolution_Voltage">电压：</sys:String>
     <sys:String x:Key="AcqSolution_Current">电流：</sys:String>
+    <sys:String x:Key="AcqSolution_Power">功率：</sys:String>
     <sys:String x:Key="SpotTime">单片时间：</sys:String>
     <sys:String x:Key="ExposeFPS">动态帧速率：</sys:String>
     <sys:String x:Key="StartAcq">立即采集</sys:String>

@@ -617,6 +617,30 @@ namespace NV.DetectionPlatform.Entity
         private global::System.String _GUID;
         partial void OnGUIDChanging(global::System.String value);
         partial void OnGUIDChanged();
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Double> Power
+        {
+            get
+            {
+                return _Power;
+            }
+            set
+            {
+                OnPowerChanging(value);
+                ReportPropertyChanging("Power");
+                _Power = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Power");
+                OnPowerChanged();
+            }
+        }
+        private Nullable<global::System.Double> _Power = 0D;
+        partial void OnPowerChanging(Nullable<global::System.Double> value);
+        partial void OnPowerChanged();
 
         #endregion
 

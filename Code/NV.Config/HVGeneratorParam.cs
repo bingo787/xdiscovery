@@ -83,20 +83,20 @@ namespace NV.Config
                 Set(() => PreheatKV, ref _preheatKV, value);
             }
         }
-        private int _preheatCurrent = 200;
+        private double _preheatPower = 7.5;
         /// <summary>
-        /// 预热电流
+        /// 预热功率
         /// </summary>
-        [XmlElement(ElementName = "预热电流")]
-        public int PreheatCurrent
+        [XmlElement(ElementName = "预热功率")]
+        public double PreheatPower
         {
             get
             {
-                return _preheatCurrent;
+                return _preheatPower;
             }
             set
             {
-                Set(() => PreheatCurrent, ref _preheatCurrent, value);
+                Set(() => PreheatPower, ref _preheatPower, value);
             }
         }
 
@@ -133,22 +133,22 @@ namespace NV.Config
                 Set(() => MaxKV, ref _maxKV, value);
             }
         }
-        private int _maxCurrent = 1500;
-        /// <summary>
-        /// 安全电流
-        /// </summary>
-        [XmlElement(ElementName = "电流上限")]
-        public int MaxCurrent
-        {
-            get
-            {
-                return _maxCurrent;
-            }
-            set
-            {
-                Set(() => MaxCurrent, ref _maxCurrent, value);
-            }
-        }
+        //private int _maxCurrent = 1500;
+        ///// <summary>
+        ///// 安全电流
+        ///// </summary>
+        //[XmlElement(ElementName = "电流上限")]
+        //public int MaxCurrent
+        //{
+        //    get
+        //    {
+        //        return _maxCurrent;
+        //    }
+        //    set
+        //    {
+        //        Set(() => MaxCurrent, ref _maxCurrent, value);
+        //    }
+        //}
         private int _maxPower = 200;
         /// <summary>
         /// 安全功率

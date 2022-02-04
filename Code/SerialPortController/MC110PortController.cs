@@ -277,9 +277,9 @@ namespace SerialPortController
                 arg = _lastCommand.TrimStart("SPWR:".ToArray());
                 if (int.TryParse(arg, out temp))
                 {
-                    uint uA = (uint)(temp*0.1 / (setKvValue*1000) * 0.001 * 0.001);
-                    if (CurrentSettingChanged != null)
-                        CurrentSettingChanged(uA);  //uA
+                   //todo: 这里需要好好显示下
+                    //if (CurrentSettingChanged != null)
+                    //    CurrentSettingChanged(uA);  //uA
                 }
                 _lastCommand = string.Empty;
             }
@@ -525,14 +525,14 @@ namespace SerialPortController
         /// <summary>
         /// 预热
         /// </summary>
-        public void Preheat(double kv, int ua)
+        public void Preheat(double kv, double p)
         {
             new Thread(new ThreadStart(delegate
             {
                 System.Threading.Thread.Sleep(200);
                 SetKV(kv);
                 System.Threading.Thread.Sleep(200);
-                SetCurrent(ua);
+                SetPower(p);
                 System.Threading.Thread.Sleep(200);
                 XRayOn();
 
@@ -549,7 +549,6 @@ namespace SerialPortController
             SendCommand("EP:0");
         }
 
-        private double setKvValue = 0.0f;
         /// <summary>
         /// 设置KV
         /// </summary>
@@ -558,7 +557,6 @@ namespace SerialPortController
         {
             if (kv < 0)
                 kv = 0;
-            setKvValue = kv;
             SendCommand("SAV:" + ((int)(kv * 1000)).ToString());
         }
         /// <summary>
@@ -567,16 +565,13 @@ namespace SerialPortController
         /// <param name="ua"></param>
         public void SetCurrent(int ua)
         {
-            if (ua < 0)
-                ua = 0;
-            int power = (int)((double)ua * 0.01 * setKvValue);
-            SetPower(power);
+            // MC110光源不支持设置电流
         }
         /// <summary>
         /// 设置功率
         /// </summary>
         /// <param name="p"></param>
-        public void SetPower(int p)
+        public void SetPower(double p)
         {
             if (p < 0)
                 p = 0;

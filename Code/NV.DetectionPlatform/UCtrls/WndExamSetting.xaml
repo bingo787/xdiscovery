@@ -88,19 +88,19 @@
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="{DynamicResource AcqSolution_Voltage}" HorizontalAlignment="Center"/>
-                    <Label Content="{DynamicResource AcqSolution_Current}" Grid.Row="2" HorizontalAlignment="Center"/>
+                    <Label Content="{DynamicResource AcqSolution_Power}" Grid.Row="2" HorizontalAlignment="Center"/>
                     <Label Content="{DynamicResource SpotTime}" Grid.Row="4" HorizontalAlignment="Center"/>
                     <Label Content="{DynamicResource ExposeFPS}" Grid.Row="6" HorizontalAlignment="Center"/>
                     <Label Content="kV"  Grid.Column="2" HorizontalAlignment="Center"/>
-                    <Label Content="uA" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"/>
+                    <Label Content="W" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"/>
                     <Label Content="S" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center"/>
 
                     <TextBox Grid.Column="1" x:Name="txtkv" Text="{Binding DataContext.CurrentParam.KV}"/>
-                    <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtua" Text="{Binding DataContext.CurrentParam.UA}"/>
+                    <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtPower" Text="{Binding DataContext.CurrentParam.Power}"/>
                     <TextBox Grid.Column="1" Grid.Row="4" x:Name="txtTime" Text="{Binding DataContext.CurrentParam.Time}"/>
 
                     <Slider Grid.ColumnSpan="3" Grid.Row="1" x:Name="sldrkv" Minimum="0" Value="{Binding DataContext.CurrentParam.KV}" TickFrequency="0.1" Maximum="160"/>
-                    <Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrua" Minimum="0" Value="{Binding DataContext.CurrentParam.UA}" Maximum="1250"/>
+                    <Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrpower" Minimum="0" Value="{Binding DataContext.CurrentParam.Power}"  TickFrequency="0.1"/>
                     <Slider Grid.ColumnSpan="3" Grid.Row="5" x:Name="sldrtime" Minimum="0" Value="{Binding DataContext.CurrentParam.Time}" TickFrequency="0.1"/>
 
                     <ComboBox x:Name="cboFps" Grid.Row="6" Grid.Column="1" Text="{Binding SelectedItem.Fps,ElementName=lstParams,Mode=OneWay}" SelectedIndex="0">
@@ -152,7 +152,7 @@
                         <Path.Data>
                             <GeometryGroup>
                                 <PathGeometry Figures="M512 102.370529c-209.646787 0-380.226814 170.580027-380.226814 380.226814 0 209.646787 170.579003 380.225791 380.226814 380.225791 209.645764 0 380.225791-170.579003 380.225791-380.225791C892.225791 272.950556 721.645764 102.370529 512 102.370529zM512 822.561152c-187.467649 0-339.963809-152.498206-339.963809-339.963809 0-187.467649 152.49616-339.963809 339.963809-339.963809 187.466626 0 339.963809 152.497183 339.963809 339.963809C851.963809 670.062945 699.466626 822.561152 512 822.561152z"/>
-                                <PathGeometry Figures="M594.297354 539.02654 429.967682 539.02654l-38.331004 104.008842-50.664913 0 150.656255-390.308427 42.887786 0 148.244322 390.308427-50.664913 0L594.297354 539.02654zM444.713524 499.079736l135.105071 0-67.016323-184.969759L444.713524 499.079736z"/>
+                                <PathGeometry Figures= "M785.6128 334.0288l-118.5792 423.3216h-64.512L517.7344 452.608c-4.3008-14.1312-5.5296-27.648-6.7584-43.008h-1.2288c-1.2288 15.36-4.3008 29.4912-6.7584 43.008l-86.6304 304.128h-62.6688l-122.88-423.3216h60.2112l86.6304 319.488c4.3008 14.1312 5.5296 29.4912 6.7584 43.008h1.2288c1.2288-11.0592 4.3008-25.1904 8.6016-43.008l90.9312-319.488h52.8384l87.8592 321.3312c3.072 11.0592 5.5296 23.9616 6.7584 40.5504h1.2288c1.2288-11.0592 4.3008-25.1904 8.6016-41.7792l82.3296-319.488h60.8256z"/>
                             </GeometryGroup>
                         </Path.Data>
                     </Path>
@@ -165,15 +165,15 @@
                         </Path.Data>
                     </Path>
                     <TextBlock Text="kV" Grid.Column="3" VerticalAlignment="Center"/>
-                    <TextBlock Text="uA" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center"/>
+                    <TextBlock Text="W" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center"/>
                     <TextBlock Text="mA" Grid.Row="2" Grid.Column="3" VerticalAlignment="Center"/>
 
                     <TextBlock Text="0000" Grid.Column="2" FontSize="30" x:Name="tbKV" VerticalAlignment="Center" x:FieldModifier="public"></TextBlock>
-                    <TextBlock Text="0000" Grid.Row="1" Grid.Column="2" FontSize="30" x:Name="tbUA" VerticalAlignment="Center" x:FieldModifier="public"/>
+                    <TextBlock Text="0000" Grid.Row="1" Grid.Column="2" FontSize="30" x:Name="tbPower" VerticalAlignment="Center" x:FieldModifier="public"/>
                     <TextBlock Text="0000" Grid.Row="2" Grid.Column="2" FontSize="30" x:Name="tbFila" VerticalAlignment="Center" x:FieldModifier="public"/>
                     
                     <Button Content=">" Grid.Column="0" Grid.Row="0" Width="20" Height="40" Click="SetKV"/>
-                    <Button Content=">" Grid.Column="0" Grid.Row="1" Width="20" Height="40" Click="SetUA"/>
+                    <Button Content=">" Grid.Column="0" Grid.Row="1" Width="20" Height="40" Click="SetP"/>
 
                     <UniformGrid Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="3" Grid.RowSpan="2" Columns="2" Rows="2">
                         <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">

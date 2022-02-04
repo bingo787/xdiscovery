@@ -81,7 +81,7 @@ namespace NV.DetectionPlatform.UCtrls
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                tbUA.Text = arg.ToString();
+               // tbUA.Text = arg.ToString();
             }));
         }
 
@@ -100,7 +100,7 @@ namespace NV.DetectionPlatform.UCtrls
         private void StartPreheat(object sender, RoutedEventArgs e)
         {
             NV.Config.HVGeneratorParam preheat = NV.Config.HVGeneratorParam.Instance;
-            MainWindow.ControlSystem.Preheat(preheat.PreheatKV, preheat.PreheatCurrent);
+            MainWindow.ControlSystem.Preheat(preheat.PreheatKV, preheat.PreheatPower);
 
             _preheatMinutes = preheat.PreheatMinutes;
             _span = TimeSpan.FromMinutes(_preheatMinutes);

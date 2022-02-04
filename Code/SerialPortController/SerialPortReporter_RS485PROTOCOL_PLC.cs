@@ -39,9 +39,15 @@ namespace SerialPortController
 
         private SerialPortReporter_RS485PROTOCOL_PLC()
         {
+
+            try {
+                OpenSerialPort();
+                // InitilizeHVStatusThread();
+            }
+            catch (Exception) {
+
+            }
             
-            OpenSerialPort();
-            // InitilizeHVStatusThread();
         }
 
         #region 字段
