@@ -138,7 +138,7 @@ namespace SerialPortController
                 }
                 AxisZDistance_mm =  buffer[1]*1000 +  buffer[2]* 100 + buffer[3]*10 + buffer[4] + buffer[5]/10.0;
 #if DEBUG
-                Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + "AxisZDistance_mm =" + AxisZDistance_mm.ToString());
+              //  Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + "AxisZDistance_mm =" + AxisZDistance_mm.ToString());
 #endif
             }
 

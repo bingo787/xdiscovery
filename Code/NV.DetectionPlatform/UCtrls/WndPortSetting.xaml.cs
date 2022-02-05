@@ -62,7 +62,6 @@ namespace NV.DetectionPlatform.UCtrls
                 }
                 catch { }
                 ControlSystem.OpenSerialPort();
-                ControlSystem.SendCommand("MON");
             }
             catch (Exception)
             {

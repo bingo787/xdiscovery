@@ -81,7 +81,18 @@ namespace NV.DetectionPlatform.UCtrls
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-               // tbUA.Text = arg.ToString();
+                double kv = 0.0f;
+#if DEBUG
+                Console.WriteLine("监控的电压和电流 tbKV {0} current {1}",tbKV.Text, arg);
+#endif                
+                if (!double.TryParse(tbKV.Text, out kv )) {
+                    tbPower.Text = "Unknown";
+                    return;
+                }
+                double current_mA = arg * 0.1 * 0.001;
+                // 功率 W
+                tbPower.Text = (current_mA * kv).ToString("f1");
+
             }));
         }
 
@@ -100,6 +111,9 @@ namespace NV.DetectionPlatform.UCtrls
         private void StartPreheat(object sender, RoutedEventArgs e)
         {
             NV.Config.HVGeneratorParam preheat = NV.Config.HVGeneratorParam.Instance;
+
+            Console.WriteLine("开始预热 电压 {0}, 功率 {1},时间 {2} ", preheat.PreheatKV, preheat.PreheatPower, preheat.PreheatMinutes);
+
             MainWindow.ControlSystem.Preheat(preheat.PreheatKV, preheat.PreheatPower);
 
             _preheatMinutes = preheat.PreheatMinutes;

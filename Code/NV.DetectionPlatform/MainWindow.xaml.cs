@@ -16,6 +16,8 @@ using System.Reflection;
 using System.Threading;
 using System.Windows.Media;
 using NV.DetectionPlatform.Service;
+using System.Linq;
+
 namespace NV.DetectionPlatform
 {
     /// <summary>
@@ -281,7 +283,7 @@ namespace NV.DetectionPlatform
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                lblHV_SettingCur.Content = arg + "uA";
+                lblHV_SettingCur.Content = (arg/10.0f).ToString() + "W";
             }));
         }
         /// <summary>
@@ -327,8 +329,19 @@ namespace NV.DetectionPlatform
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                lblHV_Cur.Content = arg + "uA";
-                //this.Log("电流改变为: " + lblHV_Cur.Content.ToString());
+                double current_mA = arg * 0.1 * 0.001;
+                double kv = 0.0f;
+                
+                string kvStr = lblHV_KV.Content.ToString().TrimEnd("kV".ToArray());
+                if (double.TryParse(kvStr, out kv))
+                {
+                    lblHV_Cur.Content = (current_mA * kv).ToString("f1") + "W";
+                }
+                else
+                {
+                    lblHV_Cur.Content = "--";
+                }
+
             }));
         }
         /// <summary>
@@ -339,7 +352,7 @@ namespace NV.DetectionPlatform
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                lblHV_KV.Content = arg + "kV";
+                lblHV_KV.Content = arg.ToString("f1") + "kV";
                 //this.Log("电压改变为: " + lblHV_KV.Content.ToString());
             }));
         }
@@ -653,8 +666,17 @@ namespace NV.DetectionPlatform
             if (cmd == "Preheat")
             {
                 var wnd = new NV.DetectionPlatform.UCtrls.WndPreheat();
-                wnd.tbKV.Text = lblKV.Content.ToString();
-                wnd.tbPower.Text = lblPower.Content.ToString();
+                wnd.tbKV.Text = lblHV_KV.Content.ToString();
+
+                uint current = 0;
+                double kv = 0.0f;
+                bool ret1 = uint.TryParse(lblHV_Cur.Content.ToString(), out current);
+                bool ret2 = double.TryParse(lblHV_KV.Content.ToString(), out kv);
+
+                if (ret1 && ret2) {
+                    wnd.tbPower.Text = (current * kv).ToString();
+                }
+                
                 wnd.tbFila.Text = lblHV_Fila.Content.ToString();
                 wnd.ShowDialogEx();
             }
