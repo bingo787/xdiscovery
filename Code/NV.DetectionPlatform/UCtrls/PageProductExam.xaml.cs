@@ -334,6 +334,7 @@ namespace NV.DetectionPlatform.UCtrls
 
             if (IsAcqing)
             {
+                Console.WriteLine("正在采集中...... IsAcqing = ture");
                 return;
             }
 

@@ -368,13 +368,13 @@ namespace NV.DetectionPlatform
                 {
                     lblHV_XRayState.Content = "XRay ON";
                     lblHV_XRayState.Foreground = Brushes.Yellow;
-                   // this.Log("打开X光源");
+                    Console.WriteLine("监控 光源已打开");
                 }
                 else
                 {
                     lblHV_XRayState.Content = "XRay OFF";
                     lblHV_XRayState.Foreground = _normalForeground;
-                    //this.Log("关闭X光源");
+                    Console.WriteLine("监控 光源已关闭");
                 }
             }));
 
@@ -661,6 +661,7 @@ namespace NV.DetectionPlatform
             string cmd = (sender as FrameworkElement).Tag.ToString();
             if (cmd == "ResetHV")
             {
+                ControlSystem_FaultCleared();
                 ControlSystem.ResetHV();
             }
             if (cmd == "Preheat")

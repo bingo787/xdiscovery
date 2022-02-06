@@ -240,9 +240,9 @@ namespace SerialPortController
             else if (_lastCommand.StartsWith("EP:") && message == RES_OK)
             {
                 isXrayOn = _lastCommand[3] == '1';
-                if (XRayOnChanged != null)
+                if (XRayEnableChanged != null)
                 {
-                    XRayOnChanged(isXrayOn);
+                    XRayEnableChanged(isXrayOn);
                 }
                 _lastCommand = string.Empty;
 
@@ -290,6 +290,7 @@ namespace SerialPortController
                     if (VoltageChanged != null)
                         VoltageChanged(value);
                 }
+                _lastCommand = string.Empty;
             }
             else if (message.StartsWith("TC:") && message.EndsWith(RES_OK))
             {
@@ -300,6 +301,7 @@ namespace SerialPortController
                     if (CurrentChanged != null)
                         CurrentChanged((uint)temp);
                 }
+                _lastCommand = string.Empty;
             }
             else if (message.StartsWith("HC:") && message.EndsWith(RES_OK)) {
                 //< HC: 4 5 0 0[E R R: 0] > 单位mA
@@ -309,6 +311,7 @@ namespace SerialPortController
                     if (FilamentMonitorChanged != null)
                         FilamentMonitorChanged((uint)temp);
                 }
+                _lastCommand = string.Empty;
 
             }
             else if (message.StartsWith("TMP1:") && message.EndsWith(RES_OK))
@@ -321,6 +324,7 @@ namespace SerialPortController
                     if (TemperatureChanged != null)
                         TemperatureChanged(value);
                 }
+                _lastCommand = string.Empty;
             }
             else if (message.StartsWith("[ERR:"))
             {
@@ -389,6 +393,12 @@ namespace SerialPortController
             byte[] cmd = ASCIIEncoding.ASCII.GetBytes(message);
             command.AddRange(cmd);
             command.Add(CR);
+
+            if (!string.IsNullOrEmpty(_lastCommand)) {
+                Console.WriteLine("上一次的命令是 " + _lastCommand);
+                Thread.Sleep(300);
+            }
+           
             _lastCommand = message;
 
             if (_serialPort.IsOpen)
@@ -553,10 +563,12 @@ namespace SerialPortController
         bool isStabled = false;
         public void XRayOn()
         {
-           SendCommand("EP:1");
+            Console.WriteLine("执行打开光源");
+            SendCommand("EP:1");
         }
         public void XRayOff()
         {
+            Console.WriteLine("执行关闭光源");
             SendCommand("EP:0");
         }
 
@@ -618,11 +630,15 @@ namespace SerialPortController
              Get Temperature    <GTMP:x     x=1,2> °C 
              Enable Bootloader Mode   <EBLM> Get Error Report     <GRPT> 
              */
+            Thread.Sleep(250);
             SendCommand("GAVM");
-            Thread.Sleep(200);
+            Thread.Sleep(250);
             SendCommand("GTCM");
-            Thread.Sleep(200);
+            Thread.Sleep(250);
             SendCommand("GTMP:1");
+            Thread.Sleep(250);
+            SendCommand("GHCM");
+            Thread.Sleep(250);
         }
 
         public void Connect()
