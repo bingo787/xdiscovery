@@ -23,6 +23,7 @@ namespace NV.DetectionPlatform.UCtrls
     {
         private int _preheatMinutes;
         private TimeSpan _span;
+        private int _warmUpStep = 0;
         System.Windows.Threading.DispatcherTimer _timer;
 
         public WndPreheat(bool isAuto)
@@ -169,6 +170,7 @@ namespace NV.DetectionPlatform.UCtrls
         {
             if (_span <= TimeSpan.Zero)
             {
+                _warmUpStep = 0;
                 MainWindow.ControlSystem.XRayOff();
                 btnOK.Content = runState.Text = "完成";
                 System.Media.SystemSounds.Exclamation.Play();
@@ -180,24 +182,31 @@ namespace NV.DetectionPlatform.UCtrls
                 tbTimeSpan.Foreground = System.Windows.Media.Brushes.Green;
                 return;
             }
-            else if (_span.TotalSeconds == 14*60) {
-                MainWindow.ControlSystem.MC110UpdateCMD(40, 7.5);
-            }
-            else if (_span.TotalSeconds == 11*60)
-            {
-                MainWindow.ControlSystem.MC110UpdateCMD(60, 9);
-            }
-            else if (_span.TotalSeconds == 8*60)
-            {
-                MainWindow.ControlSystem.MC110UpdateCMD(80, 12);
-            }
-            else if (_span.TotalSeconds == 4)
-            {
-                MainWindow.ControlSystem.MC110UpdateCMD(100, 15);
-            }
-
             _span = _span.Add(new TimeSpan(0, 0, -1));
             tbTimeSpan.Text = _span.Minutes.ToString("d2") + ":" + _span.Seconds.ToString("d2");
+            
+            if (_span.Minutes == 14 && _warmUpStep == 1)
+            {
+                MainWindow.ControlSystem.MC110UpdateCMD(40, 7.5);
+                _warmUpStep += 1;
+            }
+            else if (_span.Minutes == 11 && _warmUpStep == 2)
+            {
+                MainWindow.ControlSystem.MC110UpdateCMD(60, 9);
+                _warmUpStep += 1;
+            }
+            else if (_span.Minutes == 8 && _warmUpStep == 3)
+            {
+                MainWindow.ControlSystem.MC110UpdateCMD(80, 12);
+                _warmUpStep += 1;
+            }
+            else if (_span.Minutes == 4 && _warmUpStep == 4)
+            {
+                MainWindow.ControlSystem.MC110UpdateCMD(100, 15);
+                _warmUpStep += 1;
+            }
+
+
         }
         /// <summary>
         /// 取消预热
@@ -247,7 +256,7 @@ namespace NV.DetectionPlatform.UCtrls
              80kV 12.0W 4min
              100kV 15W 4min
              */
-
+            _warmUpStep = 1;
             MainWindow.ControlSystem.Preheat(20, 5.0);
 
             _preheatMinutes = 16;
