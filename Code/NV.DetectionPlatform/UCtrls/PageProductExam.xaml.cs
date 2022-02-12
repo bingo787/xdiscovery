@@ -529,9 +529,9 @@ namespace NV.DetectionPlatform.UCtrls
             _file.BitsStored = bits;
 
             _file.PutDicomString(0x18, 0x60, Global.CurrentParam.KV.ToString());//KVP
-            _file.PutDicomString(0x18, 0x1151, Global.CurrentParam.UA.ToString());//XRayTubeCurrent
+            _file.PutDicomString(0x18, 0x1151, Global.CurrentParam.Power.ToString());//功率
             _file.PutDicomString(0x18, 0x1150, _curExpTime.ToString());//ExposureTime
-            _file.PutDicomString(0x0028, 0x0030, "0.1");//像素与mm倍率
+            _file.PutDicomString(0x0028, 0x0030, scaleRatio.ToString("f2"));//像素与mm倍率
             _file.PutDicomString(0x0008, 0x1010, NV.DRF.Core.Model.GeneralSettingHelper.Instance.HVName);//高压名称-StationName
 
             _file.PatientID = Global.CurrentProduct.GUID;
