@@ -51,8 +51,8 @@
     </Overlay>
     <Overlay>
       <Type>DYNAMIC</Type>
-      <Description>电流uA</Description>
-      <DisplayFormat>%suA</DisplayFormat>
+      <Description>功率W</Description>
+      <DisplayFormat>%sW</DisplayFormat>
       <TagGroup>0x0018</TagGroup>
       <TagElement>0x1151</TagElement>
     </Overlay>
