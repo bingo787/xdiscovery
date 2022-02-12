@@ -25,14 +25,24 @@ namespace NV.DetectionPlatform.UCtrls
         private TimeSpan _span;
         System.Windows.Threading.DispatcherTimer _timer;
 
-        public WndPreheat()
+        public WndPreheat(bool isAuto)
         {
             InitializeComponent();
 
             InitilizeControlSystem();
-            this.Loaded += StartPreheat;
+
+            if (isAuto)
+            {
+                this.Loaded += StartMC110WarmUp;
+            }
+            else
+            {
+                this.Loaded += StartPreheat;
+            }
+
             this.Closing += WndPreheat_Closing;
         }
+
 
         /// <summary>
         /// 初始化串口控制器
@@ -151,6 +161,45 @@ namespace NV.DetectionPlatform.UCtrls
             tbTimeSpan.Text = _span.Minutes.ToString("d2") + ":" + _span.Seconds.ToString("d2");
         }
         /// <summary>
+        /// 倒计时
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void MC110WarmUpTimerTick(object sender, EventArgs e)
+        {
+            if (_span <= TimeSpan.Zero)
+            {
+                MainWindow.ControlSystem.XRayOff();
+                btnOK.Content = runState.Text = "完成";
+                System.Media.SystemSounds.Exclamation.Play();
+
+                if (this.Visibility == Visibility.Hidden)
+                {
+                    this.Visibility = Visibility.Visible;
+                }
+                tbTimeSpan.Foreground = System.Windows.Media.Brushes.Green;
+                return;
+            }
+            else if (_span.TotalSeconds == 14*60) {
+                MainWindow.ControlSystem.MC110UpdateCMD(40, 7.5);
+            }
+            else if (_span.TotalSeconds == 11*60)
+            {
+                MainWindow.ControlSystem.MC110UpdateCMD(60, 9);
+            }
+            else if (_span.TotalSeconds == 8*60)
+            {
+                MainWindow.ControlSystem.MC110UpdateCMD(80, 12);
+            }
+            else if (_span.TotalSeconds == 4)
+            {
+                MainWindow.ControlSystem.MC110UpdateCMD(100, 15);
+            }
+
+            _span = _span.Add(new TimeSpan(0, 0, -1));
+            tbTimeSpan.Text = _span.Minutes.ToString("d2") + ":" + _span.Seconds.ToString("d2");
+        }
+        /// <summary>
         /// 取消预热
         /// </summary>
         /// <param name="sender"></param>
@@ -188,5 +237,31 @@ namespace NV.DetectionPlatform.UCtrls
             {
             }
         }
+
+
+        public void StartMC110WarmUp(object sender, RoutedEventArgs e) {
+            /*
+             20kV 5.0W 2min
+             40kV 7.5W 3min
+             60kV 9.0W 3min
+             80kV 12.0W 4min
+             100kV 15W 4min
+             */
+
+            MainWindow.ControlSystem.Preheat(20, 5.0);
+
+            _preheatMinutes = 16;
+            _span = TimeSpan.FromMinutes(_preheatMinutes);
+            runPreheatTime.Text = _preheatMinutes.ToString();
+            tbTimeSpan.Text = _span.Minutes.ToString("d2") + ":" + _span.Seconds.ToString("d2");
+
+            _timer = new System.Windows.Threading.DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Tick += MC110WarmUpTimerTick;
+            _timer.Start();
+        }
+
+
+
     }
 }

@@ -560,6 +560,21 @@ namespace SerialPortController
             })).Start();
 
         }
+        public void MC110UpdateCMD(double kv, double p) {
+
+            Console.WriteLine("更新光源设置参数 电压：{0}， 功率：{1}",kv,p);
+
+            new Thread(new ThreadStart(delegate
+            {
+                System.Threading.Thread.Sleep(200);
+                SetKV(kv);
+                System.Threading.Thread.Sleep(200);
+                SetPower(p);
+                System.Threading.Thread.Sleep(200);
+                SendCommand("UPDT");
+
+            })).Start();
+        }
         bool isStabled = false;
         public void XRayOn()
         {

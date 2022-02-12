@@ -461,7 +461,7 @@ namespace NV.DetectionPlatform
                 NV.Config.HVGeneratorParam preheat = NV.Config.HVGeneratorParam.Instance;
                 if (preheat.IsAutoPreheat)
                 {
-                    var wnd = new NV.DetectionPlatform.UCtrls.WndPreheat();
+                    var wnd = new NV.DetectionPlatform.UCtrls.WndPreheat(true);
                     wnd.tbKV.Text = lblKV.Content.ToString();
                     wnd.tbPower.Text = lblPower.Content.ToString();
                     wnd.tbFila.Text = lblHV_Fila.Content.ToString();
@@ -666,7 +666,7 @@ namespace NV.DetectionPlatform
             }
             if (cmd == "Preheat")
             {
-                var wnd = new NV.DetectionPlatform.UCtrls.WndPreheat();
+                var wnd = new NV.DetectionPlatform.UCtrls.WndPreheat(false);
                 wnd.tbKV.Text = lblHV_KV.Content.ToString();
 
                 uint current = 0;
