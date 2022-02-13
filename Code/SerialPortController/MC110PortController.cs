@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Windows;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+
 
 namespace SerialPortController
 {
@@ -326,7 +329,8 @@ namespace SerialPortController
                 }
                 _lastCommand = string.Empty;
             }
-            else if (message.StartsWith("[ERR:"))
+
+           if (message.StartsWith("[ERR:"))
             {
                 /// 错误码
 
@@ -645,15 +649,13 @@ namespace SerialPortController
              Get Temperature    <GTMP:x     x=1,2> °C 
              Enable Bootloader Mode   <EBLM> Get Error Report     <GRPT> 
              */
-            Thread.Sleep(250);
             SendCommand("GAVM");
-            Thread.Sleep(250);
+            Thread.Sleep(1000);
             SendCommand("GTCM");
-            Thread.Sleep(250);
+            Thread.Sleep(1000);
             SendCommand("GTMP:1");
-            Thread.Sleep(250);
+            Thread.Sleep(1000);
             SendCommand("GHCM");
-            Thread.Sleep(250);
         }
 
         public void Connect()
@@ -668,7 +670,20 @@ namespace SerialPortController
             */
 
             SendCommand("EH:1");
-            Thread.Sleep(5*1000);
+            
+            
+           // System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>{ }));
+            /*
+            _preheatMinutes = 16;
+            _span = TimeSpan.FromMinutes(_preheatMinutes);
+            runPreheatTime.Text = _preheatMinutes.ToString();
+            tbTimeSpan.Text = _span.Minutes.ToString("d2") + ":" + _span.Seconds.ToString("d2");
+
+            _timer = new System.Windows.Threading.DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Tick += MC110WarmUpTimerTick;
+            _timer.Start();
+            */
 
         }
     }

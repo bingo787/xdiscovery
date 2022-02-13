@@ -64,6 +64,23 @@ namespace NV.DetectionPlatform.UCtrls
             }
         }
 
+        private void RemoveInitCallback() {
+            try
+            {
+                MainWindow.ControlSystem.XRayOnChanged -= ControlSystem_XRayOnChanged;
+                MainWindow.ControlSystem.VoltageChanged -= ControlSystem_VoltageChanged;
+                MainWindow.ControlSystem.CurrentChanged -= ControlSystem_CurrentChanged;
+                MainWindow.ControlSystem.FilamentMonitorChanged -= ControlSystem_FilamentMonitorChanged;
+                MainWindow.ControlSystem.StateReported -= ControlSystem_StateReported;
+                MainWindow.ControlSystem.XRayEnableChanged -= ControlSystem_XRayOnChanged;
+            }
+            catch (Exception)
+            {
+            }
+
+
+        }
+
         private void ControlSystem_XRayOnChanged(bool arg)
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
@@ -147,6 +164,7 @@ namespace NV.DetectionPlatform.UCtrls
             if (_span <= TimeSpan.Zero)
             {
                 MainWindow.ControlSystem.XRayOff();
+                RemoveInitCallback();
                 btnOK.Content = runState.Text = "完成";
                 System.Media.SystemSounds.Exclamation.Play();
 
@@ -172,6 +190,7 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 _warmUpStep = 0;
                 MainWindow.ControlSystem.XRayOff();
+                RemoveInitCallback();
                 btnOK.Content = runState.Text = "完成";
                 System.Media.SystemSounds.Exclamation.Play();
 
@@ -200,11 +219,11 @@ namespace NV.DetectionPlatform.UCtrls
                 MainWindow.ControlSystem.MC110UpdateCMD(80, 12);
                 _warmUpStep += 1;
             }
-            //else if (_span.Minutes == 4 && _warmUpStep == 4)
-            //{
-            //    MainWindow.ControlSystem.MC110UpdateCMD(100, 15);
-            //    _warmUpStep += 1;
-            //}
+            else if (_span.Minutes == 4 && _warmUpStep == 4)
+            {
+                MainWindow.ControlSystem.MC110UpdateCMD(100, 12);
+                _warmUpStep += 1;
+            }
 
 
         }
@@ -216,6 +235,7 @@ namespace NV.DetectionPlatform.UCtrls
         private void AbortPreheat(object sender, RoutedEventArgs e)
         {
             MainWindow.ControlSystem.XRayOff();
+            RemoveInitCallback();
             _span = TimeSpan.Zero;
             this.Close();
         }
