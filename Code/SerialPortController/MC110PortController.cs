@@ -670,20 +670,8 @@ namespace SerialPortController
             */
 
             SendCommand("EH:1");
+            Thread.Sleep(5 * 1000);
             
-            
-           // System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>{ }));
-            /*
-            _preheatMinutes = 16;
-            _span = TimeSpan.FromMinutes(_preheatMinutes);
-            runPreheatTime.Text = _preheatMinutes.ToString();
-            tbTimeSpan.Text = _span.Minutes.ToString("d2") + ":" + _span.Seconds.ToString("d2");
-
-            _timer = new System.Windows.Threading.DispatcherTimer();
-            _timer.Interval = TimeSpan.FromSeconds(1);
-            _timer.Tick += MC110WarmUpTimerTick;
-            _timer.Start();
-            */
 
         }
     }
