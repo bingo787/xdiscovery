@@ -200,11 +200,11 @@ namespace NV.DetectionPlatform.UCtrls
                 MainWindow.ControlSystem.MC110UpdateCMD(80, 12);
                 _warmUpStep += 1;
             }
-            else if (_span.Minutes == 4 && _warmUpStep == 4)
-            {
-                MainWindow.ControlSystem.MC110UpdateCMD(100, 15);
-                _warmUpStep += 1;
-            }
+            //else if (_span.Minutes == 4 && _warmUpStep == 4)
+            //{
+            //    MainWindow.ControlSystem.MC110UpdateCMD(100, 15);
+            //    _warmUpStep += 1;
+            //}
 
 
         }
