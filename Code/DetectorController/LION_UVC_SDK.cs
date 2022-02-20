@@ -285,18 +285,44 @@ namespace Detector
     [StructLayout(LayoutKind.Sequential)]
     public struct TWD_IDENTITY
     {
-    LU_UINT32 Id;
-    LU_VERSION Version;
-    LU_UINT16 ProtocolMajor;
-    LU_UINT16 ProtocolMinor;
-    LU_UINT32 SupportedGroups;
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-    char[] Manufacturer;
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-    char[] ProductFamily;
-    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-    char[] ProductName;
-    }
+        LU_UINT32 Id;
+        LU_VERSION Version;
+        LU_UINT16 ProtocolMajor;
+        LU_UINT16 ProtocolMinor;
+        LU_UINT32 SupportedGroups;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        char[] Manufacturer;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        char[] ProductFamily;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        char[] ProductName;
+    };
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct LU_IDENTITY
+    {
+        LU_UINT32 Id;                   //设备ID
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 128)]
+        char[] Name;             //设备名称
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 64)]
+        char[] DevSerial;         //设备序列号
+        LU_UINT16 MajorNum;         //固件版本高位
+        LU_UINT16 MinorNum;			//固件版本低位
+    };
+    public struct LU_DEVICE
+    {
+        LU_IDENTITY uvcIdentity;
+        TWD_IDENTITY twIdentity;
+    };
+    //参数
+    public struct LU_PARAM
+    {
+
+    LU_UINT16 param;        //参数 ,开方式参数形式，用于兼容
+    LU_UINT16 type;         //存储空间数据类型, data实际数据类型为int, short, char.....
+    LU_UINT32 size;         //存储空间大小,byte个数
+    IntPtr data;			//存储空间，用于存储实际参数值
+    };
 
     #endregion struct
 
@@ -313,6 +339,46 @@ namespace Detector
         [DllImport("LionSDK.dll", EntryPoint = "GetDeviceCount", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern LU_RESULT GetDeviceCount(LU_UINT32 enumLion = 1);
 
+
+        /*********************************************************************************************************************
+        * @brief 获取设备
+        * 
+        * @param[in] index 设备索引 0, 1, 2, 3....
+        * @param[in] enumLion 枚举设备类型，1: uvc, 0: twain
+        * @return 返回设备
+       *********************************************************************************************************************/
+        [DllImport("LionSDK.dll", EntryPoint = "GetDevice", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern ref LU_DEVICE GetDevice(LU_UINT32 index, LU_UINT32 enumLion = 1);
+
+        /*********************************************************************************************************************
+      * @brief 打开设备
+      *
+      * @param[in] pDevice需要打开的设备路径
+      * @return LU_SUCCESS：成功，其他：失败
+     *********************************************************************************************************************/
+        [DllImport("LionSDK.dll", EntryPoint = "OpenDevice", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern LU_RESULT OpenDevice(IntPtr pDevice);
+
+
+        /*********************************************************************************************************************
+     * @brief 关闭设备
+     *
+     * @param[in] pDevice需要关闭的设备路径
+     * @return LU_SUCCESS：成功，其他：失败
+    *********************************************************************************************************************/
+        [DllImport("LionSDK.dll", EntryPoint = "CloseDevice", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern LU_RESULT CloseDevice(IntPtr pDevice);
+
+
+        /*********************************************************************************************************************
+     * @brief 查询设备状态，只限于uvc设备
+     *
+     * @param[in] pDevice需要查询的设备路径
+     * @param[out] devState 返回的设备状态
+     * @return LU_SUCCESS：成功，其他：失败
+    *********************************************************************************************************************/
+        [DllImport("LionSDK.dll", EntryPoint = "GetDeviceState", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern LU_RESULT GetDeviceState(IntPtr pDevice, ref LUDEV_STATE devState);
 
 
     }
