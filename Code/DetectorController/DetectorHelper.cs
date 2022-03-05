@@ -16,6 +16,11 @@ using NV.Infrastructure.UICommon;
 using SerialPortController;
 namespace Detector
 {
+
+    using LU_UINT16 = System.UInt16;
+    using LU_RESULT = System.Int32;
+    using LU_UINT32 = System.UInt32;
+
     public delegate void ImageCallbackHandler(byte wnd, ImageData image);
     public delegate void TemperatureCallbackHandler(float a, float b);
     public delegate void SystemStatusCallbackHandler(int a, int b);
@@ -683,6 +688,25 @@ namespace Detector
             return 0;
         }
 
+
+        private unsafe LU_RESULT LionUVCRecieveImage(LU_DEVICE device, byte* pImgData, LU_UINT32 nDataBuf, byte* pFile, LU_UINT32 nFileBuf) {
+
+            ushort[] buffer = new ushort[nDataBuf];
+
+            for (int i = 0; i < nDataBuf; i++)
+            {
+                buffer[i] = ((ushort*)pImgData)[i];
+            }
+
+            PlayBuffer.Enqueue(buffer);
+            if (IsStored)
+            {
+                ImageBuffer.Add(buffer);
+            }
+
+            count++;
+            return 0;
+        }
 
         /// <summary>
         /// 实时处理探测器采集到的图像

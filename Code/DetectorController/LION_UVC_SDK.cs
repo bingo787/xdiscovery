@@ -380,7 +380,24 @@ namespace Detector
         [DllImport("LionSDK.dll", EntryPoint = "GetDeviceState", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern LU_RESULT GetDeviceState(IntPtr pDevice, ref LUDEV_STATE devState);
 
+        [DllImport("LionSDK.dll", EntryPoint = "GetImage", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+        public static extern LU_RESULT GetImage(IntPtr pDevice, LU_UINT32 showUi, PLionImageCallback callback);
 
     }
+    #endregion
+
+    #region delegate
+    // Notice: call back function
+    // @USER_CALLBACK_HANDLE_ENVENT
+    // @byteEventid:enum eEventCallbackCommType
+    // @ufpdId:平板设备ID
+    // @PVEventParam1:fpd config or image data buffer addr
+    // @nEventParam2:参数2，例如data size或状态
+    // @nEventParam3:参数3，例如帧率 frame rate或状态等
+    // @nEventParam4:参数4，例如pcie事件id或预留扩展
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate LU_RESULT PLionImageCallback(LU_DEVICE device, byte pImgData, LU_UINT32 nDataBuf, byte pFile, LU_UINT32 nFileBuf);
+
+
     #endregion
 }
