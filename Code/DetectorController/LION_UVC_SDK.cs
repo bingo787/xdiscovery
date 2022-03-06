@@ -328,8 +328,51 @@ namespace Detector
 
 
     #region function
-    class LION_UVC_SDK
+    public class LION_UVC_SDK
     {
+
+        public static IntPtr handle;
+
+        public static string GetErrorMsgByCode(int code ) {
+            /*
+             #define LU_SUCCESS							0x00					//成功
+            #define LU_FAIL								-0x01					//失败
+            #define LU_OPENED							-0x02					//设备已打开
+            #define LU_OTHERDEVOPENED					-0x03					//其他设备已打开
+            #define LU_UNOPEN							-0x04					//设备未打开
+
+            #define LU_PARAMINVALID						-0x10				//参数无效	
+            #define LU_WRITEFAILED						-0x11				//写入失败
+            #define LU_NOTSUPPORT						-0x20				//不支持
+            #define LU_MEMLOW							-0x30				//存储空间不足
+            #define LU_OVERTIME							-0x40				//超时
+            #define LU_TRIGGEROVERTIME					-0x41				//触发超时
+            #define LU_READIMAGEOVERTIME				-0x42				//读图超时
+             */
+
+            switch (code) {
+
+                case 0x00: return "成功";
+                case -0x01: return "失败";
+                case -0x02: return "设备已打开";
+                case -0x03: return "其他设备已打开";
+                case -0x04: return "设备未打开";
+                case -0x10: return "参数无效";
+                case -0x11: return "写入失败";
+                case -0x20: return "存储空间不足";
+                case -0x30: return "不支持";
+                case -0x40: return "超时";
+                case -0x41: return "触发超时";
+                case -0x42: return "读图超时";
+
+                default:
+                    return "Unknown Error";
+            }
+
+        }
+
+
+
         /*********************************************************************************************************************
          * @brief 获取设备个数
          *
@@ -348,7 +391,7 @@ namespace Detector
         * @return 返回设备
        *********************************************************************************************************************/
         [DllImport("LionSDK.dll", EntryPoint = "GetDevice", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
-        public static extern ref LU_DEVICE GetDevice(LU_UINT32 index, LU_UINT32 enumLion = 1);
+        public static extern IntPtr GetDevice(LU_UINT32 index, LU_UINT32 enumLion = 1);
 
         /*********************************************************************************************************************
       * @brief 打开设备
@@ -383,18 +426,23 @@ namespace Detector
         [DllImport("LionSDK.dll", EntryPoint = "GetImage", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
         public static extern LU_RESULT GetImage(IntPtr pDevice, LU_UINT32 showUi, PLionImageCallback callback);
 
+
+        /*********************************************************************************************************************
+ * @brief 设置参数
+ *
+ * @param[in] cDev需要打开的设备路径
+ * @param[in, out] param 待设置的参数结构
+ * @return LU_SUCCESS：成功，其他：失败
+*********************************************************************************************************************/
+        [DllImport("LionSDK.dll", EntryPoint = "SetDeviceParam", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.StdCall)]
+
+        unsafe public static extern LU_RESULT SetDeviceParam(IntPtr pDevice, LU_PARAM* pParam);
+
     }
     #endregion
 
     #region delegate
     // Notice: call back function
-    // @USER_CALLBACK_HANDLE_ENVENT
-    // @byteEventid:enum eEventCallbackCommType
-    // @ufpdId:平板设备ID
-    // @PVEventParam1:fpd config or image data buffer addr
-    // @nEventParam2:参数2，例如data size或状态
-    // @nEventParam3:参数3，例如帧率 frame rate或状态等
-    // @nEventParam4:参数4，例如pcie事件id或预留扩展
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate LU_RESULT PLionImageCallback(LU_DEVICE device, byte pImgData, LU_UINT32 nDataBuf, byte pFile, LU_UINT32 nFileBuf);
 

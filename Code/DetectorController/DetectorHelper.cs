@@ -21,6 +21,16 @@ namespace Detector
     using LU_RESULT = System.Int32;
     using LU_UINT32 = System.UInt32;
 
+    public unsafe struct ImageData
+    {
+        public uint uwidth;       // image width
+        public uint uheight;      // image height
+        public uint ndatabits; // 
+        public uint uframeid;     // frame id
+        public void* databuff;           // buffer address
+        public uint datalen;      // buffer size
+    }
+
     public delegate void ImageCallbackHandler(byte wnd, ImageData image);
     public delegate void TemperatureCallbackHandler(float a, float b);
     public delegate void SystemStatusCallbackHandler(int a, int b);
@@ -34,17 +44,6 @@ namespace Detector
     public class DetectorController
     {
 
-        public bool bGainAcqFinished = false;   // 采集gain亮场图像结束标识
-        public bool bDefectAcqFinished = false; // 采集defect亮场图像结束标识
-        public bool bOffsetTemplateOk = false; // 生成offset模板成功标识
-        public bool bGainsetTemplateOk = false; // 生成gain模板成功标识
-        public bool bDefectTemplateOk = false; // 生成defect模板成功标识
-        public bool bDownloadTemplateOk = false; // 下载模板成功标识
-
-        RegCfgInfo m_pLastRegCfg; //记录固件所有配置数据  1024字节的结构体
-        IMAGE_CORRECT_ENABLE m_pCorrect = new IMAGE_CORRECT_ENABLE();
-        //    DOWNLOAD_FILE m_pdownloadmode = new DOWNLOAD_FILE();
-        FPD_AQC_MODE m_stMode = new FPD_AQC_MODE();
 
         /// <summary>
         /// 高压控制器
@@ -121,9 +120,6 @@ namespace Detector
             TemperatureCallBack = new TemperatureCallbackHandler(TemperatureChanged);
             SystemStatusCallBack = new SystemStatusCallbackHandler(SystemStatusChanged);
             ConnBreakCallBack = new ExcutedCallbackHandler(ConnBreak);
-            FinishedOffsetEvent = new ExcutedFinishCallbackHandler(FinishedOffset);
-            FinishedDetectEvent = new ExcutedFinishCallbackHandler(FinishedDetect);
-            FinishedGainEvent = new ExcutedFinishCallbackHandler(FinishGain);
             OpenXRayEvent = new ExcutedCallbackHandlerWithValue(OpenXRay);
             CloseXRayEvent = new ExcutedCallbackHandler(CloseXRay);
 
@@ -132,8 +128,6 @@ namespace Detector
             IsMultiFramesOverlayByAvg = true;
             MultiFramesOverlayNumber = 2;
 
-                //add by zhao 
-            HBIEventCallback = new USER_CALLBACK_HANDLE_ENVENT(RecieveImageAndEvent);
 
         }
 
@@ -150,7 +144,7 @@ namespace Detector
             //  StringBuilder _error = new StringBuilder(1024);
             //   NVDentalSDK.NV_LastErrorMsg(_error, 1024);
             //  return _error.ToString();
-            return HBI_FPD_DLL.GetErrorMsgByCode(ret);
+            return LION_UVC_SDK.GetErrorMsgByCode(ret);
         }
 
         public bool GetTemperature(out float temperatrue1, out float temperature2)
@@ -174,43 +168,18 @@ namespace Detector
         /// <param name="e"></param>
 
         public bool StartSingleShot() {
-            ShowMessage("StartSingleShot");
             _imageBuffer.Clear();
             _multiFramesOverlayBuffer.Clear();
             count = 0;
-            int  ret = -1;
 
-            if (true)
+            int ret = 0;// LION_UVC_SDK.GetImage(LION_UVC_SDK.handle, 0, LionUVCRecieveImage);
+            if (ret != 0)
             {
-                ret = HBI_FPD_DLL.HBI_SinglePrepare(HBI_FPD_DLL._handel);
-                if (ret != 0)
-                {
-                    ShowMessage("HBI_SinglePrepare Failed——" + GetLastError(ret), true);
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                ShowMessage("LION_UVC_SDK.GetImage Failed——" + GetLastError(ret), true);
+                return false;
             }
-            else
-            {
-                FPD_AQC_MODE stMode = new FPD_AQC_MODE();
-                stMode.eAqccmd = EnumIMAGE_ACQ_CMD.SINGLE_ACQ_DEFAULT_TYPE;
-                stMode.eLivetype = EnumLIVE_ACQUISITION.ONLY_IMAGE;     // 1-固件做offset模板并上图；2-只上图；3-固件做只做offset模板。
-                stMode.ndiscard = 0;     // 这里默认位0，不抛弃前几帧图像
-                stMode.nframeid = 0;     // 这里默认位0
-                HBI_FPD_DLL.HBI_SinglePrepare(HBI_FPD_DLL._handel);
-                ret = HBI_FPD_DLL.HBI_SingleAcquisition(HBI_FPD_DLL._handel, stMode);
-                if (ret != 0)
-                {
-                    ShowMessage("HBI_SingleAcquisition Failed——" + GetLastError(ret), true);
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+            else {
+                return true;
             }
         }
 
@@ -220,24 +189,8 @@ namespace Detector
             _imageBuffer.Clear();
             _multiFramesOverlayBuffer.Clear();
             count = 0;
-            //  亦可不用切换到软触发模式下，发送连续采集1帧即可完成单帧采集
-            FPD_AQC_MODE stMode = new FPD_AQC_MODE();
-            stMode.eAqccmd = EnumIMAGE_ACQ_CMD.LIVE_ACQ_DEFAULT_TYPE;
-            stMode.eLivetype = EnumLIVE_ACQUISITION.ONLY_IMAGE;     // 1-固件做offset模板并上图；2-只上图；3-固件做只做offset模板。
-            stMode.ndiscard = 0;     // 这里默认位0，不抛弃前几帧图像
-            stMode.nframeid = 0;     // 这里默认位0
-            int ret = HBI_FPD_DLL.HBI_LiveAcquisition(HBI_FPD_DLL._handel, stMode);
+            return true;
 
-
-            if (ret != 0)
-            {
-                ShowMessage("StartAcq Failed——" + GetLastError(ret), true);
-                return false;
-            }
-            else
-            {
-                return true;
-            }
         }
 
         /// <summary>
@@ -248,14 +201,7 @@ namespace Detector
         {
             ShowMessage("StopAcq ");
 
-            int ret = HBI_FPD_DLL.HBI_StopAcquisition(HBI_FPD_DLL._handel);
-            if (ret !=0)
-            {
-                ShowMessage("StopAcq Failed——" + GetLastError(ret), true);
-                return false;
-            }
-
-            _waitHandle.Set();
+          
             return true;
         }
 
@@ -299,9 +245,6 @@ namespace Detector
         public event ExcutedCallbackHandler AcqMaxFramesEvent;
         public int MaxFrames = 0;
 
-        public static USER_CALLBACK_HANDLE_ENVENT HBIEventCallback;
-        public static USER_CALLBACK_HANDLE_PROCESS HBIProcessCallback;
-
 
         /// <summary>
         /// 初始化探测器
@@ -316,18 +259,18 @@ namespace Detector
             _imageWidth = _detectorWidth;
             _bits = 16;
 
-            // 因为要重新连接，所以需要先销毁
-            HBI_FPD_DLL.HBI_Destroy(HBI_FPD_DLL._handel);
-            HBI_FPD_DLL._handel = HBI_FPD_DLL.HBI_Init();
 
-            // 然后再注册回调函数
-
-            int ret = HBI_FPD_DLL.HBI_RegEventCallBackFun(HBI_FPD_DLL._handel, HBIEventCallback);
-            if (ret != 0)
-                res += ("HBI_RegEventCallBackFun Failed");
+            if (LION_UVC_SDK.GetDeviceCount(1) < 1)
+            {
+                res += "No device ";
+                return false;
+            }
             else
-                ShowMessage("HBI_RegEventCallBackFun success.");
-            return true;
+            {
+                return true;
+            }
+
+          
         }
 
         private void ConnBreak()
@@ -356,355 +299,21 @@ namespace Detector
         }
 
 
-        /// <summary>
-        /// HBI 的事件回调函数，这个接口内部有众多事件需要判断
-        // Notice: call back function
-        // @USER_CALLBACK_HANDLE_ENVENT
-        // @byteEventid:enum eEventCallbackCommType
-        // @ufpdId:平板设备ID
-        // @PVEventParam1:fpd config or image data buffer addr
-        // @nEventParam2:参数2，例如data size或状态
-        // @nEventParam3:参数3，例如帧率 frame rate或状态等
-        // @nEventParam4:参数4，例如pcie事件id或预留扩展
-        private int RecieveImageAndEvent(IntPtr _contex, int nDevId, byte byteEventId, IntPtr pvParam, int nlength, int param3, int param4)
-        {
-            eCallbackEventCommType command = (eCallbackEventCommType)byteEventId;
-            int len = nlength;
-            int ret = -1;
-            if ((command == eCallbackEventCommType.ECALLBACK_TYPE_ROM_UPLOAD) || (command == eCallbackEventCommType.ECALLBACK_TYPE_RAM_UPLOAD) ||
-                (command == eCallbackEventCommType.ECALLBACK_TYPE_FACTORY_UPLOAD))
-            {
-                if (pvParam == null || nlength == 0)
-                {
-                    ShowMessage("注册回调函数参数异常!");
-                    return ret;
-                }
-
-                if (0 != nDevId)
-                {
-                    ShowMessage("warnning:RecieveImageAndEvent:\n");
-                    return ret;
-                }
-            }
-            else if ((command == eCallbackEventCommType.ECALLBACK_TYPE_SINGLE_IMAGE) ||
-                (command == eCallbackEventCommType.ECALLBACK_TYPE_MULTIPLE_IMAGE) ||
-                (command == eCallbackEventCommType.ECALLBACK_TYPE_PREVIEW_IMAGE) ||
-                (command == eCallbackEventCommType.ECALLBACK_TYPE_OFFSET_TMP) ||
-                (command == eCallbackEventCommType.ECALLBACK_OVERLAY_16BIT_IMAGE) ||
-                (command == eCallbackEventCommType.ECALLBACK_OVERLAY_32BIT_IMAGE))
-            {
-                if (pvParam == null || nlength == 0)
-                {
-                    ShowMessage("注册回调函数参数异常!");
-                    return ret;
-                }
-
-                if (0 != nDevId)
-                {
-                    ShowMessage("warnning:RecieveImageAndEvent:\n");
-                    return ret;
-                }
-            }
-
-            ShowMessage("================== RecieveImageAndEvent Id = 0X" + byteEventId.ToString("X2"));
-            int status = -1;
-            ret = 1;
-            switch (command)
-            {
-                case eCallbackEventCommType.ECALLBACK_TYPE_FPD_STATUS:
-                    {
-                        if (len <= 0 && len >= -11)
-                        {
-                            ConnBreakCallBack();
-
-                            if (len == 0)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG, Err: 网络未连接！", true);
-                            else if (len == -1)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,Err:参数异常!", true);
-                            else if (len == -2)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,Err:准备就绪的描述符数返回失败!", true);
-                            else if (len == -3)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,Err:接收超时!", true);
-                            else if (len == -4)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,Err:接收失败!", true);
-                            else if (len == -5)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,Err:端口不可读!", true);
-                            else if (len == -6)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,network card unusual!", true);
-                            else if (len == -7)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,network card ok!", true);
-                            else if (len == -8)
-                                ShowMessage("ECALLBACK_TYPE_FPD_STATUS:update Firmware end!\n", true);
-                            else if (len == -9)
-                                ShowMessage("ECALLBACK_TYPE_FPD_STATUS:光纤已断开!!\n", true);
-                            else if (len == -10)
-                                ShowMessage("ECALLBACK_TYPE_FPD_STATUS:read ddr failed,try restarting the PCIe driver!\n", true);
-                            else /*if (nlength == -11)*/
-                                ShowMessage("ECALLBACK_TYPE_FPD_STATUS:ECALLBACK_TYPE_FPD_STATUS:is not jumb!\n", true);
-                            status = (int)EFpdStatusType.FPD_STATUS_DISCONN;
-
-                        }
-                        else if (nlength == (int)EFpdStatusType.FPD_CONN_SUCCESS)
-                        { // connect
-                            ShowMessage("ECALLBACK_TYPE_FPD_STATUS,开始监听!\n");
-                            status = (int)EFpdStatusType.FPD_CONN_SUCCESS;
-                        }
-                        else if (nlength == (int)EFpdStatusType.FPD_PREPARE_STATUS)
-                        { // ready
-                            ShowMessage("ECALLBACK_TYPE_FPD_STATUS,ready!\n");
-                            status = (int)EFpdStatusType.FPD_PREPARE_STATUS;
-                        }
-                        else if (nlength == (int)EFpdStatusType.FPD_READY_STATUS)
-                        { // busy
-                            ShowMessage("ECALLBACK_TYPE_FPD_STATUS,busy!\n");
-                            status = (int)EFpdStatusType.FPD_READY_STATUS;
-                        }
-                        else if (nlength == (int)EFpdStatusType.FPD_DOOFFSET_TEMPLATE)
-                        { // prepare
-                            ShowMessage("ECALLBACK_TYPE_FPD_STATUS,prepare!\n");
-                            status = (int)EFpdStatusType.FPD_DOOFFSET_TEMPLATE;
-                        }
-                        else if (nlength == (int)EFpdStatusType.FPD_EXPOSE_STATUS)
-                        { // busy expose
-                            ShowMessage("ECALLBACK_TYPE_FPD_STATUS:Exposing!\n");
-                            status = (int)EFpdStatusType.FPD_EXPOSE_STATUS;
-                        }
-                        else if (nlength == (int)EFpdStatusType.FPD_CONTINUE_READY)
-                        { // continue ready
-                            ShowMessage("ECALLBACK_TYPE_FPD_STATUS:Continue ready!\n");
-                            status = (int)EFpdStatusType.FPD_CONTINUE_READY;
-                        }
-                        else if (nlength == (int)EFpdStatusType.FPD_DWONLOAD_GAIN)
-                        { // download gain template
-                            ShowMessage("ECALLBACK_TYPE_FPD_STATUS:Download gain template ack!\n");
-                            status = (int)EFpdStatusType.FPD_DWONLOAD_GAIN;
-                        }
-                        else if (nlength == (int)EFpdStatusType.FPD_DWONLOAD_DEFECT)
-                        { // download defect template
-                            ShowMessage("ECALLBACK_TYPE_FPD_STATUS:Download defect template ack!\n");
-                            status = (int)EFpdStatusType.FPD_DWONLOAD_DEFECT;
-                        }
-                        else if (nlength == (int)EFpdStatusType.FPD_DWONLOAD_OFFSET)
-                        { // download offset template
-                            ShowMessage("ECALLBACK_TYPE_FPD_STATUS:Download offset template ack!\n");
-                            status = (int)EFpdStatusType.FPD_DWONLOAD_OFFSET;
-                        }
-                        else if (nlength == (int)EFpdStatusType.FPD_UPDATE_FIRMARE)
-                        { // update firmware
-                            ShowMessage("ECALLBACK_TYPE_FPD_STATUS:Update firmware!\n");
-                            status = (int)EFpdStatusType.FPD_UPDATE_FIRMARE;
-                        }
-                        else if (nlength == (int)EFpdStatusType.FPD_RETRANS_MISS)
-                        { // update firmware
-                            ShowMessage("ECALLBACK_TYPE_FPD_STATUS:Retransmission!\n");
-                            status = (int)EFpdStatusType.FPD_RETRANS_MISS;
-                        }
-                        else
-                            ShowMessage("ECALLBACK_TYPE_FPD_STATUS,Err:Other error "+ nlength.ToString());
-
-
-                    }
-                    break;
-                case eCallbackEventCommType.ECALLBACK_TYPE_SET_CFG_OK:
-                    ShowMessage("ECALLBACK_TYPE_SET_CFG_OK:Reedback set rom param succuss!\n");
-                    break;
-                case eCallbackEventCommType.ECALLBACK_TYPE_ROM_UPLOAD:
-                    {
-                        ShowMessage("ECALLBACK_TYPE_ROM_UPLOAD");
-                      //  RegCfgInfo* pRegCfg = (RegCfgInfo*)pvParam;
-                    }
-                    break;
-                case eCallbackEventCommType.ECALLBACK_TYPE_SINGLE_IMAGE:
-                case eCallbackEventCommType.ECALLBACK_TYPE_MULTIPLE_IMAGE:
-                    {
-                        ShowMessage("ECALLBACK_TYPE_SINGLE_IMAGE or ECALLBACK_TYPE_MULTIPLE_IMAGE");
-                        unsafe
-                        {
-                            ImageData image;
-                            image.uwidth = ((ImageData*)pvParam)->uwidth;
-                            image.uheight = ((ImageData*)pvParam)->uheight;
-                            image.uframeid = ((ImageData*)pvParam)->uframeid;
-                            image.ndatabits = ((ImageData*)pvParam)->ndatabits;
-                            image.databuff = ((ImageData*)pvParam)->databuff;
-
-                            image.datalen = ((ImageData*)pvParam)->datalen;
-                            ShowImageCallBack(0, image);
-                        }
-                      
-                    }
-                    break;
-
-                case eCallbackEventCommType.ECALLBACK_TYPE_GENERATE_TEMPLATE:
-                    {
-                        
-                        if (nlength == (int)eCallbackTemplateStatus.ECALLBACK_TEMPLATE_BEGIN)
-                        {
-                            ShowMessage("ECALLBACK_TEMPLATE_BEGIN\n");
-                        }
-                        else if (nlength == (int)eCallbackTemplateStatus.ECALLBACK_TEMPLATE_INVALVE_PARAM)
-                        {
-                            ShowMessage("ECALLBACK_TEMPLATE_INVALVE_PARAM:" + param3.ToString());
-                        }
-                        else if (nlength == (int)eCallbackTemplateStatus.ECALLBACK_TEMPLATE_MALLOC_FAILED)
-                        {
-                            ShowMessage("ECALLBACK_TEMPLATE_MALLOC_FAILED:" + param3.ToString());
-                        }
-                        else if (nlength == (int)eCallbackTemplateStatus.ECALLBACK_TEMPLATE_SEND_FAILED)
-                        {
-                            ShowMessage("ECALLBACK_TEMPLATE_SEND_FAILED:" + param3.ToString());
-                        }
-                        else if (nlength == (int)eCallbackTemplateStatus.ECALLBACK_TEMPLATE_STATUS_ABORMAL)
-                        {
-                            ShowMessage("ECALLBACK_TEMPLATE_STATUS_ABORMAL:" + param3.ToString());
-                        }
-                        else if (nlength == (int)eCallbackTemplateStatus.ECALLBACK_TEMPLATE_FRAME_NUM)
-                        {
-                            ShowMessage("ECALLBACK_TEMPLATE_FRAME_NUM::" + param3.ToString());
-                        }
-                        else if (nlength == (int)eCallbackTemplateStatus.ECALLBACK_TEMPLATE_TIMEOUT)
-                        {
-                            ShowMessage("ECALLBACK_TEMPLATE_TIMEOUT:" + param3.ToString());
-                        }
-                        else if (nlength == (int)eCallbackTemplateStatus.ECALLBACK_TEMPLATE_MEAN)
-                        {
-                            //ECALLBACK_RAW_INFO* ptr = (ECALLBACK_RAW_INFO*)pvParam;
-                            //if (ptr != NULL)
-                            //{
-                            //    ShowMessage("ECALLBACK_TEMPLATE_MEAN:%s,dMean=%0.2f\n", ptr->szRawName, ptr->dMean);
-                            //}
-                            ShowMessage("ECALLBACK_TEMPLATE_MEAN");
-                        }
-                        else if (nlength == (int)eCallbackTemplateStatus.ECALLBACK_TEMPLATE_GENERATE)
-                        {
-                            if (param3 == (int)emUPLOAD_FILE_TYPE.OFFSET_TMP)
-                                ShowMessage("ECALLBACK_TEMPLATE_GENERATE:OFFSET_TMP\n");
-                            else if (param3 == (int)emUPLOAD_FILE_TYPE.GAIN_TMP)
-                                ShowMessage("ECALLBACK_TEMPLATE_GENERATE:GAIN_TMP\n");
-                            else if (param3 == (int)emUPLOAD_FILE_TYPE.DEFECT_TMP)
-                                ShowMessage("ECALLBACK_TEMPLATE_GENERATE:DEFECT_TMP,bad point= "+ nlength.ToString());
-                            else
-                                ShowMessage("ECALLBACK_TEMPLATE_GENERATE:nid=:" + param3.ToString());
-                        }
-                        else if (nlength == (int)eCallbackTemplateStatus.ECALLBACK_TEMPLATE_RESULT)
-                        {
-                            ShowMessage("ECALLBACK_TEMPLATE_RESULT:" + param3.ToString());
-                        }
-                        else
-                        {// other
-                            ShowMessage("other");
-                        }
-                    }
-                    break;
-                case eCallbackEventCommType.ECALLBACK_OVERLAY_16BIT_IMAGE:
-                    {
-                        ShowMessage("ECALLBACK_OVERLAY_16BIT_IMAGE");
-                    }
-                    break;
-                case eCallbackEventCommType.ECALLBACK_OVERLAY_32BIT_IMAGE:
-                    {
-                        ShowMessage("ECALLBACK_OVERLAY_32BIT_IMAGE");
-                    }
-                    break;
-                case (eCallbackEventCommType.ECALLBACK_TYPE_GAIN_ERR_MSG):
-                    {
-                        if (len == 0)
-                        {
-                            bGainsetTemplateOk = true; // 表示生成gain模板成功
-                            ShowMessage("ECALLBACK_TYPE_GAIN_ERR_MSG,bGainsetTemplateOk is true!\n");
-                            FinishedGainEvent(true);
-                        }
-                    }
-
-                    break;
-                case (eCallbackEventCommType.ECALLBACK_TYPE_DEFECT_ERR_MSG):
-                    {
-                        if (len == 0)
-                        {
-                            bDefectAcqFinished = true; // 表示生成defect模板成功
-                            ShowMessage("ECALLBACK_TYPE_DEFECT_ERR_MSG,bDefectAcqFinished is true!\n");
-                            FinishedDetectEvent(true);
-                        }
-                    }
-
-                    break;
-                case eCallbackEventCommType.ECALLBACK_TYPE_PACKET_MISS:
-                case eCallbackEventCommType.ECALLBACK_TYPE_PACKET_MISS_MSG:
-                    {
-                        ShowMessage("Packet miss  " + len.ToString());
-                        _MissedPacketNum = len;
-
-                    }
-                    break;
-
-                case eCallbackEventCommType.ECALLBACK_TYPE_THREAD_EVENT:
-                    {
-                        if (len == 100)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,start recv data!\n");
-                        else if (len == 101)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,end recv data!\n");
-                        else if (len == 104)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Packet Retransmission:start recv data!\n");
-                        else if (len == 105)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Frame Retransmission:start recv data!\n");
-                        else if (len == 106)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Frame loss retransmission over,end recv data!\n");
-                        else if (len == 107)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,image buff is null:end recv data!\n");
-                        else if (len == 108)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Generate Offset Template:start thread!\n");
-                        else if (len == 109)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Generate Offset Template:end thread!\n");
-                        else if (len == 110)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Generate Gain Template:start thread!\n");
-                        else if (len == 111)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,Generate Gain Template:end thread!\n");
-                        else if (len == 112)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,offset calibrate:success!\n");
-                        else if (len == 113)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,offset calibrate:failed!\n");
-                        else if (len == 114)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,gain calibrate:success!\n");
-                        else if (len == 115)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,gain calibrate:failed!\n");
-                        else if (len == 116)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,defect calibrate:success!\n");
-                        else if (len == 117)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,defect calibrate:failed!\n");
-                        else if (len == 118)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,InitGainTemplate:failed!\n");
-                        else if (len == 119)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT,firmare offset calibrate:success!\n");
-                        else
-                            ShowMessage(string.Format("ECALLBACK_TYPE_THREAD_EVENT,Err:未知错误[{0}]\n", len));
-                    }        
-                    break;
-
-                default:
-                    {
-                    //    ShowMessage("ECALLBACK_TYPE_INVALID, command " + cmd.ToString(), true);
-                        break;
-                    }
-            }
-            return 0;
-        }
-
 
         private unsafe LU_RESULT LionUVCRecieveImage(LU_DEVICE device, byte* pImgData, LU_UINT32 nDataBuf, byte* pFile, LU_UINT32 nFileBuf) {
 
-            ushort[] buffer = new ushort[nDataBuf];
-
-            for (int i = 0; i < nDataBuf; i++)
+            unsafe
             {
-                buffer[i] = ((ushort*)pImgData)[i];
-            }
+                ImageData image;
+                image.uwidth = 1920;
+                image.uheight = 1080;
+                image.uframeid = 0;
+                image.ndatabits = 16;
+                image.databuff = pImgData;
 
-            PlayBuffer.Enqueue(buffer);
-            if (IsStored)
-            {
-                ImageBuffer.Add(buffer);
+                image.datalen = nDataBuf;
+                ShowImageCallBack(0, image);
             }
-
-            count++;
             return 0;
         }
 
@@ -832,70 +441,7 @@ namespace Detector
         {
              System.Console.WriteLine("["+ DateTime.Now.ToString("HH:mm:ss.ffff") + "]" + p);
          }
-        /// <summary>
-        /// 设置探测器采集时间、增益
-        /// </summary>
-        /// <param name="nullable1"></param>
-        /// <param name="nullable2"></param>
-        public string SetAcqPara(int? exp, string g, string binning = "1X1")
-        {
-            string res = string.Empty;
-            int expTime = 168;
-            //  NV_Gain gain = NV_Gain.NV_GAIN_07;
-            //NV_BinningMode bin = binning == "2X2" ? NV_BinningMode.NV_BINNING_2X2 : NV_BinningMode.NV_BINNING_1X1;
 
-            byte bin = 1;
-            if (binning == "1X1")
-            {
-                bin = 1;
-            } else if (binning == "2X2") {
-                bin = 2;
-            } else if (binning == "4X4") {
-                bin = 4;
-            }
-
-            int ret = HBI_FPD_DLL.HBI_SetBinning(HBI_FPD_DLL._handel, bin);
-
-            if (ret != 0)
-            {
-                res += ("Set BinningMode Failed:" + GetLastError(ret) + "\n");
-            }
-
-
-            int gain = 6;
-            switch (g)
-            {
-                case "0.6pC": gain = 1; break;
-                case "1.2pC": gain = 2; break;
-                case "2.4pC": gain = 3; break;
-                case "3.6pC": gain = 4; break;
-                case "4.8pC": gain = 5; break;
-                case "7.2pC": gain = 6; break; //默认7.2pC
-                case "9.6pC": gain = 7; break;
-                default: break;
-
-            }
-            if (HBI_FPD_DLL.HBI_SetPGALevel(HBI_FPD_DLL._handel, gain) != (int)HBIRETCODE.HBI_SUCCSS)
-            {
-                res += ("Set Gain Failed\n");
-            }
-            int  w = 0, h = 0;
-            res += ("exp:" + expTime + "," + g + "," + binning + "," + w + "x" + h);
-            return res;
-        }
-        #region 校正
-        /// <summary>
-        /// 本底校正回调
-        /// </summary>
-        public static ExcutedFinishCallbackHandler FinishedOffsetEvent;
-        /// <summary>
-        /// detect校正回调
-        /// </summary>
-        public static ExcutedFinishCallbackHandler FinishedDetectEvent;
-        /// <summary>
-        /// Gain校正回调
-        /// </summary>
-        public static ExcutedFinishCallbackHandler FinishedGainEvent;
         /// <summary>
         /// 开光
         /// </summary>
@@ -905,321 +451,7 @@ namespace Detector
         /// </summary>
         public static ExcutedCallbackHandler CloseXRayEvent;
 
-        /// <summary>
-        /// 本底校正
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void StartCorrectOffsetTemplate()
-        {
-            count = 0;
-            int ret = HBI_FPD_DLL.HBI_GenerateTemplate(HBI_FPD_DLL._handel, EnumIMAGE_ACQ_CMD.OFFSET_TEMPLATE_TYPE);
-            if (ret != 0)
-            {
-                ShowMessage("HBI_GenerateTemplate failed!" + ret.ToString(), true);
-                return;
-            }
-            else
-            {
-                ShowMessage("Do pre-offset template success!",false);
-            }
-
-        }
-        /// <summary>
-        /// 校正完毕，设置校正模式软件模式
-        /// </summary>
-        /// <param name="isSuccess"></param>
-        private void FinishedOffset(bool isSuccess)
-        {
-            string msg = isSuccess ? "成功" : "失败";
-            ShowMessage("Offset 校正" + isSuccess, true);
-            _offsetWaitHandle.Set();
-        }
-
-        /// <summary>
-        /// detect校正
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// 
-
-        public bool StartCorrectDetectTemplate_Step1() {
-            count = 0;
-
-            bDefectAcqFinished = false;
-            bDefectTemplateOk = false;
-            bDownloadTemplateOk = false;
-           // ShowMessage("第一步：第一组亮场(剂量要求：正常高压，毫安秒调节正常的 10%)",true);
-            // 第一步：第一组亮场(剂量要求：正常高压，毫安秒调节正常的 10%)-发送采集命令
-            int ret = HBI_FPD_DLL.HBI_GenerateTemplate(HBI_FPD_DLL._handel, EnumIMAGE_ACQ_CMD.DEFECT_TEMPLATE_GROUP1);
-            if (ret != 0)
-            {
-                ShowMessage("HBI_GenerateTemplate failed!" + ret.ToString(), true);
-                return false;
-            }
-            else
-            {
-                ShowMessage("Do defect group1 success!", true);
-                return true;
-            }
-        }
-        public bool StartCorrectDetectTemplate_Step2()
-        {
-            // 第二步：第二组亮场(剂量要求：正常高压，毫安秒调节正常的 50%)-发送采集命令
-
-            int ret = HBI_FPD_DLL.HBI_GenerateTemplate(HBI_FPD_DLL._handel, EnumIMAGE_ACQ_CMD.DEFECT_TEMPLATE_GROUP2);
-            if (ret != 0)
-            {
-                ShowMessage("HBI_GenerateTemplate failed!" + ret.ToString(), true);
-                return false;
-            }
-            else
-            {
-                ShowMessage("Do defect group2 success!", true);
-                return true;
-            }
-        }
-        public bool StartCorrectDetectTemplate_Step3()
-        {
-            // 第三步：第三组亮场(剂量要求：正常高压，毫安秒调节正常的 100%)-发送采集命令
-            int ret = HBI_FPD_DLL.HBI_GenerateTemplate(HBI_FPD_DLL._handel, EnumIMAGE_ACQ_CMD.DEFECT_TEMPLATE_GROUP3);
-            if (ret != 0)
-            {
-                ShowMessage("HBI_GenerateTemplate failed!" + ret.ToString(), true);
-                return false;
-            }
-            else
-            {
-                ShowMessage("Do defect group3 success!", true);
-                return true;
-                
-            }
-        }
-
-
-        public void StartCorrectDetectTemplate_Step4()
-        {
-
-            // 第四步：注册回调函数
-            int ret = HBI_FPD_DLL.HBI_RegProgressCallBack(HBI_FPD_DLL._handel, DownloadCallBack, HBI_FPD_DLL._handel);
-            if (ret != 0)
-            {
-                ShowMessage("err:HBI_RegProgressCallBack failed,TimeOut!", true);
-                return;
-            }
-            else {
-                ShowMessage("HBI_RegProgressCallBack success!");
-            }
-               
-            // 第五步：将defect模板下载到固件
-            HBI_FPD_DLL.HBI_DownloadTemplateByType(HBI_FPD_DLL._handel, 1);
-            if (ret != 0)
-            {
-                ShowMessage("HBI_DownloadTemplateByType:detect template failed!ret:[{0}]" + ret.ToString());
-                return;
-            }
-            
-         
-
-            // 第六步：更新矫正使能
-            m_pCorrect.bFeedbackCfg = true;  // true  - ECALLBACK_TYPE_ROM_UPLOAD Event,false - ECALLBACK_TYPE_SET_CFG_OK Event
-            m_pCorrect.ucOffsetCorrection = (char)3;
-            m_pCorrect.ucGainCorrection = (char)2;
-            m_pCorrect.ucDefectCorrection = (char)2;
-            m_pCorrect.ucDummyCorrection = (char)0; // 暂时不支持
-            // 打印
-            Log("HBI_UpdateCorrectEnable\n");
-            Log(String.Format("\tm_pCorrect.ucOffsetCorrection={0}\n", (int)m_pCorrect.ucOffsetCorrection));
-            Log(String.Format("\tm_pCorrect.ucGainCorrection={0}\n", (int)m_pCorrect.ucGainCorrection));
-            Log(String.Format("\tm_pCorrect.ucDefectCorrection={0}\n", (int)m_pCorrect.ucDefectCorrection));
-            Log(String.Format("\tm_pCorrect.ucDummyCorrection={0}\n", (int)m_pCorrect.ucDummyCorrection));
-            ret = HBI_FPD_DLL.HBI_UpdateCorrectEnable(HBI_FPD_DLL._handel, ref m_pCorrect);
-            if (ret == 0)
-            {
-                Log("\tHBI_UpdateCorrectEnable success!\n");
-            }
-            else
-            {
-                Log("\tHBI_UpdateCorrectEnable failed!");
-                return;
-            }
-        }
-        // dwnload template callcallback function
-        private int DownloadCallBack(byte command, int code, IntPtr pContext)
-        {
-            switch (command)
-            {
-                case (byte)(eCallbackUpdateFirmwareStatus.ECALLBACK_UPDATE_STATUS_START): // 初始化进度条	
-                    {
-                        ShowMessage(string.Format("DownloadCallBack, 开始下载:[{0}]\n", code));
-                    }
-                    break;
-                case (byte)(eCallbackUpdateFirmwareStatus.ECALLBACK_UPDATE_STATUS_PROGRESS):// 进度 code：百分比（0~100）	
-                    {
-                        ShowMessage(string.Format("DownloadCallBack, 下载进度:[{0}]\n", code));
-                    }
-                    break;
-                case (byte)(eCallbackUpdateFirmwareStatus.ECALLBACK_UPDATE_STATUS_RESULT):
-                    {
-                        if ((0 <= code) && (code <= 6))
-                        {       // 显示Uploading gain template!
-                            if (code == 0)
-                            {       // offset模板上传完成
-                                ShowMessage(" DownloadCallBack: download offset template!");
-                            }
-                            else if (code == 1)
-                            {  // offset模板上传完成
-                                ShowMessage(" DownloadCallBack: download gain template!");
-                            }
-                            else if (code == 2)
-                            {  // gain模板上传完成
-                                ShowMessage(" DownloadCallBack: download defect template!");
-                            }
-                            else if (code == 3)
-                            {  // defect模板上传完成
-                                ShowMessage(" DownloadCallBack: download offset finish!");
-                            }
-                            else if (code == 4)
-                            {  // defect模板上传完成
-                                ShowMessage(" DownloadCallBack: download gain finish!");
-                            }
-                            else if (code == 5)
-                            {  // defect模板上传完成
-                                ShowMessage(" DownloadCallBack: download defect finish!");
-
-                            }
-                            else/* if (code == 6)*/
-                            {  // defect模板上传完成
-                                ShowMessage(" DownloadCallBack: Download finish and sucess!");
-                            }
-                        }
-                        else
-                        {
-                            if (code == -1)
-                            {
-                                ShowMessage(" DownloadCallBack: wait event other error!");
-                            }
-                            else if (code == -2)
-                            {
-                                ShowMessage(" DownloadCallBack: timeout!");
-                            }
-                            else if (code == -3)
-                            {
-                                ShowMessage(" DownloadCallBack: downlod offset failed!");
-                            }
-                            else if (code == -4)
-                            {
-                                ShowMessage(" DownloadCallBack: downlod gain failed!");
-                            }
-                            else if (code == -5)
-                            {
-                                ShowMessage(" DownloadCallBack: downlod defect failed!");
-                            }
-                            else if (code == -6)
-                            {
-                                ShowMessage(" DownloadCallBack: Download failed");
-                            }
-                            else if (code == -7)
-                            {
-                                ShowMessage(" DownloadCallBack: read offset failed!");
-                            }
-                            else if (code == -8)
-                            {
-                                ShowMessage(" DownloadCallBack: read gain failed!");
-                            }
-                            else if (code == -9)
-                            {
-                                ShowMessage(" DownloadCallBack: read defect failed!");
-                            }
-                            else
-                            {
-                                ShowMessage(" DownloadCallBack: unknown error!");
-                            }
-                        }
-                    }
-                    break;
-                default: // unusual
-                    Log(string.Format("DownloadCallBack,retcode:[{0}]\n", code));
-                    break;
-            }
-            return 1;
-        }
-        /// <summary>
-        /// detect校正返回
-        /// </summary>
-        /// <param name="isSuccess"></param>
-        private void FinishedDetect(bool isSuccess)
-        {
-            this.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                string msg = isSuccess ? "成功" : "失败";
-                ShowMessage("defect模板生成 " + isSuccess, true);
-            }));
-        }
-        /// <summary>
-        /// Gain校正
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void StartCorrectGainTemplate()
-        {
-            bGainAcqFinished = false;
-            bGainsetTemplateOk = false;
-            bDownloadTemplateOk = false;
-
-            xRayControler.XRayOn();
-            Thread.Sleep(3000);
-            // 第一步：一组亮场(剂量要求：正常高压和电流)-发送采集命令
-            // 高压的剂量一般为正常采图的剂量即可，等高压到达稳定值后开始调用生成接口直到采图完成结束。
-            int ret = HBI_FPD_DLL.HBI_GenerateTemplate(HBI_FPD_DLL._handel, EnumIMAGE_ACQ_CMD.GAIN_TEMPLATE_TYPE);
-            if (ret != 0)
-            {
-                ShowMessage("HBI_GenerateTemplate failed!" + ret.ToString(),true);
-                return;
-            }
-            
-
-            // 第二步：注册回调函数
-            ret = HBI_FPD_DLL.HBI_RegProgressCallBack(HBI_FPD_DLL._handel, DownloadCallBack, HBI_FPD_DLL._handel);
-            if (ret != 0)
-            {
-                ShowMessage("HBI_RegProgressCallBack failed! ret: " + ret.ToString(),true);
-                return;
-            }
-            else
-                ShowMessage("HBI_RegProgressCallBack success!");
-
-            xRayControler.XRayOff();
-            // 第三步：将gain模板下载到固件
-            HBI_FPD_DLL.HBI_DownloadTemplateByType(HBI_FPD_DLL._handel, 0);
-            if (ret != 0)
-            {
-                ShowMessage("HBI_DownloadTemplateByType:gain template failed!ret:[{0}]" + ret.ToString(),true);
-                return;
-            }
-            // 第四步：更新矫正使能
-            m_pCorrect.bFeedbackCfg = true;  // true  - ECALLBACK_TYPE_ROM_UPLOAD Event,false - ECALLBACK_TYPE_SET_CFG_OK Event
-            m_pCorrect.ucOffsetCorrection = (char)3;
-            m_pCorrect.ucGainCorrection = (char)2;
-            m_pCorrect.ucDefectCorrection = (char)0;
-            m_pCorrect.ucDummyCorrection = (char)0; // 暂时不支持
-            // 打印
-            ShowMessage("HBI_UpdateCorrectEnable\n");
-            ShowMessage(String.Format("\tm_pCorrect.ucOffsetCorrection={0}\n", (int)m_pCorrect.ucOffsetCorrection));
-            ShowMessage(String.Format("\tm_pCorrect.ucGainCorrection={0}\n", (int)m_pCorrect.ucGainCorrection));
-            ShowMessage(String.Format("\tm_pCorrect.ucDefectCorrection={0}\n", (int)m_pCorrect.ucDefectCorrection));
-            ShowMessage(String.Format("\tm_pCorrect.ucDummyCorrection={0}\n", (int)m_pCorrect.ucDummyCorrection));
-            ret = HBI_FPD_DLL.HBI_UpdateCorrectEnable(HBI_FPD_DLL._handel, ref m_pCorrect);
-            if (ret == 0)
-            {
-                ShowMessage("\tHBI_UpdateCorrectEnable success!\n");
-            }
-            else
-            {
-                ShowMessage("\tHBI_UpdateCorrectEnable failed!",true);
-                return;
-            }
-        }
+      
         /// <summary>
         /// 关闭X光回调
         /// </summary>
@@ -1259,7 +491,7 @@ namespace Detector
             }));
             _gainWaitHandle.Set();
         }
-        #endregion
+      
 
         /// <summary>
         /// 同步获取指定数量图像数据
@@ -1301,14 +533,9 @@ namespace Detector
         /// <returns></returns>
         public List<ushort[]> GetOffsetImage(int count = 10)
         {
-            StartCorrectOffsetTemplate();
             _offsetWaitHandle.WaitOne(600000, true);
 
             Thread.Sleep(5000);
-            //NVDentalSDK.NV_SetDefectCal(NV_CorrType.NV_CORR_NO);
-            //NVDentalSDK.NV_SetOffsetCal(NV_CorrType.NV_CORR_SOFT);
-            //NVDentalSDK.NV_SetGainCal(NV_CorrType.NV_CORR_NO);
-
             return GetImage(count);
         }
 
@@ -1321,7 +548,6 @@ namespace Detector
         {
             if (runGainCal)
             {
-                StartCorrectGainTemplate();
                 _gainWaitHandle.WaitOne(60000, true);
                 Thread.Sleep(1000);
                 this.Dispatcher.Invoke(new Action(() =>
@@ -1329,103 +555,10 @@ namespace Detector
                     CMessageBox.Show("请打开 X光");
                 }));
             }
-
-            //NVDentalSDK.NV_SetDefectCal(NV_CorrType.NV_CORR_NO);
-            //NVDentalSDK.NV_SetOffsetCal(NV_CorrType.NV_CORR_SOFT);
-            //NVDentalSDK.NV_SetGainCal(NV_CorrType.NV_CORR_SOFT);
             return GetImage(count);
         }
 
-        //public void SaveFile(List<ushort[]> list, string directory, FileType type = FileType.DICOM)
-        //{
-        //    try
-        //    {
-        //        if (!System.IO.Directory.Exists(directory))
-        //        {
-        //            System.IO.Directory.CreateDirectory(directory);
-        //        }
-        //        string fileExtention = type == FileType.DICOM ? ".DCM" : ".RAW";
-        //        for (int i = 0; i < list.Count; i++)
-        //        {
-        //            SaveFile(System.IO.Path.Combine(directory, i.ToString() + fileExtention), list[i], type);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //    }
-        //}
 
-        //    /// <summary>
-        //    /// 保存RAW
-        //    /// </summary>
-        //    /// <param name="directory"></param>
-        //    /// <param name="name"></param>
-        //    /// <param name="data"></param>
-        //    private void SaveFile(string fileName, ushort[] data, FileType type = FileType.RAW)
-        //    {
-        //        byte[] buf = new byte[data.Length * 2];
-        //        for (int j = 0; j < data.Length; j++)
-        //        {
-        //            BitConverter.GetBytes(data[j]).CopyTo(buf, j * 2);
-        //        }
-
-        //        if (type == FileType.RAW)
-        //        {
-        //            System.IO.File.WriteAllBytes(fileName, buf);
-        //        }
-        //        else if (type == FileType.DICOM)
-        //        {
-        //            ClearCanvas.Dicom.DicomFile file = new ClearCanvas.Dicom.DicomFile();
-        //            if (!System.IO.File.Exists("template.dcm"))
-        //            {
-        //                throw new System.IO.FileNotFoundException("未找到模板文件template.dcm");
-        //            }
-        //            file.Load("template.dcm");
-        //            file.DataSet.GetAttribute(ClearCanvas.Dicom.DicomTags.PixelData).Values = buf;
-        //            file.DataSet.GetAttribute(ClearCanvas.Dicom.DicomTags.Rows).SetUInt16(0, (ushort)_imageHeight);
-        //            file.DataSet.GetAttribute(ClearCanvas.Dicom.DicomTags.Columns).SetUInt16(0, (ushort)_imageWidth);
-        //            file.DataSet.GetAttribute(ClearCanvas.Dicom.DicomTags.BitsStored).SetUInt16(0, 16);
-        //            file.Save(fileName);
-        //        }
-        //    }
-        //    #endregion
-
-        //    internal static void SaveFile(ImageInfo avgImage, string fileName, FileType type = FileType.DICOM)
-        //    {
-        //        string dir = System.IO.Path.GetDirectoryName(fileName);
-        //        if (!System.IO.Directory.Exists(dir))
-        //        {
-        //            System.IO.Directory.CreateDirectory(dir);
-        //        }
-
-        //        byte[] buf = new byte[avgImage.Width * avgImage.Height * 2];
-        //        for (int j = 0; j < avgImage.PixelData.Length; j++)
-        //        {
-        //            BitConverter.GetBytes(avgImage.PixelData[j]).CopyTo(buf, j * 2);
-        //        }
-
-        //        if (type == FileType.RAW)
-        //        {
-        //            System.IO.File.WriteAllBytes(fileName, buf);
-        //        }
-        //        else if (type == FileType.DICOM)
-        //        {
-        //            ClearCanvas.Dicom.DicomFile file = new ClearCanvas.Dicom.DicomFile();
-        //            if (!System.IO.File.Exists("template.dcm"))
-        //            {
-        //                throw new System.IO.FileNotFoundException("未找到模板文件template.dcm");
-        //            }
-        //            file.Load("template.dcm");
-        //            file.DataSet.GetAttribute(ClearCanvas.Dicom.DicomTags.PixelData).Values = buf;
-        //            file.DataSet.GetAttribute(ClearCanvas.Dicom.DicomTags.Rows).SetUInt16(0, avgImage.Height);
-        //            file.DataSet.GetAttribute(ClearCanvas.Dicom.DicomTags.Columns).SetUInt16(0, avgImage.Width);
-        //            file.DataSet.GetAttribute(ClearCanvas.Dicom.DicomTags.BitsStored).SetUInt16(0, avgImage.Bits);
-
-        //            file.Save(fileName);
-        //        }
-        //    }
-
-        //}
         /// <summary>
         /// 临时图像存储
         /// </summary>
@@ -1445,313 +578,38 @@ namespace Detector
             public ushort[] Pixel { set; get; }
         }
 
-        public bool HB_SetGain(int mode) {
+      
 
-            int ret = HBI_FPD_DLL.HBI_SetPGALevel(HBI_FPD_DLL._handel, mode);
-            return ret==0;
-        }
+        public int Connect() {
 
-        public bool HB_SetAqcSpanTime(int p)
-        {
-            ShowMessage("采集帧率(ms) " + p.ToString() );
-            int ret = HBI_FPD_DLL.HBI_SetSelfDumpingTime(HBI_FPD_DLL._handel,p);
-
-            if (ret != 0)
-            {
-                ShowMessage("HBI_SetSelfDumpingTime Failed——" + GetLastError(ret), true);
-                return false;
-            }
-            else
-            {
-                return true;
-
-            }
-
-        }
-
-        public bool HBI_SetSinglePrepareTime(int p)
-        {
-            int ret = HBI_FPD_DLL.HBI_SetSinglePrepareTime(HBI_FPD_DLL._handel, p);
-            ShowMessage("HBI_SetSinglePrepareTime " + p.ToString() + " ms" );
-            if (ret != 0)
-            {
-                ShowMessage("HBI_SetSinglePrepareTime Failed——" + GetLastError(ret), true);
-                return false;
-            }
-            else {
-                return true;
-
-            }
-           
+            LION_UVC_SDK.handle =  LION_UVC_SDK.GetDevice(0);
+            LU_RESULT ret = LION_UVC_SDK.OpenDevice(LION_UVC_SDK.handle);
+            return ret;
         }
 
 
-        public bool HB_SetMaxFrames(int p)
+
+
+        public bool SetMaxFrames(int p)
         {
             MaxFrames = p;
             return true;
-            //   return NVDentalSDK.NV_SetMaxFrames(p) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
-        public bool HB_SetBinningMode(byte mode) {
+ 
 
-            int ret = HBI_FPD_DLL.HBI_SetBinning(HBI_FPD_DLL._handel, mode);
+        public bool SetTriggerMode(int t) {
 
-            switch (mode) {
-                case 1: {
-
-                        break;
-                    }
-                case 2:
-                    {
-                        _imageWidth = _detectorWidth / 2;
-                        _imageHeight = _detectorHeight / 2;
-                        break;
-                    }
-                case 4:
-                    {
-                        _imageWidth = _detectorWidth / 4;
-                        _imageHeight = _detectorHeight / 4;
-                        break;
-                    }
-                default:
-                    {
-                        ShowMessage("Unsupport bining mode");
-                        break;
-                    }
-
-            }
-
-            return ret == 0;
-        }
-
-
-        //public bool NV_SetBinningMode(NV_BinningMode nV_BinningMode)
-        //{
-        //    bool res = NVDentalSDK.NV_SetBinningMode(nV_BinningMode) == NV_StatusCodes.NV_SC_SUCCESS;
-        //    if (nV_BinningMode == NV_BinningMode.NV_BINNING_2X2)
-        //    {
-        //        _imageWidth = _detectorWidth / 2;
-        //        _imageHeight = _detectorHeight / 2;
-        //    }
-        //    else
-        //    {
-        //        _imageWidth = _detectorWidth;
-        //        _imageHeight = _detectorHeight;
-        //    }
-
-        //    return res;
-        //}
-
-        //public bool NV_SetShutterMode(NV_ShutterMode nV_ShutterMode)
-        //{
-        //    return NVDentalSDK.NV_SetShutterMode(nV_ShutterMode) == NV_StatusCodes.NV_SC_SUCCESS;
-        //}
-
-      
-
-        public bool HB_SetTriggerMode(int t) {
-
-            ShowMessage("设置触发模式为  " + t.ToString());
-            int ret = HBI_FPD_DLL.HBI_UpdateTriggerMode(HBI_FPD_DLL._handel,t);
-            if (ret != 0)
-            {
-                ShowMessage("  HBI_UpdateTriggerMode Failed", true);
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
-
-        //public bool NV_SetAcquisitionMode(NV_AcquisitionMode nV_AcquisitionMode)
-        //{
-        //    return NVDentalSDK.NV_SetAcquisitionMode(nV_AcquisitionMode) == NV_StatusCodes.NV_SC_SUCCESS;
-        //}
-
-        public bool NV_SetOffsetCal(HB_OffsetCorrType nV_CorrType)
-        {
-            m_pCorrect.ucOffsetCorrection = (char)nV_CorrType;
             return true;
-           // return NVDentalSDK.NV_SetOffsetCal(nV_CorrType) == NV_StatusCodes.NV_SC_SUCCESS;
         }
 
-        public bool NV_SetGainCal(HB_CorrType nV_CorrType)
-        {
-
-            m_pCorrect.ucGainCorrection = (char)nV_CorrType;
-            return true;
-           // return NVDentalSDK.NV_SetGainCal(nV_CorrType) == NV_StatusCodes.NV_SC_SUCCESS;
-        }
-
-        public bool NV_SetDefectCal(HB_CorrType nV_CorrType)
-        {
-            m_pCorrect.ucDefectCorrection = (char)nV_CorrType;
-            return true;
-            //return NVDentalSDK.NV_SetDefectCal(nV_CorrType) == NV_StatusCodes.NV_SC_SUCCESS;
-        }
-
-        public bool HB_UpdateTriggerAndCorrectEnable(int trigger) {
-
-            int ret = HBI_FPD_DLL.HBI_TriggerAndCorrectApplay(HBI_FPD_DLL._handel,trigger, ref m_pCorrect);
-           // int ret = HBI_FPD_DLL.HBI_UpdateCorrectEnable(HBI_FPD_DLL._handel, ref m_pCorrect);
-            ShowMessage(" ucDefectCorrection " + ((int)m_pCorrect.ucDefectCorrection).ToString() +
-                " ucGainCorrection " + ((int)m_pCorrect.ucGainCorrection).ToString() +
-                " ucDefectCorrection  " + ((int)m_pCorrect.ucDefectCorrection).ToString());
-
-            if (ret == 0)
-            {
-                ShowMessage("\tHBI_UpdateCorrectEnable success!\n");
-                return true;
-            }
-            else
-            {
-                ShowMessage("\tHBI_UpdateCorrectEnable failed!");
-                return false;
-            }
-        }
-
-        public bool NV_SaveParamFile()
-        {
-            return true;
-            //return NVDentalSDK.NV_SaveParamFile() == NV_StatusCodes.NV_SC_SUCCESS;
-        }
-
-        // 固件最新参数数据
-        public void btnGetFirmwareCfg_Click()
-        {
-            //if (!m_bOpen)
-            //{
-            //    System.Windows.Forms.MessageBox.Show("warnning:disconnect!");
-            //    return;
-            //}
-            //
-            m_pLastRegCfg = new RegCfgInfo();//RegCfgInfo 1024
-            int _ret = Marshal.SizeOf(m_pLastRegCfg);
-            _ret = HBI_FPD_DLL.HBI_GetFpdCfgInfo(HBI_FPD_DLL._handel, ref m_pLastRegCfg);       //获取固件参数，连接后即可获取参数
-            if (_ret != 0) { Log("Error,HBI_GetDevCfgInfo" + _ret.ToString()); return; }   // WriteLog("HBI_GetDevCfgInfo:\n", img_pro.nwidth, img_pro.nheight);
-
-            // 测试，置零，检查结果
-            ushort usValue = (ushort)(((m_pLastRegCfg.m_EtherInfo.m_sDestUDPPort & 0xff) << 8) | ((m_pLastRegCfg.m_EtherInfo.m_sDestUDPPort >> 8) & 0xff));// 高低位需要转换
-            Log(string.Format("\tSourceIP:{0}.{1}.{2}.{3}:{4}\n",
-               (int)(m_pLastRegCfg.m_EtherInfo.m_byDestIP[0]), (int)(m_pLastRegCfg.m_EtherInfo.m_byDestIP[1]),
-                (int)(m_pLastRegCfg.m_EtherInfo.m_byDestIP[2]), (int)(m_pLastRegCfg.m_EtherInfo.m_byDestIP[3]), (ushort)(usValue)));
-            usValue = (ushort)(((m_pLastRegCfg.m_EtherInfo.m_sSourceUDPPort & 0xff) << 8) | ((m_pLastRegCfg.m_EtherInfo.m_sSourceUDPPort >> 8) & 0xff));
-            Log(string.Format("\tDestIP:{0}.{1}.{2}.{3}:{4}\n", (int)(m_pLastRegCfg.m_EtherInfo.m_bySourceIP[0]), (int)(m_pLastRegCfg.m_EtherInfo.m_bySourceIP[1]),
-                (int)(m_pLastRegCfg.m_EtherInfo.m_bySourceIP[2]),
-                (int)(m_pLastRegCfg.m_EtherInfo.m_bySourceIP[3]), (ushort)(usValue)));
-
-            if (m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize >= 0x01 && m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize <= 0x08)
-            {
-                if (m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize == 0x01)
-                    Log(string.Format("\tPanelSize:0x{0:X000},fpd type:4343\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
-                else if (m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize == 0x02)
-                    Log(string.Format("\tPanelSize:0x{0:X000},fpd type:3543\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
-                else if (m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize == 0x03)
-                    Log(string.Format("\tPanelSize:0x{0:X000},fpd type:1613\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
-                else if (m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize == 0x04)
-                    Log(string.Format("\tPanelSize:0x{0:X000},fpd type:3030\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
-                else if (m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize == 0x05)
-                    Log(string.Format("\tPanelSize:0x{0:X000},fpd type:2530\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
-                else
-                    Log(string.Format("\tPanelSize:0x{0:X000},fpd type:3025\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
-            }
-            else
-            {
-                Log(string.Format("\tErr:fpd property:Do not know!fpd type:0x{0:X000}\n", (int)m_pLastRegCfg.m_SysBaseInfo.m_byPanelSize));
-            }
-            Log(string.Format("\twidth={0},hight={1}\n", m_pLastRegCfg.m_SysBaseInfo.m_sImageWidth, m_pLastRegCfg.m_SysBaseInfo.m_sImageHeight));
-            Log("\tdatatype is unsigned char.\n");
-            Log("\tdatabit is 16bits.\n");
-            Log("\tdata is little endian.\n");
-
-           
-            // 图像分辨率
-            _imageWidth = m_pLastRegCfg.m_SysBaseInfo.m_sImageWidth;
-            _imageHeight = m_pLastRegCfg.m_SysBaseInfo.m_sImageHeight;
-            Log(string.Format("\tImage width={0},hight={1}\n", _imageWidth, _imageHeight));
-            // 连续采集时间间隔
-            UInt32 value = (UInt32)m_pLastRegCfg.m_SysCfgInfo.m_unSelfDumpingSpanTime;
-
-            Log(string.Format("\tm_pLastRegCfg.m_SysCfgInfo.m_byWorkMode ={0} \n", m_pLastRegCfg.m_SysCfgInfo.m_byWorkMode));
-
-        }
-        // 获取SDK版本信息
-        public void btnGetSdkVer_Click()
-        {
-            System.Text.StringBuilder strSDKVerionbuf = new System.Text.StringBuilder(64);//
-            int _ret = HBI_FPD_DLL.HBI_GetSDKVerion(HBI_FPD_DLL._handel, strSDKVerionbuf);
-            if (0 != _ret)
-            {
-                Log("HBI_GetSDKVerion failed!");
-                return;
-            }
-            else
-            {
-                Log("HBI_GetSDKVerion:" + strSDKVerionbuf.ToString());
-            }
-        }
-        // 获取固件版本信息
-        public void btnFirmwareVer_Click()
-        {
-            System.Text.StringBuilder strFirmwareVersion = new System.Text.StringBuilder(64);//
-            int _ret = HBI_FPD_DLL.HBI_GetFirmareVerion(HBI_FPD_DLL._handel, strFirmwareVersion);
-            if (0 != _ret)
-            {
-                Log("HBI_GetFirmareVerion failed!");
-                return;
-            }
-            else
-            {
-                Log("HBI_GetFirmareVerion:" + strFirmwareVersion.ToString());
-            }
-        }
+       
         // 获取图像数据信息
         public void btnGetImageProperty()
         {
             Log("get Image property begin!\n");
-            IMAGE_PROPERTY img_pro = new IMAGE_PROPERTY();
-            int ret = HBI_FPD_DLL.HBI_GetImageProperty(HBI_FPD_DLL._handel, ref img_pro);
-            if (ret == 0)
-            {
-                _detectorHeight = img_pro.nheight;
-                _detectorWidth = img_pro.nwidth;
-                _imageHeight = _detectorHeight;
-                _imageWidth = _detectorWidth;
-                Log(string.Format("HBI_GetImageProperty:width={0},hight={1}\n", img_pro.nwidth, img_pro.nheight));
-                //
-                if (img_pro.datatype == 0) Log("\tdatatype is unsigned char.\n");
-                else if (img_pro.datatype == 1) Log("\tdatatype is char.\n");
-                else if (img_pro.datatype == 2) Log("\tdatatype is unsigned short.\n");
-                else if (img_pro.datatype == 3) Log("\tdatatype is float.\n");
-                else if (img_pro.datatype == 4) Log("\tdatatype is double.\n");
-                else Log("\tdatatype is not support.\n");
-                //
-                if (img_pro.ndatabit == 0)
-                {
-                    _bits = 16;
-                    Log("\tdatabit is 16bits.\n");
-                }
-                else if (img_pro.ndatabit == 1) {
-                    _bits = 14;
-                    Log("\tdatabit is 14bits.\n"); }
-                else if (img_pro.ndatabit == 2) {
-                    _bits = 12;
-                    Log("\tdatabit is 12bits.\n");
-                }
-                else if (img_pro.ndatabit == 3) {
-                    _bits = 8;
-                    Log("\tdatabit is 8bits.\n");
-                } 
-                else Log("\tdatatype is unsigned char.\n");
-                //
-                if (img_pro.nendian == 0) Log("\tdata is little endian.\n");
-                else Log("\tdata is bigger endian.\n");
-            }
-            else
-            {
-                ShowMessage("HBI_GetImageProperty failed!\n",true);
-            }
+          
+          
         }
 
 

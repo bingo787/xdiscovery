@@ -98,7 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DetectorHelper.cs" />
-    <Compile Include="HBI_FPD_DLL.cs" />
     <Compile Include="LION_UVC_SDK.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

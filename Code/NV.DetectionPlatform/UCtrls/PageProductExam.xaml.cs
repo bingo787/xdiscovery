@@ -173,29 +173,7 @@ namespace NV.DetectionPlatform.UCtrls
 
                 scale_ratio = Data.ExpTime/1000.0;
 
-
-                string local_ip = "192.168.10.20";
-                string remote_ip = "192.168.10.40";
-
-                COMM_CFG config;
-                config.type = (FPD_COMM_TYPE)Data.CommunicationType;
-                config.loacalPort = 0x8080;
-                config.localip = local_ip.PadRight(16, '\0').ToCharArray();
-                config.remotePort = 0x8081;
-                config.remoteip = remote_ip.PadRight(16, '\0').ToCharArray();
-
-                string autoOffset = Data.IsAutoPreOffset ? "1" : "0";
-                // 连接是否做固件offset模板，1-做offset模板，其他不做
-                // 静态平板也不能做校正
-                int offsettemplate = 0;
-                if (autoOffset == "1" && config.type != FPD_COMM_TYPE.UDP_COMM_TYPE)
-                    offsettemplate = 1;
-                int ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, config, offsettemplate);
-                
-               // int ret = HBI_FPD_DLL.HBI_ConnectDetectorJumbo(HBI_FPD_DLL._handel, remote_ip, 0x8081, local_ip, 0x8080, offsettemplate);
-
-                _detector.ShowMessage("local ip: " + local_ip + " <---> " + remote_ip);
-
+                int ret = _detector.Connect();
                 if (ret != 0)
                 {
                     res += "探测器连接失败。" + _detector.GetLastError(ret);
@@ -203,21 +181,8 @@ namespace NV.DetectionPlatform.UCtrls
                 else
                 {
                     _detector.Delay = Data.Delay;
-                    _detector.HB_SetBinningMode((byte)Data.BinningMode);
-                   // _detector.HB_SetTriggerMode((int)Data.TriggerMode);
-                    _detector.HB_SetGain((int)Data.Gain);
-                    _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
-                    _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
-                    _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
-                    _detector.HB_UpdateTriggerAndCorrectEnable((int)Data.TriggerMode);
-                    _detector.btnGetImageProperty();
-                    _detector.btnGetSdkVer_Click();
-                    _detector.btnFirmwareVer_Click();
-                    _detector.btnGetFirmwareCfg_Click();
-
                     res += "探测器已连接。";
                     IsConnected = true;
-
                 }              
                 _detector.ShowMessage(res, true);
 
@@ -343,14 +308,12 @@ namespace NV.DetectionPlatform.UCtrls
                     /// 防止曝光时间设置为 0
                     _curExpTime = 1;
                 }
-                _detector.HBI_SetSinglePrepareTime(_curExpTime);
 
             }
             else if (type == ExamType.Expose)
             {
                 _detector.IsStored = isStored;
                 _detector.MaxFrames = 0; // 连续获取
-                _detector.HB_SetAqcSpanTime((int)(1000.0 / Global.CurrentParam.Fps));// 设置采集帧率 ： 1，2，4
 
             }
             else if (type == ExamType.MultiEnergyAvg)
@@ -1056,8 +1019,8 @@ namespace NV.DetectionPlatform.UCtrls
 
         private void UnLoaded(object sender, RoutedEventArgs e)
         {
-           // NVDentalSDK.NV_CloseDet();
-            HBI_FPD_DLL.HBI_Destroy(HBI_FPD_DLL._handel);
+
+            LION_UVC_SDK.CloseDevice(LION_UVC_SDK.handle);
         }
 
         /// <summary>

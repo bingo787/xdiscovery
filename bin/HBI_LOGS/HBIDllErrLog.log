@@ -1,0 +1,36 @@
+03-05 18:09:46 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][725] HBI_Destroy
+03-05 18:09:46 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][634][0] SDK_x64_Ver4.0.1.1_Release20211216
+03-05 18:09:46 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][655] HBI_Init,CFpdServer(2,8)
+03-05 18:09:46 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\fpdserver.cpp][361][0] InitImageQueue success!
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][690][0] HBI_Init success!
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][2400] HBI_RegEventCallBackFun
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][2415][0] HBI_RegEventCallBackFun:succss!
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][804] HBI_ConnectDetector
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][805] _type=0,doOffsetTemp=0
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][806] _remoteip=192.168.10.40:_remotePort=32897
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][807] _localip=192.168.10.20:_loacalPort=32896
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][872][0] HBI_ConnectDetecto,COMM_CREATE
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\comm.cpp][57][0] COMM_CREATE
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\comm.cpp][89][0] COMM_CREATE:192.168.10.40:32897
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\comm.cpp][90][0] COMM_CREATE:192.168.10.20:32896
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\comm.cpp][91][0] COMM_CREATE:20
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\comm.cpp][115][0] Err:COMM_CREATE bind local port failed,because of 10049
+03-05 18:09:47 [10556] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][874][0] err:COMM_CREATE failed!
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][725] HBI_Destroy
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][634][0] SDK_x64_Ver4.0.1.1_Release20211216
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][655] HBI_Init,CFpdServer(2,8)
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\fpdserver.cpp][361][0] InitImageQueue success!
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][690][0] HBI_Init success!
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][2400] HBI_RegEventCallBackFun
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][2415][0] HBI_RegEventCallBackFun:succss!
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][804] HBI_ConnectDetector
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][805] _type=0,doOffsetTemp=0
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][806] _remoteip=192.168.10.40:_remotePort=32897
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][807] _localip=192.168.10.20:_loacalPort=32896
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][872][0] HBI_ConnectDetecto,COMM_CREATE
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\comm.cpp][57][0] COMM_CREATE
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\comm.cpp][89][0] COMM_CREATE:192.168.10.40:32897
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\comm.cpp][90][0] COMM_CREATE:192.168.10.20:32896
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\comm.cpp][91][0] COMM_CREATE:20
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\comm.cpp][115][0] Err:COMM_CREATE bind local port failed,because of 10049
+03-05 18:10:31 [07256] :[e:\客户目录\双板\hbi_fpd_tool_pcie_wireless\hbisdkapi\hbisdkapi\hbifpd.cpp][874][0] err:COMM_CREATE failed!
