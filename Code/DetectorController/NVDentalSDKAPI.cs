@@ -13,7 +13,6 @@ namespace Detector
     public delegate void ExcutedCallbackHandler();
     public delegate void ExcutedCallbackHandlerWithValue(int targetValue);
 
-
     public enum NV_StatusCodes
     {
         NV_SC_SUCCESS = 0,      ///< OK      
@@ -95,14 +94,6 @@ namespace Detector
     }
     public static class NVDentalSDK
     {
-
-
-      //  [DllImport("HBI_FPD_E.dll", CharSet = CharSet.Auto)]
-     //   public static extern UIntPtr HBI_Init();
- 
-     //   [DllImport("HBI_FPD_E.dll", CharSet = CharSet.Ansi)]
-     //   public static extern int HBI_GetSDKVerion(UIntPtr handle, StringBuilder szVer);
-
         /////////////////////////////////////////////////////////////////////////
         /// @brief						打开探测器，读取配置文件初始化到硬件，并启动温度和状态监控线程
         /// @retval	NV_StatusCodes		返回状态码，若成功则返回NV_SC_SUCCESS

@@ -127,12 +127,8 @@
     <sys:String x:Key="BubbleUpperlimit">气泡上限:</sys:String>
     <sys:String x:Key="BubbleLowerlimit">气泡下限:</sys:String>
     <sys:String x:Key="BubbleQualification">合格率:</sys:String>
-    <sys:String x:Key="UsmAmount">数量:</sys:String>
-    <sys:String x:Key="UsmRadius">半径:</sys:String>
-    <sys:String x:Key="UsmThreshould">阈值:</sys:String>
     <sys:String x:Key="BubbleSave">保存</sys:String>
     <sys:String x:Key="BubbleClose">关闭</sys:String>
-	<sys:String x:Key="BubbleApply">应用</sys:String>
     <sys:String x:Key="OffsetCorType">本底校正:</sys:String>
     <sys:String x:Key="GainCorType">增益校正:</sys:String>
     <sys:String x:Key="DefectCorType">坏点校正:</sys:String>

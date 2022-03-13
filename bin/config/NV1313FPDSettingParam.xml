@@ -13,4 +13,5 @@
   <触发模式>NV_CONTINUE</触发模式>
   <本底校正模式>NV_CORR_NO</本底校正模式>
   <增益校正模式>NV_CORR_NO</增益校正模式>
+  <坏点校正模式>NV_CORR_NO</坏点校正模式>
 </NV1313FPDSetting>

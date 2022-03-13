@@ -40,9 +40,6 @@ namespace NV.DetectionPlatform.UCtrls
         private KrayDicomLib.DicomFile _file = new KrayDicomLib.DicomFile();
         private int _curExpTime;
         private ExamType _curExpType;
-
-        private WndUSMSetting usmSetting = new WndUSMSetting();
-
         public PageProductExam()
         {
             InitializeComponent();
@@ -57,8 +54,6 @@ namespace NV.DetectionPlatform.UCtrls
         void PageProductExam_Loaded(object sender, RoutedEventArgs e)
         {
             WndAOISetting.InitAOI();
-            usmSetting.InitUSM();
-          
             InitilizePlayAcqThread();
         }
 
@@ -66,17 +61,9 @@ namespace NV.DetectionPlatform.UCtrls
         {
             PlatformModels = new ObservableCollection<PlatformFilesModel>();
             _lstSeries.ItemsSource = PlatformModels;
-
-         
-           usmSetting.UsmParamChangedEvent += usmSetting_UsmParamChanged;
-           usmSetting.CloseSettingEvent += usmSetting_Close;
-
-
             this.Log("初始化快速窗位窗宽设定");
             var wlSetting = new WndWLSetting();
             bdWL.Child = wlSetting;
-           
-
             wlSetting.WindowWLChangedEvent += wlSetting_WindowWLChangedEvent;
             wlSetting.CloseSettingEvent += wlSetting_CloseSettingEvent;
             var wlsetting = NV.Config.SerializeHelper.LoadFromFile<ImageParam>(System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "config\\wlsetting.xaml"));
@@ -118,25 +105,6 @@ namespace NV.DetectionPlatform.UCtrls
                 ipUC.CurrentDv.Invalidate();
             }
         }
-
-        void usmSetting_UsmParamChanged(int amount, int radius, int threshold)
-        {
-            
-            if (ipUC != null && ipUC.CurrentDv != null)
-            {
-                if (usmTryCount != 0) {
-                    ipUC.CurrentDv.BackFromStack();
-                }
-                ushort[] result = usmSetting.UnsharpenMask(ipUC.CurrentDv,amount,radius,threshold);
-                ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
-                ipUC.CurrentDv.PutImageData(width, height, bits, ref result[0]);
-                ipUC.CurrentDv.RefreshImage();
-                usmTryCount += 1;
-            }
-        }
-        void usmSetting_Close() {
-        }
-
         /// <summary>
         /// 实时显示图像线程
         /// </summary>
@@ -870,8 +838,6 @@ namespace NV.DetectionPlatform.UCtrls
                 DragDrop.DoDragDrop(sender as FrameworkElement, fileName, DragDropEffects.Copy);
             }
         }
-
-
         /// <summary>
         /// 图像处理
         /// </summary>
@@ -888,14 +854,8 @@ namespace NV.DetectionPlatform.UCtrls
             switch (tag)
             {
                 case "Sharp":
-                    if (ipUC.CurrentDv.HasImage) {
-                        // ipUC.CurrentDv.SharpImage(1);
-                            ushort[] result = usmSetting.UnsharpenMask(ipUC.CurrentDv);
-                            ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
-                            ipUC.CurrentDv.PutImageData(width, height, bits, ref result[0]);
-                            ipUC.CurrentDv.RefreshImage();
-                    }
-
+                    if (ipUC.CurrentDv.HasImage)
+                        ipUC.CurrentDv.SharpImage(1);
                     break;
                 case "EqualHist":
                     if (ipUC.CurrentDv.HasImage)
@@ -1344,66 +1304,6 @@ namespace NV.DetectionPlatform.UCtrls
             wnd.ShowDialog();
         }
 
-        private int usmTryCount = 0;
-        private void OpenUSMSetting(object sender, MouseButtonEventArgs e)
-        {
-            usmSetting = new WndUSMSetting();
-            usmSetting.Left = SystemParameters.PrimaryScreenWidth - usmSetting.Width - 20;
-            usmSetting.Top = SystemParameters.PrimaryScreenHeight - usmSetting.Height - 60;
-
-            usmTryCount = 0;
-            ipUC.CurrentDv.SaveToStack();
-            usmSetting.UsmParamChangedEvent += usmSetting_UsmParamChanged;
-            usmSetting.ShowDialog();
-        }
-
-
-        private void Puzzle()
-        {
-          
-            bool divide_images = false;
-            Stitcher.Mode mode = Stitcher.Mode.Scans;
-
-            string folderName = @"C:\Users\zhaoqibin\Pictures\Saved Pictures\";
-            string[] imageFiles = { "right.jpg", "left.jpg" };
-
-            string result_name = "result.png";
-            Mat[] imgs = new Mat[imageFiles.Length];
-
-            //读入图像
-            for (int i = 0; i < imageFiles.Length; i++)
-            {
-                imgs[i] = new Mat(folderName + imageFiles[i], ImreadModes.Color);
-
-          
-                
-              //  Cv2.ImShow("1",imgs[i]);
-              //  Cv2.WaitKey(0);
-            }
-
-            CMessageBox.Show("准备缝合图片");
-            Mat pano = new Mat();
-            Stitcher stitcher = Stitcher.Create(mode);
-            CMessageBox.Show(String.Format("imgs size{0} {0}",imgs.Length, imgs[0].Size()));
-
-            
-            Stitcher.Status status = stitcher.Stitch(imgs, pano);
-            if (status != Stitcher.Status.OK)
-            {
-                CMessageBox.Show(String.Format("Can't stitch images, error code = {0} ", (int)status));
-               // Console.WriteLine("Can't stitch images, error code = {0} ", (int)status);
-                return;
-            }
-            CMessageBox.Show("缝合完毕，准备显示");
-            Cv2.ImWrite(folderName + result_name, pano);
-            Cv2.ImShow("PANO",pano);
-            Cv2.WaitKey(0);
-
-
-
-        }
-
-
         internal void SaveScreenImage()
         {
             DicomViewer dv = ipUC.CurrentDv;
@@ -1481,7 +1381,4 @@ namespace NV.DetectionPlatform.UCtrls
             }
         }
     }
-
-
-  
 }

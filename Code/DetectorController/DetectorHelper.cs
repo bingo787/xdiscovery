@@ -15,16 +15,6 @@ namespace Detector
     /// </summary>
     public class DetectorController
     {
-
-        // add by zhao
-        public UIntPtr hb_fpd_handle { get; set; }
-        public int LastHBIReturnValue { get; set; }
-
-
-        public IMAGE_PROPERTY iMAGE_PROPERTY;
-
-        // add by zhao end
-
         /// <summary>
         /// 是否存储图像
         /// </summary>
@@ -95,17 +85,10 @@ namespace Detector
             FinishedGainEvent = new ExcutedFinishCallbackHandler(FinishGain);
             OpenXRayEvent = new ExcutedCallbackHandlerWithValue(OpenXRay);
             CloseXRayEvent = new ExcutedCallbackHandler(CloseXRay);
-
             IsStored = true;
             IsMultiFramesOverlay = false;
             IsMultiFramesOverlayByAvg = true;
             MultiFramesOverlayNumber = 2;
-
-            unsafe {
-                //add by zhao 
-                HBICallbackHandle = new USER_CALLBACK_HANDLE_ENVENT(RecieveImageAndEvent);
-            }
-
         }
 
         /// <summary>
@@ -118,22 +101,20 @@ namespace Detector
         /// <returns></returns>
         public string GetLastError()
         {
-            //  StringBuilder _error = new StringBuilder(1024);
-            //   NVDentalSDK.NV_LastErrorMsg(_error, 1024);
-            //  return _error.ToString();
-            return HBSDK.GetErrorMsgByCode(LastHBIReturnValue);
+            StringBuilder _error = new StringBuilder(1024);
+            NVDentalSDK.NV_LastErrorMsg(_error, 1024);
+            return _error.ToString();
         }
 
         public bool GetTemperature(out float temperatrue1, out float temperature2)
         {
-            // HBI没有找到温度相关的接口
-            //float a, b;
-            //if (NVDentalSDK.NV_GetTemperature(out a, out b) == NV_StatusCodes.NV_SC_SUCCESS)
-            //{
-            //    temperatrue1 = a;
-            //    temperature2 = b;
-            //    return true;
-            //}
+            float a, b;
+            if (NVDentalSDK.NV_GetTemperature(out a, out b) == NV_StatusCodes.NV_SC_SUCCESS)
+            {
+                temperatrue1 = a;
+                temperature2 = b;
+                return true;
+            }
             temperatrue1 = 0;
             temperature2 = 0;
             return false;
@@ -149,10 +130,7 @@ namespace Detector
             _multiFramesOverlayBuffer.Clear();
             count = 0;
 
-
             NVDentalSDK.NV_SetMaxFrames(MaxFrames);
-
-            //  HBSDK.HBI_LiveAcquisition(hb_fpd_handle, fpq_aec_mode);
             if (NVDentalSDK.NV_StartAcq(AcqMaxFrameEvent) != (int)NV_StatusCodes.NV_SC_SUCCESS)
             {
                 ShowMessage("StartAcq Failed——" + GetLastError(), true);
@@ -170,10 +148,7 @@ namespace Detector
         /// <returns></returns>
         public bool StopAcq()
         {
-
-
-            LastHBIReturnValue = HBSDK.HBI_StopAcquisition(hb_fpd_handle);
-            if ((HBIRETCODE)LastHBIReturnValue != HBIRETCODE.HBI_SUCCSS)
+            if (NVDentalSDK.NV_StopAcq() != NV_StatusCodes.NV_SC_SUCCESS)
             {
                 ShowMessage("StopAcq Failed——" + GetLastError(), true);
                 return false;
@@ -223,70 +198,53 @@ namespace Detector
         public event ExcutedCallbackHandler AcqMaxFramesEvent;
         public int MaxFrames = 0;
 
-        public static USER_CALLBACK_HANDLE_ENVENT HBICallbackHandle;
-
-
         /// <summary>
         /// 初始化探测器
         /// </summary>
         public bool InitDetector(out string res)
         {
             res = string.Empty;
+            NVDentalSDK.NV_CloseDet();
 
-            // 首先销毁之前的句柄
-            //NVDentalSDK.NV_CloseDet();
-            HBSDK.HBI_Destroy(hb_fpd_handle);
-
-            // 然后再注册回调函数
-
-            LastHBIReturnValue = HBSDK.HBI_RegEventCallBackFun(hb_fpd_handle, HBICallbackHandle);
-            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
-                res += ("HBI_RegEventCallBackFun Failed");
+            if (NVDentalSDK.NV_SetAcqCallback(ShowImageCallBack, this) != (int)NV_StatusCodes.NV_SC_SUCCESS)
+                res += ("SetAcqCallback Failed");
             else
-                ShowMessage("HBI_RegEventCallBackFun success.");
-
-
-            LastHBIReturnValue = HBSDK.HBI_ConnectDetector(hb_fpd_handle, "192.168.3.1", 100, "192.168.3.1", 100, 30);
-            if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
+                ShowMessage("SetAcqCallback success.");
+            if (NVDentalSDK.NV_OpenDet() != NV_StatusCodes.NV_SC_SUCCESS)
             {
-                res += "探测器连接失败。" + GetLastError();
+                StringBuilder buffer = new StringBuilder(1024);
+                NVDentalSDK.NV_LastErrorMsg(buffer, 1024);
+                res += "探测器连接失败。" + buffer.ToString();
                 return false;
             }
             else
             {
-                //if (NVDentalSDK.NV_MonitorTemperature(TemperatureCallBack) != NV_StatusCodes.NV_SC_SUCCESS)
-                //    res += ("Temperature failed");
-                //if (NVDentalSDK.NV_MonitorSystemStatus(SystemStatusCallBack) != NV_StatusCodes.NV_SC_SUCCESS)
-                //    res += ("SystemStatus failed");
-                //if (NVDentalSDK.NV_MonitorConnbreak(ConnBreakCallBack) != NV_StatusCodes.NV_SC_SUCCESS)
-                //    res += ("ConnBreak failed");
+                if (NVDentalSDK.NV_MonitorTemperature(TemperatureCallBack) != NV_StatusCodes.NV_SC_SUCCESS)
+                    res += ("Temperature failed");
+                if (NVDentalSDK.NV_MonitorSystemStatus(SystemStatusCallBack) != NV_StatusCodes.NV_SC_SUCCESS)
+                    res += ("SystemStatus failed");
+                if (NVDentalSDK.NV_MonitorConnbreak(ConnBreakCallBack) != NV_StatusCodes.NV_SC_SUCCESS)
+                    res += ("ConnBreak failed");
 
-                
-                LastHBIReturnValue = HBSDK.HBI_GetImageProperty(hb_fpd_handle, out iMAGE_PROPERTY);
-
-                if (LastHBIReturnValue != (int)HBIRETCODE.HBI_SUCCSS)
+                if (NVDentalSDK.NV_GetSensorSize(out _detectorWidth, out _detectorHeight, out _bits) != (int)NV_StatusCodes.NV_SC_SUCCESS)
                 {
-                    res += ("HBI_GetImageProperty failed");
+                    res += ("GetSize failed");
                 }
                 else
                 {
-                    _imageWidth = (int)iMAGE_PROPERTY.nwidth;
-                    _imageHeight = (int)iMAGE_PROPERTY.nheight;
-                    _bits = (int)iMAGE_PROPERTY.ndatabit;
-
-                    Byte binning;
-                    HBSDK.HBI_GetBinning(hb_fpd_handle, out binning);
-
+                    _imageWidth = _detectorWidth;
+                    _imageHeight = _detectorHeight;
+                    NV_BinningMode binning;
+                    NVDentalSDK.NV_GetBinningMode(out binning);
                     res += binning.ToString();
-                    //if (binning == 2)
-                    //{
-                    //    HBSDK.HBI_SetImageCalibration
-                    //    NVDentalSDK.NV_SetImageRange(0, 0, ImageWidth / 2, ImageHeight / 2);
-                    //}
-                    //else
-                    //    NVDentalSDK.NV_SetImageRange(0, 0, ImageWidth, ImageHeight);
-                    //NVDentalSDK.NV_SaveParamFile();
-                    ////NVDentalSDK.NV_LoadParamFile();
+                    if (binning == NV_BinningMode.NV_BINNING_2X2)
+                    {
+                        NVDentalSDK.NV_SetImageRange(0, 0, ImageWidth / 2, ImageHeight / 2);
+                    }
+                    else
+                        NVDentalSDK.NV_SetImageRange(0, 0, ImageWidth, ImageHeight);
+                    NVDentalSDK.NV_SaveParamFile();
+                    //NVDentalSDK.NV_LoadParamFile();
                 }
                 res += (string.Format("Size w:{0} h:{1} bits:{2}", ImageWidth, ImageHeight, Bits));
                 res += "探测器已连接。";
@@ -316,123 +274,6 @@ namespace Detector
             {
                 TemperatureChangedEvent(a, b);
             }
-        }
-
-        private unsafe int RecieveImageAndEvent(Byte cmd, void* buff, int len, int nID){
-
-            switch ((CALLBACK_EVENT_COMM_TYPE)cmd)
-            {
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_NET_ERR_MSG:
-                    {
-                       
-                        if (len <= 0 && len >= -7)
-                        {
-                            if (len == 0)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG, Err: 网络未连接！",true);
-                            else if (len == -1)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,Err:参数异常!", true);
-                            else if (len == -2)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,Err:准备就绪的描述符数返回失败!", true);
-                            else if (len == -3)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,Err:接收超时!", true);
-                            else if (len == -4)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,Err:接收失败!", true);
-                            else if (len == -5)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,Err:端口不可读!", true);
-                            else if (len == -6)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,network card unusual!", true);
-                            else if (len == -7)
-                                ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,network card ok!", true);
-                        }
-                        else if (len == 1)
-                            ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,开始监听!");
-                        else if (len == 2)
-                            ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,ready!");
-                        else if (len == 3)
-                            ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,busy!");
-                        else if (len == 4)
-                            ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG,prepare!");
-                        else
-                            ShowMessage("ECALLBACK_TYPE_NET_ERR_MSG, unknown err {}");
-
-                        break;
-                    }
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_ROM_UPLOAD:
-                    {
-                        ShowMessage("ECALLBACK_TYPE_ROM_UPLOAD...");
-                        //if (INSTANCE->m_pLastRegCfg != NULL)
-                        //{
-                        //    memset(INSTANCE->m_pLastRegCfg, 0x00, sizeof(RegCfgInfo));
-                        //    memcpy_s(INSTANCE->m_pLastRegCfg, sizeof(RegCfgInfo), (unsigned char *)buff, sizeof(RegCfgInfo));
-
-                        //    XLOG_INFO("Serial Number : {}", INSTANCE->m_pLastRegCfg->m_SysBaseInfo.m_cSnNumber);
-
-                        //}
-                        break;
-                    }
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_SINGLE_IMAGE:
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_MULTIPLE_IMAGE:
-                    {
-                        ushort[] buffer = new ushort[_imageWidth * _imageHeight];
-
-                        for (int i = 0; i < _imageWidth * _imageHeight; i++)
-                        {
-                           // buffer[i] = buff[i];
-                        }
-
-                        PlayBuffer.Enqueue(buffer);
-                        if (IsStored)
-                        {
-                            ImageBuffer.Add(buffer);
-                        }
-
-                        count++;
-                        break;
-                    }
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_THREAD_EVENT:
-                    {
-                        if (len == 112)// offset使能，校正反馈信息
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},offset calibrate:success!");
-                        else if (len == 113)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},offset calibrate:failed!");
-                        else if (len == 114)// gain使能，校正反馈信息
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},gain calibrate:success!");
-                        else if (len == 115)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},gain calibrate:failed!");
-                        else if (len == 116)// defect使能，校正反馈信息
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},defect calibrate:success!");
-                        else if (len == 117)
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},defect calibrate:failed!");
-                        else
-                            ShowMessage("ECALLBACK_TYPE_THREAD_EVENT{},other feedback message!");
-                        break;
-                    }
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_FPD_STATUS:
-                    {
-                        ShowMessage("TYPE_FPD_STATUS, command= " + cmd.ToString());
-                        if (len == 5)
-                        {
-                            ShowMessage("Stop Acquisition",true);
-                            //if(INSTANCE->acq_mode.aqc_mode == DYNAMIC_DEFECT_ACQ_MODE)
-                            //	INSTANCE->
-                        }
-                        break;
-                    }
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_GAIN_ERR_MSG:
-                    {
-                        break;
-                    }
-                case CALLBACK_EVENT_COMM_TYPE.ECALLBACK_TYPE_DEFECT_ERR_MSG:
-                    {
-                        break;
-                    }
-                default:
-                    {
-                        ShowMessage("ECALLBACK_TYPE_INVALID, command " + cmd.ToString(),true);
-                        break;
-                    }
-            }
-            return 0;
         }
 
         /// <summary>
@@ -519,6 +360,7 @@ namespace Detector
         /// </summary>
         private void AcqMaxFrame()
         {
+            StopAcq();
             if (AcqMaxFramesEvent != null)
             {
                 AcqMaxFramesEvent.Invoke();
@@ -546,7 +388,7 @@ namespace Detector
 
         private void Log(string p)
         {
-            Console.WriteLine(p);
+
         }
         /// <summary>
         /// 设置探测器采集时间、增益

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Model.Store" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+    <Schema Namespace="Model.Store" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityType Name="AOIParam">
           <Key>
             <PropertyRef Name="GUID" />
@@ -70,22 +70,11 @@
           <Property Name="EndTime" Type="nvarchar" MaxLength="254" />
           <Property Name="ImageFolder" Type="nvarchar" MaxLength="254" />
         </EntityType>
-        <EntityType Name="USMParam">
-          <Key>
-            <PropertyRef Name="GUID" />
-          </Key>
-          <Property Name="GUID" Type="nvarchar" MaxLength="254" Nullable="false" />
-          <Property Name="Amount" Type="int" />
-          <Property Name="Radius" Type="int" />
-          <Property Name="Threshold" Type="int" />
-          <Property Name="Name" Type="nvarchar" MaxLength="254" />
-        </EntityType>
         <EntityContainer Name="ModelStoreContainer">
           <EntitySet Name="AOIParam" EntityType="Self.AOIParam" store:Type="Tables" />
           <EntitySet Name="ExamParam" EntityType="Self.ExamParam" store:Type="Tables" />
           <EntitySet Name="ImageParam" EntityType="Self.ImageParam" store:Type="Tables" />
           <EntitySet Name="Product" EntityType="Self.Product" store:Type="Tables" />
-          <EntitySet Name="USMParam" EntityType="Self.USMParam" store:Type="Tables" />
           <EntitySet Name="Overlay" EntityType="Self.Overlay" store:Type="Tables">
             <DefiningQuery>SELECT 
 [Overlay].[OverlayDesc] AS [OverlayDesc], 
@@ -101,34 +90,26 @@ FROM [Overlay] AS [Overlay]</DefiningQuery>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Model" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="String" MaxLength="254" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProductName" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="ProductTypeID" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="ProductSpecification" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="ProductKeywords" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="StartTime" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="EndTime" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="ImageFolder" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="USMParam" EntityType="Model.USMParam" />
-          <EntitySet Name="AOIParam" EntityType="Model.AOIParam" />
+          <EntitySet Name="Product" EntityType="Self.Product" />
           <EntitySet Name="ExamParam" EntityType="Model.ExamParam" />
           <EntitySet Name="ImageParam" EntityType="Model.ImageParam" />
-          <EntitySet Name="Product" EntityType="Model.Product" />
           <EntitySet Name="Overlay" EntityType="Model.Overlay" />
+          <EntitySet Name="AOIParam" EntityType="Model.AOIParam" />
         </EntityContainer>
-        <EntityType Name="USMParam">
-          <Key>
-            <PropertyRef Name="GUID" />
-          </Key>
-          <Property Name="GUID" Nullable="false" MaxLength="254" FixedLength="false" Unicode="true" Type="String" />
-          <Property Name="Amount" Type="Int32" />
-          <Property Name="Radius" Type="Int32" />
-          <Property Name="Threshold" Type="Int32" />
-          <Property Name="Name" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="AOIParam">
-          <Key>
-            <PropertyRef Name="GUID" />
-          </Key>
-          <Property Name="GUID" Type="String" Nullable="false" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="UpperlimitofBubble" Type="Int32" />
-          <Property Name="LowerlimitofBubble" Type="Int32" />
-          <Property Name="PercentofBubblePass" Type="Int32" />
-          <Property Name="Name" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-        </EntityType>
         <EntityType Name="ExamParam">
           <Key>
             <PropertyRef Name="GUID" />
@@ -158,19 +139,6 @@ FROM [Overlay] AS [Overlay]</DefiningQuery>
           <Property Name="EqualHist" Type="Boolean" />
           <Property Name="ProductType" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="Product">
-          <Key>
-            <PropertyRef Name="GUID" />
-          </Key>
-          <Property Name="GUID" Type="String" Nullable="false" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="ProductName" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="ProductTypeID" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="ProductSpecification" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="ProductKeywords" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="StartTime" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="EndTime" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="ImageFolder" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-        </EntityType>
         <EntityType Name="Overlay">
           <Key>
             <PropertyRef Name="OverlayID" />
@@ -182,31 +150,33 @@ FROM [Overlay] AS [Overlay]</DefiningQuery>
           <Property Name="OverlayID" Type="Int32" Nullable="false" />
           <Property Name="IsUseful" Type="Boolean" />
         </EntityType>
+        <EntityType Name="AOIParam">
+          <Key>
+            <PropertyRef Name="GUID" />
+          </Key>
+          <Property Name="GUID" Type="String" Nullable="false" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="UpperlimitofBubble" Type="Int32" />
+          <Property Name="LowerlimitofBubble" Type="Int32" />
+          <Property Name="PercentofBubblePass" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
-    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
-    <EntitySetMapping Name="USMParam">
-            <EntityTypeMapping TypeName="Model.USMParam">
-              <MappingFragment StoreEntitySet="USMParam">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Threshold" ColumnName="Threshold" />
-                <ScalarProperty Name="Radius" ColumnName="Radius" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Product">
+            <EntityTypeMapping TypeName="Model.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="ImageFolder" ColumnName="ImageFolder" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
                 <ScalarProperty Name="GUID" ColumnName="GUID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AOIParam">
-            <EntityTypeMapping TypeName="Model.AOIParam">
-              <MappingFragment StoreEntitySet="AOIParam">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="PercentofBubblePass" ColumnName="PercentofBubblePass" />
-                <ScalarProperty Name="LowerlimitofBubble" ColumnName="LowerlimitofBubble" />
-                <ScalarProperty Name="UpperlimitofBubble" ColumnName="UpperlimitofBubble" />
-                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
+                <ScalarProperty Name="ProductSpecification" ColumnName="ProductSpecification" />
+                <ScalarProperty Name="ProductKeywords" ColumnName="ProductKeywords" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -241,20 +211,6 @@ FROM [Overlay] AS [Overlay]</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Product">
-            <EntityTypeMapping TypeName="Model.Product">
-              <MappingFragment StoreEntitySet="Product">
-                <ScalarProperty Name="ImageFolder" ColumnName="ImageFolder" />
-                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
-                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
-                <ScalarProperty Name="ProductKeywords" ColumnName="ProductKeywords" />
-                <ScalarProperty Name="ProductSpecification" ColumnName="ProductSpecification" />
-                <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="GUID" ColumnName="GUID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Overlay">
             <EntityTypeMapping TypeName="Model.Overlay">
               <MappingFragment StoreEntitySet="Overlay">
@@ -267,8 +223,20 @@ FROM [Overlay] AS [Overlay]</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
-</Mapping></edmx:Mappings>
+          <EntitySetMapping Name="AOIParam">
+            <EntityTypeMapping TypeName="Model.AOIParam">
+              <MappingFragment StoreEntitySet="AOIParam">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PercentofBubblePass" ColumnName="PercentofBubblePass" />
+                <ScalarProperty Name="LowerlimitofBubble" ColumnName="LowerlimitofBubble" />
+                <ScalarProperty Name="UpperlimitofBubble" ColumnName="UpperlimitofBubble" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
   <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
@@ -282,19 +250,18 @@ FROM [Overlay] AS [Overlay]</DefiningQuery>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="false" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
-        <DesignerProperty Name="UseLegacyProvider" Value="True" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="默认值" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
     <Diagrams>
-      <Diagram DiagramId="26145d9a15284a01a58d4a54f0eb35d2" Name="Diagram1" ZoomLevel="127">
-        <EntityTypeShape EntityType="Model.USMParam" PointX="3.375" PointY="4" Width="1.5" />
-        <EntityTypeShape EntityType="Model.AOIParam" Width="1.5" PointX="0.75" PointY="0.75" />
-        <EntityTypeShape EntityType="Model.ExamParam" Width="1.5" PointX="2.75" PointY="0.75" />
-        <EntityTypeShape EntityType="Model.ImageParam" Width="1.5" PointX="4.75" PointY="0.75" />
-        <EntityTypeShape EntityType="Model.Product" Width="1.5" PointX="0.75" PointY="4.75" />
-        <EntityTypeShape EntityType="Model.Overlay" Width="1.5" PointX="6.75" PointY="0.75" />
+      <Diagram DiagramId="26145d9a15284a01a58d4a54f0eb35d2" Name="Diagram1">
+        <EntityTypeShape EntityType="Model.Product" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.ExamParam" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="Model.ImageParam" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="Model.Overlay" Width="1.5" PointX="3.375" PointY="4.75" />
+        <EntityTypeShape EntityType="Model.AOIParam" Width="1.5" PointX="5.375" PointY="0.75" />
       </Diagram>
     </Diagrams>
   </Designer>
