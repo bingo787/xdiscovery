@@ -20,6 +20,8 @@ using NV.DetectionPlatform.Service;
 using System.Diagnostics;
 using NV.DetectionPlatform.Entity;
 using System.Drawing;
+using OpenCvSharp;
+
 namespace NV.DetectionPlatform.UCtrls
 {
     /// <summary>
@@ -40,6 +42,9 @@ namespace NV.DetectionPlatform.UCtrls
         private KrayDicomLib.DicomFile _file = new KrayDicomLib.DicomFile();
         private int _curExpTime;
         private ExamType _curExpType;
+
+        private WndUSMSetting usmSetting = new WndUSMSetting();
+
         public PageProductExam()
         {
             InitializeComponent();
@@ -54,6 +59,8 @@ namespace NV.DetectionPlatform.UCtrls
         void PageProductExam_Loaded(object sender, RoutedEventArgs e)
         {
             WndAOISetting.InitAOI();
+            usmSetting.InitUSM();
+          
             InitilizePlayAcqThread();
         }
 
@@ -61,6 +68,13 @@ namespace NV.DetectionPlatform.UCtrls
         {
             PlatformModels = new ObservableCollection<PlatformFilesModel>();
             _lstSeries.ItemsSource = PlatformModels;
+
+         
+           usmSetting.UsmParamChangedEvent += usmSetting_UsmParamChanged;
+           usmSetting.BackSettingEvent += usmSetting_Back;
+           usmSetting.CloseSettingEvent += usmSetting_Close;
+
+
             this.Log("初始化快速窗位窗宽设定");
             var wlSetting = new WndWLSetting();
             bdWL.Child = wlSetting;
@@ -105,6 +119,28 @@ namespace NV.DetectionPlatform.UCtrls
                 ipUC.CurrentDv.Invalidate();
             }
         }
+
+        void usmSetting_UsmParamChanged(int amount, int radius, int threshold)
+        {
+             
+            if (ipUC != null && ipUC.CurrentDv != null)
+            {
+                ipUC.CurrentDv.SaveToStack();
+                ushort[] result = usmSetting.UnsharpenMask(ipUC.CurrentDv,amount,radius,threshold);
+                ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+                ipUC.CurrentDv.PutImageData(width, height, bits, ref result[0]);
+                ipUC.CurrentDv.RefreshImage();
+            }
+        }
+        void usmSetting_Close() {
+        }
+
+        void usmSetting_Back()
+        {
+            ipUC.CurrentDv.BackFromStack();
+            ApplyConfigWL(true);     
+        }
+
         /// <summary>
         /// 实时显示图像线程
         /// </summary>
@@ -161,6 +197,9 @@ namespace NV.DetectionPlatform.UCtrls
                 if (_detector.PlayBuffer.Count > 0)
                 {
                     ushort[] data = _detector.PlayBuffer.Dequeue();
+                    ushort W = (ushort)_detector.ImageWidth;
+                    ushort H = (ushort)_detector.ImageHeight;
+                    ushort Bits = (ushort)_detector.Bits;
                     _imageCount++;
                     this.Dispatcher.Invoke(new Action(() =>
                     {
@@ -211,7 +250,7 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="type"></param>
         public void StartAcq(ExamType type = ExamType.Spot, bool isStored = false, int maxCount = 1, double stepKv = 0, int stepUA = 0)
         {
-            Window wnd = Window.GetWindow(this);
+            System.Windows.Window wnd = System.Windows.Window.GetWindow(this);
             if (wnd != null && (wnd as MainWindow) != null && (wnd as MainWindow)._hVView != null)
             {
                 (wnd as MainWindow)._hVView.Visibility = Visibility.Hidden; ;
@@ -854,8 +893,14 @@ namespace NV.DetectionPlatform.UCtrls
             switch (tag)
             {
                 case "Sharp":
-                    if (ipUC.CurrentDv.HasImage)
-                        ipUC.CurrentDv.SharpImage(1);
+                    if (ipUC.CurrentDv.HasImage) {
+                        // ipUC.CurrentDv.SharpImage(1);
+                            ushort[] result = usmSetting.UnsharpenMask(ipUC.CurrentDv);
+                            ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+                            ipUC.CurrentDv.PutImageData(width, height, bits, ref result[0]);
+                            ipUC.CurrentDv.RefreshImage();
+                    }
+
                     break;
                 case "EqualHist":
                     if (ipUC.CurrentDv.HasImage)
@@ -1304,6 +1349,69 @@ namespace NV.DetectionPlatform.UCtrls
             wnd.ShowDialog();
         }
 
+
+        private void OpenUSMSetting(object sender, MouseButtonEventArgs e)
+        {
+            usmSetting = new WndUSMSetting();
+            usmSetting.Left = SystemParameters.PrimaryScreenWidth - usmSetting.Width - 20;
+            usmSetting.Top = SystemParameters.PrimaryScreenHeight - usmSetting.Height - 60;
+
+            usmSetting.UsmParamChangedEvent += usmSetting_UsmParamChanged;
+            usmSetting.BackSettingEvent += usmSetting_Back;
+            
+            usmSetting.ShowDialog();
+        }
+
+
+        private ushort[] Stitching(string[] imageFiles, ref ushort width, ref ushort height)
+        {
+
+            Stitcher.Mode mode = Stitcher.Mode.Panorama;
+            Mat[] imgs = new Mat[imageFiles.Length];
+
+            string names = "";
+            //读入图像
+            for (int i = 0; i < imageFiles.Length; i++)
+            {
+                imgs[i] = new Mat(imageFiles[i], ImreadModes.Color);
+                names += imageFiles[i] + " \n";
+
+            }
+
+            CMessageBox.Show("开始缝合图片? " + names);
+            Mat pano = new Mat();
+            Stitcher stitcher = Stitcher.Create(mode);
+           // CMessageBox.Show(String.Format("imgs size{0} {0}",imgs.Length, imgs[0].Size()));
+
+            Stitcher.Status status = stitcher.Stitch(imgs, pano);
+            width = (ushort)pano.Width;
+            height = (ushort)pano.Height;
+            ushort[] result = new ushort[width * height];
+
+            if (status != Stitcher.Status.OK)
+            {
+                CMessageBox.Show(String.Format("缝合失败! 请保证图片大于1张，且每张之间至少具有30%的重复。 error code = {0} ", (int)status));
+               // Console.WriteLine("Can't stitch images, error code = {0} ", (int)status);
+                return result;
+            }
+          //  CMessageBox.Show("缝合完毕，准备显示");
+           // Cv2.ImWrite("123.bmp",pano);
+
+            // 显示
+            // for (int i = 0; i < height; i++)
+            System.Threading.Tasks.Parallel.For(0, height, i =>
+            {
+                for (int j = 0; j < pano.Width; j++)
+                {
+                    result[i * pano.Width + j] = pano.At<ushort>(i, j);
+                }
+            });
+
+            return result;
+
+        }
+
+
         internal void SaveScreenImage()
         {
             DicomViewer dv = ipUC.CurrentDv;
@@ -1311,7 +1419,7 @@ namespace NV.DetectionPlatform.UCtrls
                 return;
 
             System.Windows.Point start = ipUC.PointToScreen(new System.Windows.Point(0d, 0d));
-            Rect area = new Rect(start.X, start.Y, ipUC.ActualWidth, ipUC.ActualHeight);
+            System.Windows.Rect area = new System.Windows.Rect(start.X, start.Y, ipUC.ActualWidth, ipUC.ActualHeight);
             Bitmap image = new Bitmap((int)area.Width, (int)area.Height);
             Graphics imgGraphics = Graphics.FromImage(image);
             //设置截屏区域

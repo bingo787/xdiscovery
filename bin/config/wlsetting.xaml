@@ -12,8 +12,8 @@
   </EntityKey>
   <GUID>69eb1caa-2d74-4234-89a5-bf56dd1f7ce5</GUID>
   <Name>示例1</Name>
-  <WindowWidth>65534</WindowWidth>
-  <WindowLevel>33879</WindowLevel>
+  <WindowWidth>5002</WindowWidth>
+  <WindowLevel>4022</WindowLevel>
   <Gamma xsi:nil="true" />
   <SharpLevel xsi:nil="true" />
   <ReduceNoiseLevel xsi:nil="true" />
