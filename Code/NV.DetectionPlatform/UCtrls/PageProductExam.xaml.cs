@@ -186,6 +186,7 @@ namespace NV.DetectionPlatform.UCtrls
                 string remote_ip = "192.168.10.40";
 
                 COMM_CFG config;
+                Data.CommunicationType = HB_FPD_COMM_TYPE.UDP_JUMBO;
                 config.type = (FPD_COMM_TYPE)Data.CommunicationType;
                 config.loacalPort = 0x8080;
                 config.localip = local_ip.PadRight(16, '\0').ToCharArray();
@@ -202,30 +203,36 @@ namespace NV.DetectionPlatform.UCtrls
                 }
                 else
                 {
-                    if (Data.IsAutoPreOffset == true &&  config.type != FPD_COMM_TYPE.UDP_COMM_TYPE)
-                    {
-                        _detector.HB_SetTriggerMode((int)HB_TriggerMode.CONTINUE);
-                        Thread.Sleep(150);
-                        _detector.StartCorrectOffsetTemplate();
-                    }
-
-
-                    
                     _detector.Delay = Data.Delay;
-                    _detector.HB_SetBinningMode((byte)Data.BinningMode);
-                    _detector.HB_SetGain((int)Data.Gain);
-                    _detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
-                    _detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
-                    _detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
-                    _detector.btnGetImageProperty();
-                    _detector.btnGetSdkVer_Click();
-                    _detector.btnFirmwareVer_Click();
-                    _detector.btnGetFirmwareCfg_Click();
+                    //   _detector.HB_SetBinningMode((byte)Data.BinningMode);
+                    //  Thread.Sleep(2000);
+                    //  _detector.HB_SetGain((int)Data.Gain);
+                    //  Thread.Sleep(2000);
+                    Data.OffsetCorMode = HB_OffsetCorrType.FIRMWARE_POST_OFFSET;
+                    Data.GainCorMode = HB_CorrType.FRIMWARE;
+                    Data.DefectCorMode = HB_CorrType.FRIMWARE;
+            
+
+                    _detector.NV_SetOffsetCal(Data.OffsetCorMode);
+                    _detector.NV_SetGainCal(Data.GainCorMode);
+                    _detector.NV_SetDefectCal(Data.DefectCorMode);
+
 
                     res += "探测器已连接。";
                     IsConnected = true;
 
-                }              
+                    if (Data.IsAutoPreOffset == true && config.type != FPD_COMM_TYPE.UDP_COMM_TYPE)
+                    {
+                        Thread.Sleep(1000);
+                        _detector.HB_UpdateTriggerAndCorrectEnable(7);
+                        Thread.Sleep(1000);
+                        _detector.StartCorrectOffsetTemplate();
+                    }
+                    _detector.btnGetFirmwareCfg_Click();
+                    _detector.btnGetImageProperty();
+                    _detector.btnGetSdkVer_Click();
+
+                }
                 _detector.ShowMessage(res, true);
 
             }

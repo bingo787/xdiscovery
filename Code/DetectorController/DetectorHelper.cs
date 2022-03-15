@@ -897,7 +897,7 @@ namespace Detector
             }
             else
             {
-                ShowMessage("Do pre-offset template success!",false);
+                ShowMessage("Do pre-offset template success!", true);
             }
 
         }
@@ -1566,11 +1566,13 @@ namespace Detector
 
         public bool HB_UpdateTriggerAndCorrectEnable(int trigger) {
 
+            m_pCorrect.bFeedbackCfg = false;
             int ret = HBI_FPD_DLL.HBI_TriggerAndCorrectApplay(HBI_FPD_DLL._handel,trigger, ref m_pCorrect);
            // int ret = HBI_FPD_DLL.HBI_UpdateCorrectEnable(HBI_FPD_DLL._handel, ref m_pCorrect);
             ShowMessage(" ucDefectCorrection " + ((int)m_pCorrect.ucDefectCorrection).ToString() +
                 " ucGainCorrection " + ((int)m_pCorrect.ucGainCorrection).ToString() +
-                " ucDefectCorrection  " + ((int)m_pCorrect.ucDefectCorrection).ToString());
+                " ucOffsetCorrection  " + ((int)m_pCorrect.ucOffsetCorrection).ToString() + 
+                "trigger mode " + trigger.ToString());
 
             if (ret == 0)
             {
@@ -1647,6 +1649,34 @@ namespace Detector
             UInt32 value = (UInt32)m_pLastRegCfg.m_SysCfgInfo.m_unSelfDumpingSpanTime;
 
             Log(string.Format("\tm_pLastRegCfg.m_SysCfgInfo.m_byWorkMode ={0} \n", m_pLastRegCfg.m_SysCfgInfo.m_byWorkMode));
+
+            Log("\tm_pLastRegCfg.m_SysCfgInfo.m_byWorkMode" + m_pLastRegCfg.m_SysCfgInfo.m_byWorkMode.ToString() +"\n");
+
+            switch (m_pLastRegCfg.m_SysCfgInfo.m_byWorkMode) {
+
+                case (char)1:
+                    Log("\tm_pLastRegCfg.m_SysCfgInfo.m_byWorkMode : 1 " + "\n");
+                    break;
+                case (char)2:
+                    Log("\tm_pLastRegCfg.m_SysCfgInfo.m_byWorkMode : 2 " + "\n");
+                    break;
+                case (char)3:
+                    Log("\tm_pLastRegCfg.m_SysCfgInfo.m_byWorkMode : 3" + "\n");
+                    break;
+                case (char)4:
+                    Log("\tm_pLastRegCfg.m_SysCfgInfo.m_byWorkMode : 4 " + "\n");
+                    break;
+                case (char)5:
+                    Log("\tm_pLastRegCfg.m_SysCfgInfo.m_byWorkMode : 5 " + "\n");
+                    break;
+                case (char)6:
+                    Log("\tm_pLastRegCfg.m_SysCfgInfo.m_byWorkMode : 6 " + "\n");
+                    break;
+                case (char)7:
+                    Log("\tm_pLastRegCfg.m_SysCfgInfo.m_byWorkMode : 7 " + "\n");
+                    break;
+
+            }
 
         }
         // 获取SDK版本信息
