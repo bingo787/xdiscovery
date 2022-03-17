@@ -995,6 +995,7 @@ namespace NV.DetectionPlatform.UCtrls
                             ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
                             ipUC.CurrentDv.PutImageData(width, height, bits, ref result[0]);
                             ipUC.CurrentDv.RefreshImage();
+                            ipUC.CurrentDv.Invalidate();
                     }
 
                     break;
