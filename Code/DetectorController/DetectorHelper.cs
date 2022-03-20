@@ -41,6 +41,7 @@ namespace Detector
         //    DOWNLOAD_FILE m_pdownloadmode = new DOWNLOAD_FILE();
         FPD_AQC_MODE m_stMode = new FPD_AQC_MODE();
 
+        public int ScaleRatioFinetuning = 45;
         /// <summary>
         /// 高压控制器
         /// </summary>
@@ -100,6 +101,8 @@ namespace Detector
         /// 延时采集时间
         /// </summary>
         public int Delay = 0;
+
+        public double TempratureThreshold;
         /// <summary>
         /// 单例模式，提供辅助类实例
         /// </summary>
@@ -897,7 +900,7 @@ namespace Detector
             }
             else
             {
-                ShowMessage("Do pre-offset template success!", true);
+              //  ShowMessage("Do pre-offset template success!", true);
             }
 
         }

@@ -545,7 +545,7 @@ namespace SerialPortController
         /// </summary>
         public void ResetHV()
         {
-           // SendCommand("UPDT");
+            SendCommand("CLEAR");
         }
         /// <summary>
         /// 预热
@@ -670,9 +670,6 @@ namespace SerialPortController
             */
 
             SendCommand("EH:1");
-            Thread.Sleep(5 * 1000);
-            
-
         }
     }
 }

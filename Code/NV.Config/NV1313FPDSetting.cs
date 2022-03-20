@@ -189,7 +189,7 @@ namespace NV.Config
             }
         }
 
-        private int _expTime = 168;
+        private int _expTime = 45;
         /// <summary>
         /// 积分时间
         /// </summary>
@@ -221,6 +221,24 @@ namespace NV.Config
                 Set(() => Delay, ref _delay, value);
             }
         }
+
+        private double _temperatureThreshold = 35.0;
+        /// <summary>
+        /// 延迟采集时间
+        /// </summary>
+        [XmlElement(ElementName = "温度过高阈值C")]
+        public double TemperatureThreshold
+        {
+            get
+            {
+                return _temperatureThreshold;
+            }
+            set
+            {
+                Set(() => TemperatureThreshold, ref _temperatureThreshold, value);
+            }
+        }
+
         private int _maxFrames = 10;
         /// <summary>
         /// 最大帧

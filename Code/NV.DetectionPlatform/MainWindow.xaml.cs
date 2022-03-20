@@ -17,14 +17,63 @@ using System.Threading;
 using System.Windows.Media;
 using NV.DetectionPlatform.Service;
 using System.Linq;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+
+
+
 
 namespace NV.DetectionPlatform
 {
+
+
+
+
+
+
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
     public partial class MainWindow : Window, IMainWindow
     {
+
+
+        [DllImport("user32.dll", EntryPoint = "FindWindow", CharSet = CharSet.Auto)]
+        private extern static IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern int PostMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+        public const int WM_CLOSE = 0x10;
+        System.Windows.Threading.DispatcherTimer timer;
+        ProgressDialog dia = new ProgressDialog("初始化");
+
+        private void StartKiller()
+        {
+            timer = new System.Windows.Threading.DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(15);    //15秒启动
+            timer.Tick += new EventHandler(Timer_Tick);
+            timer.Start();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            KillMessageBox();
+            //停止计时器
+            ((System.Windows.Threading.DispatcherTimer)sender).Stop();
+        }
+
+        private void KillMessageBox()
+        {
+            //查找MessageBox的弹出窗口,注意MessageBox对应的标题
+            IntPtr ptr = FindWindow(null, "初始化");
+            if (ptr != IntPtr.Zero)
+            {
+                //查找到窗口则关闭
+                PostMessage(ptr, WM_CLOSE, IntPtr.Zero, IntPtr.Zero);
+            }
+        }
+
+
         private Brush _normalForeground = (Brush)new BrushConverter().ConvertFromString("#FFF1F1F1");
         /// <summary>
         /// 高压控制器
@@ -38,14 +87,37 @@ namespace NV.DetectionPlatform
         /// 高压KV UA设置控件
         /// </summary>
         public UCtrls.WndExamSetting _hVView;
+
+
+
         public MainWindow()
         {
+
+            //_timer = new System.Windows.Threading.DispatcherTimer();
+            //_span = TimeSpan.FromSeconds(15);
+            //_timer.Interval = TimeSpan.FromSeconds(1);
+            //_timer.Tick += timer_Tick;
+            //_timer.Start();
+            //StartKiller();
+            //timer.Dispatcher.BeginInvoke(new Action(() =>
+            //{
+            //    Console.WriteLine("CMessageBox.Show");
+            //    MessageBoxResult result =  CMessageBox.Show("系统正在初始化, 请稍后使用...\n" +
+            //        "(该窗口将在 15秒 后自动关闭，请勿点击)\n" + "System initializing, please use later... \n" + 
+            //        "(this window will automatically close after 15 seconds, please do not click)", "初始化");
+
+
+            //}));
+
             this.Initialized += InitData;
+
             InitializeComponent();
             this.Loaded += ResizeWindow;
+
             this.ContentRendered += MainWindow_ContentRendered;
             this.Closing += Shell_Closing;
             this.Closed += MainWindow_Closed;
+
         }
 
         void MainWindow_Closed(object sender, EventArgs e)
@@ -58,11 +130,11 @@ namespace NV.DetectionPlatform
             catch (Exception)
             {
             }
-           
+
             Process.GetCurrentProcess().Kill();
         }
 
-       
+
         /// <summary>
         /// 双屏显示
         /// </summary>
@@ -76,7 +148,7 @@ namespace NV.DetectionPlatform
             {
                 for (int i = 0; i < System.Windows.Forms.Screen.AllScreens.Length; i++)
                 {
-                    if(System.Windows.Forms.Screen.AllScreens[i]!=System.Windows.Forms.Screen.PrimaryScreen)
+                    if (System.Windows.Forms.Screen.AllScreens[i] != System.Windows.Forms.Screen.PrimaryScreen)
                     {
                         top = System.Windows.Forms.Screen.AllScreens[i].Bounds.Top;
                         left = System.Windows.Forms.Screen.AllScreens[i].Bounds.Left;
@@ -91,6 +163,8 @@ namespace NV.DetectionPlatform
             }
         }
 
+
+
         #region 初始化控制器，高压、探测器监控
         /// <summary>
         /// 初始化数据
@@ -99,6 +173,8 @@ namespace NV.DetectionPlatform
         /// <param name="e"></param>
         private void InitData(object sender, EventArgs e)
         {
+
+
 #if ROCKEY
             this.Log("开始验证加密狗.");
             try
@@ -114,6 +190,7 @@ namespace NV.DetectionPlatform
 #endif
             try
             {
+
                 UpdateLanguage();
 
                 this.Log("初始化页面.");
@@ -124,12 +201,15 @@ namespace NV.DetectionPlatform
                 bdrRegister.Child = new UCtrls.UCProductRegister();
                 _hVView.StartAcqEvent += _hVView_StartAcqEvent;
                 //_hVView.AutoWLEvent += _hVView_AutoWLEvent;
+
             }
             catch (Exception ex)
             {
                 this.Log(ex.ToString());
                 MessageBox.Show(ex.Message + ex.ToString());
             }
+
+
             this.Log("初始化串口.");
             InitilizeControlSystem();
             this.Log("初始化探测器.");
@@ -283,7 +363,7 @@ namespace NV.DetectionPlatform
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                lblHV_SettingCur.Content = (arg/10.0f).ToString() + "W";
+                lblHV_SettingCur.Content = (arg / 10.0f).ToString() + "W";
             }));
         }
         /// <summary>
@@ -298,6 +378,7 @@ namespace NV.DetectionPlatform
             }));
         }
 
+        int isFirstShowWarning = 0;
         /// <summary>
         /// 高压温度监控
         /// </summary>
@@ -307,8 +388,22 @@ namespace NV.DetectionPlatform
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
                 lblHV_Temperature.Content = arg.ToString("f2") + "℃";
-                //this.Log("高压温度: " + lblHV_Temperature.Content.ToString());
+                Console.WriteLine("当前温度 {0}", arg);
+
+                if (arg > Detector.DetectorController.Instance.TempratureThreshold && isFirstShowWarning == 0)
+                {
+                    isFirstShowWarning = 1;
+                    ControlSystem.XRayOff();
+                    CMessageBox.Show("警告：当前温度过高！请停止工作，给设备通风降温 \n" +
+                        "WARNING: High temperature! Please stop working and ventilate the device");
+                    Process.GetCurrentProcess().Kill();
+                }
+
+
+
             }));
+
+
         }
         /// <summary>
         /// 灯丝监控
@@ -331,7 +426,7 @@ namespace NV.DetectionPlatform
             {
                 double current_mA = arg * 0.1 * 0.001;
                 double kv = 0.0f;
-                
+
                 string kvStr = lblHV_KV.Content.ToString().TrimEnd("kV".ToArray());
                 if (double.TryParse(kvStr, out kv))
                 {
@@ -389,7 +484,7 @@ namespace NV.DetectionPlatform
                 if (_examView != null && _examView.IsConnected)
                     lblDetector.Content = Connected;
                 float t1, t2;
-                if (Detector.DetectorController.Instance.GetTemperature(out t1, out  t2))
+                if (Detector.DetectorController.Instance.GetTemperature(out t1, out t2))
                     Instance_TemperatureChangedEvent(t1, t2);
                 Detector.DetectorController.Instance.TemperatureChangedEvent += Instance_TemperatureChangedEvent;
                 Detector.DetectorController.Instance.ConnBreakEvent += Instance_ConnBreakEvent;
@@ -407,7 +502,7 @@ namespace NV.DetectionPlatform
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-               _examView.StopAcq(null, null);
+                _examView.StopAcq(null, null);
 
             }));
         }
@@ -438,6 +533,7 @@ namespace NV.DetectionPlatform
             }));
         }
 
+
         /// <summary>
         /// 窗口大小
         /// </summary>
@@ -452,6 +548,62 @@ namespace NV.DetectionPlatform
 
             vbProductInfo.MaxWidth = this.Width - 2 * menuBar.ActualWidth - 100;
             this.MainView.Content = _examView;
+
+
+
+            dia = new ProgressDialog("系统初始化");
+            dia.Summary = "正在系统初始化，请稍候...";
+            dia.MaxValue = 100;
+            dia.CurValue = 50;
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
+            System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
+                {
+                    for (int i = 0; i < 100; i++)
+                    {
+
+                        dia.CurValue = i;
+                        Thread.Sleep(100);
+                    }
+                    dia.Close();
+
+                }));
+
+
+
+            //dia.CanCancel = false;
+            //BackgroundWorker bw = new BackgroundWorker();
+            //bw.DoWork += delegate
+            //{
+            //    System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
+            //    System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
+            //    {
+            //        dia.Summary = "正在系统初始化，请稍候...";
+            //        dia.MaxValue = 100;
+            //        dia.CurValue = 0;
+
+            //    }));
+
+
+            //    for (int i = 0; i < 100; i++)
+            //    {
+            //        System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
+            //        {
+            //            dia.CurValue++;
+
+            //        }));
+            //        Thread.Sleep(100);
+            //    }
+            //};
+
+            //bw.RunWorkerCompleted += delegate
+            //{
+            //    dia.Summary = "初始化完成";
+            //    dia.Close();
+            //};
+
+            //bw.RunWorkerAsync();
+
+
 
             try
             {
@@ -549,7 +701,7 @@ namespace NV.DetectionPlatform
                 {
                     lblDetector.Content = Connected;
                     float t1, t2;
-                    if (Detector.DetectorController.Instance.GetTemperature(out t1, out  t2))
+                    if (Detector.DetectorController.Instance.GetTemperature(out t1, out t2))
                         Instance_TemperatureChangedEvent(t1, t2);
                 }
 
@@ -569,7 +721,7 @@ namespace NV.DetectionPlatform
             }
             if (tag == "DetectorDefectCorrection")
             {
-                
+
                 Detector.DetectorController.Instance.ShowMessage("第一步：第一组亮场(剂量要求：正常高压，毫安秒调节正常的 10%)", true);
                 _hVView.ShowDialog();
                 MainWindow.ControlSystem.XRayOn();
@@ -674,10 +826,11 @@ namespace NV.DetectionPlatform
                 bool ret1 = uint.TryParse(lblHV_Cur.Content.ToString(), out current);
                 bool ret2 = double.TryParse(lblHV_KV.Content.ToString(), out kv);
 
-                if (ret1 && ret2) {
+                if (ret1 && ret2)
+                {
                     wnd.tbPower.Text = (current * kv).ToString();
                 }
-                
+
                 wnd.tbFila.Text = lblHV_Fila.Content.ToString();
                 wnd.ShowDialogEx();
             }
@@ -843,7 +996,7 @@ namespace NV.DetectionPlatform
         /// 登记产品开始检查
         /// </summary>
         /// <param name="pro"></param>
-        public void UpdateProduct(object pro,bool isSkipSearchDir=false)
+        public void UpdateProduct(object pro, bool isSkipSearchDir = false)
         {
             if (pro == null)
                 return;

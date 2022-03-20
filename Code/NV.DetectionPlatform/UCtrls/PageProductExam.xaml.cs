@@ -49,9 +49,10 @@ namespace NV.DetectionPlatform.UCtrls
         
         public static SerialPortReporter_RS485PROTOCOL_PLC PostionReporter = SerialPortReporter_RS485PROTOCOL_PLC.Instance;
         double scaleRatio = 0.1;
+        double TempratureThreshold = 35.0f;
         private double CalculateScaleRatio() {
             //todo:zhaoqibin
-            scaleRatio =  (PostionReporter.AxisZDistance_mm * 2.126526929 + 45)/10000.0;
+            scaleRatio =  (PostionReporter.AxisZDistance_mm * 2.126526929 + _detector.ScaleRatioFinetuning) /10000.0;
 
             return scaleRatio;
         }
@@ -180,6 +181,7 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.IsMultiFramesOverlay = Data.IsMultiFramesOverlay;
                 _detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
                 _detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
+                _detector.TempratureThreshold = Data.TemperatureThreshold;
 
 
                 string local_ip = "192.168.10.20";
@@ -204,6 +206,7 @@ namespace NV.DetectionPlatform.UCtrls
                 else
                 {
                     _detector.Delay = Data.Delay;
+                    _detector.ScaleRatioFinetuning = Data.ExpTime;
                     //   _detector.HB_SetBinningMode((byte)Data.BinningMode);
                     //  Thread.Sleep(2000);
                     //  _detector.HB_SetGain((int)Data.Gain);
@@ -223,9 +226,8 @@ namespace NV.DetectionPlatform.UCtrls
 
                     if (Data.IsAutoPreOffset == true && config.type != FPD_COMM_TYPE.UDP_COMM_TYPE)
                     {
-                        Thread.Sleep(1000);
                         _detector.HB_UpdateTriggerAndCorrectEnable(7);
-                        Thread.Sleep(1000);
+                        Thread.Sleep(2000);
                         _detector.StartCorrectOffsetTemplate();
                     }
                     _detector.btnGetFirmwareCfg_Click();
@@ -233,7 +235,7 @@ namespace NV.DetectionPlatform.UCtrls
                     _detector.btnGetSdkVer_Click();
 
                 }
-                _detector.ShowMessage(res, true);
+               // _detector.ShowMessage(res, true);
 
             }
             else
