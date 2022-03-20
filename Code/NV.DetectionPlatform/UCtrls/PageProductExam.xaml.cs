@@ -369,7 +369,8 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 _detector.IsStored = isStored;
                 _detector.MaxFrames = 0; // 连续获取
-                _detector.HB_SetAqcSpanTime((int)(1000.0 / Global.CurrentParam.Fps));// 设置采集帧率 ： 1，2，4
+                _curExpTime = (int)(1000.0 / Global.CurrentParam.Fps);
+                _detector.HB_SetAqcSpanTime(_curExpTime);// 设置采集帧率 ： 1，2，4
 
                 Thread.Sleep(200);
                 _detector.HB_SetTriggerMode((int)HB_TriggerMode.CONTINUE);
@@ -1197,6 +1198,8 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 return;
             }
+
+            Console.WriteLine("===CurrentFiles[0]======== {0}", CurrentFiles[0]);
             if (CurrentFiles[0].Contains(" "))
             {
                 try
@@ -1215,14 +1218,20 @@ namespace NV.DetectionPlatform.UCtrls
                     this.Log(ex.ToString());
                 }
             }
+
+
+
             int time = 12;
             string folder = Path.GetDirectoryName(CurrentFiles[0]);
             _file.OpenFile(CurrentFiles[0]);
             string exptime = _file.GetDicomString(0x18, 0x1150);//ExposureTime
-            if (!int.TryParse(exptime, out time))
+            if (!int.TryParse(exptime, out time) || (time==0))
                 time = 12;
             System.Windows.Forms.SaveFileDialog dia = new System.Windows.Forms.SaveFileDialog();
             dia.Filter = "*.avi|*.avi";
+
+            Console.WriteLine("===time ======== {0}", time);
+
             if (dia.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 int fps = 1000 / time;
@@ -1239,6 +1248,8 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="output"></param>
         static void ExportAVI(int fps, string source, string output)
         {
+
+            Console.WriteLine("{0}, {1}", source, output);
             string parameters = string.Format("-r {0} -i {1} -b:v 2048k -vcodec mpeg4 {2} -y", fps, source, output);
             var p = new Process();
             p.StartInfo.FileName = Path.Combine(System.Windows.Forms.Application.StartupPath, "Export\\ffmpeg.exe");

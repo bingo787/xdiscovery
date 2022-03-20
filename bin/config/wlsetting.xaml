@@ -12,12 +12,11 @@
   </EntityKey>
   <GUID>69eb1caa-2d74-4234-89a5-bf56dd1f7ce5</GUID>
   <Name>示例1</Name>
-  <WindowWidth>5002</WindowWidth>
-  <WindowLevel>4022</WindowLevel>
+  <WindowWidth>1276</WindowWidth>
+  <WindowLevel>1270</WindowLevel>
   <Gamma xsi:nil="true" />
   <SharpLevel xsi:nil="true" />
   <ReduceNoiseLevel xsi:nil="true" />
   <FalseColor xsi:nil="true" />
   <EqualHist xsi:nil="true" />
-  <ProductType>电池</ProductType>
 </ImageParam>
