@@ -253,8 +253,8 @@ namespace Detector
         {
             res = string.Empty;
 
-            _detectorHeight = 3072;
-            _detectorWidth = 3072;
+            _detectorHeight = 2272;
+            _detectorWidth = 1660;
             _imageHeight = _detectorHeight;
             _imageWidth = _detectorWidth;
             _bits = 16;
