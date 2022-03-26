@@ -160,14 +160,13 @@ namespace Detector
                 try
                 {
                     BinaryReader br = new BinaryReader(new FileStream(pFile, FileMode.Open));
-
-                    Byte[] buffer = br.ReadBytes((int)(_imageHeight * _imageWidth));
-
                     ushort[] buffer_ = new ushort[_imageHeight * _imageWidth];
                     for (int i = 0; i < _imageHeight * _imageWidth; i++) {
-                        buffer_[i] = buffer[i];
+                        buffer_[i] = br.ReadUInt16();
                     }
+
                     PlayBuffer.Enqueue(buffer_);
+
                     if (IsStored)
                     {
                         ImageBuffer.Add(buffer_);
