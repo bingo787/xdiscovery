@@ -14,12 +14,11 @@ using NV.DRF.Controls;
 using NV.DRF.Core.Common;
 using NV.Infrastructure.UICommon;
 using SerialPortController;
+
+using LionSDK;
+
 namespace Detector
 {
-
-    using LU_UINT16 = System.UInt16;
-    using LU_RESULT = System.Int32;
-    using LU_UINT32 = System.UInt32;
 
     public unsafe struct ImageData
     {
@@ -115,7 +114,6 @@ namespace Detector
 
         private DetectorController()
         {
-            ShowImageCallBack = new ImageCallbackHandler(ReceiveImage);
             AcqMaxFrameEvent = new ExcutedCallbackHandler(AcqMaxFrame);
             TemperatureCallBack = new TemperatureCallbackHandler(TemperatureChanged);
             SystemStatusCallBack = new SystemStatusCallbackHandler(SystemStatusChanged);
@@ -135,17 +133,7 @@ namespace Detector
         /// 程序当前线程Dispatcher
         /// </summary>
         public System.Windows.Threading.Dispatcher Dispatcher { get { return Application.Current.Dispatcher; } }
-        /// <summary>
-        /// 获取上次出错信息
-        /// </summary>
-        /// <returns></returns>
-        public string GetLastError(int ret)
-        {
-            //  StringBuilder _error = new StringBuilder(1024);
-            //   NVDentalSDK.NV_LastErrorMsg(_error, 1024);
-            //  return _error.ToString();
-            return LION_UVC_SDK.GetErrorMsgByCode(ret);
-        }
+
 
         public bool GetTemperature(out float temperatrue1, out float temperature2)
         {
@@ -161,25 +149,72 @@ namespace Detector
             temperature2 = 0;
             return false;
         }
+
+        private int AsyncImageCallback(LU_DEVICE device, byte[] pImgData, int nDataBuf, string pFile)
+        {
+
+            unsafe
+            {
+
+                // 读取文件
+                try
+                {
+                    BinaryReader br = new BinaryReader(new FileStream(pFile, FileMode.Open));
+
+                    Byte[] buffer = br.ReadBytes((int)(_imageHeight * _imageWidth));
+
+                    ushort[] buffer_ = new ushort[_imageHeight * _imageWidth];
+                    for (int i = 0; i < _imageHeight * _imageWidth; i++) {
+                        buffer_[i] = buffer[i];
+                    }
+                    PlayBuffer.Enqueue(buffer_);
+                    if (IsStored)
+                    {
+                        ImageBuffer.Add(buffer_);
+                    }
+
+                    count++;
+
+
+                    if (MaxFrames == 1)
+                    {
+                        // 单帧的时候，停止
+                        AcqMaxFrameEvent();
+                    }
+
+                }
+                catch (IOException e)
+                {
+                    Console.WriteLine(e.Message + "\n Cannot open file.");
+                }
+
+              
+            }
+            return 0;
+        }
+
         /// <summary>
         /// 开始采集
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-
+        LionCom.LionImageCallback callback;
         public bool StartSingleShot() {
             _imageBuffer.Clear();
             _multiFramesOverlayBuffer.Clear();
             count = 0;
 
-            int ret = 0;// LION_UVC_SDK.GetImage(LION_UVC_SDK.handle, 0, LionUVCRecieveImage);
-            if (ret != 0)
+            unsafe
             {
-                ShowMessage("LION_UVC_SDK.GetImage Failed——" + GetLastError(ret), true);
-                return false;
-            }
-            else {
-                return true;
+               
+                if (LionCom.LU_SUCCESS == LionSDK.LionSDK.GetImage(ref luDev, 0, callback))
+                {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+
             }
         }
 
@@ -246,6 +281,8 @@ namespace Detector
         public int MaxFrames = 0;
 
 
+        LU_DEVICE luDev;
+
         /// <summary>
         /// 初始化探测器
         /// </summary>
@@ -258,15 +295,30 @@ namespace Detector
             _imageHeight = _detectorHeight;
             _imageWidth = _detectorWidth;
             _bits = 16;
-
-
-            if (LION_UVC_SDK.GetDeviceCount(1) < 1)
+ 
+            if (LionSDK.LionSDK.GetDeviceCount() < 1)
             {
-                res += "No device ";
+                res += "没有设备存在！";
                 return false;
             }
             else
             {
+                // 只使用一个Device 0 
+                  luDev = new LU_DEVICE();
+
+                if (LionCom.LU_SUCCESS != LionSDK.LionSDK.GetDevice(0, ref luDev)) {
+                    res += "获取设备失败！";
+                    return false;
+                }
+
+                if (LionCom.LU_SUCCESS != LionSDK.LionSDK.OpenDevice(ref luDev)){
+                    res += "打开设备失败！";
+                    return false;
+                }
+
+                callback = new LionCom.LionImageCallback(AsyncImageCallback);
+
+                res += "设备打开成功！";
                 return true;
             }
 
@@ -299,60 +351,8 @@ namespace Detector
         }
 
 
+ 
 
-        private unsafe LU_RESULT LionUVCRecieveImage(LU_DEVICE device, byte* pImgData, LU_UINT32 nDataBuf, byte* pFile, LU_UINT32 nFileBuf) {
-
-            unsafe
-            {
-                ImageData image;
-                image.uwidth = 1920;
-                image.uheight = 1080;
-                image.uframeid = 0;
-                image.ndatabits = 16;
-                image.databuff = pImgData;
-
-                image.datalen = nDataBuf;
-                ShowImageCallBack(0, image);
-            }
-            return 0;
-        }
-
-        /// <summary>
-        /// 实时处理探测器采集到的图像
-        /// </summary>
-        /// <param name="wnd"></param>
-        /// <param name="image"></param>
-        private unsafe void ReceiveImage(byte wnd, ImageData image)
-        {
-            ShowMessage("ReceiveImage ");
-            /* 探测器分辨率大小 */
-            if ((image.databuff == null) || ((image.datalen/sizeof(ushort)) != (_imageWidth * _imageHeight)))
-            {
-                ShowMessage("图像数据异常 ",true);
-                return ;
-            }
-
-            ushort[] buffer = new ushort[image.uwidth * image.uheight];
-
-            for (int i = 0; i < image.uwidth * image.uheight; i++)
-            {
-                buffer[i] = ((ushort*)image.databuff)[i];
-            }
-
-            PlayBuffer.Enqueue(buffer);
-            if (IsStored)
-            {
-                ImageBuffer.Add(buffer);
-            }
-
-            count++;
-
-            
-            if (MaxFrames == 1) {
-                // 单帧的时候，停止
-                AcqMaxFrameEvent();
-            }
-        }
         /// <summary>
         /// 多帧叠加
         /// </summary>
@@ -579,15 +579,7 @@ namespace Detector
         }
 
       
-
-        public int Connect() {
-
-            LION_UVC_SDK.handle =  LION_UVC_SDK.GetDevice(0);
-            LU_RESULT ret = LION_UVC_SDK.OpenDevice(LION_UVC_SDK.handle);
-            return ret;
-        }
-
-
+ 
 
 
         public bool SetMaxFrames(int p)

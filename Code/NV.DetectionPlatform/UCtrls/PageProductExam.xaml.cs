@@ -173,17 +173,7 @@ namespace NV.DetectionPlatform.UCtrls
 
                 scale_ratio = Data.ExpTime/1000.0;
 
-                int ret = _detector.Connect();
-                if (ret != 0)
-                {
-                    res += "探测器连接失败。" + _detector.GetLastError(ret);
-                }
-                else
-                {
-                    _detector.Delay = Data.Delay;
-                    res += "探测器已连接。";
-                    IsConnected = true;
-                }              
+                IsConnected = true;
                 _detector.ShowMessage(res, true);
 
             }
@@ -1020,7 +1010,7 @@ namespace NV.DetectionPlatform.UCtrls
         private void UnLoaded(object sender, RoutedEventArgs e)
         {
 
-            LION_UVC_SDK.CloseDevice(LION_UVC_SDK.handle);
+           
         }
 
         /// <summary>
