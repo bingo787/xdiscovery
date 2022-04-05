@@ -550,7 +550,7 @@ namespace SerialPortController
             redata[1] = Convert.ToString((byte)((crc >> 8) & 0xff), 16);
             redata[0] = Convert.ToString((byte)((crc & 0xff)), 16);
 
-            System.Console.WriteLine("CRC {},{}", redata[1], redata[0]);
+            System.Console.WriteLine("CRC {0},{1}", redata[1], redata[0]);
 
         }
 
@@ -587,7 +587,7 @@ namespace SerialPortController
             List<byte> command = new List<byte>() { 0x01 , 0x05, 0x00, 0x00, 0xFF, 0x00, 0x8C, 0x3A };
             if (_serialPort.IsOpen)
             {
-                Console.WriteLine("XRayOn " + command.ToString());
+                Console.WriteLine("XRayOn ");
                 _serialPort.Write(command.ToArray(), 0, command.Count);
             }
 
@@ -601,7 +601,7 @@ namespace SerialPortController
             List<byte> command = new List<byte>() { 0x01, 0x05, 0x00, 0x00, 0x00, 0x00, 0xCD, 0xCA };
             if (_serialPort.IsOpen)
             {
-                Console.WriteLine("XRayOff " + command.ToString());
+                Console.WriteLine("XRayOff ");
                 _serialPort.Write(command.ToArray(), 0, command.Count);
             }
 
@@ -625,7 +625,12 @@ namespace SerialPortController
 
             CRC16Calc(ref command);
 
-            Console.WriteLine("Set KV " + command.ToString());
+            Console.Write("Set KV ");
+
+            for (int i = 0; i < command.Count(); i++) {
+                Console.Write("{0:x} ",command[i]);
+            }
+            Console.WriteLine("");
 
 
             if (_serialPort.IsOpen)
