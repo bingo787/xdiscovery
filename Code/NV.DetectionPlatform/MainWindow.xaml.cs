@@ -232,10 +232,17 @@ namespace NV.DetectionPlatform
                     ControlSystem.ClosePort();
                 }
                 catch { }
-                ControlSystem.OpenSerialPort();
-                lblHVConn.Content = "--";
 
-                ControlSystem.Connect();
+                try
+                {
+                    ControlSystem.OpenSerialPort();
+                    ControlSystem.Connect();
+                }
+                catch {
+                    lblHVConn.Content = "--";
+                }
+                lblHVConn.Content = Connected;
+                
             }
             catch (Exception)
             {
