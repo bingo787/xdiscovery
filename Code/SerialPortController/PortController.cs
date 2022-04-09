@@ -138,7 +138,12 @@ namespace SerialPortController
                 int len = port.Read(buffer, 0, buffer.Length);
                 string message = ASCIIEncoding.ASCII.GetString(buffer, 0, len);
 #if DEBUG
-                Console.WriteLine("Receive-" + DateTime.Now.ToString("HH:mm:ss.ffff") + "=" + message);
+                Console.WriteLine("Receive-" + DateTime.Now.ToString("HH:mm:ss.ffff"));
+
+                for (int i = 0; i < len; i++ ) {
+
+                    Console.Write("{0:x} ", buffer[i]);
+                }
 #endif
 
             }
