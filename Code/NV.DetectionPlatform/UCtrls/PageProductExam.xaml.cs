@@ -62,7 +62,7 @@ namespace NV.DetectionPlatform.UCtrls
         {
             WndAOISetting.InitAOI();
             usmSetting.InitUSM();
-          
+
             InitilizePlayAcqThread();
         }
 
@@ -71,16 +71,16 @@ namespace NV.DetectionPlatform.UCtrls
             PlatformModels = new ObservableCollection<PlatformFilesModel>();
             _lstSeries.ItemsSource = PlatformModels;
 
-         
-           usmSetting.UsmParamChangedEvent += usmSetting_UsmParamChanged;
-           usmSetting.BackSettingEvent += usmSetting_Back;
-           usmSetting.CloseSettingEvent += usmSetting_Close;
+
+            usmSetting.UsmParamChangedEvent += usmSetting_UsmParamChanged;
+            usmSetting.BackSettingEvent += usmSetting_Back;
+            usmSetting.CloseSettingEvent += usmSetting_Close;
 
 
             this.Log("初始化快速窗位窗宽设定");
             var wlSetting = new WndWLSetting();
             bdWL.Child = wlSetting;
-           
+
 
             wlSetting.WindowWLChangedEvent += wlSetting_WindowWLChangedEvent;
             wlSetting.CloseSettingEvent += wlSetting_CloseSettingEvent;
@@ -126,23 +126,24 @@ namespace NV.DetectionPlatform.UCtrls
 
         void usmSetting_UsmParamChanged(int amount, int radius, int threshold)
         {
-             
+
             if (ipUC != null && ipUC.CurrentDv != null)
             {
                 ipUC.CurrentDv.SaveToStack();
-                ushort[] result = usmSetting.UnsharpenMask(ipUC.CurrentDv,amount,radius,threshold);
+                ushort[] result = usmSetting.UnsharpenMask(ipUC.CurrentDv, amount, radius, threshold);
                 ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
                 ipUC.CurrentDv.PutImageData(width, height, bits, ref result[0]);
                 ipUC.CurrentDv.RefreshImage();
             }
         }
-        void usmSetting_Close() {
+        void usmSetting_Close()
+        {
         }
 
         void usmSetting_Back()
         {
             ipUC.CurrentDv.BackFromStack();
-            ApplyConfigWL(true);     
+            ApplyConfigWL(true);
         }
 
         /// <summary>
@@ -154,7 +155,7 @@ namespace NV.DetectionPlatform.UCtrls
             _playAcqImage.Start();
         }
 
-       
+
 
         /// <summary>
         /// 初始化探测器
@@ -165,13 +166,11 @@ namespace NV.DetectionPlatform.UCtrls
             string res;
             if (_detector.InitDetector(out res))
             {
+                var Data = NV.Config.NV1313FPDSetting.Instance;
+                scale_ratio = Data.ExpTime / 1000.0;
 
-                 var Data = NV.Config.NV1313FPDSetting.Instance;
-                _detector.IsMultiFramesOverlay = Data.IsMultiFramesOverlay;
-                _detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
-                _detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
-
-                scale_ratio = Data.ExpTime/1000.0;
+                _detector.SetUVCDeviceParameters((int)Data.ImageMode, (int)Data.BinningMode, (int)Data.ModelFilter, (int)Data.XrayType);
+                _detector.GetUVCDeviceParameters();
 
                 IsConnected = true;
                 _detector.ShowMessage(res, true);
@@ -205,18 +204,18 @@ namespace NV.DetectionPlatform.UCtrls
                     _imageCount++;
                     this.Dispatcher.Invoke(new Action(() =>
                     {
-                       // System.Console.WriteLine(String.Format("PlayBackground IsAcqing {0}", IsAcqing));
-                       // if (IsAcqing)
+                        // System.Console.WriteLine(String.Format("PlayBackground IsAcqing {0}", IsAcqing));
+                        // if (IsAcqing)
                         {
-                            ipUC.PutData(W,H ,Bits,data, true);
+                            ipUC.PutData(W, H, Bits, data, true);
 
                             if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
                             {
                                 ApplyConfigWL(true);
                             }
-                            
+
                         }
-                            
+
                         if (_detector.PlayBuffer.Count > 90)
                         {
                             _detector.PlayBuffer.Dequeue();
@@ -288,13 +287,14 @@ namespace NV.DetectionPlatform.UCtrls
 
             DicomViewer.Current.ClearImage();
 
-            if (type == ExamType.Spot )
+            if (type == ExamType.Spot)
             {
                 _detector.IsStored = true;
                 _detector.MaxFrames = 1;
                 // 设置曝光时间
                 _curExpTime = (int)(Global.CurrentParam.Time * 1000);
-                if (_curExpTime == 0) {
+                if (_curExpTime == 0)
+                {
                     /// 防止曝光时间设置为 0
                     _curExpTime = 1;
                 }
@@ -377,12 +377,13 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="e"></param>
         public void StopAcq(object sender, RoutedEventArgs e)
         {
-           
+
             MainWindow.ControlSystem.XRayOff();
-            if (IsAcqing) {
+            if (IsAcqing)
+            {
                 IsAcqing = false;
 
-                _detector.StopAcq();  
+                _detector.StopAcq();
                 if (_curExpType == ExamType.MultiEnergyAvg)//多能合成
                 {
                     SaveMultiAvgFiles(_detector.ImageBuffer.ToList());
@@ -401,7 +402,7 @@ namespace NV.DetectionPlatform.UCtrls
 
                 _detector.ImageBuffer.Clear();
             }
-           
+
 
         }
         /// <summary>
@@ -921,12 +922,13 @@ namespace NV.DetectionPlatform.UCtrls
             switch (tag)
             {
                 case "Sharp":
-                    if (ipUC.CurrentDv.HasImage) {
+                    if (ipUC.CurrentDv.HasImage)
+                    {
                         // ipUC.CurrentDv.SharpImage(1);
-                            ushort[] result = usmSetting.UnsharpenMask(ipUC.CurrentDv);
-                            ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
-                            ipUC.CurrentDv.PutImageData(width, height, bits, ref result[0]);
-                            ipUC.CurrentDv.RefreshImage();
+                        ushort[] result = usmSetting.UnsharpenMask(ipUC.CurrentDv);
+                        ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+                        ipUC.CurrentDv.PutImageData(width, height, bits, ref result[0]);
+                        ipUC.CurrentDv.RefreshImage();
                     }
 
                     break;
@@ -971,16 +973,16 @@ namespace NV.DetectionPlatform.UCtrls
                     {
                         ushort width = 0;
                         ushort height = 0;
-                        ushort[] result = Stitching(dialog.FileNames,ref width, ref height);
+                        ushort[] result = Stitching(dialog.FileNames, ref width, ref height);
 
-                    
-                       // ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+
+                        // ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
                         System.Console.WriteLine("result " + width.ToString() + " " + height.ToString());
                         ipUC.PutData(width, height, 16, result, true);
                         ipUC.AutoWindowLevel();
                         ipUC.CurrentDv.Invalidate();
                     }
-               
+
                     break;
                 case "Back":
                     ipUC.CurrentDv.BackFromStack();
@@ -1010,7 +1012,7 @@ namespace NV.DetectionPlatform.UCtrls
         private void UnLoaded(object sender, RoutedEventArgs e)
         {
 
-           
+
         }
 
         /// <summary>
@@ -1403,7 +1405,7 @@ namespace NV.DetectionPlatform.UCtrls
 
             usmSetting.UsmParamChangedEvent += usmSetting_UsmParamChanged;
             usmSetting.BackSettingEvent += usmSetting_Back;
-            
+
             usmSetting.ShowDialog();
         }
 
@@ -1426,7 +1428,7 @@ namespace NV.DetectionPlatform.UCtrls
             CMessageBox.Show("开始缝合图片? " + names);
             Mat pano = new Mat();
             Stitcher stitcher = Stitcher.Create(mode);
-           // CMessageBox.Show(String.Format("imgs size{0} {0}",imgs.Length, imgs[0].Size()));
+            // CMessageBox.Show(String.Format("imgs size{0} {0}",imgs.Length, imgs[0].Size()));
 
             Stitcher.Status status = stitcher.Stitch(imgs, pano);
             width = (ushort)pano.Width;
@@ -1436,11 +1438,11 @@ namespace NV.DetectionPlatform.UCtrls
             if (status != Stitcher.Status.OK)
             {
                 CMessageBox.Show(String.Format("缝合失败! 请保证图片大于1张，且每张之间至少具有30%的重复。 error code = {0} ", (int)status));
-               // Console.WriteLine("Can't stitch images, error code = {0} ", (int)status);
+                // Console.WriteLine("Can't stitch images, error code = {0} ", (int)status);
                 return result;
             }
-          //  CMessageBox.Show("缝合完毕，准备显示");
-           // Cv2.ImWrite("123.bmp",pano);
+            //  CMessageBox.Show("缝合完毕，准备显示");
+            // Cv2.ImWrite("123.bmp",pano);
 
             // 显示
             // for (int i = 0; i < height; i++)
@@ -1536,5 +1538,5 @@ namespace NV.DetectionPlatform.UCtrls
     }
 
 
-  
+
 }

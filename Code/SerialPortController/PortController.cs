@@ -62,16 +62,6 @@ namespace SerialPortController
                         tag++;
                         tag = tag % 2;
 
-                        if (tag == 0)
-                        {
-                            Thread.Sleep(150 * 1);
-                            SendCommand("MON");
-                        }
-                        else if (tag == 1)
-                        {
-                            Thread.Sleep(150 * 1);
-                            SendCommand("FLT");
-                        }
                     }
                     catch { }
                 }

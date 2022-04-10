@@ -43,9 +43,6 @@ namespace NV.DetectionPlatform.UCtrls
         {
             Data.Save();
             var detector = Detector.DetectorController.Instance;
-            detector.IsMultiFramesOverlay = Data.IsMultiFramesOverlay;
-            detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
-            detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
             detector.Delay = Data.Delay;
             
 

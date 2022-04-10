@@ -51,11 +51,11 @@
                     <MenuItem Header="{DynamicResource Menu_Setting}">
                         <MenuItem Header="{DynamicResource Menu_Setting_Detector}" >
                             <MenuItem Header="{DynamicResource Menu_Setting_Detector_cfg}" Tag="DetectorSetting"  Click="SettingClick"/>
-                            <MenuItem Header="{DynamicResource Menu_Setting_Detector_Correction}">
+                            <!--<MenuItem Header="{DynamicResource Menu_Setting_Detector_Correction}">
                                 <MenuItem Header="{DynamicResource Menu_Setting_Detector_Correction_Offset}" Tag="DetectorOffsetCorrection"  Click="SettingClick"/>
                                 <MenuItem Header="{DynamicResource Menu_Setting_Detector_Correction_Gain}" Tag="DetectorGainCorrection" Click="SettingClick"/>
                                 <MenuItem Header="{DynamicResource Menu_Setting_Detector_Correction_Defect}" Tag="DetectorDefectCorrection" Click="SettingClick"/>
-                            </MenuItem>
+                            </MenuItem>-->
                             <MenuItem Header="{DynamicResource Menu_Setting_Detector_Reconnection}" Click="SettingClick" Tag="DetectorReConnect"/>
 
                         </MenuItem>

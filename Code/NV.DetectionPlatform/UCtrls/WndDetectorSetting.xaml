@@ -17,8 +17,8 @@
                     </Style>
                 </UniformGrid.Resources>
 
-                <TextBlock Text="自动Offset:" ToolTip="开机自动进行Offset校正"/>
-                <CheckBox Width="25" Height="25" HorizontalAlignment="Left" Margin="2,0,0,0" IsChecked="{Binding IsAutoPreOffset,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
+                <!--<TextBlock Text="自动Offset:" ToolTip="开机自动进行Offset校正"/>
+                <CheckBox Width="25" Height="25" HorizontalAlignment="Left" Margin="2,0,0,0" IsChecked="{Binding IsAutoPreOffset,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>-->
 
                 <!--<TextBlock Text="静态多帧叠加降噪:" ToolTip="是否应用多帧静态叠加降噪"/>
                 <CheckBox Width="25" Height="25" HorizontalAlignment="Left" Margin="2,0,0,0" IsChecked="{Binding IsMultiFramesOverlay,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"/>
@@ -28,27 +28,26 @@
                 <TextBox Text="{Binding MultiFramesOverlayNumber,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->
                 <TextBlock Text="延时采集Delay(ms):"/>
                 <TextBox Text="{Binding Delay,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Text="增益Gain:" />
-                <ComboBox SelectedValue="{Binding Gain,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Gains,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Text="ScaleRatio:"/>
+                <TextBlock Text="Xray类型:" />
+                <ComboBox SelectedValue="{Binding XrayType ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding XrayTypes,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="尺度比例:"/>
                 <TextBox Text="{Binding ExpTime,UpdateSourceTrigger=PropertyChanged}" />
                 <!--<TextBlock Text="最大帧数:"/>
                 <TextBox Text="{Binding MaxFrames,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->
-                <TextBlock Text="通讯类型:"/>
-                <ComboBox ItemsSource="{Binding CommunicationTypes}" SelectedValue="{Binding CommunicationType}"/>
+                <TextBlock Text="图像处理:"/>
+                <ComboBox ItemsSource="{Binding ModelFilters}" SelectedValue="{Binding ModelFilter}"/>
                 <TextBlock Text="Binning:"/>
                 <ComboBox ItemsSource="{Binding BinningModes}" SelectedValue="{Binding BinningMode}"/>
                 <!--<TextBlock Text="Shutter:"/>
                 <ComboBox SelectedValue="{Binding ShutterMode}" ItemsSource="{Binding ShutterModes}"/>-->
-                <TextBlock Text="触发模式:"/>
-                <ComboBox ItemsSource="{Binding TriggerModes}" SelectedValue="{Binding TriggerMode}">
-                </ComboBox>
-                <TextBlock Text="{DynamicResource OffsetCorType}"/>
-                <ComboBox ItemsSource="{Binding OffsetCorrectionModes}" SelectedValue="{Binding OffsetCorMode}"/>
-                <TextBlock Text="{DynamicResource GainCorType}"/>
-                <ComboBox x:Name="cboStopBites" ItemsSource="{Binding CorrectionModes}" SelectedValue="{Binding GainCorMode}"/>
-                <TextBlock Text="{DynamicResource DefectCorType}"/>
-                <ComboBox x:Name="cboSstopBites" ItemsSource="{Binding CorrectionModes}" SelectedValue="{Binding DefectCorMode}"/>
+                <TextBlock Text="出图模式:"/>
+                <ComboBox ItemsSource="{Binding ImageModes}" SelectedValue="{Binding ImageMode}"></ComboBox>
+                <!--<TextBlock Text="{DynamicResource OffsetCorType}"/>
+                <ComboBox ItemsSource="{Binding OffsetCorrectionModes}" SelectedValue="{Binding OffsetCorMode}"/>-->
+                <!--<TextBlock Text="{DynamicResource GainCorType}"/>
+                <ComboBox x:Name="cboStopBites" ItemsSource="{Binding CorrectionModes}" SelectedValue="{Binding GainCorMode}"/>-->
+                <!--<TextBlock Text="{DynamicResource DefectCorType}"/>
+                <ComboBox x:Name="cboSstopBites" ItemsSource="{Binding CorrectionModes}" SelectedValue="{Binding DefectCorMode}"/>-->
                 <Button x:Name="btnClose" Content="应用" IsEnabled="True" Click="btnClose_Click" Height="30" Visibility="Hidden"/>
                 <Button  Content="{DynamicResource Btn_Apply}" IsEnabled="True" Click="btnClose_Click" Height="30" IsDefault="True"/>
             </UniformGrid>

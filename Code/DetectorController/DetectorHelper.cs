@@ -49,27 +49,13 @@ namespace Detector
         /// </summary>
         public static SerialPortControler_RS232PROTOCOL xRayControler = SerialPortControler_RS232PROTOCOL.Instance;
 
-        /// <summary>
-        /// 是否丢包
-        /// </summary>
-        public Int32 _MissedPacketNum;
+
 
         /// <summary>
         /// 是否存储图像
         /// </summary>`
         public bool IsStored { get; set; }
-        /// <summary>
-        /// 是否多帧叠加
-        /// </summary>
-        public bool IsMultiFramesOverlay { get; set; }
-        /// <summary>
-        /// 是否多帧平均叠加
-        /// </summary>
-        public bool IsMultiFramesOverlayByAvg { get; set; }
-        /// <summary>
-        /// 多帧叠加数量
-        /// </summary>
-        public int MultiFramesOverlayNumber { get; set; }
+
         /// <summary>
         /// 数据位数,图像宽，高
         /// </summary>
@@ -122,9 +108,6 @@ namespace Detector
             CloseXRayEvent = new ExcutedCallbackHandler(CloseXRay);
 
             IsStored = true;
-            IsMultiFramesOverlay = false;
-            IsMultiFramesOverlayByAvg = true;
-            MultiFramesOverlayNumber = 2;
 
 
         }
@@ -282,9 +265,133 @@ namespace Detector
         public event ExcutedCallbackHandler AcqMaxFramesEvent;
         public int MaxFrames = 0;
 
-
         LU_DEVICE luDev;
 
+        public void SetUVCDeviceParameters(int nImgModel, int nBinning, int nFilter, int nRay) {
+
+            //检测图像时间
+            UInt32 nCheckTime = 5000;
+            //获取图像时间
+            UInt32 nGetTime = 10000;
+
+            LU_PARAM param = new LU_PARAM();
+            unsafe
+            {
+                //出图模式
+                param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_MODE;
+                param.size = sizeof(UInt32);
+                param.data = &nImgModel;
+                //
+                LionSDK.LionSDK.SetDeviceParam(ref luDev, ref param);
+            }
+            //
+            unsafe
+            {
+                //Binning模式
+                param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_BINNING;
+                param.size = sizeof(UInt32);
+                param.data = &nBinning;
+                //
+                LionSDK.LionSDK.SetDeviceParam(ref luDev, ref param);
+            }
+            unsafe
+            {
+                //图像处理标志
+                param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_FILTER;
+                param.size = sizeof(UInt32);
+                param.data = &nFilter;
+                //
+                LionSDK.LionSDK.SetDeviceParam(ref luDev, ref param);
+            }
+            unsafe
+            {
+                //X-RAY类型
+                param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_XRAY;
+                param.size = sizeof(UInt32);
+                param.data = &nRay;
+                //
+                LionSDK.LionSDK.SetDeviceParam(ref luDev, ref param);
+            }
+            unsafe
+            {
+                //检测图像时间
+                param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_TRIGGERTIME;
+                param.size = sizeof(UInt32);
+                param.data = &nCheckTime;
+                //
+                LionSDK.LionSDK.SetDeviceParam(ref luDev, ref param);
+            }
+            unsafe
+            {
+                //获取图像时间
+                param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_READIMAGETIME;
+                param.size = sizeof(UInt32);
+                param.data = &nGetTime;
+                LionSDK.LionSDK.SetDeviceParam(ref luDev, ref param);
+            }
+
+
+        }
+
+        public void GetUVCDeviceParameters() {
+
+            //出图模式
+            int nImgModel = (int)LU_MODE.LUMODE_AC;
+            //Binning模式
+            int nBinning = (int)LUDEV_BINNING.LUDEVBINNING_NO;
+            //图像处理标志
+            int nFilter = (int)LUDEV_FILTER.LUDEVFILTER_NO;
+            //X-RAY类型
+            int nRay = 0;
+
+            LU_PARAM param = new LU_PARAM();
+
+            //获取设置
+            unsafe
+            {
+                //出图模式
+                nImgModel = 0;
+                param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_MODE;
+                param.size = sizeof(UInt32);
+                param.data = &nImgModel;
+                //
+                LionSDK.LionSDK.GetDeviceParam(ref luDev, ref param);
+            }
+            //
+            unsafe
+            {
+                //Binning模式
+                nBinning = 0;
+                param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_BINNING;
+                param.size = sizeof(UInt32);
+                param.data = &nBinning;
+                //
+                LionSDK.LionSDK.GetDeviceParam(ref luDev, ref param);
+            }
+            unsafe
+            {
+                //图像处理标志
+                nFilter = 0;
+                param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_FILTER;
+                param.size = sizeof(UInt32);
+                param.data = &nFilter;
+                //
+                LionSDK.LionSDK.GetDeviceParam(ref luDev, ref param);
+            }
+            unsafe
+            {
+                //X-RAY类型
+                nRay = 0;
+                param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_XRAY;
+                param.size = sizeof(UInt32);
+                param.data = &nRay;
+                //
+                LionSDK.LionSDK.GetDeviceParam(ref luDev, ref param);
+            }
+
+            Console.WriteLine("mode:{0},bining:{1},filter:{2},Xray:{3}", nImgModel, nBinning, nFilter, nRay);
+
+        }
         /// <summary>
         /// 初始化探测器
         /// </summary>
@@ -307,7 +414,6 @@ namespace Detector
             {
                 // 只使用一个Device 0 
                 luDev = new LU_DEVICE();
-
                 if (LionCom.LU_SUCCESS != LionSDK.LionSDK.GetDevice(0, ref luDev)) {
                     res += "获取设备失败！";
                     return false;
@@ -315,124 +421,6 @@ namespace Detector
 
                 callback = new LionCom.LionImageCallback(AsyncImageCallback);
                 res += "设备打开成功！";
-
-
-                //出图模式
-                int nImgModel = (int)LU_MODE.LUMODE_AC;
-                //Binning模式
-                int nBinning = (int)LUDEV_BINNING.LUDEVBINNING_NO;
-                //图像处理标志
-                int nFilter = (int)LUDEV_FILTER.LUDEVFILTER_NO;
-                //X-RAY类型
-                int nRay = 0;
-                //检测图像时间
-                UInt32 nCheckTime = 5000;
-                //获取图像时间
-                UInt32 nGetTime = 10000;
-
-                LU_PARAM param = new LU_PARAM();
-                unsafe
-                {
-                    //出图模式
-                    param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_MODE;
-                    param.size = sizeof(UInt32);
-                    param.data = &nImgModel;
-                    //
-                    LionSDK.LionSDK.SetDeviceParam(ref luDev, ref param);
-                }
-                //
-                unsafe
-                {
-                    //Binning模式
-                    param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_BINNING;
-                    param.size = sizeof(UInt32);
-                    param.data = &nBinning;
-                    //
-                    LionSDK.LionSDK.SetDeviceParam(ref luDev, ref param);
-                }
-                unsafe
-                {
-                    //图像处理标志
-                    param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_FILTER;
-                    param.size = sizeof(UInt32);
-                    param.data = &nFilter;
-                    //
-                    LionSDK.LionSDK.SetDeviceParam(ref luDev, ref param);
-                }
-                unsafe
-                {
-                    //X-RAY类型
-                    param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_XRAY;
-                    param.size = sizeof(UInt32);
-                    param.data = &nRay;
-                    //
-                    LionSDK.LionSDK.SetDeviceParam(ref luDev, ref param);
-                }
-                unsafe
-                {
-                    //检测图像时间
-                    param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_TRIGGERTIME;
-                    param.size = sizeof(UInt32);
-                    param.data = &nCheckTime;
-                    //
-                    LionSDK.LionSDK.SetDeviceParam(ref luDev, ref param);
-                }
-                unsafe
-                {
-                    //获取图像时间
-                    param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_READIMAGETIME;
-                    param.size = sizeof(UInt32);
-                    param.data = &nGetTime;
-                    //
-                    LionSDK.LionSDK.SetDeviceParam(ref luDev, ref param);
-                }
-
-
-                //获取设置
-                unsafe
-                {
-                    //出图模式
-                    nImgModel = 0;
-                    param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_MODE;
-                    param.size = sizeof(UInt32);
-                    param.data = &nImgModel;
-                    //
-                    LionSDK.LionSDK.GetDeviceParam(ref luDev, ref param);
-                }
-                //
-                unsafe
-                {
-                    //Binning模式
-                    nBinning = 0;
-                    param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_BINNING;
-                    param.size = sizeof(UInt32);
-                    param.data = &nBinning;
-                    //
-                    LionSDK.LionSDK.GetDeviceParam(ref luDev, ref param);
-                }
-                unsafe
-                {
-                    //图像处理标志
-                    nFilter = 0;
-                    param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_FILTER;
-                    param.size = sizeof(UInt32);
-                    param.data = &nFilter;
-                    //
-                    LionSDK.LionSDK.GetDeviceParam(ref luDev, ref param);
-                }
-                unsafe
-                {
-                    //X-RAY类型
-                    nRay = 0;
-                    param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_XRAY;
-                    param.size = sizeof(UInt32);
-                    param.data = &nRay;
-                    //
-                    LionSDK.LionSDK.GetDeviceParam(ref luDev, ref param);
-                }
-
-                Console.WriteLine("mode:{0},bining:{1},filter:{2},Xray:{3}",nImgModel,nBinning,nFilter,nRay);
-
                 return true;
             }
 
@@ -467,57 +455,7 @@ namespace Detector
 
  
 
-        /// <summary>
-        /// 多帧叠加
-        /// </summary>
-        /// <param name="buffer"></param>
-        private void MultiFramesOverlay(ref ushort[] buffer)
-        {
-            ShowMessage("MultiFramesOverlay ");
-            _multiFramesOverlayBuffer.Enqueue(buffer);
-            //低于降噪帧数直接返回
-            if (_multiFramesOverlayBuffer.Count < MultiFramesOverlayNumber)
-            {
-                return;
-            }
-            //多于降噪帧数，抛弃早期图像
-            while (_multiFramesOverlayBuffer.Count > MultiFramesOverlayNumber)
-            {
-                _multiFramesOverlayBuffer.Dequeue();
-            }
-
-            ushort[] res = new ushort[buffer.Length];
-
-            if (_multiFramesOverlayBuffer.Count == MultiFramesOverlayNumber)
-            {
-
-                Parallel.For(0, buffer.Length,
-                     (i) =>
-                     {
-                         int sum = 0;
-                         foreach (var data in _multiFramesOverlayBuffer)
-                         {
-                             sum += data[i];
-                         }
-
-                         if (IsMultiFramesOverlayByAvg)
-                         {
-                             res[i] = (ushort)(sum / MultiFramesOverlayNumber);
-                         }
-                         else
-                         {
-                             if (sum > 65534)
-                                 sum = 65534;
-                             res[i] = (ushort)(sum);
-                         }
-                     });
-
-                buffer = res;
-            }
-
-
-        }
-
+       
 
         /// <summary>
         /// 采集到最大帧

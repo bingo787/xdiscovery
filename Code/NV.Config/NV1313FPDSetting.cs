@@ -9,57 +9,32 @@ namespace NV.Config
 {
 
 
-    public enum HB_TriggerMode
+    public enum LIONUVC_XRAY_TYPE
     {
-        SORTWARE =1 ,
-        CLEAR = 2,
-        HVG = 3,
-        FREE_AED = 4,
-        CONTINUE = 7
+        VTC_D =0 ,
+        VTC_A = 1,
     }
 
-    public enum HB_FPD_COMM_TYPE {
+    public enum LIONUVC_MODEL_FILTER {
 
-        UDP = 0,
-        UDP_JUMBO,
-        PCIE,
-        WLAN
+        FILTER = 0,
+        NO_FILTER 
     }
 
-    public enum NV_ShutterMode
+
+
+    public enum LIONUVC_BinningMode
     {
-        NV_GLOBAL_SHUTTER,			///< 全局快门(默认值)
-        NV_ROLLING_SHUTTER			///< 滚动快门
-    }
-    public enum NV_BinningMode
-    {
-        NV_BINNING_1X1 = 0,				///< 1x1binning(默认值)
-        NV_BINNING_2X2 = 1,				///< 2x2binning
+        NO_BINNING = 0,             ///< 2x2binning
+        BINNING = 1,				///< 1x1binning(默认值)
+
     }
 
-    public enum HB_BinningMode
-    {
-        BINNING_1X1 = 1,				///< 1x1binning(默认值)
-        BINNING_2X2 = 2,             ///< 2x2binning
-        BINNING_4X4 = 4,				///< 2x2binning
-    }
 
-    public enum NV_Gain
-    {
-        NV_GAIN_01,					///< Sensor的增益档位：0.1PF
-        NV_GAIN_04,					///< Sensor的增益档位：0.4PF
-        NV_GAIN_07,					///< Sensor的增益档位：0.7PF(默认值)
-        NV_GAIN_10					///< Sensor的增益档位：1.0PF
-    }
 
-    public enum HB_Gain {
-        HB_GAIN_06 = 1,       // [1]-0.6pC
-        HB_GAIN_12,         // [2]-1.2pC
-        HB_GAIN_24,         // [3]-2.4pC
-        HB_GAIN_36,         // [4]-3.6pC
-        HB_GAIN_48,         // [5]-4.8pC
-        HB_GAIN_72,         // [6]-7.2pC, 默认7.2pC
-        HB_GAIN_96,         // [7]-9.6pC
+    public enum LIONUVC_IMAGE_MODE {
+        AC = 0,       // AC 模式出图
+        VTC = 1         // VTC出图
 
     }
 
@@ -146,46 +121,41 @@ namespace NV.Config
             }
         }
 
-        private HB_Gain _gain = HB_Gain.HB_GAIN_72;
+        private LIONUVC_IMAGE_MODE _image_mode = LIONUVC_IMAGE_MODE.AC;
         /// <summary>
-        /// 增益档
+        /// 出图模式
         /// </summary>
-        [XmlElement(ElementName = "增益档")]
-        public HB_Gain Gain
+        [XmlElement(ElementName = "出图模式")]
+        public LIONUVC_IMAGE_MODE ImageMode
         {
             get
             {
-                return _gain;
+                return _image_mode;
             }
             set
             {
-                Set(() => Gain, ref _gain, value);
+                Set(() => ImageMode, ref _image_mode, value);
             }
         }
 
-        private ObservableCollection<HB_Gain> _gains = new ObservableCollection<HB_Gain>()
+        private ObservableCollection<LIONUVC_IMAGE_MODE> _image_modes = new ObservableCollection<LIONUVC_IMAGE_MODE>()
         {
-            HB_Gain.HB_GAIN_06,       // [1]-0.6pC
-            HB_Gain.HB_GAIN_12,         // [2]-1.2pC
-            HB_Gain.HB_GAIN_24,         // [3]-2.4pC
-            HB_Gain.HB_GAIN_36,         // [4]-3.6pC
-            HB_Gain.HB_GAIN_48,         // [5]-4.8pC
-            HB_Gain.HB_GAIN_72,         // [6]-7.2pC, 默认7.2pC
-            HB_Gain.HB_GAIN_96        // [7]-9.6pC
+            LIONUVC_IMAGE_MODE.AC,       // [1]-0.6pC
+            LIONUVC_IMAGE_MODE.VTC         // [2]-1.2pC
         };
         /// <summary>
-        /// 增益档列表
+        /// 出图模式列表
         /// </summary>
         [XmlIgnoreAttribute]
-        public ObservableCollection<HB_Gain> Gains
+        public ObservableCollection<LIONUVC_IMAGE_MODE> ImageModes
         {
             get
             {
-                return _gains;
+                return _image_modes;
             }
             set
             {
-                _gains = value;
+                _image_modes = value;
             }
         }
 
@@ -238,61 +208,13 @@ namespace NV.Config
             }
         }
 
-        private bool _isMultiFramesOverlay = false;
-        /// <summary>
-        /// 多帧叠加降噪
-        /// </summary>
-        [XmlElement(ElementName = "静态多帧叠加降噪")]
-        public bool IsMultiFramesOverlay
-        {
-            get
-            {
-                return _isMultiFramesOverlay;
-            }
-            set
-            {
-                Set(() => IsMultiFramesOverlay, ref _isMultiFramesOverlay, value);
-            }
-        }
-        private bool _isMultiFramesOverlayByAvg = true;
-        /// <summary>
-        /// 多帧叠加降噪后均值
-        /// </summary>
-        [XmlElement(ElementName = "静态多帧均值叠加降噪")]
-        public bool IsMultiFramesOverlayByAvg
-        {
-            get
-            {
-                return _isMultiFramesOverlayByAvg;
-            }
-            set
-            {
-                Set(() => IsMultiFramesOverlayByAvg, ref _isMultiFramesOverlayByAvg, value);
-            }
-        }
-        private int _multiFramesOverlayNumber = 2;
-        /// <summary>
-        /// 静态叠加降噪帧数
-        /// </summary>
-        [XmlElement(ElementName = "静态叠加降噪帧数")]
-        public int MultiFramesOverlayNumber
-        {
-            get
-            {
-                return _multiFramesOverlayNumber;
-            }
-            set
-            {
-                Set(() => MultiFramesOverlayNumber, ref _multiFramesOverlayNumber, value);
-            }
-        }
 
-        private HB_BinningMode _binningMode = HB_BinningMode.BINNING_1X1;
+        private LIONUVC_BinningMode _binningMode = LIONUVC_BinningMode.BINNING;
         /// <summary>
         /// binning模式
         /// </summary>
-        [XmlElement(ElementName = "binning模式")]
-        public HB_BinningMode BinningMode
+        [XmlElement(ElementName = "Binning模式")]
+        public LIONUVC_BinningMode BinningMode
         {
             get
             {
@@ -303,17 +225,16 @@ namespace NV.Config
                 Set(() => BinningMode, ref _binningMode, value);
             }
         }
-        private ObservableCollection<HB_BinningMode> _binningModes = new ObservableCollection<HB_BinningMode>()
+        private ObservableCollection<LIONUVC_BinningMode> _binningModes = new ObservableCollection<LIONUVC_BinningMode>()
         {
-            HB_BinningMode.BINNING_1X1,
-            HB_BinningMode.BINNING_2X2,
-            HB_BinningMode.BINNING_4X4,
+            LIONUVC_BinningMode.BINNING,
+            LIONUVC_BinningMode.NO_BINNING,
         };
         /// <summary>
         /// Binning列表
         /// </summary>
         [XmlIgnoreAttribute]
-        public ObservableCollection<HB_BinningMode> BinningModes
+        public ObservableCollection<LIONUVC_BinningMode> BinningModes
         {
             get
             {
@@ -324,225 +245,86 @@ namespace NV.Config
                 _binningModes = value;
             }
         }
-        private NV_ShutterMode _shutterMode = NV_ShutterMode.NV_GLOBAL_SHUTTER;
-        /// <summary>
-        /// shutter模式
-        /// </summary>
-        [XmlElement(ElementName = "shutter模式")]
-        public NV_ShutterMode ShutterMode
-        {
-            get
-            {
-                return _shutterMode;
-            }
-            set
-            {
-                Set(() => ShutterMode, ref _shutterMode, value);
-            }
-        }
 
-        private ObservableCollection<NV_ShutterMode> _shutterModes = new ObservableCollection<NV_ShutterMode>()
-        {
-            NV_ShutterMode.NV_GLOBAL_SHUTTER,
-            NV_ShutterMode.NV_ROLLING_SHUTTER,
-        };
-        /// <summary>
-        /// 列表
-        /// </summary>
-        [XmlIgnoreAttribute]
-        public ObservableCollection<NV_ShutterMode> ShutterModes
-        {
-            get
-            {
-                return _shutterModes;
-            }
-            set
-            {
-                _shutterModes = value;
-            }
-        }
 
-        private HB_TriggerMode _triggerMode = HB_TriggerMode.SORTWARE;
+        private LIONUVC_XRAY_TYPE _xrayType = LIONUVC_XRAY_TYPE.VTC_D;
         /// <summary>
         /// 触发模式
         /// </summary>
-        [XmlElement(ElementName = "触发模式")]
-        public HB_TriggerMode TriggerMode
+        [XmlElement(ElementName = "XRay类型")]
+        public LIONUVC_XRAY_TYPE XrayType
         {
             get
             {
-                return _triggerMode;
+                return _xrayType;
             }
             set
             {
-                Set(() => TriggerMode, ref _triggerMode, value);
+                Set(() => XrayType, ref _xrayType, value);
             }
         }
 
-        private ObservableCollection<HB_TriggerMode> _triggerModes = new ObservableCollection<HB_TriggerMode>()
+        private ObservableCollection<LIONUVC_XRAY_TYPE> _xrayTypes = new ObservableCollection<LIONUVC_XRAY_TYPE>()
         {
-            HB_TriggerMode.SORTWARE,
-            HB_TriggerMode.CLEAR,
-            HB_TriggerMode.HVG,
-            HB_TriggerMode.FREE_AED,
-            HB_TriggerMode.CONTINUE
+            LIONUVC_XRAY_TYPE.VTC_D,
+            LIONUVC_XRAY_TYPE.VTC_A
         };
         /// <summary>
-        /// 触发模式列表
+        /// Xray类型列表
         /// </summary>
         [XmlIgnoreAttribute]
-        public ObservableCollection<HB_TriggerMode> TriggerModes
+        public ObservableCollection<LIONUVC_XRAY_TYPE> XrayTypes
         {
             get
             {
-                return _triggerModes;
+                return _xrayTypes;
             }
             set
             {
-                _triggerModes = value;
+                _xrayTypes = value;
             }
         }
 
         ///==================================
-        private HB_FPD_COMM_TYPE _communicationType = HB_FPD_COMM_TYPE.UDP;
+        private LIONUVC_MODEL_FILTER _modelFilter = LIONUVC_MODEL_FILTER.FILTER;
         /// <summary>
-        /// 通讯类型
+        /// 图像处理
         /// </summary>
-        [XmlElement(ElementName = "通讯方式")]
-        public HB_FPD_COMM_TYPE CommunicationType
+        [XmlElement(ElementName = "图像处理")]
+        public LIONUVC_MODEL_FILTER ModelFilter
         {
             get
             {
-                return _communicationType;
+                return _modelFilter;
             }
             set
             {
-                Set(() => CommunicationType, ref _communicationType, value);
+                Set(() => ModelFilter, ref _modelFilter, value);
             }
         }
 
-        private ObservableCollection<HB_FPD_COMM_TYPE> _communicationTypes = new ObservableCollection<HB_FPD_COMM_TYPE>()
+        private ObservableCollection<LIONUVC_MODEL_FILTER> _modeFilters = new ObservableCollection<LIONUVC_MODEL_FILTER>()
         {
-            HB_FPD_COMM_TYPE.UDP,
-            HB_FPD_COMM_TYPE.UDP_JUMBO,
-            HB_FPD_COMM_TYPE.WLAN,
-            HB_FPD_COMM_TYPE.PCIE
+            LIONUVC_MODEL_FILTER.FILTER,
+            LIONUVC_MODEL_FILTER.NO_FILTER,
 
         };
         /// <summary>
-        /// 通讯类型列表
+        /// 图像处理列表
         /// </summary>
         [XmlIgnoreAttribute]
-        public ObservableCollection<HB_FPD_COMM_TYPE> CommunicationTypes
+        public ObservableCollection<LIONUVC_MODEL_FILTER> ModelFilters
         {
             get
             {
-                return _communicationTypes;
+                return _modeFilters;
             }
             set
             {
-                _communicationTypes = value;
+                _modeFilters = value;
             }
         }
 
-        private ObservableCollection<HB_CorrType> _correctionModes = new ObservableCollection<HB_CorrType>()
-        {
-
-            HB_CorrType.NO,
-            HB_CorrType.SOFTWARE,
-            HB_CorrType.FRIMWARE
-        };
-        /// <summary>
-        /// 校正模式列表
-        /// </summary>
-        [XmlIgnoreAttribute]
-        public ObservableCollection<HB_CorrType> CorrectionModes
-        {
-            get
-            {
-                return _correctionModes;
-            }
-            set
-            {
-                _correctionModes = value;
-            }
-        }
-
-        //
-
-        private ObservableCollection<HB_OffsetCorrType> _offsetCorrectionModes = new ObservableCollection<HB_OffsetCorrType>()
-        {
-            HB_OffsetCorrType.NO ,              
-            HB_OffsetCorrType.SOFTWARE_PRE_OFFSET ,        
-            HB_OffsetCorrType.FIRMWARE_PRE_OFFSET,       
-            HB_OffsetCorrType.FIRMWARE_POST_OFFSET
-        };
-        /// <summary>
-        /// Offset 校正模式列表
-        /// </summary>
-        [XmlIgnoreAttribute]
-        public ObservableCollection<HB_OffsetCorrType> OffsetCorrectionModes
-        {
-            get
-            {
-                return _offsetCorrectionModes;
-            }
-            set
-            {
-                _offsetCorrectionModes = value;
-            }
-        }
-
-        //
-
-        private HB_OffsetCorrType _offsetCorMode = HB_OffsetCorrType.FIRMWARE_POST_OFFSET;
-        /// <summary>
-        /// 本底校正模式
-        /// </summary>
-        [XmlElement(ElementName = "本底校正模式")]
-        public HB_OffsetCorrType OffsetCorMode
-        {
-            get
-            {
-                return _offsetCorMode;
-            }
-            set
-            {
-                Set(() => OffsetCorMode, ref _offsetCorMode, value);
-            }
-        }
-        private HB_CorrType _gainCorMode = HB_CorrType.SOFTWARE;
-        /// <summary>
-        /// 增益校正模式
-        /// </summary>
-        [XmlElement(ElementName = "增益校正模式")]
-        public HB_CorrType GainCorMode
-        {
-            get
-            {
-                return _gainCorMode;
-            }
-            set
-            {
-                Set(() => GainCorMode, ref _gainCorMode, value);
-            }
-        }
-        private HB_CorrType _defectCorMode = HB_CorrType.SOFTWARE;
-        /// <summary>
-        /// 坏点校正模式
-        /// </summary>
-        [XmlElement(ElementName = "坏点校正模式")]
-        public HB_CorrType DefectCorMode
-        {
-            get
-            {
-                return _defectCorMode;
-            }
-            set
-            {
-                Set(() => DefectCorMode, ref _defectCorMode, value);
-            }
-        }
-
+       
     }
 }
