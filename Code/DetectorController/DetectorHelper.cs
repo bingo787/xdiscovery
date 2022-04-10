@@ -56,6 +56,8 @@ namespace Detector
         /// </summary>`
         public bool IsStored { get; set; }
 
+        public int ImageMode { get; set; }
+
         /// <summary>
         /// 数据位数,图像宽，高
         /// </summary>
@@ -89,6 +91,8 @@ namespace Detector
         /// 延时采集时间
         /// </summary>
         public int Delay = 0;
+
+        public double ScaleRatio = 0.1;
         /// <summary>
         /// 单例模式，提供辅助类实例
         /// </summary>
@@ -144,8 +148,13 @@ namespace Detector
                 {
                     //Console.WriteLine("{0},{1},{2},{3}",device.uvcIdentity.Id, pImgData.Length, nDataBuf, pFile);
 
+                    if (string.IsNullOrEmpty(pFile)) {
+                      //  string message = GetDeviceState();
+                        ShowMessage( "文件路径为空" , true);
+                    }
+
                     Console.WriteLine("图片已采集存储完成 " + pFile);
-                    BinaryReader br = new BinaryReader(new FileStream(pFile, FileMode.Open));
+                    BinaryReader br = new BinaryReader(new FileStream("luvc_camera.raw", FileMode.Open));
                     ushort[] buffer_ = new ushort[_imageHeight * _imageWidth];
                     for (int i = 0; i < _imageHeight * _imageWidth; i++) {
                         buffer_[i] = br.ReadUInt16();
@@ -161,7 +170,7 @@ namespace Detector
                     count++;
 
 
-                    if (MaxFrames == 1)
+                    if (ImageMode == 0) // AC 模式下收到图后就停止
                     {
                         // 单帧的时候，停止
                         AcqMaxFrameEvent();
@@ -170,7 +179,13 @@ namespace Detector
                 }
                 catch (IOException e)
                 {
+                  
+                    string message  = GetDeviceState();
+                    Console.WriteLine(message);
                     Console.WriteLine(e.Message + "\n Cannot open file.");
+                    ShowMessage(message, true);
+                    return 1;
+
                 }
 
               
@@ -270,9 +285,9 @@ namespace Detector
         public void SetUVCDeviceParameters(int nImgModel, int nBinning, int nFilter, int nRay) {
 
             //检测图像时间
-            UInt32 nCheckTime = 5000;
+            UInt32 nCheckTime = 60 * 1000; //ms
             //获取图像时间
-            UInt32 nGetTime = 10000;
+            UInt32 nGetTime = 60 * 1000; //ms
 
             LU_PARAM param = new LU_PARAM();
             unsafe
@@ -392,6 +407,44 @@ namespace Detector
             Console.WriteLine("mode:{0},bining:{1},filter:{2},Xray:{3}", nImgModel, nBinning, nFilter, nRay);
 
         }
+
+        public string GetDeviceState() {
+
+            unsafe
+            {
+                //获取设备状态
+                string Text = "";
+                LUDEV_STATE state = LUDEV_STATE.LUDEVSTATE_UNOPNE;
+                if (LionCom.LU_SUCCESS == LionSDK.LionSDK.GetDeviceState(ref luDev, ref state))
+                {
+                    //更亲状态信息
+                    switch (state)
+                    {
+                        case LUDEV_STATE.LUDEVSTATE_UNOPNE:             //设备未打开
+                            Text = "设备状态: 设备未打开!";
+                            break;
+                        case LUDEV_STATE.LUDEVSTATE_OPEN:                   //设备打开
+                            Text = "设备状态: 设备打开!";
+                            break;
+                        case LUDEV_STATE.LUDEVSTATE_WAITTRIGGER:                    //等待触发
+                            Text = "设备状态: 等待触发!";
+                            break;
+                        case LUDEV_STATE.LUDEVSTATE_TRIGGERIMAGE:                   //触发获取图像数据
+                            Text = "设备状态: 触发获取图像数据!";
+                            break;
+                        case LUDEV_STATE.LUDEVSTATE_IMAGESAVE:                  //图像保存
+                            Text = "设备状态: 图像保存!";
+                            break;
+                        case LUDEV_STATE.LUDEVSTATE_OVERTIME:                   //超时
+                            Text = "设备状态: 获取图像超时";
+                            break;
+                    }
+
+                }
+                return Text;
+            }
+        }
+        
         /// <summary>
         /// 初始化探测器
         /// </summary>

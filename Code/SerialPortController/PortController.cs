@@ -65,7 +65,8 @@ namespace SerialPortController
                     }
                     catch { }
                 }
-            })) { IsBackground = true }.Start();
+            }))
+            { IsBackground = true }.Start();
         }
         #region 字段
         SerialPort _serialPort;
@@ -127,14 +128,13 @@ namespace SerialPortController
                 byte[] buffer = new byte[1024];
                 int len = port.Read(buffer, 0, buffer.Length);
                 string message = ASCIIEncoding.ASCII.GetString(buffer, 0, len);
-#if DEBUG
-                Console.WriteLine("Receive-" + DateTime.Now.ToString("HH:mm:ss.ffff"));
+
+                Console.WriteLine("Receive-" + DateTime.Now.ToString("HH:mm:ss.ffff "));
 
                 for (int i = 0; i < len; i++ ) {
 
-                    Console.Write("{0:x} ", buffer[i]);
+                    Console.Write("{0:X} ", buffer[i]);
                 }
-#endif
 
             }
 
@@ -263,7 +263,7 @@ namespace SerialPortController
                 {
                     string errorMess = string.Empty;
                     string[] ErrorInfo = new string[]
-                    { 
+                    {
                     "Regulation",
                     "Interlock Open",
                     "Cathode Over KV Fault",
@@ -538,8 +538,8 @@ namespace SerialPortController
                 }
 
             }
-            bytedata.Add((byte)((crc >> 8) & 0xff));
             bytedata.Add((byte)((crc & 0xff)));
+            bytedata.Add((byte)((crc >> 8) & 0xff));
 
             string[] redata = new string[2];
             redata[1] = Convert.ToString((byte)((crc >> 8) & 0xff), 16);
@@ -555,7 +555,7 @@ namespace SerialPortController
         /// </summary>
         public void ResetHV()
         {
-            
+            XRayOff();
         }
         /// <summary>
         /// 预热
@@ -566,8 +566,8 @@ namespace SerialPortController
             {
                 System.Threading.Thread.Sleep(200);
                 SetKV(kv);
-                System.Threading.Thread.Sleep(200);
-                SetCurrent(ua);
+                //System.Threading.Thread.Sleep(200);
+                //SetCurrent(ua);
                 System.Threading.Thread.Sleep(200);
                 XRayOn();
             })).Start();
@@ -579,14 +579,15 @@ namespace SerialPortController
              主站请求帧（16进制）：01 05 00 00 FF 00 8C 3A
             从站响应帧（16进制）：01 05 00 00 FF 00 8C 3A
              */
-            List<byte> command = new List<byte>() { 0x01 , 0x05, 0x00, 0x00, 0xFF, 0x00, 0x8C, 0x3A };
+            List<byte> command = new List<byte>() { 0x01, 0x05, 0x00, 0x00, 0xFF, 0x00, 0x8C, 0x3A };
             if (_serialPort.IsOpen)
             {
                 Console.WriteLine("XRayOn ");
                 _serialPort.Write(command.ToArray(), 0, command.Count);
             }
 
-            if (XRayOnChanged != null) {
+            if (XRayOnChanged != null)
+            {
                 XRayOnChanged(true);
             }
 
@@ -611,19 +612,25 @@ namespace SerialPortController
         /// <param name="kv"></param>
         public void SetKV(double v)
         {
+            // 最大 80 kv 分成2000份
 
-           int Vol =  (int)v * 2000 / 5;
+            int Vol = (int )(v * 2000.0 / 80.0);
+            Console.WriteLine("写入电压值{0},(0~2000)",Vol);
+
             List<byte> command = new List<byte>() { 0x01, 0x06, 0x00, 0x00 };
 
-            command.Add((byte)((Vol >> 8) & 0xff));
-            command.Add((byte)((Vol & 0xff)));
+            /// Modobus BigEndian,  高位在前，低位在后
+            command.Add((byte)((Vol >> 8) & 0xff)); // HI
+            command.Add((byte)((Vol & 0xff))); //LO
+           
 
             CRC16Calc(ref command);
 
             Console.Write("Set KV ");
 
-            for (int i = 0; i < command.Count(); i++) {
-                Console.Write("{0:x} ",command[i]);
+            for (int i = 0; i < command.Count(); i++)
+            {
+                Console.Write("{0:X} ", command[i]);
             }
             Console.WriteLine("");
 
@@ -639,14 +646,14 @@ namespace SerialPortController
         /// <param name="ua"></param>
         public void SetCurrent(int ua)
         {
-          
+
         }
         /// <summary>
         /// 获取高压状态
         /// </summary>
         public void GetHVStatus()
         {
-          
+
         }
 
         public void Connect()

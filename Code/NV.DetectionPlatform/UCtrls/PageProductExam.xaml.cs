@@ -31,7 +31,6 @@ namespace NV.DetectionPlatform.UCtrls
     public partial class PageProductExam : Page
     {
         private int _imageCount = 0;
-        private double scale_ratio = 0.14;
         /// <summary>
         /// 实时采集显示线程
         /// </summary>
@@ -167,9 +166,11 @@ namespace NV.DetectionPlatform.UCtrls
             if (_detector.InitDetector(out res))
             {
                 var Data = NV.Config.NV1313FPDSetting.Instance;
-                scale_ratio = Data.ExpTime / 1000.0;
+                _detector.ScaleRatio = Data.ScaleRatio;
+                _detector.Delay = Data.Delay;
 
-                _detector.SetUVCDeviceParameters((int)Data.ImageMode, (int)Data.BinningMode, (int)Data.ModelFilter, (int)Data.XrayType);
+                _detector.ImageMode = (int)Data.ImageMode;
+                _detector.SetUVCDeviceParameters(_detector.ImageMode, 0, 0, 0);
                 _detector.GetUVCDeviceParameters();
 
                 IsConnected = true;
@@ -255,6 +256,38 @@ namespace NV.DetectionPlatform.UCtrls
 
         #region 采集图像
         private const int DETECTOR_READTIME = 132;
+        TimeSpan _span;
+        System.Windows.Threading.DispatcherTimer _timer;
+        /// <summary>
+        /// 倒计时
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void timer_Tick(object sender, EventArgs e)
+        {
+           // Console.WriteLine("倒计时 {0}", _span.Milliseconds );
+            if (_span <= TimeSpan.Zero)
+            {
+                _timer.Stop();
+                StopAcq(null, null);
+
+                return;
+            }
+            _span = _span.Add(new TimeSpan(0, 0, 0, 0, -100));
+        }
+        public void StopAcqAfter(int timeMs) {
+
+            Console.WriteLine("{0} ms后关闭光源 ", timeMs);
+            _span = TimeSpan.FromMilliseconds(timeMs);
+            _timer = new System.Windows.Threading.DispatcherTimer();
+            _timer.Interval = TimeSpan.FromMilliseconds(100);
+            _timer.Tick += timer_Tick;
+            _timer.Start();
+
+
+        }
+
+
         /// <summary>
         ///采集
         /// </summary>
@@ -316,7 +349,18 @@ namespace NV.DetectionPlatform.UCtrls
             _imageCount = 0;
 
             MainWindow.ControlSystem.XRayOn();
+
+            double kvv = (double)Global.CurrentParam.KV;
+            Thread.Sleep(200);
+            /// 设定时间后自动关闭Xray
+            if (_detector.ImageMode == 1) // 1: vtc, 0:ac
+            {
+                StopAcqAfter(_curExpTime + _detector.Delay - 200);
+            }
+            MainWindow.ControlSystem.SetKV(kvv);
+
             IsAcqing = true;
+
 
             new Thread(new ThreadStart(delegate
             {
@@ -332,6 +376,7 @@ namespace NV.DetectionPlatform.UCtrls
                 {
                     ret = _detector.StartAcq();
                 }
+
 
                 if (ret)
                 {
@@ -848,7 +893,7 @@ namespace NV.DetectionPlatform.UCtrls
             if (ipUC.CurrentDv != null)
             {
                 ipUC.CurrentDv.ResetImage();
-                ipUC.CurrentDv.SetScaleRatio(scale_ratio);//暂时保留，后续废除
+                ipUC.CurrentDv.SetScaleRatio(_detector.ScaleRatio);//暂时保留，后续废除
             }
         }
         /// <summary>
@@ -873,7 +918,7 @@ namespace NV.DetectionPlatform.UCtrls
                             ipUC.CurrentDv.SetWindowLevel(ww, wl);
                     }
                     ipUC.CurrentDv.Invalidate();
-                    ipUC.CurrentDv.SetScaleRatio(scale_ratio);//暂时保留，后续废除
+                    ipUC.CurrentDv.SetScaleRatio(_detector.ScaleRatio);//暂时保留，后续废除
                 }
             }
             catch (Exception ex)
@@ -1312,7 +1357,7 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 dv.DeleteAnnotation(true);
                 dv.LoadFile(dialog.FileName);
-                dv.SetScaleRatio(scale_ratio);//暂时保留，后续废除
+                dv.SetScaleRatio(_detector.ScaleRatio);//暂时保留，后续废除
                 dv.Invalidate();
             }
         }

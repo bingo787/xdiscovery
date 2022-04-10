@@ -36,8 +36,8 @@ namespace NV.DetectionPlatform.UCtrls
             NV.Config.HVGeneratorParam para = NV.Config.HVGeneratorParam.Instance;
 
             txtKV.Text = para.MaxKV.ToString();
-            txtUA.Text = para.MaxCurrent.ToString();
-            txtPower.Text = para.MaxPower.ToString();
+            //txtUA.Text = para.MaxCurrent.ToString();
+            //txtPower.Text = para.MaxPower.ToString();
             txtExternSoft.Text = para.ExternSoft;
 
         }
@@ -62,19 +62,19 @@ namespace NV.DetectionPlatform.UCtrls
                     CMessageBox.Show("电压上限不合法");
                     return; ;
                 }
-                if (!int.TryParse(txtUA.Text, out ua))
-                {
-                    CMessageBox.Show("电流上限不合法");
-                    return; ;
-                }
-                if (!int.TryParse(txtPower.Text, out power))
-                {
-                    CMessageBox.Show("功率上限不合法");
-                    return;
-                }
+                //if (!int.TryParse(txtUA.Text, out ua))
+                //{
+                //    CMessageBox.Show("电流上限不合法");
+                //    return; ;
+                //}
+                //if (!int.TryParse(txtPower.Text, out power))
+                //{
+                //    CMessageBox.Show("功率上限不合法");
+                //    return;
+                //}
                 para.MaxKV = kv;
-                para.MaxCurrent = ua;
-                para.MaxPower = power;
+                //para.MaxCurrent = ua;
+                //para.MaxPower = power;
                 para.Pwd = txtPassword.Password;
                 para.ExternSoft = txtExternSoft.Text;
 

@@ -159,20 +159,20 @@ namespace NV.Config
             }
         }
 
-        private int _expTime = 168;
+        private double _scaleRatio = 0.1;
         /// <summary>
-        /// 积分时间
+        /// 尺度比例
         /// </summary>
-        [XmlElement(ElementName = "积分时间ms")]
-        public int ExpTime
+        [XmlElement(ElementName = "尺度比例")]
+        public double ScaleRatio
         {
             get
             {
-                return _expTime;
+                return _scaleRatio;
             }
             set
             {
-                Set(() => ExpTime, ref _expTime, value);
+                Set(() => ScaleRatio, ref _scaleRatio, value);
             }
         }
         private int _delay = 1000;

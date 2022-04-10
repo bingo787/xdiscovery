@@ -369,8 +369,8 @@ namespace NV.DetectionPlatform.UCtrls
             var controlSystem = MainWindow.ControlSystem;
 
             controlSystem.SetKV(kv);
-            System.Threading.Thread.Sleep(150);
-            controlSystem.SetCurrent(ua);
+            //System.Threading.Thread.Sleep(150);
+            //controlSystem.SetCurrent(ua);
             this.Visibility = Visibility.Hidden;
         }
         /// <summary>

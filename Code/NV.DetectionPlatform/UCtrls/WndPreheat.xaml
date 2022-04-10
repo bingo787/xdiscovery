@@ -85,7 +85,7 @@
                             </GeometryGroup>
                         </Path.Data>
                     </Path>
-                    <TextBlock Text="kV" Grid.Column="2"/>
+                    <TextBlock Text="V" Grid.Column="2"/>
                     <TextBlock Text="uA" Grid.Row="1" Grid.Column="2"/>
                     <TextBlock Text="mA" Grid.Row="2" Grid.Column="2"/>
 

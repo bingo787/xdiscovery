@@ -28,20 +28,23 @@
                 <TextBox Text="{Binding MultiFramesOverlayNumber,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->
                 <TextBlock Text="延时采集Delay(ms):"/>
                 <TextBox Text="{Binding Delay,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Text="Xray类型:" />
-                <ComboBox SelectedValue="{Binding XrayType ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding XrayTypes,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Text="尺度比例:"/>
-                <TextBox Text="{Binding ExpTime,UpdateSourceTrigger=PropertyChanged}" />
-                <!--<TextBlock Text="最大帧数:"/>
-                <TextBox Text="{Binding MaxFrames,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->
-                <TextBlock Text="图像处理:"/>
-                <ComboBox ItemsSource="{Binding ModelFilters}" SelectedValue="{Binding ModelFilter}"/>
-                <TextBlock Text="Binning:"/>
-                <ComboBox ItemsSource="{Binding BinningModes}" SelectedValue="{Binding BinningMode}"/>
-                <!--<TextBlock Text="Shutter:"/>
-                <ComboBox SelectedValue="{Binding ShutterMode}" ItemsSource="{Binding ShutterModes}"/>-->
+                <TextBlock Text="尺度比例ScaleRatio:"/>
+                <TextBox Text="{Binding ScaleRatio,UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="出图模式:"/>
                 <ComboBox ItemsSource="{Binding ImageModes}" SelectedValue="{Binding ImageMode}"></ComboBox>
+                <!--<TextBlock Text="Xray类型:" />
+                <ComboBox SelectedValue="{Binding XrayType ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding XrayTypes,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>-->
+              
+                <!--<TextBlock Text="最大帧数:"/>
+                <TextBox Text="{Binding MaxFrames,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->
+                <!--<TextBlock Text="图像处理:"/>
+                <ComboBox ItemsSource="{Binding ModelFilters}" SelectedValue="{Binding ModelFilter}"/>-->
+                <!--<TextBlock Text="Binning:"/>
+                <ComboBox ItemsSource="{Binding BinningModes}" SelectedValue="{Binding BinningMode}"/>-->
+              
+                <!--<TextBlock Text="Shutter:"/>
+                <ComboBox SelectedValue="{Binding ShutterMode}" ItemsSource="{Binding ShutterModes}"/>-->
+
                 <!--<TextBlock Text="{DynamicResource OffsetCorType}"/>
                 <ComboBox ItemsSource="{Binding OffsetCorrectionModes}" SelectedValue="{Binding OffsetCorMode}"/>-->
                 <!--<TextBlock Text="{DynamicResource GainCorType}"/>

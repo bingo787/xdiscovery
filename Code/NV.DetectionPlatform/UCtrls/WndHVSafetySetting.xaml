@@ -24,24 +24,21 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Content="电压上限:" />
-                <Label Content="电流上限:" Grid.Row="1"/>
-                <Label Content="功率上限:" Grid.Row="2"/>
-                <Label Content="安全密码:" Grid.Row="3"/>
-                <Label Content="随启动软件:" Grid.Row="4"/>
 
-                <Label Content="kV"  Grid.Column="2"/>
-                <Label Content="uA" Grid.Row="1" Grid.Column="2"/>
-                <Label Content="W" Grid.Row="2" Grid.Column="2"/>
-                <Label Content="*" Grid.Row="3" Grid.Column="2"/>
-                <Button VerticalAlignment="Stretch" Content="..." Grid.Row="4" Grid.Column="2" Click="SetExternSoftPath"/>
+                <Label Content="安全密码:" Grid.Row="1"/>
+                <Label Content="随启动软件:" Grid.Row="2"/>
+
+                <Label Content="V"  Grid.Column="2"/>
+
+                <Label Content="*" Grid.Row="1" Grid.Column="2"/>
+                <Button VerticalAlignment="Stretch" Content="..." Grid.Row="2" Grid.Column="2" Click="SetExternSoftPath"/>
                 
                 <TextBox x:Name="txtKV" Grid.Column="1" x:FieldModifier="public"/>
-                <TextBox x:Name="txtUA" Grid.Column="1" Grid.Row="1" x:FieldModifier="public"/>
-                <TextBox x:Name="txtPower" Grid.Column="1" Grid.Row="2" x:FieldModifier="public"/>
-                <PasswordBox x:Name="txtPassword" Grid.Column="1" Grid.Row="3" x:FieldModifier="public" Background="White" Foreground="DimGray"/>
-                <TextBox x:Name="txtExternSoft" Grid.Column="1" Grid.Row="4" x:FieldModifier="public"/>
 
-                <Button Content="应用" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="1" Height="35" Margin="1" Click="Button_Click_1" IsDefault="True"/>
+                <PasswordBox x:Name="txtPassword" Grid.Column="1" Grid.Row="1" x:FieldModifier="public" Background="White" Foreground="DimGray"/>
+                <TextBox x:Name="txtExternSoft" Grid.Column="1" Grid.Row="2" x:FieldModifier="public"/>
+
+                <Button Content="应用" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" Height="35" Margin="1" Click="Button_Click_1" IsDefault="True"/>
             </Grid>
         </GroupBox>
     </Grid>

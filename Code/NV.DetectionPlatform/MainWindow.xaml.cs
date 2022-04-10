@@ -56,11 +56,11 @@ namespace NV.DetectionPlatform
             catch (Exception)
             {
             }
-           
+
             Process.GetCurrentProcess().Kill();
         }
 
-       
+
         /// <summary>
         /// 双屏显示
         /// </summary>
@@ -74,7 +74,7 @@ namespace NV.DetectionPlatform
             {
                 for (int i = 0; i < System.Windows.Forms.Screen.AllScreens.Length; i++)
                 {
-                    if(System.Windows.Forms.Screen.AllScreens[i]!=System.Windows.Forms.Screen.PrimaryScreen)
+                    if (System.Windows.Forms.Screen.AllScreens[i] != System.Windows.Forms.Screen.PrimaryScreen)
                     {
                         top = System.Windows.Forms.Screen.AllScreens[i].Bounds.Top;
                         left = System.Windows.Forms.Screen.AllScreens[i].Bounds.Left;
@@ -233,16 +233,12 @@ namespace NV.DetectionPlatform
                 }
                 catch { }
 
-                try
-                {
-                    ControlSystem.OpenSerialPort();
-                    ControlSystem.Connect();
-                }
-                catch {
-                    lblHVConn.Content = "--";
-                }
+
+                ControlSystem.OpenSerialPort();
+                ControlSystem.Connect();
                 lblHVConn.Content = Connected;
-                
+
+
             }
             catch (Exception)
             {
@@ -362,7 +358,7 @@ namespace NV.DetectionPlatform
                 {
                     lblHV_XRayState.Content = "XRay ON";
                     lblHV_XRayState.Foreground = Brushes.Yellow;
-                   // this.Log("打开X光源");
+                    // this.Log("打开X光源");
                 }
                 else
                 {
@@ -383,7 +379,7 @@ namespace NV.DetectionPlatform
                 if (_examView != null && _examView.IsConnected)
                     lblDetector.Content = Connected;
                 float t1, t2;
-                if (Detector.DetectorController.Instance.GetTemperature(out t1, out  t2))
+                if (Detector.DetectorController.Instance.GetTemperature(out t1, out t2))
                     Instance_TemperatureChangedEvent(t1, t2);
                 Detector.DetectorController.Instance.TemperatureChangedEvent += Instance_TemperatureChangedEvent;
                 Detector.DetectorController.Instance.ConnBreakEvent += Instance_ConnBreakEvent;
@@ -401,7 +397,7 @@ namespace NV.DetectionPlatform
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-               _examView.StopAcq(null, null);
+                _examView.StopAcq(null, null);
 
             }));
         }
@@ -543,7 +539,7 @@ namespace NV.DetectionPlatform
                 {
                     lblDetector.Content = Connected;
                     float t1, t2;
-                    if (Detector.DetectorController.Instance.GetTemperature(out t1, out  t2))
+                    if (Detector.DetectorController.Instance.GetTemperature(out t1, out t2))
                         Instance_TemperatureChangedEvent(t1, t2);
                 }
 
@@ -552,7 +548,7 @@ namespace NV.DetectionPlatform
             {
                 ConnControlSystem();
             }
-         
+
             if (tag == "GeneralSetting")
             {
                 UCtrls.WndGeneralSetting wnd = new UCtrls.WndGeneralSetting();
@@ -790,7 +786,7 @@ namespace NV.DetectionPlatform
         /// 登记产品开始检查
         /// </summary>
         /// <param name="pro"></param>
-        public void UpdateProduct(object pro,bool isSkipSearchDir=false)
+        public void UpdateProduct(object pro, bool isSkipSearchDir = false)
         {
             if (pro == null)
                 return;
