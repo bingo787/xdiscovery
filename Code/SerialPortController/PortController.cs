@@ -612,12 +612,12 @@ namespace SerialPortController
         /// <param name="kv"></param>
         public void SetKV(double v)
         {
-            // 最大 80 kv 分成2000份
+            // 最大 80 kv 分成4000份
 
-            int Vol = (int )(v * 2000.0 / 80.0);
-            Console.WriteLine("写入电压值{0},(0~2000)",Vol);
+            int Vol = (int )(v * 4000.0 / 80.0);
+            Console.WriteLine("写入电压值{0},(0~4000)",Vol);
 
-            List<byte> command = new List<byte>() { 0x01, 0x06, 0x00, 0x00 };
+            List<byte> command = new List<byte>() { 0x01, 0x06, 0x01, 0xF4 };
 
             /// Modobus BigEndian,  高位在前，低位在后
             command.Add((byte)((Vol >> 8) & 0xff)); // HI
