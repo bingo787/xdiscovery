@@ -614,8 +614,8 @@ namespace SerialPortController
         {
             // 最大 80 kv 分成4000份
 
-            int Vol = (int )(v * 4000.0 / 80.0);
-            Console.WriteLine("写入电压值{0},(0~4000)",Vol);
+            int Vol = (int )(v * 1000.0 / 80.0);
+            Console.WriteLine("写入电压值{0},(0~1000)",Vol);
 
             List<byte> command = new List<byte>() { 0x01, 0x06, 0x01, 0xF4 };
 
