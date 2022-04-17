@@ -14,6 +14,7 @@ using NV.DRF.Controls;
 using NV.DRF.Core.Common;
 using NV.Infrastructure.UICommon;
 using SerialPortController;
+using OpenCvSharp;
 
 using LionSDK;
 
@@ -137,6 +138,68 @@ namespace Detector
             return false;
         }
 
+
+        void ProcessShowImage(ref ushort[] data)
+        {
+
+            unsafe {
+
+                Mat img = new Mat((int)_imageHeight, (int)_imageWidth, MatType.CV_16UC1, data);
+
+                Console.WriteLine("读取图片W:{0},H:{1}",img.Width, img.Height);
+
+                OpenCvSharp.Point[][] point1  = new OpenCvSharp.Point[2][];
+                point1[0] = new OpenCvSharp.Point[3];
+                point1[1] = new OpenCvSharp.Point[3];
+
+                point1[0][0] = new OpenCvSharp.Point(0, 1908); /* 三角形的点的相关信息 */
+                point1[0][1] = new OpenCvSharp.Point(0, 2272);
+                point1[0][2] = new OpenCvSharp.Point(285, 2272);
+
+                point1[1][0] = new OpenCvSharp.Point(1660, 1908); /* 正方形的相关信息 */
+                point1[1][1] = new OpenCvSharp.Point(1375, 2272);
+                point1[1][2] = new OpenCvSharp.Point(1660, 2272);
+
+                int[] npts ={ 3, 3 };/* 三角形有三个有效点正方形有四个有效点 */
+                Scalar color = new  Scalar(4096, 4096, 4096);/* 颜色参数 */
+             // cvFillPoly(testImage, point1, npts, 2, color);
+                Console.WriteLine("填充颜色");
+                Cv2.FillPoly(img, point1, color);
+ 
+
+                Console.WriteLine("创建数组拷贝出去W:{0}，H:{1}",_imageWidth, _imageHeight);
+                ushort[]  result = new ushort[_imageHeight * _imageWidth];
+
+                for (int i = 0; i < _imageHeight; i++) {
+                    for (int j = 0; j < _imageWidth; j++)
+                    {
+                        result[i * _imageWidth + j] = img.At<ushort>(i, j);
+                    }
+                }
+
+                PlayBuffer.Enqueue(result);
+
+                if (IsStored)
+                {
+                    ImageBuffer.Add(result);
+                }
+
+                count++;
+
+
+                if (ImageMode == 0) // AC 模式下收到图后就停止
+                {
+                    // 单帧的时候，停止
+                    AcqMaxFrameEvent();
+                }
+
+            }
+
+
+ 
+
+            }
+
         private int AsyncImageCallback(LU_DEVICE device, byte[] pImgData, int nDataBuf, string pFile)
         {
 
@@ -154,30 +217,19 @@ namespace Detector
                     }
 
                     Console.WriteLine("图片已采集存储完成 " + pFile);
+
                     BinaryReader br = new BinaryReader(new FileStream("luvc_camera.raw", FileMode.Open));
 
-                    byte[] byteBuffer =  br.ReadBytes((int)(_imageHeight * _imageWidth * sizeof(UInt16)) );
+                    byte[] byteBuffer = br.ReadBytes((int)(_imageHeight * _imageWidth * sizeof(UInt16)));
                     ushort[] uint16Buffer = new ushort[_imageHeight * _imageWidth];
 
-                    for (int i = 0; i < _imageHeight * _imageWidth; i++) {
-                        uint16Buffer[i] = System.BitConverter.ToUInt16(byteBuffer, i*2);
-                    }
-
-                    PlayBuffer.Enqueue(uint16Buffer);
-
-                    if (IsStored)
+                    for (int i = 0; i < _imageHeight * _imageWidth; i++)
                     {
-                        ImageBuffer.Add(uint16Buffer);
+                        uint16Buffer[i] = System.BitConverter.ToUInt16(byteBuffer, i * 2);
                     }
 
-                    count++;
+                    ProcessShowImage(ref uint16Buffer);
 
-
-                    if (ImageMode == 0) // AC 模式下收到图后就停止
-                    {
-                        // 单帧的时候，停止
-                        AcqMaxFrameEvent();
-                    }
 
                 }
                 catch (IOException e)
