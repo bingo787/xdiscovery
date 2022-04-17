@@ -28,7 +28,7 @@
                 <Label Content="安全密码:" Grid.Row="1"/>
                 <Label Content="随启动软件:" Grid.Row="2"/>
 
-                <Label Content="V"  Grid.Column="2"/>
+                <Label Content="KV"  Grid.Column="2"/>
 
                 <Label Content="*" Grid.Row="1" Grid.Column="2"/>
                 <Button VerticalAlignment="Stretch" Content="..." Grid.Row="2" Grid.Column="2" Click="SetExternSoftPath"/>

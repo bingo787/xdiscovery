@@ -85,9 +85,9 @@
                         <Label Content="{DynamicResource Top_Solution}" FontSize="17"/>
                         <Label x:Name="lblExamType" Content="--" FontSize="17"/>
                         <Label x:Name="lblKV" Content="0kV" FontSize="17"/>
-                        <Label x:Name="lblUA" Content="0uA" FontSize="17"/>
+                        <!--<Label x:Name="lblUA" Content="0uA" FontSize="17"/>-->
                         <Label x:Name="lblTime" Content="0s" FontSize="17"/>
-                        <Label x:Name="lblFps" Content="0Fps" FontSize="17"/>
+                        <!--<Label x:Name="lblFps" Content="0Fps" FontSize="17"/>-->
                         <Label Content="∥"/>
                 <Label HorizontalAlignment="Center" FontSize="17" Content="{DynamicResource Top_ProductName}" Foreground="LightGray" />
                 <TextBox IsReadOnly="True" FontSize="17" Background="Transparent" BorderThickness="0,0,0,1" Text="--" Foreground="{DynamicResource BtnForeground}" x:Name="txtProductName"/>

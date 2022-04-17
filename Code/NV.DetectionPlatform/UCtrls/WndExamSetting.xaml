@@ -88,30 +88,30 @@
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
                     <Label Content="{DynamicResource AcqSolution_Voltage}" HorizontalAlignment="Center"/>
-                    <Label Content="{DynamicResource AcqSolution_Current}" Grid.Row="2" HorizontalAlignment="Center"/>
-                    <Label Content="{DynamicResource SpotTime}" Grid.Row="4" HorizontalAlignment="Center"/>
-                    <Label Content="{DynamicResource ExposeFPS}" Grid.Row="6" HorizontalAlignment="Center"/>
+                    <!--<Label Content="{DynamicResource AcqSolution_Current}" Grid.Row="2" HorizontalAlignment="Center"/>-->
+                    <Label Content="{DynamicResource SpotTime}" Grid.Row="2" HorizontalAlignment="Center"/>
+                    <!--<Label Content="{DynamicResource ExposeFPS}" Grid.Row="6" HorizontalAlignment="Center"/>-->
                     <Label Content="kV"  Grid.Column="2" HorizontalAlignment="Center"/>
-                    <Label Content="uA" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"/>
-                    <Label Content="S" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center"/>
+                    <!--<Label Content="uA" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"/>-->
+                    <Label Content="S" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"/>
 
                     <TextBox Grid.Column="1" x:Name="txtkv" Text="{Binding DataContext.CurrentParam.KV}"/>
-                    <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtua" Text="{Binding DataContext.CurrentParam.UA}" IsEnabled="False"/>
-                    <TextBox Grid.Column="1" Grid.Row="4" x:Name="txtTime" Text="{Binding DataContext.CurrentParam.Time}" IsEnabled="True"/>
+                    <!--<TextBox Grid.Column="1" Grid.Row="2" x:Name="txtua" Text="{Binding DataContext.CurrentParam.UA}" IsEnabled="False"/>-->
+                    <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtTime" Text="{Binding DataContext.CurrentParam.Time}" IsEnabled="True"/>
 
-                    <Slider Grid.ColumnSpan="3" Grid.Row="1" x:Name="sldrkv" Minimum="0" Value="{Binding DataContext.CurrentParam.KV}" TickFrequency="0.1" Maximum="160"/>
-                    <Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrua" Minimum="0" Value="{Binding DataContext.CurrentParam.UA}" Maximum="1250" IsEnabled="False"/>
-                    <Slider Grid.ColumnSpan="3" Grid.Row="5" x:Name="sldrtime" Minimum="0" Value="{Binding DataContext.CurrentParam.Time}" TickFrequency="0.1"/>
+                    <Slider Grid.ColumnSpan="3" Grid.Row="1" x:Name="sldrkv" Minimum="0" Value="{Binding DataContext.CurrentParam.KV}" TickFrequency="0.1" Maximum="80"/>
+                    <!--<Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrua" Minimum="0" Value="{Binding DataContext.CurrentParam.UA}" Maximum="1250" IsEnabled="False"/>-->
+                    <Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrtime" Minimum="0" Value="{Binding DataContext.CurrentParam.Time}" TickFrequency="0.1"/>
 
-                    <ComboBox x:Name="cboFps" Grid.Row="6" Grid.Column="1" Text="{Binding SelectedItem.Fps,ElementName=lstParams,Mode=OneWay}" SelectedIndex="0" IsEnabled="False">
+                    <!--<ComboBox x:Name="cboFps" Grid.Row="6" Grid.Column="1" Text="{Binding SelectedItem.Fps,ElementName=lstParams,Mode=OneWay}" SelectedIndex="0" IsEnabled="False">
                         <ComboBoxItem Content="1" Tag="1000"/>
                         <ComboBoxItem Content="2" Tag="1000"/>
-                        <ComboBoxItem Content="4" Tag="1000"/>
+                        --><!--<ComboBoxItem Content="4" Tag="1000"/>-->
                         <!--<ComboBoxItem Content="8" Tag="1000"/>
                         <ComboBoxItem Content="16" Tag="1000"/>
                         <ComboBoxItem Content="20" Tag="1000"/>
-                        <ComboBoxItem Content="30" Tag="1000"/>-->
-                    </ComboBox>
+                        <ComboBoxItem Content="30" Tag="1000"/>--><!--
+                    </ComboBox>-->
                     
                     <Grid Grid.Row="7" Grid.ColumnSpan="3" Margin="5,0">
                         <Grid.ColumnDefinitions>
@@ -148,32 +148,32 @@
                             </GeometryGroup>
                         </Path.Data>
                     </Path>
-                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="15" Grid.Row="1" Grid.Column="1">
+                    <!--<Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="15" Grid.Row="1" Grid.Column="1">
                         <Path.Data>
                             <GeometryGroup>
                                 <PathGeometry Figures="M512 102.370529c-209.646787 0-380.226814 170.580027-380.226814 380.226814 0 209.646787 170.579003 380.225791 380.226814 380.225791 209.645764 0 380.225791-170.579003 380.225791-380.225791C892.225791 272.950556 721.645764 102.370529 512 102.370529zM512 822.561152c-187.467649 0-339.963809-152.498206-339.963809-339.963809 0-187.467649 152.49616-339.963809 339.963809-339.963809 187.466626 0 339.963809 152.497183 339.963809 339.963809C851.963809 670.062945 699.466626 822.561152 512 822.561152z"/>
                                 <PathGeometry Figures="M594.297354 539.02654 429.967682 539.02654l-38.331004 104.008842-50.664913 0 150.656255-390.308427 42.887786 0 148.244322 390.308427-50.664913 0L594.297354 539.02654zM444.713524 499.079736l135.105071 0-67.016323-184.969759L444.713524 499.079736z"/>
                             </GeometryGroup>
                         </Path.Data>
-                    </Path>
-                    <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="15" Grid.Row="2" Grid.Column="1">
+                    </Path>-->
+                    <!--<Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="15" Grid.Row="2" Grid.Column="1">
                         <Path.Data>
                             <GeometryGroup>
                                 <PathGeometry Figures="M572.8 922.24H430.08c-69.12 0-126.08-56.32-126.08-126.08v-21.12c0-17.92-8.32-35.2-23.04-48C200.32 657.28 156.8 556.8 161.28 449.92c7.04-174.08 149.12-319.36 323.2-330.24 96.64-6.4 188.8 26.88 259.2 92.8 69.76 65.28 109.44 157.44 109.44 252.8 0 106.88-48 206.08-131.84 272-14.08 10.88-22.4 28.8-22.4 47.36v11.52c-0.64 69.12-56.96 126.08-126.08 126.08zM506.88 182.4c-6.4 0-12.16 0-18.56 0.64C346.88 192 231.04 310.4 225.28 452.48c-3.84 87.04 32 168.96 97.92 225.92 28.8 24.96 45.44 60.16 45.44 96.64v21.12c0 33.92 27.52 62.08 62.08 62.08h142.72c33.92 0 62.08-27.52 62.08-62.08v-11.52c0-38.4 17.28-74.24 46.72-97.92 68.48-53.76 107.52-135.04 107.52-221.44 0-78.72-31.36-151.68-88.96-206.08-53.76-49.92-121.6-76.8-193.92-76.8z"/>
                                 <PathGeometry Figures="M618.24 532.48c-36.48 0-54.4-28.8-64.64-46.08-2.56-4.48-7.04-11.52-9.6-14.72-2.56 3.2-7.04 10.24-9.6 14.72-10.24 17.28-28.16 46.08-64.64 46.08-36.48 0-54.4-28.8-64.64-46.08-2.56-4.48-7.04-11.52-9.6-14.72-2.56 3.2-7.04 10.24-9.6 14.72-10.24 17.28-28.16 46.08-64.64 46.08-17.92 0-32-14.08-32-32 0-17.28 14.08-31.36 31.36-32 2.56-2.56 7.68-10.24 10.88-15.36 10.24-17.28 28.16-46.08 64.64-46.08s54.4 28.8 64.64 46.08c2.56 4.48 7.04 11.52 9.6 14.72 2.56-3.2 7.04-10.24 9.6-14.72 10.24-17.28 28.16-46.08 64.64-46.08 36.48 0 54.4 28.8 64.64 46.08 2.56 4.48 7.04 11.52 9.6 14.72 2.56-3.2 7.04-10.24 9.6-14.72 10.24-17.28 28.16-46.08 64.64-46.08 17.92 0 32 14.08 32 32 0 17.28-14.08 31.36-31.36 32-2.56 2.56-7.68 10.24-10.88 15.36-10.24 17.28-27.52 46.08-64.64 46.08z"/>
                             </GeometryGroup>
                         </Path.Data>
-                    </Path>
+                    </Path>-->
                     <TextBlock Text="kV" Grid.Column="3" VerticalAlignment="Center"/>
-                    <TextBlock Text="uA" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center"/>
-                    <TextBlock Text="mA" Grid.Row="2" Grid.Column="3" VerticalAlignment="Center"/>
+                    <!--<TextBlock Text="uA" Grid.Row="1" Grid.Column="3" VerticalAlignment="Center"/>
+                    <TextBlock Text="mA" Grid.Row="2" Grid.Column="3" VerticalAlignment="Center"/>-->
 
                     <TextBlock Text="0000" Grid.Column="2" FontSize="30" x:Name="tbKV" VerticalAlignment="Center" x:FieldModifier="public"></TextBlock>
-                    <TextBlock Text="0000" Grid.Row="1" Grid.Column="2" FontSize="30" x:Name="tbUA" VerticalAlignment="Center" x:FieldModifier="public"/>
-                    <TextBlock Text="0000" Grid.Row="2" Grid.Column="2" FontSize="30" x:Name="tbFila" VerticalAlignment="Center" x:FieldModifier="public"/>
+                    <!--<TextBlock Text="0000" Grid.Row="1" Grid.Column="2" FontSize="30" x:Name="tbUA" VerticalAlignment="Center" x:FieldModifier="public"/>
+                    <TextBlock Text="0000" Grid.Row="2" Grid.Column="2" FontSize="30" x:Name="tbFila" VerticalAlignment="Center" x:FieldModifier="public"/>-->
                     
                     <Button Content=">" Grid.Column="0" Grid.Row="0" Width="20" Height="40" Click="SetKV"/>
-                    <Button Content=">" Grid.Column="0" Grid.Row="1" Width="20" Height="40" Click="SetUA"/>
+                    <!--<Button Content=">" Grid.Column="0" Grid.Row="1" Width="20" Height="40" Click="SetUA"/>-->
 
                     <UniformGrid Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="3" Grid.RowSpan="2" Columns="2" Rows="2">
                         <ScrollViewer VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">

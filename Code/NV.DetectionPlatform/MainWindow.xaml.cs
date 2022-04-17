@@ -453,8 +453,8 @@ namespace NV.DetectionPlatform
                 {
                     var wnd = new NV.DetectionPlatform.UCtrls.WndPreheat();
                     wnd.tbKV.Text = lblKV.Content.ToString();
-                    wnd.tbUA.Text = lblUA.Content.ToString();
-                    wnd.tbFila.Text = lblHV_Fila.Content.ToString();
+                  //  wnd.tbUA.Text = lblUA.Content.ToString();
+                 //   wnd.tbFila.Text = lblHV_Fila.Content.ToString();
                     wnd.ShowDialogEx();
                 }
             }
@@ -620,8 +620,8 @@ namespace NV.DetectionPlatform
             {
                 var wnd = new NV.DetectionPlatform.UCtrls.WndPreheat();
                 wnd.tbKV.Text = lblKV.Content.ToString();
-                wnd.tbUA.Text = lblUA.Content.ToString();
-                wnd.tbFila.Text = lblHV_Fila.Content.ToString();
+              //  wnd.tbUA.Text = lblUA.Content.ToString();
+              //  wnd.tbFila.Text = lblHV_Fila.Content.ToString();
                 wnd.ShowDialogEx();
             }
         }
@@ -837,9 +837,9 @@ namespace NV.DetectionPlatform
                     if (Global.CurrentParam != null)
                     {
                         lblKV.Content = Global.CurrentParam.KV.ToString() + "kV";
-                        lblUA.Content = Global.CurrentParam.UA.ToString() + "uA";
+                       // lblUA.Content = Global.CurrentParam.UA.ToString() + "uA";
                         lblTime.Content = Global.CurrentParam.Time.ToString() + "s";
-                        lblFps.Content = Global.CurrentParam.Fps.ToString() + "Fps";
+                      //  lblFps.Content = Global.CurrentParam.Fps.ToString() + "Fps";
                     }
                 }));
             }

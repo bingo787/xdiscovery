@@ -112,7 +112,7 @@ namespace NV.DetectionPlatform.UCtrls
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                tbFila.Text = arg.ToString();
+               // tbFila.Text = arg.ToString();
             }));
         }
 
@@ -120,7 +120,7 @@ namespace NV.DetectionPlatform.UCtrls
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                tbUA.Text = arg.ToString();
+               // tbUA.Text = arg.ToString();
             }));
         }
 
@@ -151,7 +151,7 @@ namespace NV.DetectionPlatform.UCtrls
             }
             if (setting.MaxCurrent > 0)
             {
-                sldrua.Maximum = setting.MaxCurrent;
+               // sldrua.Maximum = setting.MaxCurrent;
             }
             if (setting.MaxPower > 0)
             {
@@ -181,11 +181,11 @@ namespace NV.DetectionPlatform.UCtrls
                 CMessageBox.Show("请输入新方案名称\n Please input new solution name");
                 return;
             }
-            if (!int.TryParse(txtua.Text, out ua))
-            {
-                CMessageBox.Show("电流值不合法。\n Invalid current value");
-                return;
-            }
+            //if (!int.TryParse(txtua.Text, out ua))
+            //{
+            //    CMessageBox.Show("电流值不合法。\n Invalid current value");
+            //    return;
+            //}
             if (!double.TryParse(txtkv.Text, out kv))
             {
                 CMessageBox.Show("电压值不合法。\nInvalid voltage value");
@@ -196,11 +196,11 @@ namespace NV.DetectionPlatform.UCtrls
                 CMessageBox.Show("曝光时间值不合法。\nInvalid spot time");
                 return;
             }
-            if (!int.TryParse(cboFps.Text, out fps))
-            {
-                CMessageBox.Show("帧速率值不合法。\n Invalid exposeFPS");
-                return;
-            }
+            //if (!int.TryParse(cboFps.Text, out fps))
+            //{
+            //    CMessageBox.Show("帧速率值不合法。\n Invalid exposeFPS");
+            //    return;
+            //}
 
             if (!CheckMaxPower())
                 return;
@@ -219,9 +219,9 @@ namespace NV.DetectionPlatform.UCtrls
                     param.GUID = System.Guid.NewGuid().ToString();
                     param.Name = name;
                     param.KV = kv;
-                    param.UA = ua;
+                   // param.UA = ua;
                     param.Time = time;
-                    param.Fps = fps;
+                  //  param.Fps = fps;
                     if (Global.CurrentProduct != null)
                     {
                         param.ProductType = Global.CurrentProduct.ProductTypeID;
@@ -281,11 +281,11 @@ namespace NV.DetectionPlatform.UCtrls
             double kv, time;
             int ua, fps;
 
-            if (!int.TryParse(txtua.Text, out ua))
-            {
-                CMessageBox.Show("电流值不合法。\n Invalid current value");
-                return;
-            }
+            //if (!int.TryParse(txtua.Text, out ua))
+            //{
+            //    CMessageBox.Show("电流值不合法。\n Invalid current value");
+            //    return;
+            //}
             if (!double.TryParse(txtkv.Text, out kv))
             {
                 CMessageBox.Show("电压值不合法。\nInvalid voltage value");
@@ -296,11 +296,11 @@ namespace NV.DetectionPlatform.UCtrls
                 CMessageBox.Show("曝光时间值不合法。\nInvalid spot time");
                 return;
             }
-            if (!int.TryParse(cboFps.Text, out fps))
-            {
-                CMessageBox.Show("帧速率值不合法。\n Invalid exposeFPS");
-                return;
-            }
+            //if (!int.TryParse(cboFps.Text, out fps))
+            //{
+            //    CMessageBox.Show("帧速率值不合法。\n Invalid exposeFPS");
+            //    return;
+            //}
             if (!CheckMaxPower())
                 return;
 
@@ -312,9 +312,9 @@ namespace NV.DetectionPlatform.UCtrls
                 {
                     repeat.Name = txtName.Text;
                     repeat.KV = kv;
-                    repeat.UA = ua;
+                   // repeat.UA = ua;
                     repeat.Time = time;
-                    repeat.Fps = fps;
+                  //  repeat.Fps = fps;
                     if (Global.CurrentProduct != null)
                     {
                         repeat.ProductType = Global.CurrentProduct.ProductTypeID;
@@ -335,11 +335,11 @@ namespace NV.DetectionPlatform.UCtrls
             double kv, time;
             int ua, fps;
 
-            if (!int.TryParse(txtua.Text, out ua))
-            {
-                CMessageBox.Show("电流值不合法。\n Invalid current value");
-                return;
-            }
+            //if (!int.TryParse(txtua.Text, out ua))
+            //{
+            //    CMessageBox.Show("电流值不合法。\n Invalid current value");
+            //    return;
+            //}
             if (!double.TryParse(txtkv.Text, out kv))
             {
                 CMessageBox.Show("电压值不合法。\nInvalid voltage value");
@@ -350,20 +350,20 @@ namespace NV.DetectionPlatform.UCtrls
                 CMessageBox.Show("曝光时间值不合法。\nInvalid spot time");
                 return;
             }
-            if (!int.TryParse(cboFps.Text, out fps))
-            {
-                CMessageBox.Show("帧速率值不合法。\n Invalid exposeFPS");
-                return;
-            }
+            //if (!int.TryParse(cboFps.Text, out fps))
+            //{
+            //    CMessageBox.Show("帧速率值不合法。\n Invalid exposeFPS");
+            //    return;
+            //}
 
             if (!CheckMaxPower())
                 return;
 
             ExamParam param = new ExamParam();
             param.KV = kv;
-            param.UA = ua;
+            //param.UA = ua;
             param.Time = time;
-            param.Fps = fps;
+          //  param.Fps = fps;
 
             Global.CurrentParam = param;
             var controlSystem = MainWindow.ControlSystem;
@@ -396,11 +396,11 @@ namespace NV.DetectionPlatform.UCtrls
         /// </summary>
         private bool CheckMaxPower()
         {
-            if (sldrkv.Value * sldrua.Value > _powerMax * 1000)
-            {
-                CMessageBox.Show("功率上限为：" + _powerMax + "W,当前设置将超出安全额定功率！\n Currnet Power is too large!");
-                return false;
-            }
+            //if (sldrkv.Value * sldrua.Value > _powerMax * 1000)
+            //{
+            //    CMessageBox.Show("功率上限为：" + _powerMax + "W,当前设置将超出安全额定功率！\n Currnet Power is too large!");
+            //    return false;
+            //}
             return true;
         }
         /// <summary>
@@ -410,12 +410,12 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="e"></param>
         private void SetUA(object sender, RoutedEventArgs e)
         {
-            int ua;
-            if (!int.TryParse(txtua.Text, out ua))
-            {
-                CMessageBox.Show("电流值不合法。\nInvalid voltage value");
-                return;
-            }
+            int ua = 0;
+            //if (!int.TryParse(txtua.Text, out ua))
+            //{
+            //    CMessageBox.Show("电流值不合法。\nInvalid voltage value");
+            //    return;
+            //}
             if (!CheckMaxPower())
                 return;
 
@@ -432,11 +432,11 @@ namespace NV.DetectionPlatform.UCtrls
             double kv, time;
             int ua, fps;
 
-            if (!int.TryParse(txtua.Text, out ua))
-            {
-                CMessageBox.Show("电流值不合法。\n Invalid current value");
-                return;
-            }
+            //if (!int.TryParse(txtua.Text, out ua))
+            //{
+            //    CMessageBox.Show("电流值不合法。\n Invalid current value");
+            //    return;
+            //}
             if (!double.TryParse(txtkv.Text, out kv))
             {
                 CMessageBox.Show("电压值不合法。\nInvalid voltage value");
@@ -447,26 +447,26 @@ namespace NV.DetectionPlatform.UCtrls
                 CMessageBox.Show("曝光时间值不合法。\nInvalid spot time");
                 return;
             }
-            if (!int.TryParse(cboFps.Text, out fps))
-            {
-                CMessageBox.Show("帧速率值不合法。\n Invalid exposeFPS");
-                return;
-            }
+            //if (!int.TryParse(cboFps.Text, out fps))
+            //{
+            //    CMessageBox.Show("帧速率值不合法。\n Invalid exposeFPS");
+            //    return;
+            //}
 
             if (!CheckMaxPower())
                 return;
 
             ExamParam param = new ExamParam();
             param.KV = kv;
-            param.UA = ua;
+           // param.UA = ua;
             param.Time = time;
-            param.Fps = fps;
+          //  param.Fps = fps;
 
             Global.CurrentParam = param;
 
             MainWindow.ControlSystem.SetKV(kv);
             System.Threading.Thread.Sleep(150);
-            MainWindow.ControlSystem.SetCurrent(ua);
+          //  MainWindow.ControlSystem.SetCurrent(ua);
         }
 
 
@@ -487,11 +487,11 @@ namespace NV.DetectionPlatform.UCtrls
             double kv, time;
             int ua, fps;
 
-            if (!int.TryParse(txtua.Text, out ua))
-            {
-                CMessageBox.Show("电流值不合法。\n Invalid current value");
-                return;
-            }
+            //if (!int.TryParse(txtua.Text, out ua))
+            //{
+            //    CMessageBox.Show("电流值不合法。\n Invalid current value");
+            //    return;
+            //}
             if (!double.TryParse(txtkv.Text, out kv))
             {
                 CMessageBox.Show("电压值不合法。\nInvalid voltage value");
@@ -502,27 +502,27 @@ namespace NV.DetectionPlatform.UCtrls
                 CMessageBox.Show("曝光时间值不合法。\nInvalid spot time");
                 return;
             }
-            if (!int.TryParse(cboFps.Text, out fps))
-            {
-                CMessageBox.Show("帧速率值不合法。\n Invalid exposeFPS");
-                return;
-            }
+            //if (!int.TryParse(cboFps.Text, out fps))
+            //{
+            //    CMessageBox.Show("帧速率值不合法。\n Invalid exposeFPS");
+            //    return;
+            //}
 
             if (!CheckMaxPower())
                 return;
 
             ExamParam param = new ExamParam();
             param.KV = kv;
-            param.UA = ua;
+           // param.UA = ua;
             param.Time = time;
-            param.Fps = fps;
+          //  param.Fps = fps;
 
             Global.CurrentParam = param;
             var controlSystem = MainWindow.ControlSystem;
 
             controlSystem.SetKV(kv);
             System.Threading.Thread.Sleep(150);
-            controlSystem.SetCurrent(ua);
+           // controlSystem.SetCurrent(ua);
             if (StartAcqEvent != null)
             {
                 StartAcqEvent.Invoke(this, null);
