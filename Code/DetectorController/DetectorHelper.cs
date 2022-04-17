@@ -155,16 +155,19 @@ namespace Detector
 
                     Console.WriteLine("图片已采集存储完成 " + pFile);
                     BinaryReader br = new BinaryReader(new FileStream("luvc_camera.raw", FileMode.Open));
-                    ushort[] buffer_ = new ushort[_imageHeight * _imageWidth];
-                    for (int i = 0; i < _imageHeight * _imageWidth; i++) {
-                        buffer_[i] = br.ReadUInt16();
+
+                    byte[] byteBuffer =  br.ReadBytes((int)(_imageHeight * _imageWidth * 2) );
+                    ushort[] uint16Buffer = new ushort[_imageHeight * _imageWidth];
+
+                    for (int i = 0; i < _imageHeight * _imageWidth; i+=2) {
+                        uint16Buffer[i] = System.BitConverter.ToUInt16(byteBuffer, i);
                     }
 
-                    PlayBuffer.Enqueue(buffer_);
+                    PlayBuffer.Enqueue(uint16Buffer);
 
                     if (IsStored)
                     {
-                        ImageBuffer.Add(buffer_);
+                        ImageBuffer.Add(uint16Buffer);
                     }
 
                     count++;
