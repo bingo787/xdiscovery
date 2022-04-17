@@ -360,7 +360,6 @@ namespace Detector
         /// </summary>
         private void AcqMaxFrame()
         {
-            StopAcq();
             if (AcqMaxFramesEvent != null)
             {
                 AcqMaxFramesEvent.Invoke();
