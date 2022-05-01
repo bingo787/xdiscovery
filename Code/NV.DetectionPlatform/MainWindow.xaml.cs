@@ -638,7 +638,7 @@ namespace NV.DetectionPlatform
         private void ProductExamStart_Click(object sender, RoutedEventArgs e)
         {
             ExamType type = btnSpot.IsChecked == true ? ExamType.Spot : ExamType.Expose;
-            _examView.StartAcq(type, (bool)btnIsStored.IsChecked);
+            _examView.StartAcq(type);
         }
         /// <summary>
         /// 手动结束采集
@@ -648,7 +648,7 @@ namespace NV.DetectionPlatform
         private void ProductExamStop_Click(object sender, RoutedEventArgs e)
         {
             _examView.StopAcq(null, null);
-            btnIsStored.IsChecked = false;
+           // btnIsStored.IsChecked = false;
         }
         /// <summary>
         /// 透视环
@@ -770,7 +770,7 @@ namespace NV.DetectionPlatform
 
         public void ActiveAllFunction()
         {
-            wplReport.IsEnabled = true;
+          //  wplReport.IsEnabled = true;
         }
 
         public void NavigateTo(DRF.Core.Global.ModuleMode moduleMapping)
