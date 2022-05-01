@@ -269,11 +269,12 @@ namespace NV.DetectionPlatform.UCtrls
             if (_span <= TimeSpan.Zero)
             {
                 _timer.Stop();
+                StopAcq(null, null);
 
-                this.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    StopAcq(null, null);
-                }));
+                //this.Dispatcher.BeginInvoke(new Action(() =>
+                //{
+                //    StopAcq(null, null);
+                //}));
 
                 return;
             }
@@ -426,12 +427,10 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="e"></param>
         public void StopAcq(object sender, RoutedEventArgs e)
         {
-
+            IsAcqing = false;
             MainWindow.ControlSystem.XRayOff();
-            if (IsAcqing)
+          //  if (!IsAcqing)
             {
-                IsAcqing = false;
-
                 _detector.StopAcq();
                 if (_curExpType == ExamType.MultiEnergyAvg)//多能合成
                 {
@@ -500,6 +499,10 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="p"></param>
         private void SaveFiles(List<ushort[]> p)
         {
+
+
+            Console.WriteLine("SaveFiles ", p.ToString());
+            Console.WriteLine("文件数量 ", p.Count());
             int w = 65535, c = 30000;
             if (ipUC != null && ipUC.CurrentDv != null && ipUC.CurrentDv.HasImage)
                 ipUC.CurrentDv.GetWindowLevel(ref w, ref c);
@@ -532,6 +535,7 @@ namespace NV.DetectionPlatform.UCtrls
             _file.SeriesTime = DateTime.Now.ToString("HH:mm:ss");
             _file.Manufacturer = NV.DRF.Core.Model.GeneralSettingHelper.Instance.CompanyName;
 
+            Console.WriteLine("保存图像");
             try
             {
                 ProgressDialog dia = new ProgressDialog("保存图像");

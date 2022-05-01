@@ -186,8 +186,9 @@ namespace Detector
 
                 count++;
 
+                
 
-                if (ImageMode == 0) // AC 模式下收到图后就停止
+              //  if (ImageMode == 0) // AC 模式下收到图后就停止
                 {
                     // 单帧的时候，停止
                     AcqMaxFrameEvent();
