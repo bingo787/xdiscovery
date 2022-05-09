@@ -56,7 +56,7 @@
     <sys:String x:Key="Tip_ProductHistory">产品查询</sys:String>
     <sys:String x:Key="Tip_ResetHVError">高压复位</sys:String>
     <sys:String x:Key="Tip_Preheat">热机,『右击』则弹出热机设置</sys:String>
-    <sys:String x:Key="Tip_Spot">单张模式,『右击』则弹出方案设置</sys:String>
+    <sys:String x:Key="Tip_Spot">单张模式,『点击』则弹出方案设置</sys:String>
     <sys:String x:Key="Tip_Expose">动态模式,『右击』则弹出方案设置</sys:String>
     <sys:String x:Key="Tip_StartACQ">开始采集 [Ctrl+Enter]</sys:String>
     <sys:String x:Key="Tip_StopACQ">结束采集</sys:String>

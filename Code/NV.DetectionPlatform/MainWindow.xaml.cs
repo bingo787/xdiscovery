@@ -675,7 +675,7 @@ namespace NV.DetectionPlatform
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ExamSetting(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void ExamSetting(object sender, RoutedEventArgs e)
         {
             (sender as RadioButton).IsChecked = true;
             string type = (sender as FrameworkElement).Tag.ToString();

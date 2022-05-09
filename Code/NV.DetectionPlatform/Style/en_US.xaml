@@ -56,7 +56,7 @@
     <sys:String x:Key="Tip_ProductHistory">Product History</sys:String>
     <sys:String x:Key="Tip_ResetHVError">Reset HV Error</sys:String>
     <sys:String x:Key="Tip_Preheat">Preheat, 『right-click』 pop-up settings.</sys:String>
-    <sys:String x:Key="Tip_Spot">SpotMode,『right-click』 pop-up settings.</sys:String>
+    <sys:String x:Key="Tip_Spot">SpotMode,『click』 pop-up settings.</sys:String>
     <sys:String x:Key="Tip_Expose">ExposeMode,『right-click』 pop-up settings.</sys:String>
     <sys:String x:Key="Tip_StartACQ">StartACQ [Ctrl+Enter]</sys:String>
     <sys:String x:Key="Tip_StopACQ">StopACQ</sys:String>
