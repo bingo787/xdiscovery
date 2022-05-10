@@ -269,12 +269,7 @@ namespace NV.DetectionPlatform.UCtrls
             if (_span <= TimeSpan.Zero)
             {
                 _timer.Stop();
-                StopAcq(null, null);
-
-                //this.Dispatcher.BeginInvoke(new Action(() =>
-                //{
-                //    StopAcq(null, null);
-                //}));
+                MainWindow.ControlSystem.XRayOff();
 
                 return;
             }
