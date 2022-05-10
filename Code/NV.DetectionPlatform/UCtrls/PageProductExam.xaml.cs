@@ -88,6 +88,8 @@ namespace NV.DetectionPlatform.UCtrls
                 _quickWW = (int)wlsetting.WindowWidth;
             if (wlsetting.WindowLevel != null)
                 _quickWL = (int)wlsetting.WindowLevel;
+
+            Console.WriteLine("_quickWW,_quickWL, {0},{1}", _quickWW, _quickWL);
             //初始化伪彩文件配置菜单
             this.Log("初始化伪彩文件配置菜单");
             string lutsDir = System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "Luts");
@@ -206,10 +208,10 @@ namespace NV.DetectionPlatform.UCtrls
                     _imageCount++;
                     this.Dispatcher.Invoke(new Action(() =>
                     {
-                        // System.Console.WriteLine(String.Format("PlayBackground IsAcqing {0}", IsAcqing));
-                        // if (IsAcqing)
+                        System.Console.WriteLine(String.Format("PlayBackground IsAcqing {0}", IsAcqing));
+                        if (IsAcqing)
                         {
-                            ipUC.PutData(W, H, Bits, data, true);
+                          ipUC.PutData(W, H, Bits, data, true);
 
                             if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
                             {
@@ -347,7 +349,7 @@ namespace NV.DetectionPlatform.UCtrls
             }
 
 
-            _imageCount = 0;
+          //  _imageCount = 0;
 
             MainWindow.ControlSystem.XRayOn();
 
@@ -445,6 +447,7 @@ namespace NV.DetectionPlatform.UCtrls
                     RecoverHVPara();
 
                 _detector.ImageBuffer.Clear();
+
             }
 
 
@@ -497,12 +500,14 @@ namespace NV.DetectionPlatform.UCtrls
         {
 
 
-            Console.WriteLine("SaveFiles ", p.ToString());
-            Console.WriteLine("文件数量 ", p.Count());
-            int w = 65535, c = 30000;
+            Console.WriteLine("SaveFiles {0}", p.ToString());
+            Console.WriteLine("文件数量 {0}", p.Count());
+            int w = _quickWW, c = _quickWL;
             if (ipUC != null && ipUC.CurrentDv != null && ipUC.CurrentDv.HasImage)
                 ipUC.CurrentDv.GetWindowLevel(ref w, ref c);
 
+            Console.WriteLine("sss _quickWW,_quickWL, {0},{1}", _quickWW, _quickWL);
+            Console.WriteLine("sss w,c, {0},{1}", w, c);
             DicomViewer viewer = new DicomViewer(wfh);
             string tempFile = System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "template.dcm");
             //viewer.LoadFromFile(tempFile);
@@ -519,7 +524,7 @@ namespace NV.DetectionPlatform.UCtrls
             _file.PutDicomString(0x18, 0x60, Global.CurrentParam.KV.ToString());//KVP
             _file.PutDicomString(0x18, 0x1151, Global.CurrentParam.UA.ToString());//XRayTubeCurrent
             _file.PutDicomString(0x18, 0x1150, _curExpTime.ToString());//ExposureTime
-            _file.PutDicomString(0x0028, 0x0030, "0.1");//像素与mm倍率
+            _file.PutDicomString(0x0028, 0x0030, _detector.ScaleRatio.ToString());//像素与mm倍率
             _file.PutDicomString(0x0008, 0x1010, NV.DRF.Core.Model.GeneralSettingHelper.Instance.HVName);//高压名称-StationName
 
             _file.PatientID = Global.CurrentProduct.GUID;
@@ -576,8 +581,12 @@ namespace NV.DetectionPlatform.UCtrls
                             Thread.Sleep(10);
                             System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
+
                                 viewer.PutImageData(width, height, bits, ref data[0]);
+                                //ApplyConfigWL(true);
                                 viewer.SetWindowLevel(w, c);
+                                viewer.RightRotate();
+                                viewer.FlipVertical();
 
                                 //viewer.SaveToFile(fName, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
                                 viewer.SaveToDicomFilePtr(_file, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
@@ -879,10 +888,14 @@ namespace NV.DetectionPlatform.UCtrls
             if (p)
             {
                 ipUC.CurrentDv.GetWindowLevel(ref _ww, ref _wl);
+                Console.WriteLine("111 _quickWW,_quickWL, {0},{1}", _quickWW, _quickWL);
+                Console.WriteLine("111 _ww,_wl, {0},{1}", _ww, _wl);
                 ipUC.CurrentDv.SetWindowLevel(_quickWW, _quickWL);
             }
             else
             {
+                Console.WriteLine("_quickWW,_quickWL, {0},{1}", _quickWW, _quickWL);
+                Console.WriteLine("_ww,_wl, {0},{1}", _ww, _wl);
                 ipUC.CurrentDv.SetWindowLevel(_ww, _wl);
             }
             ipUC.CurrentDv.Invalidate();
