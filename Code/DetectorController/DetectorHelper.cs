@@ -93,6 +93,8 @@ namespace Detector
         /// </summary>
         public int Delay = 0;
 
+        public int TimeoutMs = 10 * 1000;
+
         public double ScaleRatio = 0.1;
         /// <summary>
         /// 单例模式，提供辅助类实例
@@ -210,13 +212,12 @@ namespace Detector
                 // 读取文件
                 try
                 {
-                    //Console.WriteLine("{0},{1},{2},{3}",device.uvcIdentity.Id, pImgData.Length, nDataBuf, pFile);
 
                     if (string.IsNullOrEmpty(pFile)) {
                       //  string message = GetDeviceState();
-                        ShowMessage( "文件路径为空" , true);
+                        ShowMessage( "采集超时！！请增加曝光强度和时间，重新采集。\n\r 将为您显示上一次采集结果。" , true);
                     }
-
+                    
                     Console.WriteLine("图片已采集存储完成 " + pFile);
 
                     BinaryReader br = new BinaryReader(new FileStream("luvc_camera.raw", FileMode.Open));
@@ -341,7 +342,7 @@ namespace Detector
         public void SetUVCDeviceParameters(int nImgModel, int nBinning, int nFilter, int nRay) {
 
             //检测图像时间
-            UInt32 nCheckTime = 60 * 1000; //ms
+            UInt32 nCheckTime = (UInt32)TimeoutMs; //ms
             //获取图像时间
             UInt32 nGetTime = 60 * 1000; //ms
 

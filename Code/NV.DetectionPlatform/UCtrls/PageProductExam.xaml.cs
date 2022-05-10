@@ -168,6 +168,7 @@ namespace NV.DetectionPlatform.UCtrls
                 var Data = NV.Config.NV1313FPDSetting.Instance;
                 _detector.ScaleRatio = Data.ScaleRatio;
                 _detector.Delay = Data.Delay;
+                _detector.TimeoutMs = Data.MaxFrames;
 
                 _detector.ImageMode = (int)Data.ImageMode;
                 _detector.SetUVCDeviceParameters(_detector.ImageMode, 0, 0, 0);

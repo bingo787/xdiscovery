@@ -35,8 +35,8 @@
                 <!--<TextBlock Text="Xray类型:" />
                 <ComboBox SelectedValue="{Binding XrayType ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding XrayTypes,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>-->
               
-                <!--<TextBlock Text="最大帧数:"/>
-                <TextBox Text="{Binding MaxFrames,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->
+                <TextBlock Text="最大采集时间(ms):"/>
+                <TextBox Text="{Binding MaxFrames,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                 <!--<TextBlock Text="图像处理:"/>
                 <ComboBox ItemsSource="{Binding ModelFilters}" SelectedValue="{Binding ModelFilter}"/>-->
                 <!--<TextBlock Text="Binning:"/>
