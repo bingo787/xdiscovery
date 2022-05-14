@@ -131,7 +131,8 @@ namespace Detector
             count = 0;
 
             NVDentalSDK.NV_SetMaxFrames(MaxFrames);
-            if (NVDentalSDK.NV_StartAcq(AcqMaxFrameEvent) != (int)NV_StatusCodes.NV_SC_SUCCESS)
+            //if (NVDentalSDK.NV_StartAcq(AcqMaxFrameEvent) != (int)NV_StatusCodes.NV_SC_SUCCESS)
+            if (NVDentalSDK.NV_StartAcq(null) != (int)NV_StatusCodes.NV_SC_SUCCESS)
             {
                 ShowMessage("StartAcq Failed——" + GetLastError(), true);
                 return false;
@@ -283,6 +284,9 @@ namespace Detector
         /// <param name="image"></param>
         private unsafe void ReceiveImage(byte wnd, NV_ImageInfo image)
         {
+
+            Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + " ReceiveImage 1");
+
             if (image.iMissingPackets > 0)
             {
                 return;//跳过丢包图像 
@@ -300,8 +304,12 @@ namespace Detector
             {
                 ImageBuffer.Add(buffer);
             }
-
             count++;
+
+            if (MaxFrames == 1) {
+                AcqMaxFrame();
+            }
+
         }
         /// <summary>
         /// 多帧叠加

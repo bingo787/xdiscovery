@@ -280,6 +280,8 @@ namespace NV.DetectionPlatform.UCtrls
 
             DicomViewer.Current.ClearImage();
 
+            Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + " StartAcq 2");
+
             if (type == ExamType.Spot)
             {
                 _detector.IsStored = true;
@@ -299,7 +301,9 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.MaxFrames = 0;
                 _curExpTime = (int)(Global.CurrentParam.Time * 1000);
             }
-            _detector.NV_SetExpTime((int)(_curExpTime * 10 - DETECTOR_READTIME));
+            
+            int EXP = (int)(_curExpTime * 10 - DETECTOR_READTIME);
+            _detector.NV_SetExpTime(EXP);
             _imageCount = 0;
 
             MainWindow.ControlSystem.XRayOn();
@@ -350,6 +354,8 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="e"></param>
         public void StopAcq(object sender, RoutedEventArgs e)
         {
+
+            Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + " StopAcq 1");
             MainWindow.ControlSystem.XRayOff();
 
             if (IsAcqing)
@@ -377,6 +383,7 @@ namespace NV.DetectionPlatform.UCtrls
                     _detector.ImageBuffer.Clear();
                 }
             }
+            Console.WriteLine(DateTime.Now.ToString("HH:mm:ss.ffff") + " StopAcq 2");
         }
         /// <summary>
         /// 恢复设定高压参数
@@ -424,7 +431,8 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="p"></param>
         private void SaveFiles(List<ushort[]> p)
         {
-            int w = 65535, c = 30000;
+            //int w = 65535, c = 30000;
+            int w = _quickWW, c = _quickWL;
             if (ipUC != null && ipUC.CurrentDv != null && ipUC.CurrentDv.HasImage)
                 ipUC.CurrentDv.GetWindowLevel(ref w, ref c);
 
