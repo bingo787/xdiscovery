@@ -204,7 +204,11 @@ namespace NV.DetectionPlatform.UCtrls
                     this.Dispatcher.Invoke(new Action(() =>
                     {
                         if (IsAcqing)
+                        {
                             ipUC.PutData((ushort)_detector.ImageWidth, (ushort)_detector.ImageHeight, (ushort)_detector.Bits, data, true);
+                            ipUC.CurrentDv.FlipVertical();
+                            ApplyConfigWL(true);
+                        }
                         if (_detector.PlayBuffer.Count > 90)
                         {
                             _detector.PlayBuffer.Dequeue();
@@ -510,6 +514,7 @@ namespace NV.DetectionPlatform.UCtrls
                             {
                                 viewer.PutImageData(width, height, bits, ref data[0]);
                                 viewer.SetWindowLevel(w, c);
+                                viewer.FlipVertical();
 
                                 //viewer.SaveToFile(fName, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
                                 viewer.SaveToDicomFilePtr(_file, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
