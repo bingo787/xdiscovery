@@ -207,7 +207,9 @@ namespace NV.DetectionPlatform.UCtrls
                         {
                             ipUC.PutData((ushort)_detector.ImageWidth, (ushort)_detector.ImageHeight, (ushort)_detector.Bits, data, true);
                             ipUC.CurrentDv.FlipVertical();
-                            ApplyConfigWL(true);
+                            ipUC.CurrentDv.GetWindowLevel(ref _ww, ref _wl);
+                            ipUC.CurrentDv.SetWindowLevel(_ww, _wl);
+                            ipUC.CurrentDv.Invalidate();
                         }
                         if (_detector.PlayBuffer.Count > 90)
                         {
