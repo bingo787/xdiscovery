@@ -990,7 +990,7 @@ namespace NV.DetectionPlatform.UCtrls
                     dialogg.Multiselect = true;
                     dialogg.Filter = "image files|*.bmp;*.jpg;*.jpeg;*.png";
                     if (dialogg.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
-                        (dialogg.FileNames.Length == 2 || dialogg.FileNames.Length == 4))
+                        (dialogg.FileNames.Length == 2))
                     {
                         ushort width = 0;
                         ushort height = 0;
@@ -1005,7 +1005,7 @@ namespace NV.DetectionPlatform.UCtrls
                     }
                     else
                     {
-                        CMessageBox.Show("图片数量错误!! 必须是2张或者4张");
+                        CMessageBox.Show("图片数量错误!! 必须是2张");
                     }
 
                     break;
@@ -1030,32 +1030,50 @@ namespace NV.DetectionPlatform.UCtrls
 
             var cp = ConcatPictureParam.Instance;
 
-            this.Log(string.Format("左图A点({0},{1})，左图B点({2},{3}),右图A点({4},{5}),右图B点({6},{7})",
-                cp.LeftPicAX, cp.LeftPicAY, cp.LeftPicBX, cp.LeftPicBY,
-                cp.RightPicAX, cp.RightPicAY, cp.RightPicBX, cp.RightPicBY));
+            //this.Log(string.Format("左图A点({0},{1})，左图B点({2},{3}),右图A点({4},{5}),右图B点({6},{7})",
+            //    cp.LeftPicAX, cp.LeftPicAY, cp.LeftPicBX, cp.LeftPicBY,
+            //    cp.RightPicAX, cp.RightPicAY, cp.RightPicBX, cp.RightPicBY));
 
-            // A，B，C，D ： 720,1400,1700,2400,
-            int A = cp.LeftPicAX;
-            int B = cp.LeftPicBX;
-            int C = cp.RightPicAX;
-            int D = cp.RightPicBX;
+            //// A，B，C，D ： 720,1400,1700,2400,
+            //int A = cp.LeftPicAX;
+            //int B = cp.LeftPicBX;
+            //int C = cp.RightPicAX;
+            //int D = cp.RightPicBX;
 
-            OpenCvSharp.Rect rectL = new OpenCvSharp.Rect(A, 0, Math.Abs(A - B), 3072);
-            OpenCvSharp.Rect rectR = new OpenCvSharp.Rect(C, 0, Math.Abs(C - D), 3072);
-            //剪裁各个图片
-            OpenCvSharp.Rect[] rects = { rectL, rectR };
+
+            int window_width = 650;
+            int window_height = (int)_detector.ImageHeight;
+
+            /// 裁剪L图的左门
+            OpenCvSharp.Rect rectLL = new OpenCvSharp.Rect(720, 0, window_width, window_height);
+            /// 裁剪L图的右门
+            OpenCvSharp.Rect rectLR = new OpenCvSharp.Rect(1690, 0, window_width, window_height);
+
+            /// 裁R图的左门
+            OpenCvSharp.Rect rectRL = new OpenCvSharp.Rect(680, 0, window_width, window_height);
+            /// 裁剪R图的右门
+            OpenCvSharp.Rect rectRR = new OpenCvSharp.Rect(1700, 0, window_width, window_height);
+            //剪裁各个图片, 裁出来4张图
+            OpenCvSharp.Rect[] rects = { rectLL, rectLR, rectRL, rectRR};
             Mat[] imgSlices = new Mat[2 * imageFiles.Length];
-            for (int i = 0; i < imageFiles.Length; i++)
+            
+            for (int i = 0; i < 4; i++)
             {
-                imgSlices[i * 2] = new Mat(imgs[i], rectL);
-                imgSlices[i * 2 + 1] = new Mat(imgs[i], rectR);
-
+                imgSlices[i] = new Mat(imgs[i/2], rects[i]);
             }
+
+            /// 将0，1，2，3四张小图中的，1和2各自像外裁一些。
+            int rect_width = 150;
+            OpenCvSharp.Rect rectL23 = new OpenCvSharp.Rect(0, 0, rect_width, window_height);
+            OpenCvSharp.Rect rectR23 = new OpenCvSharp.Rect(window_width - rect_width, 0, rect_width, window_height);
+
+            imgSlices[1] = new Mat(imgSlices[1], rectL23);
+            imgSlices[2] = new Mat(imgSlices[2], rectR23);
 
             Mat fullPic = new Mat();
             if (imageFiles.Length == 2)
             {
-                //左右拼接两张图片
+                //左右拼接 4 张小图
                 Cv2.HConcat(imgSlices, fullPic);
             }
             else
