@@ -43,6 +43,8 @@ namespace NV.DetectionPlatform.UCtrls
         private int _curExpTime;
         private ExamType _curExpType;
 
+        private double _scale = 0.05;
+
         private WndUSMSetting usmSetting = new WndUSMSetting();
 
         public PageProductExam()
@@ -458,7 +460,7 @@ namespace NV.DetectionPlatform.UCtrls
             _file.PutDicomString(0x18, 0x60, Global.CurrentParam.KV.ToString());//KVP
             _file.PutDicomString(0x18, 0x1151, Global.CurrentParam.UA.ToString());//XRayTubeCurrent
             _file.PutDicomString(0x18, 0x1150, _curExpTime.ToString());//ExposureTime
-            _file.PutDicomString(0x0028, 0x0030, "0.1");//像素与mm倍率
+            _file.PutDicomString(0x0028, 0x0030, _scale.ToString("f2"));//像素与mm倍率
             _file.PutDicomString(0x0008, 0x1010, NV.DRF.Core.Model.GeneralSettingHelper.Instance.HVName);//高压名称-StationName
 
             _file.PatientID = Global.CurrentProduct.GUID;
@@ -836,7 +838,7 @@ namespace NV.DetectionPlatform.UCtrls
             if (ipUC.CurrentDv != null)
             {
                 ipUC.CurrentDv.ResetImage();
-                ipUC.CurrentDv.SetScaleRatio(0.1);//暂时保留，后续废除
+                ipUC.CurrentDv.SetScaleRatio(_scale);//暂时保留，后续废除
             }
         }
         /// <summary>
@@ -861,7 +863,7 @@ namespace NV.DetectionPlatform.UCtrls
                             ipUC.CurrentDv.SetWindowLevel(ww, wl);
                     }
                     ipUC.CurrentDv.Invalidate();
-                    ipUC.CurrentDv.SetScaleRatio(0.1);//暂时保留，后续废除
+                    ipUC.CurrentDv.SetScaleRatio(_scale);//暂时保留，后续废除
                 }
             }
             catch (Exception ex)
@@ -1280,7 +1282,7 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 dv.DeleteAnnotation(true);
                 dv.LoadFile(dialog.FileName);
-                dv.SetScaleRatio(0.1);//暂时保留，后续废除
+                dv.SetScaleRatio(_scale);//暂时保留，后续废除
                 dv.Invalidate();
             }
         }
