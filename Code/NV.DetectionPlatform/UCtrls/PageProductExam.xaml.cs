@@ -462,11 +462,16 @@ namespace NV.DetectionPlatform.UCtrls
 
                 _photoNumbers++;
                 System.Console.WriteLine("StopAcq  photoNumbers " + _photoNumbers.ToString() + " ImageBuffer count " + _detector.ImageBuffer.Count().ToString());
-                Thread.Sleep(1000);
+
                 this.Dispatcher.BeginInvoke(new Action(() =>
                 {
                     if (_photoNumbers == 1)
                     {
+                        // 显示第一张
+                        ushort[] result = _detector.ImageBuffer.ElementAt(0);
+                       ipUC.PutData((ushort)_detector.ImageWidth, (ushort)_detector.ImageWidth, 16, result, true);
+                        ipUC.AutoWindowLevel();
+                        ipUC.CurrentDv.Invalidate();
                         StartAcq(ExamType.Spot, true);
                     }
                     else if (_photoNumbers == 2 && _detector.ImageBuffer.Count() == 2)
