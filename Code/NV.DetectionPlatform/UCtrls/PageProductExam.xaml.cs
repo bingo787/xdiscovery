@@ -150,8 +150,8 @@ namespace NV.DetectionPlatform.UCtrls
         /// </summary>
         private void InitilizePlayAcqThread()
         {
-            _playAcqImage = new Thread(new ThreadStart(delegate { PlayBackground(); }));
-            _playAcqImage.Start();
+         //   _playAcqImage = new Thread(new ThreadStart(delegate { PlayBackground(); }));
+         //   _playAcqImage.Start();
         }
 
        
@@ -323,6 +323,15 @@ namespace NV.DetectionPlatform.UCtrls
                 CMessageBox.Show("当前无拍摄方案，无法采集。\nPlease select the Solution first");
                 return;
             }
+            if (_photoNumbers == 0)
+            {
+                _detector.ImageBuffer.Clear();
+                CMessageBox.Show("请在触摸屏上点击 1 号位，待机械装置到位后点击 确定 将会拍摄第 1 张照片");
+            }
+            else if (_photoNumbers == 1)
+            {
+                CMessageBox.Show("请在触摸屏上点击 2 号位，待机械装置到位后点击 确定 将会拍摄第 2 张照片");
+            }
 
             if (IsAcqing)
             {
@@ -429,24 +438,59 @@ namespace NV.DetectionPlatform.UCtrls
             if (IsAcqing) {
                 IsAcqing = false;
 
-                _detector.StopAcq();  
-                if (_curExpType == ExamType.MultiEnergyAvg)//多能合成
-                {
-                    SaveMultiAvgFiles(_detector.ImageBuffer.ToList());
-                }
-                else if (_curExpType == ExamType.Spot)
-                {
-                    SaveFiles(_detector.ImageBuffer.ToList());
-                }
-                else if (_curExpType == ExamType.Expose)
-                {
-                    SaveFiles(_detector.ImageBuffer.ToList());
-                }
+                _detector.StopAcq();
+                //if (_curExpType == ExamType.MultiEnergyAvg)//多能合成
+                //{
+                //    SaveMultiAvgFiles(_detector.ImageBuffer.ToList());
+                //}
+                //else if (_curExpType == ExamType.Spot)
+                //{
+                //    SaveFiles(_detector.ImageBuffer.ToList());
+                //}
+                //else if (_curExpType == ExamType.Expose)
+                //{
+                //    SaveFiles(_detector.ImageBuffer.ToList());
+                //}
 
-                if (_curExpType == ExamType.MultiEnergyAvg)
-                    RecoverHVPara();
+                //if (_curExpType == ExamType.MultiEnergyAvg)
+                //    RecoverHVPara();
 
-                _detector.ImageBuffer.Clear();
+                //  _detector.ImageBuffer.Clear();
+                //update detector state
+                if (Global.MainWindow != null)
+                    Global.MainWindow.NotifyTip("Detector", "就绪");
+
+                _photoNumbers++;
+                System.Console.WriteLine("StopAcq  photoNumbers " + _photoNumbers.ToString() + " ImageBuffer count " + _detector.ImageBuffer.Count().ToString());
+                Thread.Sleep(1000);
+                this.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    if (_photoNumbers == 1)
+                    {
+                        StartAcq(ExamType.Spot, true);
+                    }
+                    else if (_photoNumbers == 2 && _detector.ImageBuffer.Count() == 2)
+                    {
+
+                        int width = 0;
+                        int height = 0;
+                        ushort[] result = ConactPicturesByImageBuffer(ref width, ref height);
+
+                        // ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+                        System.Console.WriteLine("result " + width.ToString() + " " + height.ToString());
+                        ipUC.PutData((ushort)width, (ushort)height, 16, result, true);
+                        ipUC.AutoWindowLevel();
+                        ipUC.CurrentDv.Invalidate();
+
+                        _detector.ImageBuffer.Clear();
+                        _photoNumbers = 0;
+                        System.Console.WriteLine("StopAcq Clear photoNumbers " + _photoNumbers.ToString() + " ImageBuffer count " + _detector.ImageBuffer.Count().ToString());
+
+
+                    }
+                }));
+
+
             }
            
 
@@ -1503,7 +1547,68 @@ namespace NV.DetectionPlatform.UCtrls
 
         }
 
+        private int _photoNumbers = 0;
+        private ushort[] ConactPicturesByImageBuffer(ref int width, ref int height)
+        {
 
+            // Mat img = new Mat((int)_imageHeight, (int)_imageWidth, MatType.CV_16UC1, data);
+
+            Mat[] imgs = new Mat[_photoNumbers];
+            //读入图像
+            for (int i = 0; i < _photoNumbers; i++)
+            {
+                imgs[i] = new Mat((int)_detector.ImageHeight, (int)_detector.ImageWidth, MatType.CV_16UC1, _detector.ImageBuffer.ElementAt(i));
+            }
+
+            int window_width = 650;
+            int window_height = (int)_detector.ImageHeight;
+
+            /// 裁剪L图的左门
+            OpenCvSharp.Rect rectLL = new OpenCvSharp.Rect(720, 0, window_width, window_height);
+            /// 裁剪L图的右门
+            OpenCvSharp.Rect rectLR = new OpenCvSharp.Rect(1690, 0, window_width, window_height);
+
+            /// 裁R图的左门
+            OpenCvSharp.Rect rectRL = new OpenCvSharp.Rect(680, 0, window_width, window_height);
+            /// 裁剪R图的右门
+            OpenCvSharp.Rect rectRR = new OpenCvSharp.Rect(1700, 0, window_width, window_height);
+            //剪裁各个图片, 裁出来4张图
+            OpenCvSharp.Rect[] rects = { rectLL, rectLR, rectRL, rectRR };
+            Mat[] imgSlices = new Mat[2 * _photoNumbers];
+
+            for (int i = 0; i < 4; i++)
+            {
+                imgSlices[i] = new Mat(imgs[i / 2], rects[i]);
+            }
+
+            /// 将0，1，2，3四张小图中的，1和2各自像外裁一些。
+            int rect_width = 150;
+            OpenCvSharp.Rect rectL23 = new OpenCvSharp.Rect(0, 0, rect_width, window_height);
+            OpenCvSharp.Rect rectR23 = new OpenCvSharp.Rect(window_width - rect_width, 0, rect_width, window_height);
+
+            imgSlices[1] = new Mat(imgSlices[1], rectL23);
+            imgSlices[2] = new Mat(imgSlices[2], rectR23);
+
+            Mat fullPic = new Mat();
+
+            //左右拼接 4 张小图
+            Cv2.HConcat(imgSlices, fullPic);
+
+            // 转换为一维数组输出
+
+            width = fullPic.Width;
+            height = fullPic.Height;
+            ushort[] result = new ushort[width * height];
+            System.Threading.Tasks.Parallel.For(0, height, i =>
+            {
+                for (int j = 0; j < fullPic.Width; j++)
+                {
+                    result[i * fullPic.Width + j] = fullPic.At<ushort>(i, j);
+                }
+            });
+
+            return result;
+        }
         internal void SaveScreenImage()
         {
             DicomViewer dv = ipUC.CurrentDv;

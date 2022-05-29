@@ -170,8 +170,8 @@ namespace Detector
 
         public bool StartSingleShot() {
             ShowMessage("StartSingleShot");
-            _imageBuffer.Clear();
-            _multiFramesOverlayBuffer.Clear();
+            //_imageBuffer.Clear();
+            //_multiFramesOverlayBuffer.Clear();
             count = 0;
             int  ret = -1;
 
@@ -212,8 +212,8 @@ namespace Detector
         public bool StartAcq()
         {
 
-            _imageBuffer.Clear();
-            _multiFramesOverlayBuffer.Clear();
+            //_imageBuffer.Clear();
+            //_multiFramesOverlayBuffer.Clear();
             count = 0;
             //  亦可不用切换到软触发模式下，发送连续采集1帧即可完成单帧采集
             FPD_AQC_MODE stMode = new FPD_AQC_MODE();
@@ -706,7 +706,7 @@ namespace Detector
                 buffer[i] = ((ushort*)image.databuff)[i];
             }
 
-            PlayBuffer.Enqueue(buffer);
+           // PlayBuffer.Enqueue(buffer);
             if (IsStored)
             {
                 ImageBuffer.Add(buffer);
