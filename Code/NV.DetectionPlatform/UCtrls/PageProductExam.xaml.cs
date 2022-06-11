@@ -471,6 +471,7 @@ namespace NV.DetectionPlatform.UCtrls
                         ushort[] result = _detector.ImageBuffer.ElementAt(0);
                        ipUC.PutData((ushort)_detector.ImageWidth, (ushort)_detector.ImageWidth, 16, result, true);
                         ipUC.AutoWindowLevel();
+                        ipUC.CurrentDv.SetScaleRatio(scale_ratio);
                         ipUC.CurrentDv.Invalidate();
                         StartAcq(ExamType.Spot, true);
                     }
@@ -485,7 +486,9 @@ namespace NV.DetectionPlatform.UCtrls
                         System.Console.WriteLine("result " + width.ToString() + " " + height.ToString());
                         ipUC.PutData((ushort)width, (ushort)height, 16, result, true);
                         ipUC.AutoWindowLevel();
+                        ipUC.CurrentDv.SetScaleRatio(scale_ratio);
                         ipUC.CurrentDv.Invalidate();
+                        
 
                         _detector.ImageBuffer.Clear();
                         _photoNumbers = 0;
