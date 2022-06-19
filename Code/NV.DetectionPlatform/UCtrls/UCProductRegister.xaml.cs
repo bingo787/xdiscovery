@@ -108,7 +108,7 @@ namespace NV.DetectionPlatform.UCtrls
             }
             using (Entities db = new Entities(Global.ConnectionString))
             {
-                var pro = db.Product.FirstOrDefault(p => p.ProductName == NewProduct.ProductName);
+                var pro = db.Product.FirstOrDefault(p => p.ProductName == NewProduct.ProductName && p.ProductTypeID == NewProduct.ProductTypeID);
                 if (pro == null)
                 {
                     //登记产品
