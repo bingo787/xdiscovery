@@ -254,6 +254,7 @@ namespace NV.DetectionPlatform.UCtrls
                        // if (IsAcqing)
                         {
                             ipUC.PutData(W,H ,Bits,data, true);
+                            ipUC.CurrentDv.FlipVertical();
 
                             if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
                             {
@@ -575,6 +576,7 @@ namespace NV.DetectionPlatform.UCtrls
                             {
                                 viewer.PutImageData(width, height, bits, ref data[0]);
                                 viewer.SetWindowLevel(w, c);
+                                viewer.FlipVertical();
 
                                 //viewer.SaveToFile(fName, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
                                 viewer.SaveToDicomFilePtr(_file, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
