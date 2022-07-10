@@ -269,7 +269,10 @@ namespace NV.DetectionPlatform.UCtrls
                        // System.Console.WriteLine(String.Format("PlayBackground IsAcqing {0}", IsAcqing));
                        // if (IsAcqing)
                         {
-                            ipUC.PutData(W,H ,Bits,data, true);
+                            //ipUC.PutData(W,H ,Bits,data, true);
+                            ipUC.CurrentDv.PutImageData(W, H, Bits, ref data[0]);
+                            ipUC.CurrentDv.RefreshImage();
+                            ipUC.CurrentDv.Invalidate();
 
                             if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
                             {
