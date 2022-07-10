@@ -271,14 +271,17 @@ namespace NV.DetectionPlatform.UCtrls
                         {
                             //ipUC.PutData(W,H ,Bits,data, true);
                             ipUC.CurrentDv.PutImageData(W, H, Bits, ref data[0]);
+                            ipUC.CurrentDv.GetWindowLevel(ref _quickWW, ref _quickWL);
+                            ipUC.CurrentDv.SetWindowLevel(_quickWW, _quickWL);
                             ipUC.CurrentDv.RefreshImage();
-                            ipUC.CurrentDv.Invalidate();
+
 
                             if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
                             {
                                 ApplyConfigWL(true);
-                            }
-                            
+                            } 
+                          
+
                         }
                             
                         if (_detector.PlayBuffer.Count > 90)
