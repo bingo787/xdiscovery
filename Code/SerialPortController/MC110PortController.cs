@@ -23,7 +23,7 @@ namespace SerialPortController
         Char StartTag = (Char)(STX);
         Char EndTag = (Char)(CR);
         private static SerialPortControler_RS232PROTOCOL_MC110 _instance;
-        private bool _running = true;
+        private bool _running = false;
 
         public static SerialPortReporter_RS485PROTOCOL_PLC PostionReporter = SerialPortReporter_RS485PROTOCOL_PLC.Instance;
 
@@ -89,13 +89,15 @@ namespace SerialPortController
         {
             _serialPort = new SerialPort(PortPara.PortName, PortPara.BaudRate, PortPara.Parity, PortPara.DataBits, PortPara.StopBits);
 
+            Console.WriteLine("PortPara {0},{1},{2},{3},{4}",PortPara.PortName, PortPara.BaudRate, PortPara.Parity, PortPara.DataBits, PortPara.StopBits);
+
             _serialPort.DataReceived += _serialPort_DataReceived;
             _serialPort.WriteTimeout = 1000;
             _serialPort.ReadTimeout = 1000;
 
-            _running = true;
-
             _serialPort.Open();
+
+            _running = true;
         }
         /// <summary>
         /// 打开端口
@@ -229,14 +231,18 @@ namespace SerialPortController
 
             Console.WriteLine("[ReceivedMessage][" + DateTime.Now.ToString("HH:mm:ss.ffff") + "] " + message + " lastComand:" + _lastCommand);
 
-
-            if (_lastCommand.StartsWith("EH:") && message == RES_OK)
-            {
-                isXRayEnabled = _lastCommand[3] == '1';
+            if (_lastCommand.StartsWith("SDATE:") && message == RES_OK) {
+                System.Console.WriteLine("Set Tube Date Success!!");
                 if (Connected != null)
                 {
                     Connected();
                 }
+                _lastCommand = string.Empty;
+            }
+            else if (_lastCommand.StartsWith("EH:") && message == RES_OK)
+            {
+                isXRayEnabled = _lastCommand[3] == '1';
+              
                 System.Console.WriteLine("Enable Heater Success!!");
                 _lastCommand = string.Empty;
             }
@@ -393,6 +399,7 @@ namespace SerialPortController
         /// <param name="message"></param>
         public void SendCommand(string message)
         {
+
             List<byte> command = new List<byte>() { STX };
             byte[] cmd = ASCIIEncoding.ASCII.GetBytes(message);
             command.AddRange(cmd);
@@ -545,7 +552,7 @@ namespace SerialPortController
         /// </summary>
         public void ResetHV()
         {
-            SendCommand("CLEAR");
+            SendCommand("CLERR");
         }
         /// <summary>
         /// 预热
@@ -656,20 +663,37 @@ namespace SerialPortController
             SendCommand("GTMP:1");
             Thread.Sleep(1000);
             SendCommand("GHCM");
+
+            Thread.Sleep(5000);
         }
 
         public void Connect()
         {
             /*
-        POWER SUPPLY START - UP SEQUENCING
-        The following sequence is needed at a minimum to start up the power supply. 
-            1.Program the Anode Voltage level - < SAV:XXXXXX >
-            2.Program Power Level - < SPWR:XXXX >
-            3.Enable the Heater - < EH:1 >
-            4.Enable the Power Supply - < EP:1 >
+            1 Send the current date and wait for conditioning to complete – <SDATE:DD,MM,YYYY>
+            2 Program the Anode Voltage Level – <SAV:XXXXXX>
+            3 Program Power Level - <SPWR:XXXX>
+            4 Enable the Heater - <EH:1>
+            5 Enable the Power Supply - <EP:1>
             */
 
-            SendCommand("EH:1");
+            DateTime dt = DateTime.Now;
+            string year = dt.Year.ToString();
+            string day = dt.Day.ToString();
+            string month = dt.Month.ToString();
+            string date = day + "," + month + "," + year;
+
+            Console.WriteLine("SDATE {0}", date);
+           
+            SendCommand("SDATE:" + date);
+            //Thread.Sleep(1000);
+            //SendCommand("SAV:1");
+            //Thread.Sleep(1000);
+            //SendCommand("SPWR:1");
+            //Thread.Sleep(1000);
+            //SendCommand("EH:1");
+            //Thread.Sleep(1000);
+            //SendCommand("EP:1");
         }
     }
 }

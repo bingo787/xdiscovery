@@ -319,8 +319,9 @@ namespace NV.DetectionPlatform
 
                 ControlSystem.Connect();
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine("Exception " + e.ToString());
                 CMessageBox.Show("高压通讯串口打开失败，请检查串口设置\nHigh-voltage communication serial port failed to open, please check the serial port settings");
                 lblHVConn.Content = "--";
             }
