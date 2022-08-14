@@ -77,7 +77,6 @@ namespace NV.DetectionPlatform.UCtrls
                 controlSystem.FilamentMonitorChanged += ControlSystem_FilamentMonitorChanged;
                 controlSystem.StateReported += ControlSystem_StateReported;
                 controlSystem.FaultCleared += ControlSystem_FaultCleared;
-                controlSystem.XRayEnableChanged += ControlSystem_XRayOnChanged;
             }
             catch (Exception)
             {

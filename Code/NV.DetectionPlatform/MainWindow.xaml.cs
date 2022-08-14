@@ -19,7 +19,7 @@ using NV.DetectionPlatform.Service;
 using System.Linq;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-
+using SerialPortController;
 
 
 
@@ -117,7 +117,7 @@ namespace NV.DetectionPlatform
             this.ContentRendered += MainWindow_ContentRendered;
             this.Closing += Shell_Closing;
             this.Closed += MainWindow_Closed;
-
+            
         }
 
         void MainWindow_Closed(object sender, EventArgs e)
@@ -274,6 +274,25 @@ namespace NV.DetectionPlatform
 
             Process.GetCurrentProcess().Kill();
         }
+
+
+        private void WarmingUp() {
+            try
+            {
+               // if (SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarmingUp == true)
+                {
+                    this.Log("开始热机.");
+                    var wndPreheat = new NV.DetectionPlatform.UCtrls.WndPreheat(0);
+                    wndPreheat.ShowDialogEx();
+                }
+            }
+            catch (Exception ex)
+            {
+                CMessageBox.Show(ex.Message);
+            }
+        }
+
+
         /// <summary>
         /// 初始化串口控制器
         /// </summary>
@@ -281,7 +300,6 @@ namespace NV.DetectionPlatform
         {
             try
             {
-                ControlSystem.XRayEnableChanged += ControlSystem_XRayOnChanged;
                 ControlSystem.XRayOnChanged += ControlSystem_XRayOnChanged;
                 ControlSystem.VoltageChanged += ControlSystem_VoltageChanged;
                 ControlSystem.VoltageSettingChanged += ControlSystem_VoltageSettingChanged;
@@ -344,6 +362,8 @@ namespace NV.DetectionPlatform
                  lblHV_Error.Foreground = _normalForeground;
              }));
         }
+
+
         /// <summary>
         /// 高压出错信息监控
         /// </summary>
@@ -465,12 +485,14 @@ namespace NV.DetectionPlatform
                     lblHV_XRayState.Content = "XRay ON";
                     lblHV_XRayState.Foreground = Brushes.Yellow;
                     Console.WriteLine("监控 光源已打开");
+                    SerialPortReporter_RS485PROTOCOL_PLC.Instance.SendCommand("1");
                 }
                 else
                 {
                     lblHV_XRayState.Content = "XRay OFF";
                     lblHV_XRayState.Foreground = _normalForeground;
                     Console.WriteLine("监控 光源已关闭");
+                    SerialPortReporter_RS485PROTOCOL_PLC.Instance.SendCommand("0");
                 }
             }));
 
@@ -552,22 +574,22 @@ namespace NV.DetectionPlatform
 
 
 
-            dia = new ProgressDialog("系统初始化");
-            dia.Summary = "正在系统初始化，请稍候...";
-            dia.MaxValue = 100;
-            dia.CurValue = 50;
-            System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
-            System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
-                {
-                    for (int i = 0; i < 100; i++)
-                    {
+            //dia = new ProgressDialog("系统初始化");
+            //dia.Summary = "正在系统初始化，请稍候...";
+            //dia.MaxValue = 100;
+            //dia.CurValue = 50;
+            //System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
+            //System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
+            //    {
+            //        for (int i = 0; i < 100; i++)
+            //        {
 
-                        dia.CurValue = i;
-                        Thread.Sleep(100);
-                    }
-                    dia.Close();
+            //            dia.CurValue = i;
+            //            Thread.Sleep(100);
+            //        }
+            //        dia.Close();
 
-                }));
+            //    }));
 
 
 
@@ -582,18 +604,14 @@ namespace NV.DetectionPlatform
             //        dia.MaxValue = 100;
             //        dia.CurValue = 0;
 
+
+            //        for (int i = 0; i < 10; i++) {
+            //            Thread.Sleep(1000);
+            //            dia.CurValue += 10;
+            //        }
+
             //    }));
 
-
-            //    for (int i = 0; i < 100; i++)
-            //    {
-            //        System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
-            //        {
-            //            dia.CurValue++;
-
-            //        }));
-            //        Thread.Sleep(100);
-            //    }
             //};
 
             //bw.RunWorkerCompleted += delegate
@@ -604,27 +622,11 @@ namespace NV.DetectionPlatform
 
             //bw.RunWorkerAsync();
 
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            lblVersion.Content = "Ver:" + version.ToString();
+            this.Log("热机");
+            WarmingUp();
 
-
-            try
-            {
-                var version = Assembly.GetExecutingAssembly().GetName().Version;
-                lblVersion.Content = "Ver:" + version.ToString();
-
-                NV.Config.HVGeneratorParam preheat = NV.Config.HVGeneratorParam.Instance;
-                if (preheat.IsAutoPreheat)
-                {
-                    var wnd = new NV.DetectionPlatform.UCtrls.WndPreheat(true);
-                    wnd.tbKV.Text = lblKV.Content.ToString();
-                    wnd.tbPower.Text = lblPower.Content.ToString();
-                    wnd.tbFila.Text = lblHV_Fila.Content.ToString();
-                    wnd.ShowDialogEx();
-                }
-            }
-            catch (Exception ex)
-            {
-                CMessageBox.Show(ex.Message);
-            }
         }
 
         /// <summary>
@@ -819,21 +821,7 @@ namespace NV.DetectionPlatform
             }
             if (cmd == "Preheat")
             {
-                var wnd = new NV.DetectionPlatform.UCtrls.WndPreheat(false);
-                wnd.tbKV.Text = lblHV_KV.Content.ToString();
 
-                uint current = 0;
-                double kv = 0.0f;
-                bool ret1 = uint.TryParse(lblHV_Cur.Content.ToString(), out current);
-                bool ret2 = double.TryParse(lblHV_KV.Content.ToString(), out kv);
-
-                if (ret1 && ret2)
-                {
-                    wnd.tbPower.Text = (current * kv).ToString();
-                }
-
-                wnd.tbFila.Text = lblHV_Fila.Content.ToString();
-                wnd.ShowDialogEx();
             }
         }
         private void PreheatSetting(object sender, System.Windows.Input.MouseButtonEventArgs e)

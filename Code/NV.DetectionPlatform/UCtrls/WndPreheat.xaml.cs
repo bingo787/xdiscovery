@@ -21,25 +21,17 @@ namespace NV.DetectionPlatform.UCtrls
     /// </summary>
     public partial class WndPreheat : Window
     {
-        private int _preheatMinutes;
-        private TimeSpan _span;
-        private int _warmUpStep = 0;
+       // private int _preheatMinutes;
+       // private TimeSpan _span;
         System.Windows.Threading.DispatcherTimer _timer;
 
-        public WndPreheat(bool isAuto)
+        public WndPreheat(int  timeMinutes)
         {
             InitializeComponent();
 
             InitilizeControlSystem();
 
-            if (isAuto)
-            {
-                this.Loaded += StartMC110WarmUp;
-            }
-            else
-            {
-                this.Loaded += StartPreheat;
-            }
+            this.Loaded += StartMC110WarmUp;
 
             this.Closing += WndPreheat_Closing;
         }
@@ -52,12 +44,11 @@ namespace NV.DetectionPlatform.UCtrls
         {
             try
             {
-                MainWindow.ControlSystem.XRayOnChanged += ControlSystem_XRayOnChanged;
-                MainWindow.ControlSystem.VoltageChanged += ControlSystem_VoltageChanged;
-                MainWindow.ControlSystem.CurrentChanged += ControlSystem_CurrentChanged;
-                MainWindow.ControlSystem.FilamentMonitorChanged += ControlSystem_FilamentMonitorChanged;
-                MainWindow.ControlSystem.StateReported += ControlSystem_StateReported;
-                MainWindow.ControlSystem.XRayEnableChanged += ControlSystem_XRayOnChanged;
+             //   MainWindow.ControlSystem.XRayOnChanged += ControlSystem_XRayOnChanged;
+             //   MainWindow.ControlSystem.VoltageChanged += ControlSystem_VoltageChanged;
+            //    MainWindow.ControlSystem.CurrentChanged += ControlSystem_CurrentChanged;
+             //   MainWindow.ControlSystem.FilamentMonitorChanged += ControlSystem_FilamentMonitorChanged;
+              //  MainWindow.ControlSystem.StateReported += ControlSystem_StateReported;
             }
             catch (Exception)
             {
@@ -67,12 +58,12 @@ namespace NV.DetectionPlatform.UCtrls
         private void RemoveInitCallback() {
             try
             {
-                MainWindow.ControlSystem.XRayOnChanged -= ControlSystem_XRayOnChanged;
-                MainWindow.ControlSystem.VoltageChanged -= ControlSystem_VoltageChanged;
-                MainWindow.ControlSystem.CurrentChanged -= ControlSystem_CurrentChanged;
-                MainWindow.ControlSystem.FilamentMonitorChanged -= ControlSystem_FilamentMonitorChanged;
-                MainWindow.ControlSystem.StateReported -= ControlSystem_StateReported;
-                MainWindow.ControlSystem.XRayEnableChanged -= ControlSystem_XRayOnChanged;
+              //  MainWindow.ControlSystem.XRayOnChanged -= ControlSystem_XRayOnChanged;
+              //  MainWindow.ControlSystem.VoltageChanged -= ControlSystem_VoltageChanged;
+              //  MainWindow.ControlSystem.CurrentChanged -= ControlSystem_CurrentChanged;
+              //  MainWindow.ControlSystem.FilamentMonitorChanged -= ControlSystem_FilamentMonitorChanged;
+              //  MainWindow.ControlSystem.StateReported -= ControlSystem_StateReported;
+
             }
             catch (Exception)
             {
@@ -131,54 +122,8 @@ namespace NV.DetectionPlatform.UCtrls
                 tbKV.Text = arg.ToString("f1");
             }));
         }
-        /// <summary>
-        /// 开始预热操作
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void StartPreheat(object sender, RoutedEventArgs e)
-        {
-            NV.Config.HVGeneratorParam preheat = NV.Config.HVGeneratorParam.Instance;
 
-            Console.WriteLine("开始预热 电压 {0}, 功率 {1},时间 {2} ", preheat.PreheatKV, preheat.PreheatPower, preheat.PreheatMinutes);
-
-            MainWindow.ControlSystem.Preheat(preheat.PreheatKV, preheat.PreheatPower);
-
-            _preheatMinutes = preheat.PreheatMinutes;
-            _span = TimeSpan.FromMinutes(_preheatMinutes);
-            runPreheatTime.Text = _preheatMinutes.ToString();
-            tbTimeSpan.Text = _span.Minutes.ToString("d2") + ":" + _span.Seconds.ToString("d2");
-
-            _timer = new System.Windows.Threading.DispatcherTimer();
-            _timer.Interval = TimeSpan.FromSeconds(1);
-            _timer.Tick += timer_Tick;
-            _timer.Start();
-        }
-        /// <summary>
-        /// 倒计时
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void timer_Tick(object sender, EventArgs e)
-        {
-            if (_span <= TimeSpan.Zero)
-            {
-                MainWindow.ControlSystem.XRayOff();
-                RemoveInitCallback();
-                btnOK.Content = runState.Text = "完成";
-                System.Media.SystemSounds.Exclamation.Play();
-
-                if (this.Visibility == Visibility.Hidden)
-                {
-                    this.Visibility = Visibility.Visible;
-                }
-                tbTimeSpan.Foreground = System.Windows.Media.Brushes.Green;
-                return;
-            }
-
-            _span = _span.Add(new TimeSpan(0, 0, -1));
-            tbTimeSpan.Text = _span.Minutes.ToString("d2") + ":" + _span.Seconds.ToString("d2");
-        }
+ 
         /// <summary>
         /// 倒计时
         /// </summary>
@@ -186,44 +131,34 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="e"></param>
         void MC110WarmUpTimerTick(object sender, EventArgs e)
         {
-            if (_span <= TimeSpan.Zero)
-            {
-                _warmUpStep = 0;
-                MainWindow.ControlSystem.XRayOff();
-                RemoveInitCallback();
-                btnOK.Content = runState.Text = "完成";
-                System.Media.SystemSounds.Exclamation.Play();
+            Console.WriteLine("SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarmingUpStep = {0}", SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarming);
 
-                if (this.Visibility == Visibility.Hidden)
-                {
+            if (SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarming == true)
+            {
+                Console.WriteLine("正在预热！");
+                //  RemoveInitCallback();
+                //  btnOK.Content = runState.Text = "完成";
+                //   System.Media.SystemSounds.Exclamation.Play();
+                if (this.Visibility == Visibility.Hidden) {
                     this.Visibility = Visibility.Visible;
                 }
-                tbTimeSpan.Foreground = System.Windows.Media.Brushes.Green;
-                return;
+
+                runState.Text = SerialPortControler_RS232PROTOCOL_MC110.Instance.TS_Step + "/5";
+                tbTimeSpan.Text = SerialPortControler_RS232PROTOCOL_MC110.Instance.TS_Elapsed_Time;
+                tbPower.Text = SerialPortControler_RS232PROTOCOL_MC110.Instance.TS_Pwr_Step;
+
+                int kv = 0;
+                int.TryParse(SerialPortControler_RS232PROTOCOL_MC110.Instance.TS_Volt_Step, out kv);
+                tbKV.Text = (kv / 1000).ToString();
             }
-            _span = _span.Add(new TimeSpan(0, 0, -1));
-            tbTimeSpan.Text = _span.Minutes.ToString("d2") + ":" + _span.Seconds.ToString("d2");
-            
-            if (_span.Minutes == 14 && _warmUpStep == 1)
-            {
-                MainWindow.ControlSystem.MC110UpdateCMD(40, 7.5);
-                _warmUpStep += 1;
+            else {
+                if (this.Visibility == Visibility.Visible)
+                {
+                    this.Visibility = Visibility.Hidden;
+                }
+
             }
-            else if (_span.Minutes == 11 && _warmUpStep == 2)
-            {
-                MainWindow.ControlSystem.MC110UpdateCMD(60, 9);
-                _warmUpStep += 1;
-            }
-            else if (_span.Minutes == 8 && _warmUpStep == 3)
-            {
-                MainWindow.ControlSystem.MC110UpdateCMD(80, 12);
-                _warmUpStep += 1;
-            }
-            else if (_span.Minutes == 4 && _warmUpStep == 4)
-            {
-                MainWindow.ControlSystem.MC110UpdateCMD(100, 12);
-                _warmUpStep += 1;
-            }
+           // _span = _span.Add(new TimeSpan(0, 0, -1));
 
 
         }
@@ -234,9 +169,9 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="e"></param>
         private void AbortPreheat(object sender, RoutedEventArgs e)
         {
-            MainWindow.ControlSystem.XRayOff();
-            RemoveInitCallback();
-            _span = TimeSpan.Zero;
+           // MainWindow.ControlSystem.XRayOff();
+           // RemoveInitCallback();
+            //_span = TimeSpan.Zero;
             this.Close();
         }
 
@@ -245,12 +180,13 @@ namespace NV.DetectionPlatform.UCtrls
             try
             {
                 //未预热完成，开始后台预热
-                if (_span > TimeSpan.Zero)
+                if (SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarming == true)
                 {
                     e.Cancel = true;
-                    if (CMessageBox.Show("预热将在后台继续进行,预热完成后将提示您。", "提示", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
+                    if (CMessageBox.Show("尚未完成预热，关闭后将无法正常使用光源,下次启动时将会继续预热", "提示", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)
                     {
-                        return;
+                        _timer.Stop();
+                        this.Close();
                     }
                     else
                     {
@@ -269,23 +205,13 @@ namespace NV.DetectionPlatform.UCtrls
 
 
         public void StartMC110WarmUp(object sender, RoutedEventArgs e) {
-            /*
-             20kV 5.0W 2min
-             40kV 7.5W 3min
-             60kV 9.0W 3min
-             80kV 12.0W 4min
-             100kV 15W 4min
-             */
-            _warmUpStep = 1;
-            MainWindow.ControlSystem.Preheat(20, 5.0);
 
-            _preheatMinutes = 16;
-            _span = TimeSpan.FromMinutes(_preheatMinutes);
-            runPreheatTime.Text = _preheatMinutes.ToString();
-            tbTimeSpan.Text = _span.Minutes.ToString("d2") + ":" + _span.Seconds.ToString("d2");
+           // _span = TimeSpan.FromMinutes(_preheatMinutes);
+            //runPreheatTime.Text = _preheatMinutes.ToString();
+            tbTimeSpan.Text = "00:00";
 
             _timer = new System.Windows.Threading.DispatcherTimer();
-            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Interval = TimeSpan.FromSeconds(2);
             _timer.Tick += MC110WarmUpTimerTick;
             _timer.Start();
         }

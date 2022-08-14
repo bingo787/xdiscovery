@@ -17,9 +17,9 @@
                     </Style>
                 </Grid.Resources>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="304*"/>
+                    <ColumnDefinition Width="205*"/>
+                    <ColumnDefinition Width="59*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
@@ -30,15 +30,15 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock>
-                        <Run Text="预热时间:"/>
-                        <Run x:Name="runPreheatTime" Text="15"/>
-                        <Run Text="min"/>
+                        <Run Text="此窗口预热完成后会自动关闭" />
+                        <Run x:Name="runPreheatTime" Text=""/>
+                        <Run Text=""/>
                     </TextBlock>
                     <Viewbox Stretch="Uniform" Grid.Row="1" Margin="10">
                         <TextBlock Text="00:00" x:Name="tbTimeSpan"/>
                     </Viewbox>
                     <TextBlock  Grid.Row="2" TextTrimming="CharacterEllipsis" >
-                        <Run Text="状态:"/>
+                        <Run Text="Step:"/>
                         <Run Text="--" x:Name="runState"/>
                     </TextBlock>
                 </Grid>
@@ -60,7 +60,7 @@
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    
+
                     <Path Fill="{DynamicResource BtnForeground}" Stretch="Uniform" Margin="8">
                         <Path.Data>
                             <GeometryGroup>
@@ -101,9 +101,9 @@
                     </GridSplitter.Effect>
                 </GridSplitter>
 
-                <Grid Grid.Column="2">
+                <!--<Grid Grid.Column="2">
                     <Button Content="立即停止" VerticalAlignment="Stretch" Margin="8" Click="AbortPreheat" x:Name="btnOK"/>
-                </Grid>
+                </Grid>-->
             </Grid>
         </GroupBox>
     </Grid>
