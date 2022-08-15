@@ -241,11 +241,10 @@ namespace SerialPortController
                         case "0":
                             {
                                 error_message = string.Empty;
-                                if (FaultCleared != null)
-                                {
-                                    FaultCleared();
-                                }
-                                return;
+                                //if (FaultCleared != null)
+                                //{
+                                //    FaultCleared();
+                                //}
                             }
                             break;
                         case "1": error_message += "Invalid Command"; break;
@@ -281,7 +280,6 @@ namespace SerialPortController
                         case "31": error_message += "Loda Date"; break;
                         default: error_message += "Unknow"; break;
                     }
-                    error_message += ",";
                 }
 
                 System.Console.WriteLine("Error message : " + error_message);
@@ -294,16 +292,18 @@ namespace SerialPortController
             if (_lastCommand.StartsWith("SDATE:") && message == RES_OK)
             {
                 System.Console.WriteLine("Set Tube Date Success!!");
-                if (Connected != null)
-                {
-                    Connected();
-                }
+            
                 _lastCommand = string.Empty;
             }
             else if (_lastCommand.StartsWith("EH:") && message == RES_OK)
             {
 
                 System.Console.WriteLine("Enable Heater Success!!");
+                if (Connected != null)
+                {
+                    System.Console.WriteLine("Connected!!");
+                    Connected();
+                }
                 _lastCommand = string.Empty;
             }
             else if (_lastCommand.StartsWith("EP:") && message == RES_OK)
@@ -753,7 +753,7 @@ namespace SerialPortController
             //Thread.Sleep(200);
             //SendCommand("SPWR:1");
             //Thread.Sleep(200);
-            //SendCommand("EH:1");
+            SendCommand("EH:1");
             //Thread.Sleep(200);
             //SendCommand("EP:1");
 

@@ -45,7 +45,6 @@ namespace NV.DetectionPlatform
         public static extern int PostMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
         public const int WM_CLOSE = 0x10;
         System.Windows.Threading.DispatcherTimer timer;
-        ProgressDialog dia = new ProgressDialog("初始化");
 
         private void StartKiller()
         {
@@ -574,53 +573,27 @@ namespace NV.DetectionPlatform
 
 
 
-            //dia = new ProgressDialog("系统初始化");
-            //dia.Summary = "正在系统初始化，请稍候...";
-            //dia.MaxValue = 100;
-            //dia.CurValue = 50;
-            //System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
-            //System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
-            //    {
-            //        for (int i = 0; i < 100; i++)
-            //        {
+            ProgressDialog dia = new ProgressDialog("系统初始化");
+            dia.Summary = "正在系统初始化，请稍候...";
+            dia.MaxValue = 100;
+            dia.CurValue = 0;
 
-            //            dia.CurValue = i;
-            //            Thread.Sleep(100);
-            //        }
-            //        dia.Close();
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
+            Thread thread = new Thread(new ThreadStart(() =>
+            {
+               
+                for (int i = 0; i <= 100; i++)
+                {
+                    dia.Dispatcher.BeginInvoke((ThreadStart)delegate { dia.CurValue = i; });
+                    Thread.Sleep(100);
+                    Console.WriteLine("=================== {0}",i);
+                }
+                System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.Close(); }));
 
-            //    }));
+            }));
+            thread.Start();
 
-
-
-            //dia.CanCancel = false;
-            //BackgroundWorker bw = new BackgroundWorker();
-            //bw.DoWork += delegate
-            //{
-            //    System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
-            //    System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
-            //    {
-            //        dia.Summary = "正在系统初始化，请稍候...";
-            //        dia.MaxValue = 100;
-            //        dia.CurValue = 0;
-
-
-            //        for (int i = 0; i < 10; i++) {
-            //            Thread.Sleep(1000);
-            //            dia.CurValue += 10;
-            //        }
-
-            //    }));
-
-            //};
-
-            //bw.RunWorkerCompleted += delegate
-            //{
-            //    dia.Summary = "初始化完成";
-            //    dia.Close();
-            //};
-
-            //bw.RunWorkerAsync();
+           
 
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             lblVersion.Content = "Ver:" + version.ToString();
