@@ -23,6 +23,10 @@ using System.Drawing;
 using NV.Config;
 using OpenCvSharp;
 using SerialPortController;
+using System.Windows.Markup;
+using System.Windows.Media.Media3D;
+using System.Data.SqlTypes;
+
 namespace NV.DetectionPlatform.UCtrls
 {
     /// <summary>
@@ -384,7 +388,17 @@ namespace NV.DetectionPlatform.UCtrls
             else if (type == ExamType.MultiEnergyAvg)
             {
                 _detector.IsStored = true;
-                _detector.MaxFrames = 0;
+                _detector.MaxFrames = maxCount;
+                // 设置曝光时间
+                _curExpTime = (int)(Global.CurrentParam.Time * 1000);
+                if (_curExpTime == 0)
+                {
+                    /// 防止曝光时间设置为 0
+                    _curExpTime = 1;
+                }
+                _detector.HBI_SetSinglePrepareTime(_curExpTime);
+
+                Thread.Sleep(200);
                 _detector.HB_SetTriggerMode((int)HB_TriggerMode.SORTWARE);
             }
 
@@ -400,14 +414,35 @@ namespace NV.DetectionPlatform.UCtrls
                 Thread.Sleep(_detector.Delay);
                 bool ret = false;
 
-                if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
+                if (_curExpType == ExamType.Spot )
                 {
 
                     ret = _detector.StartSingleShot();
                 }
-                else
+                else if(_curExpType == ExamType.Expose)
                 {
                     ret = _detector.StartAcq();
+                }
+                else if(_curExpType == ExamType.MultiEnergyAvg)
+                {
+                    for (int i = 0; i < maxCount; i++)
+                    {
+                        // 采集照片
+                        ret = _detector.StartSingleShot();
+
+
+                        // 重新设置曝光参数
+                        Thread.Sleep(_curExpTime);
+                        double kv = (double)Global.CurrentParam.KV - i * stepKv;
+                        int ua = (int)Global.CurrentParam.UA - i * stepUA;
+                        MainWindow.ControlSystem.SetKV(kv);
+                        Thread.Sleep(150);
+                        MainWindow.ControlSystem.SetCurrent(ua);
+                        Thread.Sleep(150);
+                        System.Console.WriteLine("MultiEnergyAvg count{0}, kv {1}, ua {2}", i, kv, ua);
+
+                    }
+
                 }
 
                 if (ret)
@@ -415,27 +450,6 @@ namespace NV.DetectionPlatform.UCtrls
                     if (Global.MainWindow != null)
                     {
                         Global.MainWindow.NotifyTip("Detector", "正在采集");
-                    }
-
-                    if (_curExpType == ExamType.MultiEnergyAvg)
-                    {
-                        for (int i = 0; i < maxCount; i++)
-                        {
-                            Thread.Sleep(_curExpTime);
-                            double kv = (double)Global.CurrentParam.KV - i * stepKv;
-                            int ua = (int)Global.CurrentParam.UA - i * stepUA;
-                            MainWindow.ControlSystem.SetKV(kv);
-                            Thread.Sleep(150);
-                            MainWindow.ControlSystem.SetCurrent(ua);
-                            Thread.Sleep(150);
-                            System.Console.WriteLine("MultiEnergyAvg count{0}, kv {1}, ua {2}", i, kv, ua);
-
-                        }
-
-                        this.Dispatcher.BeginInvoke(new Action(() =>
-                        {
-                            StopAcq(null, null);
-                        }));
                     }
                 }
                 else
@@ -496,27 +510,60 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="list"></param>
         private void SaveMultiAvgFiles(List<ushort[]> list)
         {
-            int[] res;
-            int count = list.Count;
-            if (list.Count > 0)
-                res = new int[list[0].Length];
-            else
-                return;
 
-            for (int i = 0; i < list.Count; i++)
+            //// HDR 合成
+            // string[] imagesFiles = { "memorial0061.png", "memorial0062.png", "memorial0063.png", "memorial0064.png", "memorial0065.png", "memorial0066.png", "memorial0067.png", "memorial0068.png", "memorial0069.png", "memorial0070.png", "memorial0071.png", "memorial0072.png", "memorial0073.png", "memorial0074.png", "memorial0075.png", "memorial0076.png" };
+            // float[] exposures = { 0.03125f, 0.0625f, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
+            int num = list.Count;
+
+            //读入图片
+            int h = (int)_detector.ImageHeight;
+            int w = (int)_detector.ImageWidth;
+            Mat[] images = new Mat[num];
+            float[] exposures = { 0.03125f, 0.0625f, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
+            
+            for (int i = 0; i < num; i++)
             {
-                var data = list[i];
-                for (int j = 0; j < data.Length; j++)
+                // string file = @"I:\csharp\images\hdr\" + imagesFiles[i];
+                // images[i] = new Mat(file, ImreadModes.Color);
+
+                images[i] = new Mat(h, w, MatType.CV_16UC1, list[i]);
+            }
+
+            //估计相机响应
+            Mat response = new Mat();
+            CalibrateDebevec calibrate = CalibrateDebevec.Create();
+            calibrate.Process(images, response, exposures);
+
+            //生成HDR图片
+            Mat hdr = new Mat();
+            MergeDebevec merge_debevec = MergeDebevec.Create();
+            merge_debevec.Process(images, hdr, exposures, response);
+
+            //Tonemap
+            Mat ldr = new Mat();
+            Tonemap tonemap = Tonemap.Create(2.2f);
+            tonemap.Process(hdr, ldr);
+
+            Mat fusion = new Mat();
+            MergeMertens merge_mertens = MergeMertens.Create();
+            merge_mertens.Process(images, fusion);
+
+            Cv2.ImWrite("fusion.png", fusion * 255);
+            Cv2.ImWrite("ldr.png", ldr * 255);
+            Cv2.ImWrite("hdr.hdr", hdr);
+
+
+            ushort[] result = new ushort[w * h];
+            System.Threading.Tasks.Parallel.For(0, h, i =>
+            {
+                for (int j = 0; j < w; j++)
                 {
-                    res[j] += data[j];
+                    result[i * w + j] = hdr.At<ushort>(i, j);
                 }
-            }
+            });
 
-            ushort[] result = new ushort[res.Length];
-            for (int j = 0; j < res.Length; j++)
-            {
-                result[j] = (ushort)(res[j] / count);
-            }
+
 
             SaveFiles(new List<ushort[]> { result });
 

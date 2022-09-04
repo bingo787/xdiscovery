@@ -211,7 +211,6 @@ namespace Detector
                 }
             }
         }
-
         public bool StartAcq()
         {
 
@@ -718,8 +717,8 @@ namespace Detector
             count++;
 
             
-            if (MaxFrames == 1) {
-                // 单帧的时候，停止
+            if (MaxFrames == count) {
+                // 这里只是为了保存图片
                 AcqMaxFrameEvent();
             }
         }
