@@ -427,19 +427,27 @@ namespace NV.DetectionPlatform.UCtrls
                 {
                     for (int i = 0; i < maxCount; i++)
                     {
-                        // 采集照片
-                        ret = _detector.StartSingleShot();
+
+                            
+                            // 采集照片
+                            ret = _detector.StartSingleShot();
 
 
-                        // 重新设置曝光参数
-                        Thread.Sleep(_curExpTime);
-                        double kv = (double)Global.CurrentParam.KV - i * stepKv;
-                        int ua = (int)Global.CurrentParam.UA - i * stepUA;
-                        MainWindow.ControlSystem.SetKV(kv);
-                        Thread.Sleep(150);
-                        MainWindow.ControlSystem.SetCurrent(ua);
-                        Thread.Sleep(150);
-                        System.Console.WriteLine("MultiEnergyAvg count{0}, kv {1}, ua {2}", i, kv, ua);
+                            // 重新设置曝光参数
+                            Thread.Sleep(_curExpTime);
+                            double kv = (double)Global.CurrentParam.KV - i * stepKv;
+                            double power = (int)Global.CurrentParam.Power - i * stepUA;
+                            MainWindow.ControlSystem.SetKV(kv);
+                            Thread.Sleep(150);
+                            MainWindow.ControlSystem.SetPower(power);
+                            Thread.Sleep(150);
+                            System.Console.WriteLine("MultiEnergyAvg i {0}, kv {1}, power {2}", i, kv, power);
+
+                            // 判断图像是否采集完成，没有的话要在此等待
+                            while (_detector.ImageBuffer.Count != (i + 1)) {
+                            Console.WriteLine("_detector.ImageBuffer.Count = {0}", _detector.ImageBuffer.Count);
+                            Thread.Sleep(2 * _curExpTime);
+                            }
 
                     }
 
@@ -520,7 +528,7 @@ namespace NV.DetectionPlatform.UCtrls
             int h = (int)_detector.ImageHeight;
             int w = (int)_detector.ImageWidth;
             Mat[] images = new Mat[num];
-            float[] exposures = { 0.03125f, 0.0625f, 0.125f, 0.25f, 0.5f, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024 };
+            float[] exposures = { 0.03125f, 0.0625f, 0.125f, 0.25f, 0.5f };
             
             for (int i = 0; i < num; i++)
             {

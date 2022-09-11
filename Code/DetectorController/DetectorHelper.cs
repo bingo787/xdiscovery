@@ -173,9 +173,8 @@ namespace Detector
 
         public bool StartSingleShot() {
             ShowMessage("StartSingleShot");
-            _imageBuffer.Clear();
             _multiFramesOverlayBuffer.Clear();
-            count = 0;
+
             int  ret = -1;
 
             if (true)
@@ -715,7 +714,7 @@ namespace Detector
             }
 
             count++;
-
+            Console.WriteLine("Recieve image count  {0} / {1}, ImageBuffer.Count = {2}",count, MaxFrames, ImageBuffer.Count);
             
             if (MaxFrames == count) {
                 // 这里只是为了保存图片

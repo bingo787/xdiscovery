@@ -131,7 +131,7 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="e"></param>
         void MC110WarmUpTimerTick(object sender, EventArgs e)
         {
-            Console.WriteLine("SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarmingUpStep = {0}", SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarming);
+          //  Console.WriteLine("SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarmingUpStep = {0}", SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarming);
 
             if (SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarming == true)
             {
@@ -157,6 +157,7 @@ namespace NV.DetectionPlatform.UCtrls
                     this.Visibility = Visibility.Hidden;
                 }
 
+                _timer.Stop();
             }
            // _span = _span.Add(new TimeSpan(0, 0, -1));
 

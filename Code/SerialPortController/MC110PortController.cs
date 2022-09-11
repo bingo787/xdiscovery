@@ -213,7 +213,7 @@ namespace SerialPortController
             string arg;
             int temp;
             string RES_OK = "[ERR:0]";
-            Console.WriteLine("[ReceivedMessage][" + DateTime.Now.ToString("HH:mm:ss.ffff") + "] " + message + " lastComand:" + _lastCommand);
+          //  Console.WriteLine("[ReceivedMessage][" + DateTime.Now.ToString("HH:mm:ss.ffff") + "] " + message + " lastComand:" + _lastCommand);
             ///处理错误代码
             //if (message.StartsWith("[ERR:"))
             {
@@ -226,7 +226,7 @@ namespace SerialPortController
                     <STATUS:0,0,0,0,1,2,60000,90,0:10,67,33[ERR:27,29]>
                  */
                 string ResponseError = message.Split('[').Last().TrimEnd(']'); // --> ERR:27,29
-                Console.WriteLine("Error Code : {0}", ResponseError);
+               // Console.WriteLine("Error Code : {0}", ResponseError);
 
                 string[] ResponseErrorCode = ResponseError.Split(new Char[] { ':', ',' });
 
@@ -282,7 +282,7 @@ namespace SerialPortController
                     }
                 }
 
-                System.Console.WriteLine("Error message : " + error_message);
+               // System.Console.WriteLine("Error message : " + error_message);
                 if (StateReported != null && !string.IsNullOrEmpty(error_message))
                     StateReported(error_message);
             }
@@ -387,7 +387,7 @@ namespace SerialPortController
                 if ("1" == TubeContionActivate)
                 {
                     IsWarming = true;
-                    Console.WriteLine("Tube Conditioning ON");
+                  //  Console.WriteLine("Tube Conditioning ON");
 
                     TS_Step = msg.ElementAt(5);
                     TS_Volt_Step = msg.ElementAt(6);
@@ -399,14 +399,14 @@ namespace SerialPortController
                 else
                 {
                     IsWarming = false;
-                    Console.WriteLine("Tube Conditioning OFF");
+                   // Console.WriteLine("Tube Conditioning OFF");
                     AV = msg.ElementAt(5);
                     TC = msg.ElementAt(6).Split('[').ElementAt(0);
                    
                 }
 
                 // 调用回调函数显示
-                Console.WriteLine("AV {0},TC {1}",AV,TC);
+              //  Console.WriteLine("AV {0},TC {1}",AV,TC);
                 if (int.TryParse(AV, out temp))
                 {
                     double value = temp / 1000.0f;
@@ -464,7 +464,7 @@ namespace SerialPortController
             command.Add(CR);
 
             if (!string.IsNullOrEmpty(_lastCommand)) {
-                Console.WriteLine("上一次的命令是 " + _lastCommand);
+             //   Console.WriteLine("上一次的命令是 " + _lastCommand);
                 Thread.Sleep(300);
             }
            

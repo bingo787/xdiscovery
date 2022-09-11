@@ -408,7 +408,7 @@ namespace NV.DetectionPlatform
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
                 lblHV_Temperature.Content = arg.ToString("f2") + "℃";
-                Console.WriteLine("当前温度 {0}", arg);
+              //  Console.WriteLine("当前温度 {0}", arg);
 
                 if (arg > Detector.DetectorController.Instance.TempratureThreshold && isFirstShowWarning == 0)
                 {
