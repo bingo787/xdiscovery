@@ -43,9 +43,6 @@ namespace NV.DetectionPlatform.UCtrls
         {
             Data.Save();
             var detector = Detector.DetectorController.Instance;
-            detector.IsMultiFramesOverlay = Data.IsMultiFramesOverlay;
-            detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
-            detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
             detector.Delay = Data.Delay;
             detector.ScaleRatioFinetuning = Data.ExpTime;
            
@@ -53,12 +50,6 @@ namespace NV.DetectionPlatform.UCtrls
 
             string autoOffset = Data.IsAutoPreOffset ? "1" : "0";
             NV.Infrastructure.UICommon.IniFile.WriteString("System", "AutoOffsetCalOnOpen", autoOffset, System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "nvDentalDet.ini"));
-
-
-            //detector.NV_SetOffsetCal((HB_OffsetCorrType)Data.OffsetCorMode);
-            //detector.NV_SetGainCal((HB_CorrType)Data.GainCorMode);
-            //detector.NV_SetDefectCal((HB_CorrType)Data.DefectCorMode);
-            //detector.HB_UpdateTriggerAndCorrectEnable(7);
 
 
             CMessageBox.Show("操作成功。\nOperation completed");

@@ -133,7 +133,7 @@ namespace NV.DetectionPlatform.UCtrls
         {
           //  Console.WriteLine("SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarmingUpStep = {0}", SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarming);
 
-            if (SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarming == true)
+            if (MC110Protocol.Instance.IsWarming == true)
             {
                 Console.WriteLine("正在预热！");
                 //  RemoveInitCallback();
@@ -143,12 +143,12 @@ namespace NV.DetectionPlatform.UCtrls
                     this.Visibility = Visibility.Visible;
                 }
 
-                runState.Text = SerialPortControler_RS232PROTOCOL_MC110.Instance.TS_Step + "/5";
-                tbTimeSpan.Text = SerialPortControler_RS232PROTOCOL_MC110.Instance.TS_Elapsed_Time;
-                tbPower.Text = SerialPortControler_RS232PROTOCOL_MC110.Instance.TS_Pwr_Step;
+                runState.Text = MC110Protocol.Instance.TS_Step + "/5";
+                tbTimeSpan.Text = MC110Protocol.Instance.TS_Elapsed_Time;
+                tbPower.Text = MC110Protocol.Instance.TS_Pwr_Step;
 
                 int kv = 0;
-                int.TryParse(SerialPortControler_RS232PROTOCOL_MC110.Instance.TS_Volt_Step, out kv);
+                int.TryParse(MC110Protocol.Instance.TS_Volt_Step, out kv);
                 tbKV.Text = (kv / 1000).ToString();
             }
             else {
@@ -181,7 +181,7 @@ namespace NV.DetectionPlatform.UCtrls
             try
             {
                 //未预热完成，开始后台预热
-                if (SerialPortControler_RS232PROTOCOL_MC110.Instance.IsWarming == true)
+                if (MC110Protocol.Instance.IsWarming == true)
                 {
                     e.Cancel = true;
                     if (CMessageBox.Show("尚未完成预热，关闭后将无法正常使用光源,下次启动时将会继续预热", "提示", MessageBoxButton.OKCancel) == MessageBoxResult.Cancel)

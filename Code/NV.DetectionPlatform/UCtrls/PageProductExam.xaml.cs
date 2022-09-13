@@ -26,6 +26,7 @@ using SerialPortController;
 using System.Windows.Markup;
 using System.Windows.Media.Media3D;
 using System.Data.SqlTypes;
+using BrightVisionSDKSample;
 
 namespace NV.DetectionPlatform.UCtrls
 {
@@ -45,13 +46,13 @@ namespace NV.DetectionPlatform.UCtrls
         private DetectorController _detector = DetectorController.Instance;
         private WindowsFormsHost wfh = new WindowsFormsHost();
         private KrayDicomLib.DicomFile _file = new KrayDicomLib.DicomFile();
-        private int _curExpTime;
+        private int _curExpTime = 1 ;
         private ExamType _curExpType;
         /// <summary>
         /// 高压控制器
         /// </summary>
         
-        public static SerialPortReporter_RS485PROTOCOL_PLC PostionReporter = SerialPortReporter_RS485PROTOCOL_PLC.Instance;
+        public static CustomProtocl PostionReporter = CustomProtocl.Instance;
         double scaleRatio = 0.1;
         double TempratureThreshold = 35.0f;
         private double CalculateScaleRatio() {
@@ -182,64 +183,10 @@ namespace NV.DetectionPlatform.UCtrls
             {
 
                  var Data = NV.Config.NV1313FPDSetting.Instance;
-                _detector.IsMultiFramesOverlay = Data.IsMultiFramesOverlay;
-                _detector.MultiFramesOverlayNumber = Data.MultiFramesOverlayNumber;
-                _detector.IsMultiFramesOverlayByAvg = Data.IsMultiFramesOverlayByAvg;
                 _detector.TempratureThreshold = Data.TemperatureThreshold;
 
-
-                string local_ip = "192.168.10.20";
-                string remote_ip = "192.168.10.40";
-
-                COMM_CFG config;
-                Data.CommunicationType = HB_FPD_COMM_TYPE.UDP_JUMBO;
-                config.type = (FPD_COMM_TYPE)Data.CommunicationType;
-                config.loacalPort = 0x8080;
-                config.localip = local_ip.PadRight(16, '\0').ToCharArray();
-                config.remotePort = 0x8081;
-                config.remoteip = remote_ip.PadRight(16, '\0').ToCharArray();
-                
-                int ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, config, 0);
-
-                _detector.ShowMessage("local ip: " + local_ip + " <---> " + remote_ip);
-
-                if (ret != 0)
-                {
-                    res += "探测器连接失败。" + _detector.GetLastError(ret);
-                }
-                else
-                {
-                    _detector.Delay = Data.Delay;
-                    _detector.ScaleRatioFinetuning = Data.ExpTime;
-                    //   _detector.HB_SetBinningMode((byte)Data.BinningMode);
-                    //  Thread.Sleep(2000);
-                    //  _detector.HB_SetGain((int)Data.Gain);
-                    //  Thread.Sleep(2000);
-                    Data.OffsetCorMode = HB_OffsetCorrType.FIRMWARE_POST_OFFSET;
-                    Data.GainCorMode = HB_CorrType.FRIMWARE;
-                    Data.DefectCorMode = HB_CorrType.FRIMWARE;
-            
-
-                    _detector.NV_SetOffsetCal(Data.OffsetCorMode);
-                    _detector.NV_SetGainCal(Data.GainCorMode);
-                    _detector.NV_SetDefectCal(Data.DefectCorMode);
-
-
-                    res += "探测器已连接。";
-                    IsConnected = true;
-
-                    if (Data.IsAutoPreOffset == true && config.type != FPD_COMM_TYPE.UDP_COMM_TYPE)
-                    {
-                        _detector.HB_UpdateTriggerAndCorrectEnable(7);
-                        Thread.Sleep(2000);
-                        _detector.StartCorrectOffsetTemplate();
-                    }
-                    _detector.btnGetFirmwareCfg_Click();
-                    _detector.btnGetImageProperty();
-                    _detector.btnGetSdkVer_Click();
-
-                }
-               // _detector.ShowMessage(res, true);
+                res += "探测器已连接。";
+                IsConnected = true;
 
             }
             else
@@ -356,58 +303,46 @@ namespace NV.DetectionPlatform.UCtrls
                 return;
             }
 
-            _curExpType = type;
 
-            DicomViewer.Current.ClearImage();
+
+
+
+
 
             if (type == ExamType.Spot )
             {
                 _detector.IsStored = true;
                 _detector.MaxFrames = 1;
-                // 设置曝光时间
-                _curExpTime = (int)(Global.CurrentParam.Time * 1000);
-                if (_curExpTime == 0) {
-                    /// 防止曝光时间设置为 0
-                    _curExpTime = 1;
-                }
-                _detector.HBI_SetSinglePrepareTime(_curExpTime);
+              //  _detector.SetAcquisitionMode(2);
 
-                Thread.Sleep(200);
-                _detector.HB_SetTriggerMode((int)HB_TriggerMode.SORTWARE);
             }
             else if (type == ExamType.Expose)
             {
                 _detector.IsStored = isStored;
                 _detector.MaxFrames = 0; // 连续获取
-                _curExpTime = (int)(1000.0 / Global.CurrentParam.Fps);
-                _detector.HB_SetAqcSpanTime(_curExpTime);// 设置采集帧率 ： 1，2，4
+             //   _detector.SetAcquisitionMode(0);
 
-                Thread.Sleep(200);
-                _detector.HB_SetTriggerMode((int)HB_TriggerMode.CONTINUE);
             }
             else if (type == ExamType.MultiEnergyAvg)
             {
                 _detector.IsStored = true;
                 _detector.MaxFrames = maxCount;
-                // 设置曝光时间
-                _curExpTime = (int)(Global.CurrentParam.Time * 1000);
-                if (_curExpTime == 0)
-                {
-                    /// 防止曝光时间设置为 0
-                    _curExpTime = 1;
-                }
-                _detector.HBI_SetSinglePrepareTime(_curExpTime);
-
-                Thread.Sleep(200);
-                _detector.HB_SetTriggerMode((int)HB_TriggerMode.SORTWARE);
+              //  _detector.SetAcquisitionMode(2);
             }
 
-
             _imageCount = 0;
+            IsAcqing = true;
+            _curExpType = type;
+            _curExpTime = (int)(Global.CurrentParam.Time * 1000);
+
+            _detector.SetExposureTime((double)_curExpTime);
+
+            DicomViewer.Current.ClearImage();
+
 
             MainWindow.ControlSystem.XRayOn();
 
-            IsAcqing = true;
+
 
             new Thread(new ThreadStart(delegate
             {
@@ -1142,8 +1077,8 @@ namespace NV.DetectionPlatform.UCtrls
 
         private void UnLoaded(object sender, RoutedEventArgs e)
         {
-           // NVDentalSDK.NV_CloseDet();
-            HBI_FPD_DLL.HBI_Destroy(HBI_FPD_DLL._handel);
+            BrightVisionSDK.Uninit();
+
         }
 
         /// <summary>

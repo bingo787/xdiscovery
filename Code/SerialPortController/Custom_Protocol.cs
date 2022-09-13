@@ -17,27 +17,27 @@ namespace SerialPortController
     /// <summary>
     /// 端口通讯控制中心
     /// </summary>
-    public class SerialPortReporter_RS485PROTOCOL_PLC
+    public class CustomProtocl
     {
 
         Char StartTag = (Char)(0xFE);
         Char EndTag = (Char)(0xFF);
 
         public double AxisZDistance_mm;
-        private static SerialPortReporter_RS485PROTOCOL_PLC _instance;
+        private static CustomProtocl _instance;
         private bool _running = true;
-        public static SerialPortReporter_RS485PROTOCOL_PLC Instance
+        public static CustomProtocl Instance
         {
             get
             {
                 if (_instance == null)
-                    _instance = new SerialPortReporter_RS485PROTOCOL_PLC();
+                    _instance = new CustomProtocl();
                 return _instance;
             }
         }
         private static string PORTPARAPATH = System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "config", "ReporterPortParam.xml");
 
-        private SerialPortReporter_RS485PROTOCOL_PLC()
+        private CustomProtocl()
         {
 
             try {

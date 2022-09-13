@@ -10,27 +10,27 @@ namespace SerialPortController
     /// <summary>
     /// 端口通讯控制中心
     /// </summary>
-    public class SerialPortControler_RS232PROTOCOL
+    public class Nv_Protocol
     {
         const byte STX = 0x02;
         const byte CR = 0x0D;
         const byte SP = 0x20;
         Char StartTag = (Char)(STX);
         Char EndTag = (Char)(0x0D);
-        private static SerialPortControler_RS232PROTOCOL _instance;
+        private static Nv_Protocol _instance;
         private bool _running = true;
-        public static SerialPortControler_RS232PROTOCOL Instance
+        public static Nv_Protocol Instance
         {
             get
             {
                 if (_instance == null)
-                    _instance = new SerialPortControler_RS232PROTOCOL();
+                    _instance = new Nv_Protocol();
                 return _instance;
             }
         }
         private static string PORTPARAPATH = System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "config", "ControllerPortParam.xml");
 
-        private SerialPortControler_RS232PROTOCOL()
+        private Nv_Protocol()
         {
             InitilizeHVStatusThread();
         }

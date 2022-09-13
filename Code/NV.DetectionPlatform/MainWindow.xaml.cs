@@ -77,7 +77,7 @@ namespace NV.DetectionPlatform
         /// <summary>
         /// 高压控制器
         /// </summary>
-        public static SerialPortControler_RS232PROTOCOL_MC110 ControlSystem = SerialPortControler_RS232PROTOCOL_MC110.Instance;
+        public static MC110Protocol ControlSystem = MC110Protocol.Instance;
         /// <summary>
         /// 采集控件
         /// </summary>
@@ -484,14 +484,14 @@ namespace NV.DetectionPlatform
                     lblHV_XRayState.Content = "XRay ON";
                     lblHV_XRayState.Foreground = Brushes.Yellow;
                     Console.WriteLine("监控 光源已打开");
-                    SerialPortReporter_RS485PROTOCOL_PLC.Instance.SendCommand("1");
+                    CustomProtocl.Instance.SendCommand("1");
                 }
                 else
                 {
                     lblHV_XRayState.Content = "XRay OFF";
                     lblHV_XRayState.Foreground = _normalForeground;
                     Console.WriteLine("监控 光源已关闭");
-                    SerialPortReporter_RS485PROTOCOL_PLC.Instance.SendCommand("0");
+                    CustomProtocl.Instance.SendCommand("0");
                 }
             }));
 
@@ -686,44 +686,7 @@ namespace NV.DetectionPlatform
             {
                 ConnControlSystem();
             }
-            if (tag == "DetectorOffsetCorrection")
-            {
-                Detector.DetectorController.Instance.StartCorrectOffsetTemplate();
-            }
-            if (tag == "DetectorGainCorrection")
-            {
-                _hVView.ShowDialog();
-                Detector.DetectorController.Instance.StartCorrectGainTemplate();
-            }
-            if (tag == "DetectorDefectCorrection")
-            {
-
-                Detector.DetectorController.Instance.ShowMessage("第一步：第一组亮场(剂量要求：正常高压，毫安秒调节正常的 10%)", true);
-                _hVView.ShowDialog();
-                MainWindow.ControlSystem.XRayOn();
-                bool ret = Detector.DetectorController.Instance.StartCorrectDetectTemplate_Step1();
-                MainWindow.ControlSystem.XRayOff();
-                if (!ret) return;
-
-
-                Detector.DetectorController.Instance.ShowMessage("第二步：第二组亮场(剂量要求：正常高压，毫安秒调节正常的 50%)", true);
-                _hVView.ShowDialog();
-                MainWindow.ControlSystem.XRayOn();
-                ret = Detector.DetectorController.Instance.StartCorrectDetectTemplate_Step2();
-                MainWindow.ControlSystem.XRayOff();
-                if (!ret) return;
-
-                Detector.DetectorController.Instance.ShowMessage("第三步：第三组亮场(剂量要求：正常高压，毫安秒调节正常的 100%)", true);
-                _hVView.ShowDialog();
-                MainWindow.ControlSystem.XRayOn();
-                ret = Detector.DetectorController.Instance.StartCorrectDetectTemplate_Step3();
-                MainWindow.ControlSystem.XRayOff();
-                if (!ret) return;
-
-                Detector.DetectorController.Instance.ShowMessage("第四步：下载模板到探测器", true);
-                Detector.DetectorController.Instance.StartCorrectDetectTemplate_Step4();
-
-            }
+          
             if (tag == "GeneralSetting")
             {
                 UCtrls.WndGeneralSetting wnd = new UCtrls.WndGeneralSetting();

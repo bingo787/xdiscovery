@@ -12,29 +12,29 @@ namespace SerialPortController
     /// <summary>
     /// 端口通讯控制中心
     /// </summary>
-    public class SerialPortControler_RS232PROTOCOL_MC110
+    public class MC110Protocol
     {
         const byte STX = 0x3C;
         const byte CR = 0x3E;
         const byte SP = 0x20;
         Char StartTag = (Char)(STX);
         Char EndTag = (Char)(CR);
-        private static SerialPortControler_RS232PROTOCOL_MC110 _instance;
+        private static MC110Protocol _instance;
         private bool _running = false;
 
 
-        public static SerialPortControler_RS232PROTOCOL_MC110 Instance
+        public static MC110Protocol Instance
         {
             get
             {
                 if (_instance == null)
-                    _instance = new SerialPortControler_RS232PROTOCOL_MC110();
+                    _instance = new MC110Protocol();
                 return _instance;
             }
         }
         private static string PORTPARAPATH = System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "config", "ControllerPortParam.xml");
 
-        private SerialPortControler_RS232PROTOCOL_MC110()
+        private MC110Protocol()
         {
              InitilizeHVStatusThread();
         }
