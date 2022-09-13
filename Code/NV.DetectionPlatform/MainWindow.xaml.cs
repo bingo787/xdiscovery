@@ -551,57 +551,25 @@ namespace NV.DetectionPlatform
 
 
 
-            dia = new ProgressDialog("系统初始化");
+            ProgressDialog dia = new ProgressDialog("系统初始化");
             dia.Summary = "正在系统初始化，请稍候...";
             dia.MaxValue = 100;
-            dia.CurValue = 50;
+            dia.CurValue = 0;
+
             System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
-            System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
+            Thread thread = new Thread(new ThreadStart(() =>
+            {
+
+                for (int i = 0; i <= 100; i++)
                 {
-                    for (int i = 0; i < 100; i++)
-                    {
+                    dia.Dispatcher.BeginInvoke((ThreadStart)delegate { dia.CurValue = i; });
+                    Thread.Sleep(100);
+                    Console.WriteLine("=================== {0}", i);
+                }
+                System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.Close(); }));
 
-                        dia.CurValue = i;
-                        Thread.Sleep(100);
-                    }
-                    dia.Close();
-
-                }));
-
-
-
-            //dia.CanCancel = false;
-            //BackgroundWorker bw = new BackgroundWorker();
-            //bw.DoWork += delegate
-            //{
-            //    System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
-            //    System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
-            //    {
-            //        dia.Summary = "正在系统初始化，请稍候...";
-            //        dia.MaxValue = 100;
-            //        dia.CurValue = 0;
-
-            //    }));
-
-
-            //    for (int i = 0; i < 100; i++)
-            //    {
-            //        System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
-            //        {
-            //            dia.CurValue++;
-
-            //        }));
-            //        Thread.Sleep(100);
-            //    }
-            //};
-
-            //bw.RunWorkerCompleted += delegate
-            //{
-            //    dia.Summary = "初始化完成";
-            //    dia.Close();
-            //};
-
-            //bw.RunWorkerAsync();
+            }));
+            thread.Start();
 
 
 
