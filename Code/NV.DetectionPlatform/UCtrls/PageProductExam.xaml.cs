@@ -130,17 +130,9 @@ namespace NV.DetectionPlatform.UCtrls
         {
             if (ipUC != null && ipUC.CurrentDv != null)
             {
-                Console.WriteLine("set window level {0}, {1}", ww, wl);
-
                 ipUC.CurrentDv.SetWindowLevel(ww, wl);
-
                 _quickWL = wl;
                 _quickWW = ww;
-
-                int sww = 0, swl = 0;
-                ipUC.CurrentDv.GetWindowLevel(ref sww, ref swl);
-
-                Console.WriteLine("ggggggget window level {0}, {1}", sww, swl);
                 ipUC.CurrentDv.Invalidate();
             }
         }
