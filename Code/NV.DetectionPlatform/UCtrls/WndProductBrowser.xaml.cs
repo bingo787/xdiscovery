@@ -19,6 +19,7 @@ using System.Collections.ObjectModel;
 using NV.DRF.Core.Model;
 using System.Reflection;
 using System.IO;
+using System.Threading;
 
 namespace NV.DetectionPlatform.UCtrls
 {
@@ -27,25 +28,14 @@ namespace NV.DetectionPlatform.UCtrls
     /// </summary>
     public partial class WndProductBrowser : Window
     {
+
+
         public WndProductBrowser()
         {
             InitializeComponent();
 
-            ProgressDialog dia = new ProgressDialog("加载数据库");
-            dia.Summary = "正在加载数据，请稍候...";
-            dia.MaxValue = 100;
-            dia.CurValue = 50;
-            dia.CanCancel = false;
-            System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
-            System.Windows.Application.Current.Dispatcher.Invoke(new Action(() => {
-
-                this.DataContext = new BrowerViewModel(this);
-
-                dia.CurValue = 100;
-                dia.Summary = "加载完毕";
-                dia.Close();
-            }));
-           
+            this.DataContext = new BrowerViewModel(this);
+                     
         }
     }
 

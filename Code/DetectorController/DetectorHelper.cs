@@ -140,6 +140,8 @@ namespace Detector
 
         public bool StartSingleShot() {
             ShowMessage("StartSingleShot");
+            _imageBuffer.Clear();
+            count = 0;
 
             if (BrightVisionSDK.StartStream(null, IntPtr.Zero))
             {
@@ -162,17 +164,30 @@ namespace Detector
 
             if (pFrame != IntPtr.Zero)
             {
-                FileStream sFileStream = new FileStream("frame.raw", FileMode.OpenOrCreate, FileAccess.Write);
-                BinaryWriter sBinaryWriter = new BinaryWriter(sFileStream);
 
-                int iPixelNum = iWidth * iHeight;
+                 int iPixelNum = iWidth * iHeight;
+
+                ushort[] buffer = new ushort[iPixelNum];
                 for (int k = 0; k < iPixelNum; k++)
                 {
                     ushort iPixelValue = BrightVisionSDK.GetRawPixelValue(pFrame, iPixelBits, k);
-                    sBinaryWriter.Write(iPixelValue);
+
+                  buffer[k] = iPixelValue;
+
+
                 }
-                sFileStream.Close();
-                Console.WriteLine("Save the frame id={0} to frame.raw", iFrameID);
+          
+                IntPtr ptr = Marshal.AllocHGlobal(buffer.Length * Marshal.SizeOf(typeof(ushort)));//分配内存
+                List<byte> bytes = new List<byte>();
+                foreach (ushort u in buffer)
+                {
+                    bytes.AddRange(BitConverter.GetBytes(u));
+                }
+                Marshal.Copy(bytes.ToArray(), 0, ptr, bytes.Count);//拷贝
+
+                HandleImage(ptr, 0, iWidth, iHeight, (IntPtr)null);
+
+                Marshal.FreeHGlobal(ptr);//用完以后释放内存
             }
             else
             {
@@ -191,7 +206,7 @@ namespace Detector
             HandleImageCallBack( pFrameInShort,  iFrameID,  iFrameWidth,  iFrameHeight,  pParam);
 
 
-            return false;
+            return true;
         }
 
         FrameProcCbFunc frameCb = new FrameProcCbFunc(FrameProc);
@@ -277,8 +292,8 @@ namespace Detector
         {
             res = string.Empty;
 
-            _detectorHeight = 1200;
-            _detectorWidth = 1520;
+            _detectorHeight = 1520;
+            _detectorWidth = 1200;
             _imageHeight = _detectorHeight;
             _imageWidth = _detectorWidth;
             _bits = 16;
@@ -419,9 +434,12 @@ namespace Detector
             for (int i = 0; i < iFrameWidth * iFrameHeight; i++)
             {
                 buffer[i] = ((ushort*)pFrameInShort)[i];
+
+              //  Console.Write("{0} ", buffer[i]);
             }
 
             PlayBuffer.Enqueue(buffer);
+
             if (IsStored)
             {
                 ImageBuffer.Add(buffer);
@@ -429,9 +447,11 @@ namespace Detector
 
             count++;
             Console.WriteLine("Recieve image count  {0} / {1}, ImageBuffer.Count = {2}",count, MaxFrames, ImageBuffer.Count);
-            
-            if (MaxFrames == count) {
-                // 这里只是为了保存图片
+
+            if (MaxFrames == count)
+            {
+                // 这里只是为了保存图片, 单张的时候停止拍摄
+
                 AcqMaxFrameEvent();
             }
         }

@@ -218,7 +218,7 @@ namespace NV.DetectionPlatform.UCtrls
                     this.Dispatcher.Invoke(new Action(() =>
                     {
                        // System.Console.WriteLine(String.Format("PlayBackground IsAcqing {0}", IsAcqing));
-                       // if (IsAcqing)
+                        if (IsAcqing)
                         {
                             //ipUC.PutData(W,H ,Bits,data, true);
                             ipUC.CurrentDv.PutImageData(W, H, Bits, ref data[0]);
@@ -313,27 +313,29 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 _detector.IsStored = true;
                 _detector.MaxFrames = 1;
-              //  _detector.SetAcquisitionMode(2);
+                //  _detector.SetAcquisitionMode(2);
+                _curExpTime = (int)(Global.CurrentParam.Time * 1000); // ms
 
             }
             else if (type == ExamType.Expose)
             {
                 _detector.IsStored = isStored;
                 _detector.MaxFrames = 0; // 连续获取
-             //   _detector.SetAcquisitionMode(0);
+                //   _detector.SetAcquisitionMode(0);
+                _curExpTime = (int)(1000.0/ Global.CurrentParam.Fps);
 
             }
             else if (type == ExamType.MultiEnergyAvg)
             {
                 _detector.IsStored = true;
                 _detector.MaxFrames = maxCount;
-              //  _detector.SetAcquisitionMode(2);
+                _curExpTime = (int)(Global.CurrentParam.Time * 1000); // ms
             }
 
             _imageCount = 0;
             IsAcqing = true;
             _curExpType = type;
-            _curExpTime = (int)(Global.CurrentParam.Time * 1000);
+           
 
             _detector.SetExposureTime((double)_curExpTime);
 
@@ -353,6 +355,7 @@ namespace NV.DetectionPlatform.UCtrls
                 {
 
                     ret = _detector.StartSingleShot();
+                   // ret = _detector.StartAcq();
                 }
                 else if(_curExpType == ExamType.Expose)
                 {
@@ -517,6 +520,8 @@ namespace NV.DetectionPlatform.UCtrls
         /// <param name="p"></param>
         private void SaveFiles(List<ushort[]> p)
         {
+
+            Console.WriteLine("ImageBuffer.List size {0}", p.Count());
             int w = 65535, c = 30000;
             if (ipUC != null && ipUC.CurrentDv != null && ipUC.CurrentDv.HasImage)
                 ipUC.CurrentDv.GetWindowLevel(ref w, ref c);
@@ -564,7 +569,17 @@ namespace NV.DetectionPlatform.UCtrls
                         Global.CurrentProduct.EndTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                         Global.SaveProduct(Global.CurrentProduct);
 
-                        System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
+                        System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => {
+                            try {
+                                dia.ShowDialogEx();
+                            }
+                            catch (Exception e) { 
+                            
+                            }
+                           
+                        
+                        
+                        }));
                         System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
                         {
                             dia.Summary = "正在保存图像文件，请稍候...";
@@ -595,6 +610,8 @@ namespace NV.DetectionPlatform.UCtrls
                             {
                                 viewer.PutImageData(width, height, bits, ref data[0]);
                                 viewer.SetWindowLevel(w, c);
+                                viewer.RefreshImage();
+                                Console.WriteLine("SaveFile ------ RefreshImage");
 
                                 //viewer.SaveToFile(fName, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
                                 viewer.SaveToDicomFilePtr(_file, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
