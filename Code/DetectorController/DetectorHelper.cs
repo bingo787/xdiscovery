@@ -157,6 +157,9 @@ namespace Detector
             int iHeight = 0;
             int iPixelBits = 0;
             IntPtr pFrame = BrightVisionSDK.GetFrame(ref iFrameID, ref iWidth, ref iHeight, ref iPixelBits);
+
+            Console.WriteLine("BrightVisionSDK.GetFrame ");
+
             if (pFrame != IntPtr.Zero)
             {
                 FileStream sFileStream = new FileStream("frame.raw", FileMode.OpenOrCreate, FileAccess.Write);
