@@ -217,14 +217,17 @@ namespace NV.DetectionPlatform.UCtrls
                     _imageCount++;
                     this.Dispatcher.Invoke(new Action(() =>
                     {
-                       // System.Console.WriteLine(String.Format("PlayBackground IsAcqing {0}", IsAcqing));
+                        System.Console.WriteLine(String.Format("PlayBackground IsAcqing {0}", IsAcqing));
                         if (IsAcqing)
                         {
-                            //ipUC.PutData(W,H ,Bits,data, true);
                             ipUC.CurrentDv.PutImageData(W, H, Bits, ref data[0]);
-                            ipUC.CurrentDv.GetWindowLevel(ref _quickWW, ref _quickWL);
+
                             ipUC.CurrentDv.SetWindowLevel(_quickWW, _quickWL);
+
                             ipUC.CurrentDv.RefreshImage();
+
+                            ipUC.CurrentDv.Invalidate();
+
 
 
                             if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
@@ -526,6 +529,14 @@ namespace NV.DetectionPlatform.UCtrls
             if (ipUC != null && ipUC.CurrentDv != null && ipUC.CurrentDv.HasImage)
                 ipUC.CurrentDv.GetWindowLevel(ref w, ref c);
 
+
+            Thread.Sleep(1000);
+            //for (int i = 0; i < _detector.ImageWidth * _detector.ImageHeight; i++) {
+
+            //    Console.Write("{0} ", p[0][i]);
+
+            //}
+
             DicomViewer viewer = new DicomViewer(wfh);
             string tempFile = System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "template.dcm");
             //viewer.LoadFromFile(tempFile);
@@ -611,7 +622,8 @@ namespace NV.DetectionPlatform.UCtrls
                                 viewer.PutImageData(width, height, bits, ref data[0]);
                                 viewer.SetWindowLevel(w, c);
                                 viewer.RefreshImage();
-                                Console.WriteLine("SaveFile ------ RefreshImage");
+                                viewer.Invalidate();
+                                Console.WriteLine("SaveFile ------ RefreshImage Invalidate");
 
                                 //viewer.SaveToFile(fName, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
                                 viewer.SaveToDicomFilePtr(_file, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
