@@ -231,6 +231,12 @@ namespace NV.DetectionPlatform.UCtrls
 
                             ipUC.CurrentDv.SetWindowLevel(_quickWW, _quickWL);
 
+                            // 上下翻转
+                            ipUC.CurrentDv.FlipVertical();
+                            // 左转90 
+                            ipUC.CurrentDv.LeftRotate();
+
+
                             ipUC.CurrentDv.RefreshImage();
 
                             ipUC.CurrentDv.Invalidate();
@@ -628,6 +634,12 @@ namespace NV.DetectionPlatform.UCtrls
                             {
                                 viewer.PutImageData(width, height, bits, ref data[0]);
                                 viewer.SetWindowLevel(w, c);
+                                // 上下翻转
+                                viewer.FlipVertical();
+                                // 左转90 
+                                viewer.LeftRotate();
+
+
                                 viewer.RefreshImage();
                                 viewer.Invalidate();
                                 Console.WriteLine("SaveFile ------ RefreshImage Invalidate");
