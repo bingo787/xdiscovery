@@ -323,15 +323,7 @@ namespace NV.DetectionPlatform.UCtrls
                 CMessageBox.Show("当前无拍摄方案，无法采集。\nPlease select the Solution first");
                 return;
             }
-            if (_photoNumbers == 0)
-            {
-                _detector.ImageBuffer.Clear();
-                CMessageBox.Show("请在触摸屏上点击 1 号位，待机械装置到位后点击 确定 将会拍摄第 1 张照片");
-            }
-            else if (_photoNumbers == 1)
-            {
-                CMessageBox.Show("请在触摸屏上点击 2 号位，待机械装置到位后点击 确定 将会拍摄第 2 张照片");
-            }
+
 
             if (IsAcqing)
             {
@@ -357,6 +349,17 @@ namespace NV.DetectionPlatform.UCtrls
             }
             else if (type == ExamType.Expose)
             {
+
+                if (_photoNumbers == 0)
+                {
+                    _detector.ImageBuffer.Clear();
+                    CMessageBox.Show("请在触摸屏上点击 1 号位，待机械装置到位后点击 确定 将会拍摄第 1 张照片");
+                }
+                else if (_photoNumbers == 1)
+                {
+                    CMessageBox.Show("请在触摸屏上点击 2 号位，待机械装置到位后点击 确定 将会拍摄第 2 张照片");
+                }
+
                 _detector.IsStored = isStored;
                 _detector.MaxFrames = 0; // 连续获取
                 _detector.HB_SetAqcSpanTime((int)(1000.0 / Global.CurrentParam.Fps));// 设置采集帧率 ： 1，2，4
@@ -439,65 +442,67 @@ namespace NV.DetectionPlatform.UCtrls
                 IsAcqing = false;
 
                 _detector.StopAcq();
-                //if (_curExpType == ExamType.MultiEnergyAvg)//多能合成
-                //{
-                //    SaveMultiAvgFiles(_detector.ImageBuffer.ToList());
-                //}
-                //else if (_curExpType == ExamType.Spot)
-                //{
-                //    SaveFiles(_detector.ImageBuffer.ToList());
-                //}
-                //else if (_curExpType == ExamType.Expose)
-                //{
-                //    SaveFiles(_detector.ImageBuffer.ToList());
-                //}
-
-                //if (_curExpType == ExamType.MultiEnergyAvg)
-                //    RecoverHVPara();
-
-                //  _detector.ImageBuffer.Clear();
-                //update detector state
-                if (Global.MainWindow != null)
-                    Global.MainWindow.NotifyTip("Detector", "就绪");
-
-                _photoNumbers++;
-                System.Console.WriteLine("StopAcq  photoNumbers " + _photoNumbers.ToString() + " ImageBuffer count " + _detector.ImageBuffer.Count().ToString());
-
-                this.Dispatcher.BeginInvoke(new Action(() =>
+                if (_curExpType == ExamType.MultiEnergyAvg)//多能合成
                 {
-                    if (_photoNumbers == 1)
+                    SaveMultiAvgFiles(_detector.ImageBuffer.ToList());
+                }
+                else if (_curExpType == ExamType.Spot)
+                {
+                    SaveFiles(_detector.ImageBuffer.ToList());
+                }
+                else if (_curExpType == ExamType.Expose)
+                {
+                    //update detector state
+                    if (Global.MainWindow != null)
+                        Global.MainWindow.NotifyTip("Detector", "就绪");
+
+                    _photoNumbers++;
+                    System.Console.WriteLine("StopAcq  photoNumbers " + _photoNumbers.ToString() + " ImageBuffer count " + _detector.ImageBuffer.Count().ToString());
+
+                    this.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        // 显示第一张
-                        ushort[] result = _detector.ImageBuffer.ElementAt(0);
-                       ipUC.PutData((ushort)_detector.ImageWidth, (ushort)_detector.ImageWidth, 16, result, true);
-                        ipUC.AutoWindowLevel();
-                        ipUC.CurrentDv.SetScaleRatio(scale_ratio);
-                        ipUC.CurrentDv.Invalidate();
-                        StartAcq(ExamType.Spot, true);
-                    }
-                    else if (_photoNumbers == 2 && _detector.ImageBuffer.Count() == 2)
-                    {
+                        if (_photoNumbers == 1)
+                        {
+                            // 显示第一张
+                            ushort[] result = _detector.ImageBuffer.ElementAt(0);
+                            ipUC.PutData((ushort)_detector.ImageWidth, (ushort)_detector.ImageWidth, 16, result, true);
+                            ipUC.AutoWindowLevel();
+                            ipUC.CurrentDv.SetScaleRatio(scale_ratio);
+                            ipUC.CurrentDv.Invalidate();
+                            StartAcq(ExamType.Spot, true);
+                        }
+                        else if (_photoNumbers == 2 && _detector.ImageBuffer.Count() == 2)
+                        {
 
-                        int width = 0;
-                        int height = 0;
-                        ushort[] result = ConactPicturesByImageBuffer(ref width, ref height);
+                            int width = 0;
+                            int height = 0;
+                            ushort[] result = ConactPicturesByImageBuffer(ref width, ref height);
 
-                        // ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
-                        System.Console.WriteLine("result " + width.ToString() + " " + height.ToString());
-                        ipUC.PutData((ushort)width, (ushort)height, 16, result, true);
-                        ipUC.AutoWindowLevel();
-                        ipUC.CurrentDv.SetScaleRatio(scale_ratio);
-                        ipUC.CurrentDv.Invalidate();
-                        
-
-                        _detector.ImageBuffer.Clear();
-                        _photoNumbers = 0;
-                        System.Console.WriteLine("StopAcq Clear photoNumbers " + _photoNumbers.ToString() + " ImageBuffer count " + _detector.ImageBuffer.Count().ToString());
+                            // ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
+                            System.Console.WriteLine("result " + width.ToString() + " " + height.ToString());
+                            ipUC.PutData((ushort)width, (ushort)height, 16, result, true);
+                            ipUC.AutoWindowLevel();
+                            ipUC.CurrentDv.SetScaleRatio(scale_ratio);
+                            ipUC.CurrentDv.Invalidate();
 
 
-                    }
-                }));
+                            _detector.ImageBuffer.Clear();
+                            _photoNumbers = 0;
+                            System.Console.WriteLine("StopAcq Clear photoNumbers " + _photoNumbers.ToString() + " ImageBuffer count " + _detector.ImageBuffer.Count().ToString());
 
+
+                        }
+                    }));
+
+
+                  //  SaveFiles(_detector.ImageBuffer.ToList());
+                }
+
+                if (_curExpType == ExamType.MultiEnergyAvg)
+                    RecoverHVPara();
+
+                _detector.ImageBuffer.Clear();
+             
 
             }
            
