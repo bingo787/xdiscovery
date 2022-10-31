@@ -212,9 +212,11 @@ namespace NV.DetectionPlatform.UCtrls
         private void PlayBackground()
         {
             int clear = 0;
+
             while (_running)
             {
                 clear++;
+
                 if (_detector.PlayBuffer.Count > 0)
                 {
                     ushort[] data = _detector.PlayBuffer.Dequeue();
@@ -224,7 +226,7 @@ namespace NV.DetectionPlatform.UCtrls
                     _imageCount++;
                     this.Dispatcher.Invoke(new Action(() =>
                     {
-                        System.Console.WriteLine(String.Format("PlayBackground IsAcqing {0}", IsAcqing));
+  //                      System.Console.WriteLine(String.Format("PlayBackground IsAcqing {0},  _detector.PlayBuffer.Count = {1}", IsAcqing, _detector.PlayBuffer.Count));
                         if (IsAcqing)
                         {
                             ipUC.CurrentDv.PutImageData(W, H, Bits, ref data[0]);
@@ -232,16 +234,12 @@ namespace NV.DetectionPlatform.UCtrls
                             ipUC.CurrentDv.SetWindowLevel(_quickWW, _quickWL);
 
                             // 上下翻转
-                            ipUC.CurrentDv.FlipVertical();
+                          //  ipUC.CurrentDv.FlipVertical();
                             // 左转90 
                             ipUC.CurrentDv.LeftRotate();
-
-
                             ipUC.CurrentDv.RefreshImage();
 
-                            ipUC.CurrentDv.Invalidate();
-
-
+                          //  ipUC.CurrentDv.Invalidate();
 
                             if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
                             {
@@ -251,7 +249,7 @@ namespace NV.DetectionPlatform.UCtrls
 
                         }
                             
-                        if (_detector.PlayBuffer.Count > 90)
+                        if (_detector.PlayBuffer.Count > 20)
                         {
                             _detector.PlayBuffer.Dequeue();
                             _detector.PlayBuffer.Dequeue();
@@ -260,7 +258,7 @@ namespace NV.DetectionPlatform.UCtrls
                         sldrImageIndex.Maximum = _imageCount;
                     }), System.Windows.Threading.DispatcherPriority.Normal);
 
-                    Thread.Sleep(10);
+                   Thread.Sleep(10);
                 }
                 else
                 {
@@ -348,18 +346,17 @@ namespace NV.DetectionPlatform.UCtrls
                 _curExpTime = (int)(Global.CurrentParam.Time * 1000); // ms
             }
 
+            // 所有的缓存清零
+
+
+
             _imageCount = 0;
             IsAcqing = true;
             _curExpType = type;
-           
-
-            _detector.SetExposureTime((double)_curExpTime);
-
-            DicomViewer.Current.ClearImage();
-
-
+            
             MainWindow.ControlSystem.XRayOn();
-
+            DicomViewer.Current.ClearImage();
+            _detector.SetExposureTime((double)_curExpTime);
 
 
             new Thread(new ThreadStart(delegate
@@ -371,7 +368,7 @@ namespace NV.DetectionPlatform.UCtrls
                 {
 
                     ret = _detector.StartSingleShot();
-                   // ret = _detector.StartAcq();
+                  //  ret = _detector.StartAcq();
                 }
                 else if(_curExpType == ExamType.Expose)
                 {
@@ -543,12 +540,12 @@ namespace NV.DetectionPlatform.UCtrls
                 ipUC.CurrentDv.GetWindowLevel(ref w, ref c);
 
 
-            Thread.Sleep(1000);
-            //for (int i = 0; i < _detector.ImageWidth * _detector.ImageHeight; i++) {
+            //Thread.Sleep(1000);
+            ////for (int i = 0; i < _detector.ImageWidth * _detector.ImageHeight; i++) {
 
-            //    Console.Write("{0} ", p[0][i]);
+            ////    Console.Write("{0} ", p[0][i]);
 
-            //}
+            ////}
 
             DicomViewer viewer = new DicomViewer(wfh);
             string tempFile = System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "template.dcm");
@@ -635,10 +632,9 @@ namespace NV.DetectionPlatform.UCtrls
                                 viewer.PutImageData(width, height, bits, ref data[0]);
                                 viewer.SetWindowLevel(w, c);
                                 // 上下翻转
-                                viewer.FlipVertical();
+                               // viewer.FlipVertical();
                                 // 左转90 
                                 viewer.LeftRotate();
-
 
                                 viewer.RefreshImage();
                                 viewer.Invalidate();

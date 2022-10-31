@@ -15,6 +15,10 @@ using NV.DRF.Core.Common;
 using NV.Infrastructure.UICommon;
 using SerialPortController;
 using BrightVisionSDKSample;
+using OpenCvSharp;
+using System.Windows.Markup;
+using System.Windows.Media.Media3D;
+
 
 namespace Detector
 {
@@ -214,7 +218,8 @@ namespace Detector
         public bool StartAcq()
         {
 
-            _imageBuffer.Clear();
+            ImageBuffer.Clear();
+            PlayBuffer.Clear();
             count = 0;
             //Start Stream
 
@@ -386,7 +391,33 @@ namespace Detector
             }
 
 
-                return true;
+            // 设置一些初始化的参数，比如旋转
+
+
+            //Set ReverseY 上下翻转
+            long iReverseY = 1;
+            IntPtr pReverseY = Marshal.StringToHGlobalAnsi("ReverseY");
+            if (BrightVisionSDK.GetAttrInt(pReverseY, ref iReverseY, 0))
+            {
+                iReverseY = 1;
+                if (BrightVisionSDK.SetAttrInt(pReverseY, iReverseY, 0))
+                {
+                    Console.WriteLine("Set ReverseY to {0:D}", iReverseY);
+                }
+                else
+                {
+                    Console.WriteLine("Warnning: Fail to set ReverseY, {0}", Marshal.PtrToStringAnsi(BrightVisionSDK.GetLastErrorText()));
+                }
+            }
+            else
+            {
+                Console.WriteLine("Warnning: Fail to get ReverseY, {0}", Marshal.PtrToStringAnsi(BrightVisionSDK.GetLastErrorText()));
+            }
+            Marshal.FreeHGlobal(pReverseY);
+
+
+
+            return true;
         }
 
         private void ConnBreak()
@@ -421,7 +452,7 @@ namespace Detector
         /// <param name="image"></param>
         private unsafe void HandleImage(IntPtr pFrameInShort, ushort iFrameID, int iFrameWidth, int iFrameHeight, IntPtr pParam)
         {
-            ShowMessage("HandleImage ");
+          //  ShowMessage("HandleImage ");
 
             if ((pFrameInShort == null))
             {
@@ -435,8 +466,27 @@ namespace Detector
             {
                 buffer[i] = ((ushort*)pFrameInShort)[i];
 
-              //  Console.Write("{0} ", buffer[i]);
+                //  Console.Write("{0} ", buffer[i]);
             }
+
+
+
+
+
+            //Mat src = new Mat(iFrameHeight, iFrameWidth, MatType.CV_16UC1, buffer);
+            //Mat dst = new Mat(iFrameHeight, iFrameWidth, MatType.CV_16UC1);
+           
+            //Cv2.Rotate(src, dst ,RotateFlags.Rotate90Counterclockwise);
+            //ushort[] result = new ushort[iFrameHeight*iFrameWidth];
+
+            //System.Threading.Tasks.Parallel.For(0, iFrameWidth, i =>
+            //{
+            //    for (int j = 0; j < iFrameHeight; j++)
+            //    {
+            //        result[i * iFrameHeight + j] = dst.At<ushort>(i, j);
+            //    }
+            //});
+
 
             PlayBuffer.Enqueue(buffer);
 
@@ -446,9 +496,9 @@ namespace Detector
             }
 
             count++;
-            Console.WriteLine("Recieve image count  {0} / {1}, ImageBuffer.Count = {2}",count, MaxFrames, ImageBuffer.Count);
+          //  Console.WriteLine("Recieve image count  {0} / {1}, ImageBuffer.Count = {2}",count, MaxFrames, ImageBuffer.Count);
 
-            if (MaxFrames == count)
+            if (MaxFrames == 1 )
             {
                 // 这里只是为了保存图片, 单张的时候停止拍摄
 
