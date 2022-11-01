@@ -31,13 +31,26 @@ namespace NV.DetectionPlatform.UCtrls
         {
             InitializeComponent();
 
+
             ProgressDialog dia = new ProgressDialog("加载数据库");
             dia.Summary = "正在加载数据，请稍候...";
             dia.MaxValue = 100;
             dia.CurValue = 50;
             dia.CanCancel = false;
-            System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
-            System.Windows.Application.Current.Dispatcher.Invoke(new Action(() => {
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                try
+                {
+                    dia.ShowDialogEx();
+                }
+                catch (Exception e){
+                    
+                }
+             
+            
+            }));
+            System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
 
                 this.DataContext = new BrowerViewModel(this);
 
@@ -45,7 +58,7 @@ namespace NV.DetectionPlatform.UCtrls
                 dia.Summary = "加载完毕";
                 dia.Close();
             }));
-           
+
         }
     }
 
