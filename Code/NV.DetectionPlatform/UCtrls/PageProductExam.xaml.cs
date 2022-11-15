@@ -134,8 +134,14 @@ namespace NV.DetectionPlatform.UCtrls
         {
             if (ipUC != null && ipUC.CurrentDv != null)
             {
+                Console.WriteLine("set window level {0}, {1}", ww, wl);
+
                 ipUC.CurrentDv.SetWindowLevel(ww, wl);
-                ipUC.CurrentDv.Invalidate();
+
+                _quickWL = wl;
+                _quickWW = ww;
+
+
             }
         }
 
@@ -271,13 +277,14 @@ namespace NV.DetectionPlatform.UCtrls
                     this.Dispatcher.Invoke(new Action(() =>
                     {
                        // System.Console.WriteLine(String.Format("PlayBackground IsAcqing {0}", IsAcqing));
-                       // if (IsAcqing)
+                         if (IsAcqing)
                         {
                             //ipUC.PutData(W,H ,Bits,data, true);
                             ipUC.CurrentDv.PutImageData(W, H, Bits, ref data[0]);
-                            ipUC.CurrentDv.GetWindowLevel(ref _quickWW, ref _quickWL);
+                           // ipUC.CurrentDv.GetWindowLevel(ref _quickWW, ref _quickWL);
                             ipUC.CurrentDv.SetWindowLevel(_quickWW, _quickWL);
                             ipUC.CurrentDv.RefreshImage();
+                            ipUC.CurrentDv.Invalidate();
 
 
                             if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
