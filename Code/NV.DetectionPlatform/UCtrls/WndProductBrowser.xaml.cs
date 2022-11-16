@@ -30,7 +30,8 @@ namespace NV.DetectionPlatform.UCtrls
         public WndProductBrowser()
         {
             InitializeComponent();
-           
+            this.DataContext = new BrowerViewModel(this);
+
         }
     }
 

@@ -173,8 +173,10 @@ namespace Detector
 
         public bool StartSingleShot() {
             ShowMessage("StartSingleShot");
-            _multiFramesOverlayBuffer.Clear();
 
+            _imageBuffer.Clear();
+            _multiFramesOverlayBuffer.Clear();
+            count = 0;
             int  ret = -1;
 
             if (true)
