@@ -144,7 +144,7 @@ namespace SerialPortController
                                 ReceivedMessage(mes);
                             }
                             catch (Exception ex) {
-                                MessageBox.Show(ex.ToString());
+                              //  MessageBox.Show(ex.ToString());
                             }
                            
                         }

@@ -171,7 +171,19 @@ namespace NV.DetectionPlatform.UCtrls
             ushort[] data = new ushort[width * height];
             ushort[] result = new ushort[width * height];
 
-            System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
+            System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => {
+                try
+                {
+                    dia.ShowDialogEx();
+                }
+                catch (Exception e)
+                {
+
+                    
+                }    
+              
+            
+            }));
             System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
             {
 

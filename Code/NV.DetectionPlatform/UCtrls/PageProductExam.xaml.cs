@@ -1422,7 +1422,7 @@ namespace NV.DetectionPlatform.UCtrls
             dv.SaveAnnotation(System.IO.Path.ChangeExtension(dv.CurrentFileName, ".xml"));
 
             System.Windows.Forms.SaveFileDialog dialog = new System.Windows.Forms.SaveFileDialog();
-            dialog.Filter = "*.bmp|*.bmp|*.png|*.png|*.jpeg|*.jpeg|*.tiff|*.tiff";
+            dialog.Filter = "*.jpeg|*.jpeg|*.bmp|*.bmp|*.png|*.png|*.tiff|*.tiff";
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 string extension = System.IO.Path.GetExtension(dialog.FileName);
