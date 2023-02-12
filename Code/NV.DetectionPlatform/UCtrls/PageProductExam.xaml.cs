@@ -50,7 +50,29 @@ namespace NV.DetectionPlatform.UCtrls
         public static SerialPortReporter_RS485PROTOCOL_PLC PostionReporter = SerialPortReporter_RS485PROTOCOL_PLC.Instance;
         double scaleRatio = 0.1;
         double TempratureThreshold = 35.0f;
-        private double CalculateScaleRatio() {
+
+        /// <summary>
+        /// 计算曲率
+        /// </summary>
+        /// <returns></returns>
+        public bool PT_Angle = false;
+        public System.Drawing.Point currentPoint = new System.Drawing.Point(0,0);
+        public List<System.Drawing.Point> pointLists = new List<System.Drawing.Point>();
+
+        public static double GetPerpendicularDistance(System.Drawing.Point A, System.Drawing.Point B, System.Drawing.Point C)
+        {
+            double AB = Math.Sqrt(Math.Pow(B.X - A.X, 2) + Math.Pow(B.Y - A.Y, 2));
+            double AC = Math.Sqrt(Math.Pow(C.X - A.X, 2) + Math.Pow(C.Y - A.Y, 2));
+            double BC = Math.Sqrt(Math.Pow(C.X - B.X, 2) + Math.Pow(C.Y - B.Y, 2));
+
+            double p = (AB + AC + BC) / 2;
+            double area = Math.Sqrt(p * (p - AB) * (p - AC) * (p - BC));
+            double h = 2 * area / BC;
+           // return h;
+            return h/BC;
+        }
+    
+            private double CalculateScaleRatio() {
             //todo:zhaoqibin
             scaleRatio =  (PostionReporter.AxisZDistance_mm * 2.126526929 + _detector.ScaleRatioFinetuning) /10000.0;
 
@@ -67,7 +89,71 @@ namespace NV.DetectionPlatform.UCtrls
             this.Log("初始化采集--探测器群.");
             InitilizeDetector();
             this.Loaded += PageProductExam_Loaded;
+
+            ipUC.CurrentDv.GetCurPixel += CurrentDv_GetCurPixel;
+            ipUC.CurrentDv.ImgWndProc += CurrentDv_ImgWndProc;
+         
+
         }
+
+        private void CurrentDv_ImgWndProc(object sender, AxImageViewLib._IDicomViewerEvents_ImgWndProcEvent e)
+        {
+            // Console.WriteLine("{0},{1},{2},{3} ", e.uMsg, e.wParam, e.lParam, e.pResult);
+
+            if (PT_Angle == false) {
+                return;
+            }
+
+            if (e.uMsg == 513 && e.wParam == 1) {
+
+                Console.WriteLine("mouse left pressed x {0}, y {1}", currentPoint.X, currentPoint.Y);
+                pointLists.Add(currentPoint);
+ 
+                Console.WriteLine("pointLists Count {0}", pointLists.Count());
+
+                if (pointLists.Count() == 3) {
+                    PT_Angle = false;
+                    // 根据三个点的坐标计算曲率
+                   double res =  GetPerpendicularDistance(pointLists[0], pointLists[1], pointLists[2]);
+                   Console.WriteLine("curvature =  {0}", res);
+                    
+                    string show_text = "Curvature: " + res.ToString("0.00");
+                    Console.WriteLine(show_text);
+
+
+                    System.Drawing.Point p = new System.Drawing.Point((int)e.lParam);
+                    p = ipUC.CurrentDv.PointToClient(p);        
+                    ipUC.CurrentDv.AddText(p.X, p.Y, show_text, 80, "Microsoft YaHei");
+                    pointLists.Clear();
+                }
+            }
+            else if (e.uMsg == 514 && e.wParam == 0)
+            {
+
+                Console.WriteLine("mouse left released");
+            }
+            else if (e.uMsg == 516 && e.wParam == 2)
+            {
+
+                Console.WriteLine("mouse right released");
+            }
+            else if (e.uMsg == 517 && e.wParam == 0)
+            {
+
+                Console.WriteLine("mouse right released");
+            }
+        }
+
+
+        private void CurrentDv_GetCurPixel(object sender, AxImageViewLib._IDicomViewerEvents_GetCurPixelEvent e)
+        {
+           // Console.WriteLine("CurrentDv_GetCurPixel  x " + e.x + " y " + e.y);
+            currentPoint.X = e.x;
+            currentPoint.Y = e.y;
+ 
+        }
+
+    
 
         void PageProductExam_Loaded(object sender, RoutedEventArgs e)
         {
@@ -825,6 +911,8 @@ namespace NV.DetectionPlatform.UCtrls
             }
         }
 
+
+
         /// <summary>
         /// 图像显示处理
         /// </summary>
@@ -842,7 +930,14 @@ namespace NV.DetectionPlatform.UCtrls
 
             if (strArr.Length < 2) return;
 
+
             ipUC.CurrentDv.Excute(strTag);
+
+            Console.WriteLine("strArr {0},{1}", strArr[0], strArr[1]);
+
+            if (strArr[1].Equals("PT_ANGLE")) {
+                PT_Angle = true;
+            }
         }
 
 
@@ -985,6 +1080,9 @@ namespace NV.DetectionPlatform.UCtrls
                 string fileName = ((sender as FrameworkElement).DataContext as PlatformFilesModel).DcmFiles[0];
                 DragDrop.DoDragDrop(sender as FrameworkElement, fileName, DragDropEffects.Copy);
             }
+
+            System.Windows.Point p = e.GetPosition((IInputElement)sender);
+            Console.WriteLine("mouse point x " + p.X + " y " + p.Y);
         }
 
 
@@ -1052,11 +1150,11 @@ namespace NV.DetectionPlatform.UCtrls
                     dialog.Multiselect = true;
                     dialog.Filter = "image files|*.bmp;*.jpg;*.jpeg;*.png";
                     if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    {
+                    { 
                         ushort width = 0;
                         ushort height = 0;
                         ushort[] result = Stitching(dialog.FileNames,ref width, ref height);
-
+                         
                     
                        // ipUC.CurrentDv.GetImageSize(out ushort width, out ushort height, out ushort bits, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL);
                         System.Console.WriteLine("result " + width.ToString() + " " + height.ToString());
