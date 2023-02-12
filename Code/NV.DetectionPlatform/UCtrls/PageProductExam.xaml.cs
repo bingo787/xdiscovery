@@ -127,7 +127,7 @@ namespace NV.DetectionPlatform.UCtrls
 
                     System.Drawing.Point p = new System.Drawing.Point((int)e.lParam);
                     p = ipUC.CurrentDv.PointToClient(p);        
-                    ipUC.CurrentDv.AddText(p.X, p.Y, show_text, 80, "Microsoft YaHei");
+                    ipUC.CurrentDv.AddText(p.X, p.Y, show_text, 20, "Microsoft YaHei");
                     pointLists.Clear();
                 }
             }
