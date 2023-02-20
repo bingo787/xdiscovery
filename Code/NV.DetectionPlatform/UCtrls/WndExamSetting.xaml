@@ -95,13 +95,13 @@
                     <!--<Label Content="uA" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"/>-->
                     <Label Content="S" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center"/>
 
-                    <TextBox Grid.Column="1" x:Name="txtkv" Text="{Binding DataContext.CurrentParam.KV}"/>
+                    <TextBox Grid.Column="1" x:Name="txtkv" Text="{Binding DataContext.CurrentParam.KV}" IsEnabled="True" />
                     <!--<TextBox Grid.Column="1" Grid.Row="2" x:Name="txtua" Text="{Binding DataContext.CurrentParam.UA}" IsEnabled="False"/>-->
                     <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtTime" Text="{Binding DataContext.CurrentParam.Time}" IsEnabled="True"/>
 
-                    <Slider Grid.ColumnSpan="3" Grid.Row="1" x:Name="sldrkv" Minimum="0" Value="{Binding DataContext.CurrentParam.KV}" TickFrequency="0.1" Maximum="80"/>
+                    <Slider Grid.ColumnSpan="3" Grid.Row="1" x:Name="sldrkv" Minimum="0" Value="{Binding DataContext.CurrentParam.KV}" TickFrequency="1" Maximum="80"/>
                     <!--<Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrua" Minimum="0" Value="{Binding DataContext.CurrentParam.UA}" Maximum="1250" IsEnabled="False"/>-->
-                    <Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrtime" Minimum="0" Value="{Binding DataContext.CurrentParam.Time}" TickFrequency="0.1"/>
+                    <Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrtime" Minimum="0" Value="{Binding DataContext.CurrentParam.Time}" TickFrequency="0.1" Maximum="10"/>
 
                     <!--<ComboBox x:Name="cboFps" Grid.Row="6" Grid.Column="1" Text="{Binding SelectedItem.Fps,ElementName=lstParams,Mode=OneWay}" SelectedIndex="0" IsEnabled="False">
                         <ComboBoxItem Content="1" Tag="1000"/>

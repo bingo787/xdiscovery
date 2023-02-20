@@ -582,7 +582,7 @@ namespace SerialPortController
             List<byte> command = new List<byte>() { 0x01, 0x05, 0x00, 0x00, 0xFF, 0x00, 0x8C, 0x3A };
             if (_serialPort.IsOpen)
             {
-                Console.WriteLine("XRayOn ");
+                Console.WriteLine("打开光源 ");
                 _serialPort.Write(command.ToArray(), 0, command.Count);
             }
 
@@ -597,7 +597,7 @@ namespace SerialPortController
             List<byte> command = new List<byte>() { 0x01, 0x05, 0x00, 0x00, 0x00, 0x00, 0xCD, 0xCA };
             if (_serialPort.IsOpen)
             {
-                Console.WriteLine("XRayOff ");
+                Console.WriteLine("关闭光源 ");
                 _serialPort.Write(command.ToArray(), 0, command.Count);
             }
 

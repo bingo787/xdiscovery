@@ -170,10 +170,9 @@ namespace NV.DetectionPlatform.UCtrls
                 var Data = NV.Config.NV1313FPDSetting.Instance;
                 _detector.ScaleRatio = Data.ScaleRatio;
                 _detector.Delay = Data.Delay;
-                _detector.TimeoutMs = Data.MaxFrames;
-
-                _detector.ImageMode = (int)Data.ImageMode;
-                _detector.SetUVCDeviceParameters(_detector.ImageMode, 0, 0, 0);
+ 
+            
+                _detector.SetUVCDeviceParameters(0, 0, 0, 0);
                 _detector.GetUVCDeviceParameters();
 
                 IsConnected = true;
@@ -329,12 +328,8 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.MaxFrames = 1;
                 // 设置曝光时间
                 _curExpTime = (int)(Global.CurrentParam.Time * 1000);
-                if (_curExpTime == 0)
-                {
-                    /// 防止曝光时间设置为 0
-                    _curExpTime = 1;
-                }
 
+                _detector.SetActTime(_curExpTime);
             }
             else if (type == ExamType.Expose)
             {
@@ -355,11 +350,7 @@ namespace NV.DetectionPlatform.UCtrls
 
             double kvv = (double)Global.CurrentParam.KV;
             Thread.Sleep(200);
-            /// 设定时间后自动关闭Xray
-            if (_detector.ImageMode == 1) // 1: vtc, 0:ac
-            {
-                StopAcqAfter(_curExpTime + _detector.Delay - 200);
-            }
+ 
             MainWindow.ControlSystem.SetKV(kvv);
 
             IsAcqing = true;

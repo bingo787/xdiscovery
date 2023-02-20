@@ -30,13 +30,13 @@
                 <TextBox Text="{Binding Delay,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                 <TextBlock Text="尺度比例ScaleRatio:"/>
                 <TextBox Text="{Binding ScaleRatio,UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Text="出图模式:"/>
-                <ComboBox ItemsSource="{Binding ImageModes}" SelectedValue="{Binding ImageMode}"></ComboBox>
+                <!--<TextBlock Text="出图模式:"/>
+                <ComboBox ItemsSource="{Binding ImageModes}" SelectedValue="{Binding ImageMode}"></ComboBox>-->
                 <!--<TextBlock Text="Xray类型:" />
                 <ComboBox SelectedValue="{Binding XrayType ,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding XrayTypes,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"/>-->
-              
-                <TextBlock Text="最大采集时间(ms):"/>
-                <TextBox Text="{Binding MaxFrames,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+
+                <!--<TextBlock Text="最大采集时间(ms):"/>
+                <TextBox Text="{Binding MaxFrames,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>-->
                 <!--<TextBlock Text="图像处理:"/>
                 <ComboBox ItemsSource="{Binding ModelFilters}" SelectedValue="{Binding ModelFilter}"/>-->
                 <!--<TextBlock Text="Binning:"/>

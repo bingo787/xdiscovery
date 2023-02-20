@@ -93,7 +93,6 @@ namespace Detector
         /// </summary>
         public int Delay = 0;
 
-        public int TimeoutMs = 10 * 1000;
 
         public double ScaleRatio = 0.1;
         /// <summary>
@@ -215,12 +214,13 @@ namespace Detector
 
                     if (string.IsNullOrEmpty(pFile)) {
                       //  string message = GetDeviceState();
-                        ShowMessage( "采集超时！！请增加曝光强度和时间，重新采集。\n\r 将为您显示上一次采集结果。" , true);
+                        ShowMessage( "采集超时！！请增加曝光强度和时间，重新采集。\n\r " , true);
+                        return 0;
                     }
                     
                     Console.WriteLine("图片已采集存储完成 " + pFile);
 
-                    BinaryReader br = new BinaryReader(new FileStream("luvc_camera.raw", FileMode.Open));
+                    BinaryReader br = new BinaryReader(new FileStream(pFile, FileMode.Open));
 
                     byte[] byteBuffer = br.ReadBytes((int)(_imageHeight * _imageWidth * sizeof(UInt16)));
                     ushort[] uint16Buffer = new ushort[_imageHeight * _imageWidth];
@@ -342,9 +342,11 @@ namespace Detector
         public void SetUVCDeviceParameters(int nImgModel, int nBinning, int nFilter, int nRay) {
 
             //检测图像时间
-            UInt32 nCheckTime = (UInt32)TimeoutMs; //ms
+            UInt32 nCheckTime = 10 *1000; //ms
             //获取图像时间
             UInt32 nGetTime = 60 * 1000; //ms
+
+  
 
             LU_PARAM param = new LU_PARAM();
             unsafe
@@ -403,6 +405,30 @@ namespace Detector
             }
 
 
+
+
+        }
+
+        public void SetActTime(int nActTime) {
+            LU_PARAM param = new LU_PARAM();
+
+            if (nActTime > 10 * 1000) { 
+                nActTime = 10 * 1000;
+            }
+
+            Console.WriteLine("LUDEV_PARAM SetActTime {0} ms", nActTime);
+
+            unsafe
+            {
+                //ACT 1.6版本 曝光时间
+                param.param = (UInt16)LUDEV_PARAM.LUDEVPARAM_ACT;
+                param.size = sizeof(UInt32);
+                param.data = &nActTime;
+                //
+                int ret = LionSDK.LionSDK.SetDeviceParam(ref luDev, ref param);
+
+       
+            }
         }
 
         public void GetUVCDeviceParameters() {

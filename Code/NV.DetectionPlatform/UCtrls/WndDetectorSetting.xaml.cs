@@ -45,10 +45,7 @@ namespace NV.DetectionPlatform.UCtrls
             var detector = Detector.DetectorController.Instance;
             detector.Delay = Data.Delay;
             detector.ScaleRatio = Data.ScaleRatio;
-
-            detector.SetUVCDeviceParameters((int)Data.ImageMode, 0, 0, 0);
-            detector.GetUVCDeviceParameters();
-
+ 
             string autoOffset = Data.IsAutoPreOffset ? "1" : "0";
             NV.Infrastructure.UICommon.IniFile.WriteString("System", "AutoOffsetCalOnOpen", autoOffset, System.IO.Path.Combine(System.Windows.Forms.Application.StartupPath, "nvDentalDet.ini"));
 
