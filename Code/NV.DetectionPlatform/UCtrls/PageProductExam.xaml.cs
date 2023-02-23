@@ -22,6 +22,8 @@ using NV.DetectionPlatform.Entity;
 using System.Drawing;
 using NV.Config;
 using OpenCvSharp;
+using System.Windows.Markup;
+using System.Windows.Media.Media3D;
 
 namespace NV.DetectionPlatform.UCtrls
 {
@@ -207,6 +209,7 @@ namespace NV.DetectionPlatform.UCtrls
                     _imageCount++;
                     this.Dispatcher.Invoke(new Action(() =>
                     {
+                        IsAcqing = true;
                         System.Console.WriteLine(String.Format("PlayBackground IsAcqing {0}", IsAcqing));
                         if (IsAcqing)
                         {
@@ -957,8 +960,7 @@ namespace NV.DetectionPlatform.UCtrls
                 DragDrop.DoDragDrop(sender as FrameworkElement, fileName, DragDropEffects.Copy);
             }
         }
-
-
+       
         /// <summary>
         /// 图像处理
         /// </summary>
@@ -967,11 +969,12 @@ namespace NV.DetectionPlatform.UCtrls
         private void radioBtnDo(object sender, RoutedEventArgs e)
         {
             string tag = (sender as FrameworkElement).Tag.ToString();
-
+ 
             if (ipUC.CurrentDv == null)
                 return;
             if (tag != "FalseColor" && tag != "Back")
                 ipUC.CurrentDv.SaveToStack();
+ 
             switch (tag)
             {
                 case "Sharp":
@@ -1019,6 +1022,7 @@ namespace NV.DetectionPlatform.UCtrls
                     break;
                 case "Cameo":
 
+                 
                     System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
                     dialog.Multiselect = true;
                     dialog.Filter = "image files|*.bmp;*.jpg;*.jpeg;*.png";
@@ -1035,6 +1039,7 @@ namespace NV.DetectionPlatform.UCtrls
                         ipUC.AutoWindowLevel();
                         ipUC.CurrentDv.Invalidate();
                     }
+ 
 
                     break;
                 case "Back":

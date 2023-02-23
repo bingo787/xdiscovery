@@ -139,17 +139,55 @@ namespace Detector
             return false;
         }
 
-
-        void ProcessShowImage(ref ushort[] data)
+        void ProcessShowImage(string filePath)
         {
 
-            unsafe {
+     
+            int bufferSize = 1024;
 
-                Mat img = new Mat((int)_imageHeight, (int)_imageWidth, MatType.CV_16UC1, data);
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                BinaryReader br = new BinaryReader(fs);
 
-                Console.WriteLine("读取图片W:{0},H:{1}",img.Width, img.Height);
+                // 读取文件长度和一次读取的ushort数量
+                long fileLength = fs.Length;
+                int numUShortsToRead = (int)(fileLength / sizeof(ushort));
 
-                OpenCvSharp.Point[][] point1  = new OpenCvSharp.Point[2][];
+                // 创建一个ushort数组以存储读取的数据
+                ushort[] data = new ushort[numUShortsToRead];
+
+                // 设置读取缓冲区
+                byte[] buffer = new byte[bufferSize];
+
+                int numBytesRead = 0;
+                int numUShortsRead = 0;
+
+                // 读取数据
+                while ((numBytesRead = br.Read(buffer, 0, bufferSize)) > 0)
+                {
+                    // 将读取的数据转换为ushort并存储在数组中
+                    for (int i = 0; i < numBytesRead; i += 2)
+                    {
+                        data[numUShortsRead++] = BitConverter.ToUInt16(buffer, i);
+                    }
+                }
+
+                // 在这里，我们已经成功读取了二进制文件以ushort格式，并将其存储在data数组中
+                // 可以在这里进行后续的处理
+
+                Mat img = new Mat((int)ImageHeight, (int)ImageWidth, MatType.CV_16UC1, data);
+                Console.WriteLine("读取图片{0} W:{1},H:{2},Depth:{3},Rows:{4},Cols:{5},Channels:{6},Size:{7}",
+                    filePath,
+                    img.Width,
+                    img.Height,
+                    img.Depth(),
+                    img.Rows,
+                    img.Cols,
+                    img.Channels(),
+                    img.ElemSize()
+                    );
+
+                OpenCvSharp.Point[][] point1 = new OpenCvSharp.Point[2][];
                 point1[0] = new OpenCvSharp.Point[3];
                 point1[1] = new OpenCvSharp.Point[3];
 
@@ -161,46 +199,34 @@ namespace Detector
                 point1[1][1] = new OpenCvSharp.Point(1375, 2272);
                 point1[1][2] = new OpenCvSharp.Point(1660, 2272);
 
-                int[] npts ={ 3, 3 };/* 三角形有三个有效点正方形有四个有效点 */
-                Scalar color = new  Scalar(4096, 4096, 4096);/* 颜色参数 */
-             // cvFillPoly(testImage, point1, npts, 2, color);
+                int[] npts = { 3, 3 };/* 三角形有三个有效点正方形有四个有效点 */
+                Scalar color = new Scalar(4096, 4096, 4096);/* 颜色参数 */
+                // cvFillPoly(testImage, point1, npts, 2, color);
                 Console.WriteLine("填充颜色");
                 Cv2.FillPoly(img, point1, color);
- 
 
-                Console.WriteLine("创建数组拷贝出去W:{0}，H:{1}",_imageWidth, _imageHeight);
-                ushort[]  result = new ushort[_imageHeight * _imageWidth];
+                img.GetArray<ushort>(out ushort[] result);
 
-                for (int i = 0; i < _imageHeight; i++) {
-                    for (int j = 0; j < _imageWidth; j++)
-                    {
-                        result[i * _imageWidth + j] = img.At<ushort>(i, j);
-                    }
-                }
-
-                PlayBuffer.Enqueue(result);
 
                 if (IsStored)
                 {
+                    Console.WriteLine("ImageBuffer.Add");
                     ImageBuffer.Add(result);
                 }
 
                 count++;
-
-                
-
-              //  if (ImageMode == 0) // AC 模式下收到图后就停止
                 {
                     // 单帧的时候，停止
                     AcqMaxFrameEvent();
                 }
 
+                // 关闭读取器和文件流
+                br.Close();
+                fs.Close();
             }
 
 
- 
-
-            }
+        }
 
         private int AsyncImageCallback(LU_DEVICE device, byte[] pImgData, int nDataBuf, string pFile)
         {
@@ -214,23 +240,19 @@ namespace Detector
 
                     if (string.IsNullOrEmpty(pFile)) {
                       //  string message = GetDeviceState();
-                        ShowMessage( "采集超时！！请增加曝光强度和时间，重新采集。\n\r " , true);
+                        ShowMessage( "采集超时！！请增加曝光强度和时间，重新采集。\n\r " , false);
                         return 0;
                     }
                     
                     Console.WriteLine("图片已采集存储完成 " + pFile);
 
-                    BinaryReader br = new BinaryReader(new FileStream(pFile, FileMode.Open));
+                     ProcessShowImage(pFile.Replace(".bmp", ".raw"));
 
-                    byte[] byteBuffer = br.ReadBytes((int)(_imageHeight * _imageWidth * sizeof(UInt16)));
-                    ushort[] uint16Buffer = new ushort[_imageHeight * _imageWidth];
+                     File.Delete(pFile);
+                     File.Delete(pFile.Replace(".bmp",".jpg"));
+                     File.Delete(pFile.Replace(".bmp",".raw"));
 
-                    for (int i = 0; i < _imageHeight * _imageWidth; i++)
-                    {
-                        uint16Buffer[i] = System.BitConverter.ToUInt16(byteBuffer, i * 2);
-                    }
 
-                    ProcessShowImage(ref uint16Buffer);
 
 
                 }
@@ -535,7 +557,7 @@ namespace Detector
         {
             res = string.Empty;
 
-            _detectorHeight = 2272;
+            _detectorHeight = 2280;
             _detectorWidth = 1660;
             _imageHeight = _detectorHeight;
             _imageWidth = _detectorWidth;
@@ -557,6 +579,8 @@ namespace Detector
 
                 callback = new LionCom.LionImageCallback(AsyncImageCallback);
                 res += "设备打开成功！";
+
+                
                 return true;
             }
 
