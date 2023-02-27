@@ -120,8 +120,10 @@ namespace NV.DetectionPlatform.UCtrls
                     // 根据三个点的坐标计算曲率
                    double res =  GetPerpendicularDistance(pointLists[0], pointLists[1], pointLists[2]);
                    Console.WriteLine("curvature =  {0}", res);
-                    
-                    string show_text = "Curvature: " + res.ToString("0.00");
+
+                    // 换算成百分数
+                    res = res * 100;
+                    string show_text = "Curvature=" + res.ToString("0.00") + "%";
                     Console.WriteLine(show_text);
 
 
