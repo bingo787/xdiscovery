@@ -160,6 +160,22 @@ namespace NV.DetectionPlatform.Entity
             }
         }
         private ObjectSet<Overlay> _Overlay;
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        public ObjectSet<PLCParam> PLCParam
+        {
+            get
+            {
+                if ((_PLCParam == null))
+                {
+                    _PLCParam = base.CreateObjectSet<PLCParam>("PLCParam");
+                }
+                return _PLCParam;
+            }
+        }
+        private ObjectSet<PLCParam> _PLCParam;
 
         #endregion
 
@@ -211,6 +227,14 @@ namespace NV.DetectionPlatform.Entity
         public void AddToOverlay(Overlay overlay)
         {
             base.AddObject("Overlay", overlay);
+        }
+    
+        /// <summary>
+        /// 用于向 PLCParam EntitySet 添加新对象的方法，已弃用。请考虑改用关联的 ObjectSet&lt;T&gt; 属性的 .Add 方法。
+        /// </summary>
+        public void AddToPLCParam(PLCParam pLCParam)
+        {
+            base.AddObject("PLCParam", pLCParam);
         }
 
         #endregion
@@ -1067,6 +1091,183 @@ namespace NV.DetectionPlatform.Entity
         private Nullable<global::System.Boolean> _IsUseful;
         partial void OnIsUsefulChanging(Nullable<global::System.Boolean> value);
         partial void OnIsUsefulChanged();
+
+        #endregion
+
+    
+    }
+    
+    /// <summary>
+    /// 没有元数据文档可用。
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="Model", Name="PLCParam")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class PLCParam : EntityObject
+    {
+        #region 工厂方法
+    
+        /// <summary>
+        /// 创建新的 PLCParam 对象。
+        /// </summary>
+        /// <param name="gUID">GUID 属性的初始值。</param>
+        public static PLCParam CreatePLCParam(global::System.String gUID)
+        {
+            PLCParam pLCParam = new PLCParam();
+            pLCParam.GUID = gUID;
+            return pLCParam;
+        }
+
+        #endregion
+
+        #region 基元属性
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String GUID
+        {
+            get
+            {
+                return _GUID;
+            }
+            set
+            {
+                if (_GUID != value)
+                {
+                    OnGUIDChanging(value);
+                    ReportPropertyChanging("GUID");
+                    _GUID = StructuralObject.SetValidValue(value, false);
+                    ReportPropertyChanged("GUID");
+                    OnGUIDChanged();
+                }
+            }
+        }
+        private global::System.String _GUID;
+        partial void OnGUIDChanging(global::System.String value);
+        partial void OnGUIDChanged();
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> X
+        {
+            get
+            {
+                return _X;
+            }
+            set
+            {
+                OnXChanging(value);
+                ReportPropertyChanging("X");
+                _X = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("X");
+                OnXChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _X;
+        partial void OnXChanging(Nullable<global::System.Int32> value);
+        partial void OnXChanged();
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Y
+        {
+            get
+            {
+                return _Y;
+            }
+            set
+            {
+                OnYChanging(value);
+                ReportPropertyChanging("Y");
+                _Y = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Y");
+                OnYChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Y;
+        partial void OnYChanging(Nullable<global::System.Int32> value);
+        partial void OnYChanged();
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public Nullable<global::System.Int32> Z
+        {
+            get
+            {
+                return _Z;
+            }
+            set
+            {
+                OnZChanging(value);
+                ReportPropertyChanging("Z");
+                _Z = StructuralObject.SetValidValue(value);
+                ReportPropertyChanged("Z");
+                OnZChanged();
+            }
+        }
+        private Nullable<global::System.Int32> _Z;
+        partial void OnZChanging(Nullable<global::System.Int32> value);
+        partial void OnZChanged();
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String PortName
+        {
+            get
+            {
+                return _PortName;
+            }
+            set
+            {
+                OnPortNameChanging(value);
+                ReportPropertyChanging("PortName");
+                _PortName = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("PortName");
+                OnPortNameChanged();
+            }
+        }
+        private global::System.String _PortName;
+        partial void OnPortNameChanging(global::System.String value);
+        partial void OnPortNameChanged();
+    
+        /// <summary>
+        /// 没有元数据文档可用。
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
+        [DataMemberAttribute()]
+        public global::System.String Name
+        {
+            get
+            {
+                return _Name;
+            }
+            set
+            {
+                OnNameChanging(value);
+                ReportPropertyChanging("Name");
+                _Name = StructuralObject.SetValidValue(value, true);
+                ReportPropertyChanged("Name");
+                OnNameChanged();
+            }
+        }
+        private global::System.String _Name;
+        partial void OnNameChanging(global::System.String value);
+        partial void OnNameChanged();
 
         #endregion
 

@@ -67,6 +67,7 @@
                         </MenuItem>
                         <MenuItem IsCheckable="False" Header="{DynamicResource Menu_Setting_General}" Tag="GeneralSetting"  Click="SettingClick"/>
                         <MenuItem Header="{DynamicResource Menu_Setting_Label}" Tag="FilmSetting" Click="SettingClick"/>
+                        <MenuItem Header="{DynamicResource PLC_AXIS_SETTING}" Tag="PLCSetting" Click="SettingClick"/>
                     </MenuItem>
                     <!--<MenuItem Header="实验(H)">
                         <MenuItem Header="静态多能采集合成" ToolTip="只能在静态单张图像模式下使用" Click="Help" Tag="MultiEnergyAvgGrab"/>

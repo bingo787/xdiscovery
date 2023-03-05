@@ -128,6 +128,10 @@
     <sys:String x:Key="UsmAmount">Amount:</sys:String>
     <sys:String x:Key="UsmRadius">Radius:</sys:String>
     <sys:String x:Key="UsmThreshould">Threshold:</sys:String>
+    <sys:String x:Key="PLC_X_AXIS">X Axis:</sys:String>
+    <sys:String x:Key="PLC_Y_AXIS">Y Axis:</sys:String>
+    <sys:String x:Key="PLC_Z_AXIS">Z Axis:</sys:String>
+    <sys:String x:Key="PLC_AXIS_SETTING">PLC Axis Setting</sys:String>
     <sys:String x:Key="BubbleSave">Save</sys:String>
     <sys:String x:Key="BubbleClose">Close</sys:String>
 	<sys:String x:Key="BubbleApply">Apply</sys:String>

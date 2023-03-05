@@ -526,6 +526,13 @@ namespace NV.DetectionPlatform
                 UCtrls.WndDetectorSetting wnd = new UCtrls.WndDetectorSetting();
                 wnd.ShowDialogEx();
             }
+
+            if (tag == "PLCSetting")
+            {
+                UCtrls.WndPLCSetting wnd = new UCtrls.WndPLCSetting();
+                wnd.ShowDialogEx();
+            }
+
             if (tag == "DetectorReConnect")
             {
                 lblDetector.Content = "--";

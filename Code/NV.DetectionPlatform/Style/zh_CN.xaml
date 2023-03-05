@@ -130,6 +130,10 @@
     <sys:String x:Key="UsmAmount">数量:</sys:String>
     <sys:String x:Key="UsmRadius">半径:</sys:String>
     <sys:String x:Key="UsmThreshould">阈值:</sys:String>
+    <sys:String x:Key="PLC_X_AXIS">X轴坐标:</sys:String>
+    <sys:String x:Key="PLC_Y_AXIS">Y轴坐标:</sys:String>
+    <sys:String x:Key="PLC_Z_AXIS">Z轴坐标:</sys:String>
+    <sys:String x:Key="PLC_AXIS_SETTING">PLC坐标设置</sys:String>
     <sys:String x:Key="BubbleSave">保存</sys:String>
     <sys:String x:Key="BubbleClose">关闭</sys:String>
 	<sys:String x:Key="BubbleApply">应用</sys:String>

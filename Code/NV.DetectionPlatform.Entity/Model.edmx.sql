@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server Compact Edition
 -- --------------------------------------------------
--- Date Created: 09/05/2021 01:25:16
+-- Date Created: 03/05/2023 23:26:21
 -- Generated from EDMX file: D:\swork\xdiscovery\Code\NV.DetectionPlatform.Entity\Model.edmx
 -- --------------------------------------------------
 
@@ -18,21 +18,42 @@
 -- NOTE: if the table does not exist, an ignorable error will be reported.
 -- --------------------------------------------------
 
+    DROP TABLE [USMParam];
+GO
+    DROP TABLE [AOIParam];
+GO
+    DROP TABLE [ExamParam];
+GO
+    DROP TABLE [ImageParam];
+GO
+    DROP TABLE [Product];
+GO
+    DROP TABLE [Overlay];
+GO
+    DROP TABLE [PLCParamSet];
+GO
 
 -- --------------------------------------------------
 -- Creating all tables
 -- --------------------------------------------------
 
--- Creating table 'Product'
-CREATE TABLE [Product] (
+-- Creating table 'USMParam'
+CREATE TABLE [USMParam] (
     [GUID] nvarchar(254)  NOT NULL,
-    [ProductName] nvarchar(254)  NULL,
-    [ProductTypeID] nvarchar(254)  NULL,
-    [ProductSpecification] nvarchar(254)  NULL,
-    [ProductKeywords] nvarchar(254)  NULL,
-    [StartTime] nvarchar(254)  NULL,
-    [EndTime] nvarchar(254)  NULL,
-    [ImageFolder] nvarchar(254)  NULL
+    [Amount] int  NULL,
+    [Radius] int  NULL,
+    [Threshold] int  NULL,
+    [Name] nvarchar(254)  NULL
+);
+GO
+
+-- Creating table 'AOIParam'
+CREATE TABLE [AOIParam] (
+    [GUID] nvarchar(254)  NOT NULL,
+    [UpperlimitofBubble] int  NULL,
+    [LowerlimitofBubble] int  NULL,
+    [PercentofBubblePass] int  NULL,
+    [Name] nvarchar(254)  NULL
 );
 GO
 
@@ -65,6 +86,19 @@ CREATE TABLE [ImageParam] (
 );
 GO
 
+-- Creating table 'Product'
+CREATE TABLE [Product] (
+    [GUID] nvarchar(254)  NOT NULL,
+    [ProductName] nvarchar(254)  NULL,
+    [ProductTypeID] nvarchar(254)  NULL,
+    [ProductSpecification] nvarchar(254)  NULL,
+    [ProductKeywords] nvarchar(254)  NULL,
+    [StartTime] nvarchar(254)  NULL,
+    [EndTime] nvarchar(254)  NULL,
+    [ImageFolder] nvarchar(254)  NULL
+);
+GO
+
 -- Creating table 'Overlay'
 CREATE TABLE [Overlay] (
     [OverlayDesc] nvarchar(254)  NULL,
@@ -76,22 +110,13 @@ CREATE TABLE [Overlay] (
 );
 GO
 
--- Creating table 'AOIParam'
-CREATE TABLE [AOIParam] (
+-- Creating table 'PLCParam'
+CREATE TABLE [PLCParam] (
     [GUID] nvarchar(254)  NOT NULL,
-    [UpperlimitofBubble] int  NULL,
-    [LowerlimitofBubble] int  NULL,
-    [PercentofBubblePass] int  NULL,
-    [Name] nvarchar(254)  NULL
-);
-GO
-
--- Creating table 'USMParamSet'
-CREATE TABLE [USMParamSet] (
-    [GUID] nvarchar(254)  NOT NULL,
-    [Amount] float  NULL,
-    [Radius] int  NULL,
-    [Threshold] int  NULL,
+    [X] int  NULL,
+    [Y] int  NULL,
+    [Z] int  NULL,
+    [PortName] nvarchar(4000)  NULL,
     [Name] nvarchar(254)  NULL
 );
 GO
@@ -100,9 +125,15 @@ GO
 -- Creating all PRIMARY KEY constraints
 -- --------------------------------------------------
 
--- Creating primary key on [GUID] in table 'Product'
-ALTER TABLE [Product]
-ADD CONSTRAINT [PK_Product]
+-- Creating primary key on [GUID] in table 'USMParam'
+ALTER TABLE [USMParam]
+ADD CONSTRAINT [PK_USMParam]
+    PRIMARY KEY ([GUID] );
+GO
+
+-- Creating primary key on [GUID] in table 'AOIParam'
+ALTER TABLE [AOIParam]
+ADD CONSTRAINT [PK_AOIParam]
     PRIMARY KEY ([GUID] );
 GO
 
@@ -118,21 +149,21 @@ ADD CONSTRAINT [PK_ImageParam]
     PRIMARY KEY ([GUID] );
 GO
 
+-- Creating primary key on [GUID] in table 'Product'
+ALTER TABLE [Product]
+ADD CONSTRAINT [PK_Product]
+    PRIMARY KEY ([GUID] );
+GO
+
 -- Creating primary key on [OverlayID] in table 'Overlay'
 ALTER TABLE [Overlay]
 ADD CONSTRAINT [PK_Overlay]
     PRIMARY KEY ([OverlayID] );
 GO
 
--- Creating primary key on [GUID] in table 'AOIParam'
-ALTER TABLE [AOIParam]
-ADD CONSTRAINT [PK_AOIParam]
-    PRIMARY KEY ([GUID] );
-GO
-
--- Creating primary key on [GUID] in table 'USMParamSet'
-ALTER TABLE [USMParamSet]
-ADD CONSTRAINT [PK_USMParamSet]
+-- Creating primary key on [GUID] in table 'PLCParam'
+ALTER TABLE [PLCParam]
+ADD CONSTRAINT [PK_PLCParam]
     PRIMARY KEY ([GUID] );
 GO
 
