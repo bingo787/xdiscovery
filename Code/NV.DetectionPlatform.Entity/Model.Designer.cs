@@ -1154,7 +1154,7 @@ namespace NV.DetectionPlatform.Entity
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int32> X
+        public Nullable<global::System.Double> X
         {
             get
             {
@@ -1169,8 +1169,8 @@ namespace NV.DetectionPlatform.Entity
                 OnXChanged();
             }
         }
-        private Nullable<global::System.Int32> _X;
-        partial void OnXChanging(Nullable<global::System.Int32> value);
+        private Nullable<global::System.Double> _X;
+        partial void OnXChanging(Nullable<global::System.Double> value);
         partial void OnXChanged();
     
         /// <summary>
@@ -1178,7 +1178,7 @@ namespace NV.DetectionPlatform.Entity
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int32> Y
+        public Nullable<global::System.Double> Y
         {
             get
             {
@@ -1193,8 +1193,8 @@ namespace NV.DetectionPlatform.Entity
                 OnYChanged();
             }
         }
-        private Nullable<global::System.Int32> _Y;
-        partial void OnYChanging(Nullable<global::System.Int32> value);
+        private Nullable<global::System.Double> _Y;
+        partial void OnYChanging(Nullable<global::System.Double> value);
         partial void OnYChanged();
     
         /// <summary>
@@ -1202,7 +1202,7 @@ namespace NV.DetectionPlatform.Entity
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=true)]
         [DataMemberAttribute()]
-        public Nullable<global::System.Int32> Z
+        public Nullable<global::System.Double> Z
         {
             get
             {
@@ -1217,8 +1217,8 @@ namespace NV.DetectionPlatform.Entity
                 OnZChanged();
             }
         }
-        private Nullable<global::System.Int32> _Z;
-        partial void OnZChanging(Nullable<global::System.Int32> value);
+        private Nullable<global::System.Double> _Z;
+        partial void OnZChanging(Nullable<global::System.Double> value);
         partial void OnZChanged();
     
         /// <summary>

@@ -20,6 +20,7 @@ using NV.DRF.Core.Ctrl;
 using OpenCvSharp;
 using NV.Infrastructure.UICommon;
 using SerialPortController;
+using System.Threading;
 
 namespace NV.DetectionPlatform.UCtrls
 {
@@ -39,11 +40,16 @@ namespace NV.DetectionPlatform.UCtrls
             this.PLCParamChangedEvent += WndPLCSetting_PLCParamChangedEvent;
         }
 
-        private void WndPLCSetting_PLCParamChangedEvent(int x, int y, int z)
+        private void WndPLCSetting_PLCParamChangedEvent(double x, double y, double z)
         {
             try
             {
-                PlcController.Instance.MoveTo(x *0.1, y*0.1, z*0.1);
+
+                //  Y轴不动，Y的参数给到Z，让Z动
+
+                PlcController.Instance.MoveX(x);
+                Thread.Sleep(500);
+                PlcController.Instance.MoveZ(y);
             }
             catch (Exception e) {
                 CMessageBox.Show(e.Message);
@@ -89,21 +95,18 @@ namespace NV.DetectionPlatform.UCtrls
             try
             {
                 string oldGUID = CurrentParam == null ? "null" : CurrentParam.GUID;
-                Console.WriteLine("old GUID " + oldGUID);
-                Console.WriteLine("CurrentParam.GUID " + CurrentParam.GUID);
+
                 PLCParams.Clear();
                 using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
                 {
                     db.PLCParam.ToList().ForEach(t => PLCParams.Add(t));
                 }
 
-                Console.WriteLine("PLCParams.Count " + PLCParams.Count.ToString());
                 if (PLCParams.Count > 0)
                 {
                     var selected = PLCParams.FirstOrDefault(t => t.GUID == oldGUID);
 
                     if (selected == null) {
-                        Console.WriteLine("selected == null");
                         CurrentParam = PLCParams[0];
                     }
                     else
@@ -129,27 +132,27 @@ namespace NV.DetectionPlatform.UCtrls
         private void Add(object sender, RoutedEventArgs e)
         {
             string name = txtName.Text;
-            int x, y, z;
+            double x, y, z =0;
             if (string.IsNullOrEmpty(name))
             {
                 CMessageBox.Show("请输入新方案名称\nPlease input solution name");
                 return;
             }
-            if (!int.TryParse(txtRadius.Text, out x))
+            if (!double.TryParse(txtRadius.Text, out x))
             {
                 CMessageBox.Show("数据不合法。\nInvalid value");
                 return;
             }
-            if (!int.TryParse(txtAmount.Text, out y))
+            if (!double.TryParse(txtAmount.Text, out y))
             {
                 CMessageBox.Show("数据不合法。\nInvalid value");
                 return;
             }
-            if (!int.TryParse(txtThreshold.Text, out z))
-            {
-                CMessageBox.Show("数据不合法。\nInvalid value");
-                return;
-            }
+            //if (!double.TryParse(txtThreshold.Text, out z))
+            //{
+            //    CMessageBox.Show("数据不合法。\nInvalid value");
+            //    return;
+            //}
             using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
             {
                 var repeat = db.PLCParam.FirstOrDefault(para => para.Name == name);
@@ -216,27 +219,27 @@ namespace NV.DetectionPlatform.UCtrls
                 return;
             }
             string name = txtName.Text;
-            int x, y, z;
+            double x, y, z =0;
             if (string.IsNullOrEmpty(name))
             {
                 CMessageBox.Show("请输入新方案名称\n\nPlease input solution name");
                 return;
             }
-            if (!int.TryParse(txtRadius.Text, out x))
+            if (!double.TryParse(txtRadius.Text, out x))
             {
                 CMessageBox.Show("数据不合法。\nInvalid value");
                 return;
             }
-            if (!int.TryParse(txtAmount.Text, out y))
+            if (!double.TryParse(txtAmount.Text, out y))
             {
                 CMessageBox.Show("数据不合法。\nInvalid value");
                 return;
             }
-            if (!int.TryParse(txtThreshold.Text, out z))
-            {
-                CMessageBox.Show("数据不合法。\nInvalid value");
-                return;
-            }
+            //if (!double.TryParse(txtThreshold.Text, out z))
+            //{
+            //    CMessageBox.Show("数据不合法。\nInvalid value");
+            //    return;
+            //}
             PLCParam p = lstParams.SelectedItem as PLCParam;
             using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
             {
@@ -265,7 +268,7 @@ namespace NV.DetectionPlatform.UCtrls
             }
         }
         #endregion
-        public delegate void PLCParamChanged(int x, int y, int z);
+        public delegate void PLCParamChanged(double x, double y, double z);
         public event PLCParamChanged PLCParamChangedEvent;
 
         public delegate void CloseEventHandler();
@@ -286,22 +289,22 @@ namespace NV.DetectionPlatform.UCtrls
         {
             if (PLCParamChangedEvent != null)
             {
-                int x, y, z;
-                if (!int.TryParse(txtRadius.Text, out x))
+                double x, y, z = 0;
+                if (!double.TryParse(txtRadius.Text, out x))
                 {
                     CMessageBox.Show("数据不合法。\nInvalid value");
                     return;
                 }
-                if (!int.TryParse(txtAmount.Text, out y))
+                if (!double.TryParse(txtAmount.Text, out y))
                 {
                     CMessageBox.Show("数据不合法。\nInvalid value");
                     return;
                 }
-                if (!int.TryParse(txtThreshold.Text, out z))
-                {
-                    CMessageBox.Show("数据不合法。\nInvalid value");
-                    return;
-                }
+                //if (!double.TryParse(txtThreshold.Text, out z))
+                //{
+                //    CMessageBox.Show("数据不合法。\nInvalid value");
+                //    return;
+                //}
                 PLCParamChangedEvent(x, y, z);
 
             }

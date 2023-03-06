@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server Compact Edition
 -- --------------------------------------------------
--- Date Created: 03/05/2023 23:26:21
+-- Date Created: 03/06/2023 23:30:37
 -- Generated from EDMX file: D:\swork\xdiscovery\Code\NV.DetectionPlatform.Entity\Model.edmx
 -- --------------------------------------------------
 
@@ -30,7 +30,7 @@ GO
 GO
     DROP TABLE [Overlay];
 GO
-    DROP TABLE [PLCParamSet];
+    DROP TABLE [PLCParam];
 GO
 
 -- --------------------------------------------------
@@ -113,9 +113,9 @@ GO
 -- Creating table 'PLCParam'
 CREATE TABLE [PLCParam] (
     [GUID] nvarchar(254)  NOT NULL,
-    [X] int  NULL,
-    [Y] int  NULL,
-    [Z] int  NULL,
+    [X] float  NULL,
+    [Y] float  NULL,
+    [Z] float  NULL,
     [PortName] nvarchar(4000)  NULL,
     [Name] nvarchar(254)  NULL
 );

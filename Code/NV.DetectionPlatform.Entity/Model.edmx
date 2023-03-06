@@ -92,9 +92,9 @@
       <PropertyRef Name="GUID" />
     </Key>
     <Property Name="GUID" Type="nvarchar" Nullable="false" MaxLength="254" />
-    <Property Name="X" Type="int" Nullable="true" />
-    <Property Name="Y" Type="int" Nullable="true" />
-    <Property Name="Z" Type="int" Nullable="true" />
+    <Property Name="X" Type="float" Nullable="true" />
+    <Property Name="Y" Type="float" Nullable="true" />
+    <Property Name="Z" Type="float" Nullable="true" />
     <Property Name="PortName" Type="nvarchar" Nullable="true" />
     <Property Name="Name" Type="nvarchar" Nullable="true" MaxLength="254" />
   </EntityType>
@@ -189,9 +189,9 @@
             <PropertyRef Name="GUID" />
           </Key>
           <Property Name="GUID" Type="String" Nullable="false" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="X" Type="Int32" />
-          <Property Name="Y" Type="Int32" />
-          <Property Name="Z" Type="Int32" />
+          <Property Name="X" Type="Double" />
+          <Property Name="Y" Type="Double" />
+          <Property Name="Z" Type="Double" />
           <Property Name="PortName" Type="String" />
           <Property Name="Name" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
         </EntityType>
@@ -320,7 +320,7 @@
         <EntityTypeShape EntityType="Model.ImageParam" Width="1.5" PointX="4.75" PointY="0.75" />
         <EntityTypeShape EntityType="Model.Product" Width="1.5" PointX="0.75" PointY="4.75" />
         <EntityTypeShape EntityType="Model.Overlay" Width="1.5" PointX="6.75" PointY="0.75" />
-        <EntityTypeShape EntityType="Model.PLCParam" Width="1.5" PointX="5.375" PointY="4.75" />
+        <EntityTypeShape EntityType="Model.PLCParam" Width="1.5" PointX="5.625" PointY="4" />
       </Diagram>
     </Diagrams>
   </Designer>

@@ -94,6 +94,19 @@ namespace SerialPortController
             }
             return result;
         }
+
+        public void MoveX(double x) {
+            Move(CMD_MOVE_X,x);
+        }
+        public void MoveY(double x)
+        {
+            Move(CMD_MOVE_Y, x);
+        }
+        public void MoveZ(double x)
+        {
+            Move(CMD_MOVE_Z, x);
+        }
+
         void Move(byte cmd, double x)
         {
             UInt16 ix = (ushort)(x * 10);
@@ -107,12 +120,12 @@ namespace SerialPortController
             command.Add(checkCode);
 
 
-            Console.WriteLine("command: ");
-            for (int i = 0; i < command.Count; i++)
-            {
-                Console.Write("0x" + command[i].ToString("X") + " ");
-            }
-            Console.WriteLine("");
+            //Console.WriteLine("command: ");
+            //for (int i = 0; i < command.Count; i++)
+            //{
+            //    Console.Write("0x" + command[i].ToString("X") + " ");
+            //}
+            //Console.WriteLine("");
             _serialPort.Write(command.ToArray(), 0, command.Count);
 
         }
@@ -122,8 +135,8 @@ namespace SerialPortController
 
             Move(CMD_MOVE_X, x);
             Thread.Sleep(500);
-            // Move(CMD_MOVE_Y, y);
-            // Thread.Sleep(500);
+            Move(CMD_MOVE_Y, y);
+            Thread.Sleep(500);
             Move(CMD_MOVE_Z, z);
         }
 
@@ -133,12 +146,12 @@ namespace SerialPortController
             command.AddRange(new byte[] { HEAD_BYTE, 0x07, 0, 0 });
             byte checkCode = CalculateXorCheckCode(command);
             command.Add(checkCode);
-            Console.WriteLine("command: ");
-            for (int i = 0; i < command.Count; i++)
-            {
-                Console.Write("0x" + command[i].ToString("X") + " ");
-            }
-            Console.WriteLine("");
+           // Console.WriteLine("command: ");
+            //for (int i = 0; i < command.Count; i++)
+            //{
+            //    Console.Write("0x" + command[i].ToString("X") + " ");
+            //}
+           // Console.WriteLine("");
             _serialPort.Write(command.ToArray(), 0, command.Count);
         }
 

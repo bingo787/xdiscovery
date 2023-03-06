@@ -42,11 +42,11 @@
                     </Grid.ColumnDefinitions>
                     <Label Content="{DynamicResource PLC_X_AXIS}" HorizontalAlignment="Center"/>
                     <Label Content="{DynamicResource PLC_Y_AXIS}" Grid.Row="2" HorizontalAlignment="Center"/>
-                    <Label Content="{DynamicResource PLC_Z_AXIS}" Grid.Row="4" HorizontalAlignment="Center"/>
+                    <!--<Label Content="{DynamicResource PLC_Z_AXIS}" Grid.Row="4" HorizontalAlignment="Center"/>-->
 
                     <TextBox Grid.Column="1" x:Name="txtAmount" Text="{Binding Path=CurrentParam.X}" Width="100" HorizontalAlignment="Left"/>
                     <TextBox Grid.Column="1" Grid.Row="2" x:Name="txtRadius" Text="{Binding CurrentParam.Y}"  Width="100" HorizontalAlignment="Left"/>
-                    <TextBox Grid.Column="1" Grid.Row="4" x:Name="txtThreshold" Text="{Binding CurrentParam.Z}"  Width="100" HorizontalAlignment="Left"/>
+                    <!--<TextBox Grid.Column="1" Grid.Row="4" x:Name="txtThreshold" Text="{Binding CurrentParam.Z}"  Width="100" HorizontalAlignment="Left"/>-->
 
                     <!--<Slider Grid.ColumnSpan="3" Grid.Row="1" x:Name="sldrAmount" Minimum="0" Value="{Binding CurrentParam.X}"  Maximum="500"  ValueChanged="SetPLC"/>
                     <Slider Grid.ColumnSpan="3" Grid.Row="3" x:Name="sldrRadius" Minimum="0" Value="{Binding CurrentParam.Y}"  Maximum="250"  ValueChanged="SetPLC"/>
