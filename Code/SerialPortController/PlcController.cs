@@ -57,10 +57,7 @@ namespace SerialPortController
             _serialPort.Open();
         }
 
-        public bool IsOpen()
-        {
-            return _serialPort.IsOpen;
-        }
+    
 
         void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
@@ -97,7 +94,7 @@ namespace SerialPortController
             }
             return result;
         }
-        void Move(byte cmd, float x)
+        void Move(byte cmd, double x)
         {
             UInt16 ix = (ushort)(x * 10);
 
@@ -120,7 +117,7 @@ namespace SerialPortController
 
         }
 
-        public void MoveTo(float x, float y, float z)
+        public void MoveTo(double x, double y, double z)
         {
 
             Move(CMD_MOVE_X, x);

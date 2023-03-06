@@ -19,6 +19,7 @@ using SerialPortController;
 using NV.DRF.Core.Ctrl;
 using OpenCvSharp;
 using NV.Infrastructure.UICommon;
+using SerialPortController;
 
 namespace NV.DetectionPlatform.UCtrls
 {
@@ -35,6 +36,18 @@ namespace NV.DetectionPlatform.UCtrls
             PLCParams = new System.Collections.ObjectModel.ObservableCollection<PLCParam>();
             CurrentParam = new PLCParam();
             this.Loaded += WndExamSetting_Loaded;
+            this.PLCParamChangedEvent += WndPLCSetting_PLCParamChangedEvent;
+        }
+
+        private void WndPLCSetting_PLCParamChangedEvent(int x, int y, int z)
+        {
+            try
+            {
+                PlcController.Instance.MoveTo(x *0.1, y*0.1, z*0.1);
+            }
+            catch (Exception e) {
+                CMessageBox.Show(e.Message);
+            }
         }
 
         /// <summary>
@@ -76,16 +89,23 @@ namespace NV.DetectionPlatform.UCtrls
             try
             {
                 string oldGUID = CurrentParam == null ? "null" : CurrentParam.GUID;
+                Console.WriteLine("old GUID " + oldGUID);
+                Console.WriteLine("CurrentParam.GUID " + CurrentParam.GUID);
                 PLCParams.Clear();
                 using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
                 {
                     db.PLCParam.ToList().ForEach(t => PLCParams.Add(t));
                 }
+
+                Console.WriteLine("PLCParams.Count " + PLCParams.Count.ToString());
                 if (PLCParams.Count > 0)
                 {
                     var selected = PLCParams.FirstOrDefault(t => t.GUID == oldGUID);
-                    if (selected == null)
+
+                    if (selected == null) {
+                        Console.WriteLine("selected == null");
                         CurrentParam = PLCParams[0];
+                    }
                     else
                     {
                         CurrentParam = selected;
@@ -98,46 +118,8 @@ namespace NV.DetectionPlatform.UCtrls
             }
         }
 
-        public void InitPLC()
-        {
 
-            using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
-            {
-                var ps = db.PLCParam.ToList();
-                if (ps.Count > 0)
-                {
-                    if (DicomViewer.Current != null)
-                    {
-                        //  设置USM的参数，做锐化
-                        //  DicomViewer.Current.SetAOIParam((int)ps[0].UpperlimitofBubble, (int)ps[0].LowerlimitofBubble, (int)ps[0].PercentofBubblePass);
-                        CurrentParam = ps[0];
-
-
-
-                    }
-                }
-            }
-        }
-
-
-        private void SetPLC(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (!this.IsLoaded)
-                return;
-
-            //System.Console.WriteLine(String.Format("SetUSM  ---------"));
-            //if ( UsmParamChangedEvent != null)
-            //{
-            //    int radius = (int)sldrRadius.Value;
-            //    int amount = (int)sldrAmount.Value;
-            //    int threshold = (int)sldrThreshold.Value;
-            //     System.Console.WriteLine(String.Format("SetUSM  {0},{1},{2}", amount,radius,threshold));
-            //    UsmParamChangedEvent(amount,radius,threshold);
-
-            //}
-
-        }
-
+  
 
         /// <summary>
         /// 添加方案
@@ -147,25 +129,25 @@ namespace NV.DetectionPlatform.UCtrls
         private void Add(object sender, RoutedEventArgs e)
         {
             string name = txtName.Text;
-            int radius, amount, threshold;
+            int x, y, z;
             if (string.IsNullOrEmpty(name))
             {
                 CMessageBox.Show("请输入新方案名称\nPlease input solution name");
                 return;
             }
-            if (!int.TryParse(txtRadius.Text, out radius))
+            if (!int.TryParse(txtRadius.Text, out x))
             {
-                CMessageBox.Show("半径值不合法。\nInvalid radius");
+                CMessageBox.Show("数据不合法。\nInvalid value");
                 return;
             }
-            if (!int.TryParse(txtAmount.Text, out amount))
+            if (!int.TryParse(txtAmount.Text, out y))
             {
-                CMessageBox.Show("数量值不合法。\nInvolid amount");
+                CMessageBox.Show("数据不合法。\nInvalid value");
                 return;
             }
-            if (!int.TryParse(txtThreshold.Text, out threshold))
+            if (!int.TryParse(txtThreshold.Text, out z))
             {
-                CMessageBox.Show("阀值不合法。\nInvalid threshold");
+                CMessageBox.Show("数据不合法。\nInvalid value");
                 return;
             }
             using (NV.DetectionPlatform.Entity.Entities db = new Entity.Entities(NV.DRF.Core.Global.Global.ConnectionString))
@@ -181,9 +163,9 @@ namespace NV.DetectionPlatform.UCtrls
                     PLCParam param = new PLCParam();
                     param.GUID = System.Guid.NewGuid().ToString();
                     param.Name = name;
-                    param.X = radius;
-                    param.Y = amount;
-                    param.Z = threshold;
+                    param.X = x;
+                    param.Y = y;
+                    param.Z = z;
 
                     db.PLCParam.AddObject(param);
                     db.SaveChanges();
@@ -234,25 +216,25 @@ namespace NV.DetectionPlatform.UCtrls
                 return;
             }
             string name = txtName.Text;
-            int raduis, amount, threshold;
+            int x, y, z;
             if (string.IsNullOrEmpty(name))
             {
                 CMessageBox.Show("请输入新方案名称\n\nPlease input solution name");
                 return;
             }
-            if (!int.TryParse(txtRadius.Text, out raduis))
+            if (!int.TryParse(txtRadius.Text, out x))
             {
-                CMessageBox.Show("半径值不合法。\nInvalid radius");
+                CMessageBox.Show("数据不合法。\nInvalid value");
                 return;
             }
-            if (!int.TryParse(txtAmount.Text, out amount))
+            if (!int.TryParse(txtAmount.Text, out y))
             {
-                CMessageBox.Show("数量值不合法。\nInvolid amount");
+                CMessageBox.Show("数据不合法。\nInvalid value");
                 return;
             }
-            if (!int.TryParse(txtThreshold.Text, out threshold))
+            if (!int.TryParse(txtThreshold.Text, out z))
             {
-                CMessageBox.Show("阀值不合法。\nInvalid threshold");
+                CMessageBox.Show("数据不合法。\nInvalid value");
                 return;
             }
             PLCParam p = lstParams.SelectedItem as PLCParam;
@@ -262,7 +244,9 @@ namespace NV.DetectionPlatform.UCtrls
                 if (repeat != null)
                 {
                     repeat.Name = txtName.Text;
-
+                    repeat.X = x;
+                    repeat.Y = y;
+                    repeat.Z = z;
                     db.SaveChanges();
                     CMessageBox.Show("保存成功\nOperation completed");
                     WndExamSetting_Loaded(null, null);
@@ -281,7 +265,7 @@ namespace NV.DetectionPlatform.UCtrls
             }
         }
         #endregion
-        public delegate void PLCParamChanged(int amount, int radius, int threshold);
+        public delegate void PLCParamChanged(int x, int y, int z);
         public event PLCParamChanged PLCParamChangedEvent;
 
         public delegate void CloseEventHandler();
@@ -302,11 +286,23 @@ namespace NV.DetectionPlatform.UCtrls
         {
             if (PLCParamChangedEvent != null)
             {
-                //int radius = (int)sldrRadius.Value;
-                //int amount = (int)sldrAmount.Value;
-                //int threshold = (int)sldrThreshold.Value;
-                //System.Console.WriteLine(String.Format("SetUSM  {0},{1},{2}", amount, radius, threshold));
-               // PLCParamChangedEvent(amount, radius, threshold);
+                int x, y, z;
+                if (!int.TryParse(txtRadius.Text, out x))
+                {
+                    CMessageBox.Show("数据不合法。\nInvalid value");
+                    return;
+                }
+                if (!int.TryParse(txtAmount.Text, out y))
+                {
+                    CMessageBox.Show("数据不合法。\nInvalid value");
+                    return;
+                }
+                if (!int.TryParse(txtThreshold.Text, out z))
+                {
+                    CMessageBox.Show("数据不合法。\nInvalid value");
+                    return;
+                }
+                PLCParamChangedEvent(x, y, z);
 
             }
         }

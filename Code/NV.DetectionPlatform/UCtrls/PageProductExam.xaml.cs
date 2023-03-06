@@ -62,6 +62,7 @@ namespace NV.DetectionPlatform.UCtrls
         {
             WndAOISetting.InitAOI();
             usmSetting.InitUSM();
+            
           
             InitilizePlayAcqThread();
         }
