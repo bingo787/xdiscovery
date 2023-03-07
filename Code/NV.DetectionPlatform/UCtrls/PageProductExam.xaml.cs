@@ -581,6 +581,7 @@ namespace NV.DetectionPlatform.UCtrls
                                 viewer.SetWindowLevel(w, c);
                                 viewer.RightRotate();
                                 viewer.FlipVertical();
+                                viewer.ReduceNoise();
 
                                 //viewer.SaveToFile(fName, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
                                 viewer.SaveToDicomFilePtr(_file, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
