@@ -225,12 +225,12 @@ namespace NV.DetectionPlatform.UCtrls
                 CMessageBox.Show("请输入新方案名称\n\nPlease input solution name");
                 return;
             }
-            if (!double.TryParse(txtRadius.Text, out x))
+            if (!double.TryParse(txtRadius.Text, out y))
             {
                 CMessageBox.Show("数据不合法。\nInvalid value");
                 return;
             }
-            if (!double.TryParse(txtAmount.Text, out y))
+            if (!double.TryParse(txtAmount.Text, out x))
             {
                 CMessageBox.Show("数据不合法。\nInvalid value");
                 return;
