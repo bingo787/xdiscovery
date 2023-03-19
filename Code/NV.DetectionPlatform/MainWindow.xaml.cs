@@ -19,9 +19,7 @@ using NV.DetectionPlatform.Service;
 using System.Linq;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-
-
-
+using System.Threading.Tasks;
 
 namespace NV.DetectionPlatform
 {
@@ -533,6 +531,24 @@ namespace NV.DetectionPlatform
             }));
         }
 
+        private async Task MyAsyncMethod()
+        {
+            dia = new ProgressDialog("系统初始化");
+            dia.Summary = "正在系统初始化，请稍候...";
+            dia.MaxValue = 100;
+            // 显示进度条
+            dia.Visibility = Visibility.Visible;
+
+            // 执行异步操作并更新进度条值
+            for (int i = 1; i <= 100; i++)
+            {
+                await Task.Delay(50);
+                dia.CurValue = i;
+            }
+
+            // 隐藏进度条
+            dia.Visibility = Visibility.Collapsed;
+        }
 
         /// <summary>
         /// 窗口大小
@@ -549,61 +565,7 @@ namespace NV.DetectionPlatform
             vbProductInfo.MaxWidth = this.Width - 2 * menuBar.ActualWidth - 100;
             this.MainView.Content = _examView;
 
-
-
-            dia = new ProgressDialog("系统初始化");
-            dia.Summary = "正在系统初始化，请稍候...";
-            dia.MaxValue = 100;
-            dia.CurValue = 50;
-            System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
-            System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
-                {
-                    for (int i = 0; i < 100; i++)
-                    {
-
-                        dia.CurValue = i;
-                        Thread.Sleep(100);
-                    }
-                    dia.Close();
-
-                }));
-
-
-
-            //dia.CanCancel = false;
-            //BackgroundWorker bw = new BackgroundWorker();
-            //bw.DoWork += delegate
-            //{
-            //    System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
-            //    System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
-            //    {
-            //        dia.Summary = "正在系统初始化，请稍候...";
-            //        dia.MaxValue = 100;
-            //        dia.CurValue = 0;
-
-            //    }));
-
-
-            //    for (int i = 0; i < 100; i++)
-            //    {
-            //        System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
-            //        {
-            //            dia.CurValue++;
-
-            //        }));
-            //        Thread.Sleep(100);
-            //    }
-            //};
-
-            //bw.RunWorkerCompleted += delegate
-            //{
-            //    dia.Summary = "初始化完成";
-            //    dia.Close();
-            //};
-
-            //bw.RunWorkerAsync();
-
-
+ 
 
             try
             {
@@ -624,6 +586,7 @@ namespace NV.DetectionPlatform
             {
                 CMessageBox.Show(ex.Message);
             }
+ 
         }
 
         /// <summary>
