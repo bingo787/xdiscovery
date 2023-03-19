@@ -195,7 +195,7 @@ namespace NV.DetectionPlatform.UCtrls
                 config.remotePort = 0x8081;
                 config.remoteip = remote_ip.PadRight(16, '\0').ToCharArray();
                 
-                int ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, config, 0);
+                int ret = HBI_FPD_DLL.HBI_ConnectDetector(HBI_FPD_DLL._handel, config, 1);
 
                 _detector.ShowMessage("local ip: " + local_ip + " <---> " + remote_ip);
 
@@ -211,25 +211,25 @@ namespace NV.DetectionPlatform.UCtrls
                     //  Thread.Sleep(2000);
                     //  _detector.HB_SetGain((int)Data.Gain);
                     //  Thread.Sleep(2000);
-                    Data.OffsetCorMode = HB_OffsetCorrType.FIRMWARE_POST_OFFSET;
-                    Data.GainCorMode = HB_CorrType.FRIMWARE;
-                    Data.DefectCorMode = HB_CorrType.FRIMWARE;
+                    //Data.OffsetCorMode = HB_OffsetCorrType.FIRMWARE_POST_OFFSET;
+                    //Data.GainCorMode = HB_CorrType.FRIMWARE;
+                    //Data.DefectCorMode = HB_CorrType.FRIMWARE;
             
 
-                    _detector.NV_SetOffsetCal(Data.OffsetCorMode);
-                    _detector.NV_SetGainCal(Data.GainCorMode);
-                    _detector.NV_SetDefectCal(Data.DefectCorMode);
+                    //_detector.NV_SetOffsetCal(Data.OffsetCorMode);
+                    //_detector.NV_SetGainCal(Data.GainCorMode);
+                    //_detector.NV_SetDefectCal(Data.DefectCorMode);
 
 
                     res += "探测器已连接。";
                     IsConnected = true;
 
-                    if (Data.IsAutoPreOffset == true && config.type != FPD_COMM_TYPE.UDP_COMM_TYPE)
-                    {
-                        _detector.HB_UpdateTriggerAndCorrectEnable(7);
-                        Thread.Sleep(2000);
-                        _detector.StartCorrectOffsetTemplate();
-                    }
+                    //if (Data.IsAutoPreOffset == true && config.type != FPD_COMM_TYPE.UDP_COMM_TYPE)
+                    //{
+                    //    _detector.HB_UpdateTriggerAndCorrectEnable(7);
+                    //    Thread.Sleep(2000);
+                    //    _detector.StartCorrectOffsetTemplate();
+                    //}
                     _detector.btnGetFirmwareCfg_Click();
                     _detector.btnGetImageProperty();
                     _detector.btnGetSdkVer_Click();
@@ -363,7 +363,7 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.HBI_SetSinglePrepareTime(_curExpTime);
 
                 Thread.Sleep(200);
-                _detector.HB_SetTriggerMode((int)HB_TriggerMode.SORTWARE);
+               // _detector.HB_SetTriggerMode((int)HB_TriggerMode.SORTWARE);
             }
             else if (type == ExamType.Expose)
             {
@@ -373,13 +373,13 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.HB_SetAqcSpanTime(_curExpTime);// 设置采集帧率 ： 1，2，4
 
                 Thread.Sleep(200);
-                _detector.HB_SetTriggerMode((int)HB_TriggerMode.CONTINUE);
+               // _detector.HB_SetTriggerMode((int)HB_TriggerMode.CONTINUE);
             }
             else if (type == ExamType.MultiEnergyAvg)
             {
                 _detector.IsStored = true;
                 _detector.MaxFrames = 0;
-                _detector.HB_SetTriggerMode((int)HB_TriggerMode.SORTWARE);
+               // _detector.HB_SetTriggerMode((int)HB_TriggerMode.SORTWARE);
             }
 
 
