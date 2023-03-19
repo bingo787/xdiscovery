@@ -542,7 +542,7 @@ namespace NV.DetectionPlatform
             // 执行异步操作并更新进度条值
             for (int i = 1; i <= 100; i++)
             {
-                await Task.Delay(50);
+                await Task.Delay(300);
                 dia.CurValue = i;
             }
 
@@ -555,7 +555,7 @@ namespace NV.DetectionPlatform
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ResizeWindow(object sender, RoutedEventArgs e)
+        private async void ResizeWindow(object sender, RoutedEventArgs e)
         {
             this.Width = SystemParameters.PrimaryScreenWidth;
             this.Height = SystemParameters.PrimaryScreenHeight - 40;
@@ -586,6 +586,8 @@ namespace NV.DetectionPlatform
             {
                 CMessageBox.Show(ex.Message);
             }
+
+            await MyAsyncMethod();
  
         }
 

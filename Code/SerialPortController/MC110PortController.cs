@@ -668,7 +668,17 @@ namespace SerialPortController
             3.Enable the Heater - < EH:1 >
             4.Enable the Power Supply - < EP:1 >
             */
+            DateTime dt = DateTime.Now;
+            string year = dt.Year.ToString();
+            string day = dt.Day.ToString();
+            string month = dt.Month.ToString();
+            string date = day + "," + month + "," + year;
 
+            // date = "31,12,2023";
+            Console.WriteLine("SDATE {0}", date);
+
+            SendCommand("SDATE:" + date);
+            Thread.Sleep(200);
             SendCommand("EH:1");
         }
     }
