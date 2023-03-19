@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1585
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NV.DetectionPlatform", "NV.DetectionPlatform\NV.DetectionPlatform.csproj", "{7CA946F6-569B-423C-9DC5-089FDCEF0C5D}"
 EndProject
@@ -14,8 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerialPortController", "SerialPortController\SerialPortController.csproj", "{A7BADA4F-D672-4DC9-A075-434B4C2A15F5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extends", "Extends", "{D31562BC-C73E-4DF2-B845-2D11868DDF54}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "XrayStudioSetup", "XrayStudioSetup\XrayStudioSetup.vdproj", "{89E04B58-F1A8-42AC-AE33-D787C69D4473}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -236,31 +234,6 @@ Global
 		{A7BADA4F-D672-4DC9-A075-434B4C2A15F5}.SingleImage|Win32.ActiveCfg = Release|Any CPU
 		{A7BADA4F-D672-4DC9-A075-434B4C2A15F5}.SingleImage|x64.ActiveCfg = Release|Any CPU
 		{A7BADA4F-D672-4DC9-A075-434B4C2A15F5}.SingleImage|x86.ActiveCfg = Release|Any CPU
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.CD_ROM|Any CPU.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.CD_ROM|Mixed Platforms.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.CD_ROM|Win32.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.CD_ROM|x64.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.CD_ROM|x86.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.Debug|Any CPU.ActiveCfg = Debug
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.Debug|Win32.ActiveCfg = Debug
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.Debug|x64.ActiveCfg = Debug
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.Debug|x86.ActiveCfg = Debug
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.DVD-5|Any CPU.ActiveCfg = Debug
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.DVD-5|Mixed Platforms.ActiveCfg = Debug
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.DVD-5|Win32.ActiveCfg = Debug
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.DVD-5|x64.ActiveCfg = Debug
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.DVD-5|x86.ActiveCfg = Debug
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.Release|Any CPU.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.Release|Mixed Platforms.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.Release|Win32.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.Release|x64.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.Release|x86.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.SingleImage|Any CPU.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.SingleImage|Mixed Platforms.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.SingleImage|Win32.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.SingleImage|x64.ActiveCfg = Release
-		{89E04B58-F1A8-42AC-AE33-D787C69D4473}.SingleImage|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
