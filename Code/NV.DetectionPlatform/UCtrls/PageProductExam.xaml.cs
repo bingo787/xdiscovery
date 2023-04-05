@@ -174,7 +174,7 @@ namespace NV.DetectionPlatform.UCtrls
                 _detector.Delay = Data.Delay;
  
             
-                _detector.SetUVCDeviceParameters(0, 0, 0, 0);
+                _detector.SetUVCDeviceParameters(0, 0, 0, 1);
                 _detector.GetUVCDeviceParameters();
 
                 IsConnected = true;
