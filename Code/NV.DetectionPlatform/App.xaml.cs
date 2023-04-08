@@ -36,5 +36,10 @@ namespace NV.DetectionPlatform
                 }
             }));
         }
-    }
+         protected override void OnStartup(StartupEventArgs e)
+         {
+             FrameworkCompatibilityPreferences.KeepTextBoxDisplaySynchronizedWithTextProperty = false;
+             base.OnStartup(e);
+          }
+}
 }

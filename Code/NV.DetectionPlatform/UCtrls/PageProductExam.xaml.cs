@@ -24,6 +24,7 @@ using NV.Config;
 using OpenCvSharp;
 using System.Windows.Markup;
 using System.Windows.Media.Media3D;
+using SerialPortController;
 
 namespace NV.DetectionPlatform.UCtrls
 {
@@ -47,6 +48,13 @@ namespace NV.DetectionPlatform.UCtrls
         private ExamType _curExpType;
 
         private WndUSMSetting usmSetting = new WndUSMSetting();
+
+
+        public static SerialPortReporter_RS485PROTOCOL_PLC PostionReporter = SerialPortReporter_RS485PROTOCOL_PLC.Instance;
+        double scaleRatio = 0.1;
+
+
+
 
         public PageProductExam()
         {
@@ -158,7 +166,18 @@ namespace NV.DetectionPlatform.UCtrls
             _playAcqImage.Start();
         }
 
+        private double CalculateScaleRatio()
+        {
+            //todo:zhaoqibin
 
+            
+            double scaleRatio = (PostionReporter.AxisZDistance_mm * (-0.00004372) + 0.01366108 + _detector.ScaleRatio)  ;
+
+            Console.WriteLine("AxisZDistance_mm {0}  _detector.ScaleRatio {1}, scaleRatio {2}", PostionReporter.AxisZDistance_mm, _detector.ScaleRatio, scaleRatio.ToString("0.00"));
+ 
+
+            return scaleRatio;
+        }
 
         /// <summary>
         /// 初始化探测器
@@ -518,7 +537,7 @@ namespace NV.DetectionPlatform.UCtrls
             _file.PutDicomString(0x18, 0x60, Global.CurrentParam.KV.ToString());//KVP
             _file.PutDicomString(0x18, 0x1151, Global.CurrentParam.UA.ToString());//XRayTubeCurrent
             _file.PutDicomString(0x18, 0x1150, _curExpTime.ToString());//ExposureTime
-            _file.PutDicomString(0x0028, 0x0030, _detector.ScaleRatio.ToString());//像素与mm倍率
+            _file.PutDicomString(0x0028, 0x0030, CalculateScaleRatio().ToString());//像素与mm倍率
             _file.PutDicomString(0x0008, 0x1010, NV.DRF.Core.Model.GeneralSettingHelper.Instance.HVName);//高压名称-StationName
 
             _file.PatientID = Global.CurrentProduct.GUID;
@@ -905,7 +924,7 @@ namespace NV.DetectionPlatform.UCtrls
             if (ipUC.CurrentDv != null)
             {
                 ipUC.CurrentDv.ResetImage();
-                ipUC.CurrentDv.SetScaleRatio(_detector.ScaleRatio);//暂时保留，后续废除
+                ipUC.CurrentDv.SetScaleRatio(CalculateScaleRatio());//暂时保留，后续废除
             }
         }
         /// <summary>
@@ -930,7 +949,7 @@ namespace NV.DetectionPlatform.UCtrls
                             ipUC.CurrentDv.SetWindowLevel(ww, wl);
                     }
                     ipUC.CurrentDv.Invalidate();
-                    ipUC.CurrentDv.SetScaleRatio(_detector.ScaleRatio);//暂时保留，后续废除
+                    ipUC.CurrentDv.SetScaleRatio(CalculateScaleRatio());//暂时保留，后续废除
                 }
             }
             catch (Exception ex)
@@ -1371,7 +1390,7 @@ namespace NV.DetectionPlatform.UCtrls
             {
                 dv.DeleteAnnotation(true);
                 dv.LoadFile(dialog.FileName);
-                dv.SetScaleRatio(_detector.ScaleRatio);//暂时保留，后续废除
+                dv.SetScaleRatio(CalculateScaleRatio());//暂时保留，后续废除
                 dv.Invalidate();
             }
         }

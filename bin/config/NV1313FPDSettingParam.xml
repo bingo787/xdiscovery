@@ -1,18 +1,11 @@
 <?xml version="1.0"?>
 <NV1313FPDSetting xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <自动校正>true</自动校正>
-  <Xray类型>VTC_D</Xray类型>
   <出图模式>AC</出图模式>
-  <Binning模式>NO_BINNING</Binning模式>
-  <图像处理>NO_FILTER</图像处理>
-  <尺度比例>0.1</尺度比例>
+  <尺度比例>0.1122</尺度比例>
   <延时采集时间ms>1000</延时采集时间ms>
   <最大帧>10</最大帧>
-  <静态多帧叠加降噪>false</静态多帧叠加降噪>
-  <静态多帧均值叠加降噪>true</静态多帧均值叠加降噪>
-  <静态叠加降噪帧数>2</静态叠加降噪帧数>
-  <触发模式>SORTWARE</触发模式>
-  <本底校正模式>NO</本底校正模式>
-  <增益校正模式>NO</增益校正模式>
-  <坏点校正模式>NO</坏点校正模式>
+  <Binning模式>NO_BINNING</Binning模式>
+  <XRay类型>VTC_D</XRay类型>
+  <图像处理>NO_FILTER</图像处理>
 </NV1313FPDSetting>
