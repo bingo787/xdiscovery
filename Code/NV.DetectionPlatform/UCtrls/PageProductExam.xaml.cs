@@ -461,6 +461,9 @@ namespace NV.DetectionPlatform.UCtrls
 
                 _detector.ImageBuffer.Clear();
 
+               
+                ipUC.CurrentDv.DeleteAnnotation(true);
+                ipUC.CurrentDv.Invalidate();
             }
 
 
@@ -594,7 +597,7 @@ namespace NV.DetectionPlatform.UCtrls
                             Thread.Sleep(10);
                             System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
                             {
-
+ 
                                 viewer.PutImageData(width, height, bits, ref data[0]);
                                 //ApplyConfigWL(true);
                                 viewer.SetWindowLevel(w, c);
