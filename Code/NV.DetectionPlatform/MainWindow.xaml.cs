@@ -43,8 +43,7 @@ namespace NV.DetectionPlatform
         public static extern int PostMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
         public const int WM_CLOSE = 0x10;
         System.Windows.Threading.DispatcherTimer timer;
-        ProgressDialog dia = new ProgressDialog("初始化");
-
+ 
         private void StartKiller()
         {
             timer = new System.Windows.Threading.DispatcherTimer();
@@ -533,7 +532,7 @@ namespace NV.DetectionPlatform
 
         private async Task MyAsyncMethod()
         {
-            dia = new ProgressDialog("系统初始化");
+            ProgressDialog dia = new ProgressDialog("系统初始化");
             dia.Summary = "正在系统初始化，请稍候...";
             dia.MaxValue = 100;
             // 显示进度条
@@ -548,6 +547,7 @@ namespace NV.DetectionPlatform
 
             // 隐藏进度条
             dia.Visibility = Visibility.Collapsed;
+            dia.Close();
         }
 
         /// <summary>
