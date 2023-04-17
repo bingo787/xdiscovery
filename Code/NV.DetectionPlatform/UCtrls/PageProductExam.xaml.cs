@@ -568,7 +568,19 @@ namespace NV.DetectionPlatform.UCtrls
                         Global.CurrentProduct.EndTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                         Global.SaveProduct(Global.CurrentProduct);
 
-                        System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
+                        System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => {
+
+                            try
+                            {
+                                dia.ShowDialogEx();
+                            }
+                            catch (Exception e)
+                            {
+                                // nothing
+                            }
+
+
+                        }));
                         System.Windows.Application.Current.Dispatcher.Invoke(new Action(() =>
                         {
                             dia.Summary = "正在保存图像文件，请稍候...";
