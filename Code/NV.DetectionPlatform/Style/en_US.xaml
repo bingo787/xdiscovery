@@ -42,8 +42,8 @@
     <sys:String x:Key="Top_Solution">Solution</sys:String>
     <sys:String x:Key="Top_ProductName">Name:</sys:String>
     <sys:String x:Key="Top_ProductName2">Name</sys:String>
-    <sys:String x:Key="Top_ProductType">Type</sys:String>
-    <sys:String x:Key="Top_ProductType2">Type:</sys:String>
+    <sys:String x:Key="Top_ProductType">ID</sys:String>
+    <sys:String x:Key="Top_ProductType2">ID:</sys:String>
     <sys:String x:Key="Top_ProductSpecification">Specification</sys:String>
     <sys:String x:Key="Top_ProductKeyword">Keyword</sys:String>
     <sys:String x:Key="Top_ProductKeyword2">Keyword:</sys:String>

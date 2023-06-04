@@ -42,8 +42,8 @@
     <sys:String x:Key="Top_Solution">拍摄方案</sys:String>
     <sys:String x:Key="Top_ProductName">产品名称:</sys:String>
     <sys:String x:Key="Top_ProductName2">产品名称</sys:String>
-    <sys:String x:Key="Top_ProductType">类型</sys:String>
-    <sys:String x:Key="Top_ProductType2">产品类型:</sys:String>
+    <sys:String x:Key="Top_ProductType">编号</sys:String>
+    <sys:String x:Key="Top_ProductType2">产品编号:</sys:String>
     <sys:String x:Key="Top_ProductSpecification">规格</sys:String>
     <sys:String x:Key="Top_ProductKeyword">关键词</sys:String>
     <sys:String x:Key="Top_ProductKeyword2">关键词:</sys:String>
