@@ -191,9 +191,13 @@ namespace NV.DetectionPlatform.UCtrls
                 var Data = NV.Config.NV1313FPDSetting.Instance;
                 _detector.ScaleRatio = Data.ScaleRatio;
                 _detector.Delay = Data.Delay;
- 
-            
-                _detector.SetUVCDeviceParameters(0, 0, 0, 1);
+
+
+                int image_mode = 1; // 0:AC 1:VTC
+                int xray_mode = 0; // 0:D 忽略act时间，1:A 中间有act*100ms的时间
+                int bining = 0; // 0: no bining
+                int filter = 1; // use filter 
+                _detector.SetUVCDeviceParameters(image_mode, bining, filter, xray_mode);
                 _detector.GetUVCDeviceParameters();
 
                 IsConnected = true;
@@ -299,7 +303,7 @@ namespace NV.DetectionPlatform.UCtrls
             }
             _span = _span.Add(new TimeSpan(0, 0, 0, 0, -100));
         }
-        public void StopAcqAfter(int timeMs) {
+        public void XrayOffAfter(int timeMs) {
 
             Console.WriteLine("{0} ms后关闭光源 ", timeMs);
             _span = TimeSpan.FromMilliseconds(timeMs);
@@ -368,7 +372,7 @@ namespace NV.DetectionPlatform.UCtrls
 
           //  _imageCount = 0;
 
-            MainWindow.ControlSystem.XRayOn();
+
 
             double kvv = (double)Global.CurrentParam.KV;
             Thread.Sleep(200);
@@ -385,8 +389,14 @@ namespace NV.DetectionPlatform.UCtrls
 
                 if (_curExpType == ExamType.Spot || _curExpType == ExamType.MultiEnergyAvg)
                 {
-
+                    // 启动sensor
                     ret = _detector.StartSingleShot();
+
+                    // 打开光源
+                    MainWindow.ControlSystem.XRayOn();
+
+                    // 光源在 _curExpTime ms后自动关闭
+                    XrayOffAfter(_curExpTime);
                 }
                 else
                 {
@@ -439,7 +449,7 @@ namespace NV.DetectionPlatform.UCtrls
         public void StopAcq(object sender, RoutedEventArgs e)
         {
             IsAcqing = false;
-            MainWindow.ControlSystem.XRayOff();
+          //  MainWindow.ControlSystem.XRayOff();
           //  if (!IsAcqing)
             {
                 _detector.StopAcq();
@@ -603,7 +613,10 @@ namespace NV.DetectionPlatform.UCtrls
                                 viewer.SetWindowLevel(w, c);
                                 viewer.RightRotate();
                                 viewer.FlipVertical();
-                                viewer.ReduceNoise();
+
+
+                                // 如果SDK的filter没有用的话，再放开这里
+                                // viewer.ReduceNoise();
 
                                 //viewer.SaveToFile(fName, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
                                 viewer.SaveToDicomFilePtr(_file, ImageViewLib.tagGET_IMAGE_FLAG.GIF_ALL, false);
