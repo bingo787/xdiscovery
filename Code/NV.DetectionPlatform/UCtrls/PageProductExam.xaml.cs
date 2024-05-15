@@ -528,7 +528,7 @@ namespace NV.DetectionPlatform.UCtrls
             _file.PatientAge = Global.CurrentProduct.ProductSpecification;
             _file.BodyPartExamined = Global.CurrentProduct.ProductKeywords;
             _file.SeriesDate = DateTime.Now.ToString("yyyy-MM-dd");
-            _file.SeriesTime = DateTime.Now.ToString("HH:mm:ss");
+            _file.SeriesTime = DateTime.Now.ToString("HHmmss");
             _file.Manufacturer = NV.DRF.Core.Model.GeneralSettingHelper.Instance.CompanyName;
 
             try
@@ -543,7 +543,7 @@ namespace NV.DetectionPlatform.UCtrls
                 {
                     try
                     {
-                        Global.CurrentProduct.EndTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                        Global.CurrentProduct.EndTime = DateTime.Now.ToString("yyyy-MM-dd HHmmss");
                         Global.SaveProduct(Global.CurrentProduct);
 
                         System.Windows.Application.Current.Dispatcher.BeginInvoke(new Action(() => { dia.ShowDialogEx(); }));
@@ -555,7 +555,7 @@ namespace NV.DetectionPlatform.UCtrls
                             sldrImageIndex.Maximum = sum;
                         }));
 
-                        string folder = System.IO.Path.Combine(Global.CurrentProduct.ImageFolder, DateTime.Now.ToString("yyyy-MM-dd_HH∶mm∶ss"));
+                        string folder = System.IO.Path.Combine(Global.CurrentProduct.ImageFolder, DateTime.Now.ToString("yyyy-MM-dd_HHmmss"));
                         if (!System.IO.Directory.Exists(folder))
                         {
                             Directory.CreateDirectory(folder);
